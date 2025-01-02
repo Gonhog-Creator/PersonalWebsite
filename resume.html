@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <title>Resume</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+    <style>
+        body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #191A1C;
+        color: white;
+        }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .download-link {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 8px 12px;
+            margin-top:5%;
+            border-radius: 5px;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 8px 12px;
+            margin-top:5%;
+            margin-right:1%;
+            border-radius: 5px;
+        }
+
+        .resume-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top:20px;
+        }
+
+        .resume-image {
+            max-width: 80%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+    </style>
+    <body>
+        <div class="header">
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Portfolio
+            </a>
+            <a href="Giacomo_Pugliese_Resume.pdf" download="Giacomo_Pugliese_Resume.pdf" class="download-link">
+                <i class="fas fa-download"></i> Download Resume
+            </a>
+        </div>
+        <div class="resume-container">
+            <img style="padding-bottom:5%" src="img/resume.png" alt="Your Resume" class="resume-image">
+        </div>
+    </body>
+</html>
