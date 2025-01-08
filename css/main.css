@@ -1288,32 +1288,6 @@ header .seperator-skew svg .fill-white {
     color: #0056b3;
 }
 
-/* Header */
-.gallery-header {
-  background-image: url('path/to/your/header-image.jpg'); /* Add the path to your image */
-  background-size: cover; /* Ensure the image covers the entire header */
-  background-position: center; /* Center the image */
-  height: 300px; /* Adjust the height as needed */
-  color: white; /* Text color */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.gallery-header .btn-blue {
-    color: white;
-    text-decoration: none;
-    font-size: 1.2rem;
-    background-color: #0056b3;
-    padding: 10px 20px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.gallery-header .btn-blue:hover {
-    background-color: #004494;
-}
 
 /* Title Section */
 .gallery-title {
