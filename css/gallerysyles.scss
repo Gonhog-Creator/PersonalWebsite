@@ -1,8 +1,51 @@
-@import "variables";
-@import "globals";
-@import "header";
-@import "projects";
-@import "education";
-@import "skills";
-@import "contact";
-@import "footer";
+/* General styles for the header */
+header {
+  background-size: cover;
+  background-position: center;
+  height: 300px; /* Adjust height as needed */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Gallery section styling */
+body {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.gallery-section {
+  /* Your gallery content styling */
+}
+
+/* Footer styling */
+footer {
+  background-color: #333; /* Dark background for the footer */
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+footer .footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+footer a {
+  color: #ffcc00; /* Yellow color for the links */
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+footer p {
+  margin: 5px 0;
+}
