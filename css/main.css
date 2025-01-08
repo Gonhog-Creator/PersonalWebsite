@@ -1290,11 +1290,17 @@ header .seperator-skew svg .fill-white {
 
 /* Header */
 .gallery-header {
-    background-color: #007bff;
-    padding: 10px 0;
-    text-align: center;
+  background-image: url('path/to/your/header-image.jpg'); /* Add the path to your image */
+  background-size: cover; /* Ensure the image covers the entire header */
+  background-position: center; /* Center the image */
+  height: 300px; /* Adjust the height as needed */
+  color: white; /* Text color */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
-
 .gallery-header .btn-blue {
     color: white;
     text-decoration: none;
