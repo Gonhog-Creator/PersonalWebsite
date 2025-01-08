@@ -1248,13 +1248,13 @@ header .seperator-skew svg .fill-white {
 .btn-blue:hover {
   background-color: #0056b3;
 }
-/*# sourceMappingURL=main.css.map */
+
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 20px;
-  text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    background-color: #ffffff; /* White background */
+    padding: 20px;
 }
 
 .gallery-grid img {
