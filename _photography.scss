@@ -1,4 +1,4 @@
-.projects {
+.photography {
   background: white;
   padding: 3rem 0;
   h2 {
@@ -6,11 +6,11 @@
     margin-bottom: 3rem;
   }
 
-  .project-row {
+  .photography-row {
     display: flex;
     margin-bottom: 3rem;
 
-    .project-left {
+    .photography-left {
       width: 50%;
       margin-right: 2rem;
       img {
@@ -18,7 +18,7 @@
         border: 1px solid lightgray;
       }
     }
-    .project-right {
+    .photography-right {
       width: 50%;
       display: flex;
       flex-direction: column;
@@ -44,7 +44,7 @@
         }
       }
 
-      .project-links {
+      .photography-links {
         margin-top: 1rem;
       }
     }
@@ -65,16 +65,16 @@
 }
 
 @media screen and (max-width: 860px) {
-  .projects {
-    .project-row {
+  .photography {
+    .photography-row {
       display: flex;
       margin-bottom: 3rem;
       flex-direction: column;
-      .project-left {
+      .photography-left {
         width: 100%;
         // max-height: 400px;
       }
-      .project-right {
+      .photography-right {
         width: 100%;
       }
     }
@@ -82,19 +82,19 @@
 }
 
 @media screen and (max-width: 500px) {
-  .project-left {
+  .photography-left {
     min-height: 200px;
   }
 }
 
 @media screen and (min-width: 501px) and (max-width: 700px) {
-  .project-left {
+  .photography-left {
     min-height: 300px;
   }
 }
 
 @media screen and (min-width: 701px) and (max-width: 859px) {
-  .project-left {
+  .photography-left {
     min-height: 350px;
   }
 }
