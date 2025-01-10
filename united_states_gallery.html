@@ -168,10 +168,13 @@
         }
         
         .gallery img {
+            flex-grow: 1;
+            flex-basis: calc(33.333% - 10px); /* Adjust for 3 images per row */
             width: 100%;
             height: auto;
             border-radius: 10px;
             object-fit: cover;
+            object-position: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
