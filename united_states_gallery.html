@@ -19,41 +19,70 @@
             color: #333;
         }
 
-        /* Navigation Header */
-        header {
-            position: fixed; /* Fixed at the top of the page */
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-            color: white;
-            z-index: 10; /* Makes sure the navbar stays on top */
-            padding: 10px 0;
-            display: flex;
-            justify-content: center;
+       /* Page Header */
+        .page-header {
+            background-color: #fff;
+            text-align: center;
+            padding: 20px 10px;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-        header ul {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            padding: 0;
+        
+        .page-header .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-
-        header ul li {
-            margin: 0 15px;
+        
+        .page-header h1 {
+            font-family: 'Times New Roman', serif;
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin: 10px 0;
         }
-
-        header ul li a {
-            color: #fff;
+        
+        .page-header hr {
+            border: none;
+            border-top: 1px solid #000;
+            width: 60%;
+            margin: 10px auto;
+        }
+        
+        .page-header .navigation {
+            margin-top: 10px;
+        }
+        
+        .page-header .navigation a {
             text-decoration: none;
-            font-size: 1.2rem;
-            transition: color 0.3s;
+            color: #333;
+            margin: 0 15px;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .page-header .navigation a:hover {
+            color: #555;
+        }
+        
+        .page-header .social-icons {
+            margin-top: 10px;
+        }
+        
+        .page-header .social-icons a {
+            margin: 0 5px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .page-header .social-icons img {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+        
+        .page-header .social-icons img:hover {
+            transform: scale(1.1);
         }
 
-        header ul li a:hover {
-            color: #3b82f6;
-        }
 
         /* Main Content Section */
         .main-section {
@@ -148,11 +177,25 @@
     </style>
 </head>
 <body>
-    <!-- Navigation Header -->
-    <header>
-        <ul>
-            <li><a href="index.html">Home</a></li>
-        </ul>
+    <header class="page-header">
+        <div class="header-content">
+            <h1>JOSÉ MARÍA BARBEITO</h1>
+            <hr>
+            <nav class="navigation">
+                <a href="index.html">Home</a>
+                <a href="projects.html">Projects</a>
+                <a href="photography.html">Photography</a>
+                <a href="about.html">About Me</a>
+            </nav>
+            <div class="social-icons">
+                <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                    <img src="img/instagram-icon.png" alt="Instagram" />
+                </a>
+                <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
+                    <img src="img/linkedin-icon.png" alt="LinkedIn" />
+                </a>
+            </div>
+        </div>
     </header>
 
     <div class="main-section">
