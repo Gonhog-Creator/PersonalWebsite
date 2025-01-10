@@ -61,6 +61,9 @@
     }
     
     .page-header .social-icons {
+        display: flex;
+        justify-content: flex-end; /* Aligns buttons to the right */
+        gap: 10px; /* Adds space between buttons */
         justify-content: flex-end;
         margin-top: 10px;
         transition: transform 0.3s ease;
@@ -73,9 +76,6 @@
     }
     
     .page-header .social-icons img {
-        display: flex;
-        justify-content: flex-end; /* Aligns buttons to the right */
-        gap: 10px; /* Adds space between buttons */
         height: 24px;
         transition: transform 0.3s ease;
     }
