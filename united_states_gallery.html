@@ -20,7 +20,20 @@
         }
 
        /* Page Header */
+        .page-header-fixed {
+            position: fixed; /* Fixed at the top of the page */
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            text-align: center;
+            padding: 20px 10px;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
         .page-header {
+            width: 100%;
             background-color: #fff;
             text-align: center;
             padding: 20px 10px;
@@ -188,6 +201,9 @@
         <div class="header-content">
             <h1>JOSÉ MARÍA BARBEITO</h1>
             <hr>
+    </header>
+    <header class="page-header-fixed">
+        <div class="header-content">
             <nav class="navigation">
                 <a href="index.html">Home</a>
                 <a href="projects.html">Projects</a>
