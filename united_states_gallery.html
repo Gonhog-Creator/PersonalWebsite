@@ -10,12 +10,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: Inter, sans-serif;
         }
 
         body {
             line-height: 1.6;
-            background-color: #f4f4f4;
+            background-color: #181a1b;
             color: #333;
         }
 
@@ -45,7 +45,7 @@
         }
 
         header ul li a:hover {
-            color: #007bff;
+            color: #3b82f6;
         }
 
         /* Main Content Section */
@@ -59,15 +59,15 @@
             color: white;
         }
 
-        /* Main Content Section */
-        .main-section {
+       .main-section .content {
             position: relative;
-            min-height: 100vh; /* Ensures it fills the entire screen */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
+            top: 50%;
+            left: 50%;
+            
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
         }
 
         .main-section h1 {
