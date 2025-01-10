@@ -73,7 +73,9 @@
     }
     
     .page-header .social-icons img {
-        width: 24px;
+        display: flex;
+        justify-content: flex-end; /* Aligns buttons to the right */
+        gap: 10px; /* Adds space between buttons */
         height: 24px;
         transition: transform 0.3s ease;
     }
