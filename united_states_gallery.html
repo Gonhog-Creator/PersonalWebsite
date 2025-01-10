@@ -21,10 +21,16 @@
 
         /* Navigation Header */
         header {
-            position: fixed;
-            background-color: #222;
-            padding: 10px 20px;
-            text-align: center;
+            position: fixed; /* Fixed at the top of the page */
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            color: white;
+            z-index: 10; /* Makes sure the navbar stays on top */
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
         }
 
         header ul {
