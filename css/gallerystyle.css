@@ -67,6 +67,7 @@
         justify-content: flex-end;
         margin-top: 10px;
         transition: transform 0.3s ease;
+         padding-left: 30px;
     }
     
     .page-header .social-icons a {
@@ -77,6 +78,8 @@
     
     .page-header .social-icons img {
         transition: transform 0.3s ease;
+        font-size: 14px; /* Make the icons smaller */
+        margin-right: 10px; /* Add space between the icon and text */
     }
     
     .page-header .social-icons img:hover {
