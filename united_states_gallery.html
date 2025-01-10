@@ -15,7 +15,7 @@
 
         body {
             line-height: 1.6;
-            background-color: #181a1b;
+            background-color: #f0f0f0;
             color: #333;
         }
 
@@ -106,8 +106,16 @@
             bottom: 0;
             width: 100%;
         }
+        
+        /* Gallery Section */
+        
+        .gallery-wrapper {
+            background-color: white; /* White background around the gallery */
+            padding: 20px; /* Padding around the gallery */
+            margin: 0 auto; /* Center the gallery */
+            max-width: 1400px;
+        }
 
-       /* Gallery Section */
         .gallery {
             display: grid;
             height: auto;
@@ -144,9 +152,10 @@
             <p>Explore breathtaking moments captured through my lens.</p>
         </div>
     </div>
-    
-    <div class="gallery-grid">
-            <img src="img/header-image1.jpg" alt="Photo 1">
+
+    <div class="gallery-wrapper">
+      <div class="gallery-grid">
+        <img src="img/header-image1.jpg" alt="Photo 1">
             <img src="img/header-image1.jpg" alt="Photo 2">
             <img src="img/header-image1.jpg" alt="Photo 3">
             <img src="img/header-image1.jpg" alt="Photo 1">
@@ -161,7 +170,7 @@
             <img src="img/header-image1.jpg" alt="Photo 1">
             <img src="img/header-image1.jpg" alt="Photo 2">
             <img src="img/header-image1.jpg" alt="Photo 3">
-            <!-- Add more images as needed -->
+      </div>
     </div>
 
     <!-- Footer -->
