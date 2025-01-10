@@ -67,16 +67,20 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Footer */
+/* Updated Footer Styles */
 .gallery-footer {
-    background-color: #222;
+    background-color: #333; /* Dark grey background */
     color: white;
     padding: 20px 0;
     text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%; /* Ensures it spans the full width of the page */
 }
 
 .gallery-footer .footer-links {
     margin-top: 10px;
+    text-align: center;
 }
 
 .gallery-footer .footer-links a {
