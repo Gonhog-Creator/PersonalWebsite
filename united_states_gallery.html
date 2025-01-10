@@ -15,7 +15,7 @@
 
         body {
             line-height: 1.6;
-            background-color: #f0f0f0;
+            background-color: ##949494;
             color: #333;
         }
 
@@ -119,7 +119,7 @@
         .gallery {
             display: grid;
             height: auto;
-            grid-template-columns: repeat(3, 1fr); /* Ensure 3 images per row */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Dynamic columns */
             gap: 15px;
             max-width: 100%;
             box-sizing: border-box; /* Ensure padding doesn't affect width */
