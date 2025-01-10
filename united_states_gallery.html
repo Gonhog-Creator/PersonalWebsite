@@ -119,10 +119,10 @@
         .gallery {
             display: grid;
             height: auto;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr); /* Ensure 3 images per row */
             gap: 15px;
             padding: 20px; /* Ensure padding is on all sides */
-            max-width: 1600px;
+            max-width: 100%;
             margin: 40px auto;
             box-sizing: border-box; /* Ensure padding doesn't affect width */
         }
@@ -135,6 +135,18 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
+        @media (max-width: 900px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr); /* 2 images per row on smaller screens */
+            }
+        }
+
+        /* For very small screens (mobile phones) */
+        @media (max-width: 600px) {
+            .gallery {
+                grid-template-columns: 1fr; /* 1 image per row on very small screens */
+            }
+        }
     </style>
 </head>
 <body>
