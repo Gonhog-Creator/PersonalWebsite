@@ -113,11 +113,12 @@
             height: auto;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 15px;
-            padding: 20px;
-            max-width: 1400px;
+            padding: 20px; /* Ensure padding is on all sides */
+            max-width: 1600px;
             margin: 40px auto;
+            box-sizing: border-box; /* Ensure padding doesn't affect width */
         }
-
+        
         .gallery img {
             width: 100%;
             height: auto;
