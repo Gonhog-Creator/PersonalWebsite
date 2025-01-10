@@ -100,26 +100,25 @@
             width: 100%;
         }
 
-        /* Gallery Grid */
-        .gallery-grid {
+       /* Gallery Section */
+        .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            max-width: 1600px;
             height: auto;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 20px auto;
         }
 
-        .gallery-grid img {
+        .gallery img {
             width: 100%;
             height: auto;
             border-radius: 10px;
+            object-fit: cover;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
     </style>
 </head>
 <body>
@@ -133,7 +132,7 @@
     </header>
 
     <div class="main-section">
-        <img src="img/header-image1.jpg" alt="Gallery Background">
+        <img src="img/header-image.jpg" alt="Gallery Background">
         <div class="content">
             <h1>Welcome to My Gallery</h1>
             <p>Explore breathtaking moments captured through my lens.</p>
