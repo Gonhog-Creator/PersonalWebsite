@@ -100,9 +100,6 @@ body {
 
 /* Gallery Container */
 .gallery {
-    display: block;
-    margin: 0 auto;
-    position: relative; /* Ensure Masonry can position items correctly */
     max-width: 100%; /* Prevent overflow beyond the container */
 }
 
