@@ -100,7 +100,6 @@ body {
 
 /* Gallery Container */
 .gallery {
-    max-width: 100%; /* Prevent overflow beyond the container */
 }
 
 /* Gallery Items */
