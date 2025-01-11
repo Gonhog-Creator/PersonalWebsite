@@ -61,13 +61,13 @@
     }
 
     .button-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    align-items: flex-end; /* Align buttons to the right */
-    gap: 10px; /* Space between buttons */
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: flex-end; /* Align buttons to the right */
+        gap: 10px; /* Space between buttons */
     }
     
     .hover-button {
