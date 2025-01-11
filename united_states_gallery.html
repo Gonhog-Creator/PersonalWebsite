@@ -69,15 +69,21 @@
     <!-- Add Masonry.js via CDN -->
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script>
-    // Initialize Masonry
     document.addEventListener("DOMContentLoaded", function () {
         var elem = document.querySelector('.gallery');
-        new Masonry(elem, {
-            itemSelector: '.gallery-item', // Target the gallery items
-            columnWidth: '.gallery-item',  // Set column width based on items
-            percentPosition: true,        // Enable percentage-based sizing
-            gutter: 15                    // Space between items
+    
+        // Ensure images are fully loaded before initializing Masonry
+        imagesLoaded(elem, function () {
+            new Masonry(elem, {
+                itemSelector: '.gallery-item', // Target gallery items
+                columnWidth: '.gallery-item', // Use gallery-item as column width
+                percentPosition: true,        // Use percentage-based widths
+                gutter: 15                    // Space between items
+            });
         });
     });
     </script>
+    
+    <!-- Add imagesLoaded.js via CDN -->
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 </html>
