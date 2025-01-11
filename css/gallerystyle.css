@@ -1,5 +1,6 @@
 
 
+
     /* General Reset */
     body, h1, h2, p, ul, li, a {
         margin: 0;
@@ -86,8 +87,8 @@
     }
     
     .icon {
-        font-size: 90px; /* Reduce icon size */
-        margin-right: 10px; /* Add spacing between icon and text */
+        font-size: 12px; /* Reduce icon size */
+        margin-right: 8px; /* Add spacing between icon and text */
     }
 
 
