@@ -98,55 +98,51 @@ body {
     font-size: 1.2rem;
 }
 
-/* Footer */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    position: relative;
-    width: 100%;
-}
-
-/* Gallery Wrapper */
-.gallery-wrapper {
-    background-color: white;
-    padding: 20px 0;
-    margin: 0 auto;
-    max-width: 1600px;
-}
-
 /* Gallery Container */
 .gallery {
-    display: block; /* Masonry manages layout; no flex or grid here */
+    display: block;
     margin: 0 auto;
+    position: relative; /* Ensure Masonry can position items correctly */
+    max-width: 100%; /* Prevent overflow beyond the container */
 }
 
 /* Gallery Items */
 .gallery-item {
-    width: 30%; /* Three items per row */
-    margin-bottom: 15px; /* Matches Masonry's gutter */
-    float: none; /* Remove floats; Masonry handles positioning */
-    position: relative; /* Required for Masonry's layout engine */
+    width: calc(33.333% - 10px); /* 3 items per row, accounting for the gutter */
+    margin-bottom: 15px;
+    position: absolute; /* Allow Masonry to take full control of positioning */
 }
 
 .gallery-item img {
-    width: 100%; /* Ensure images fit within their container */
-    display: block;
+    width: 100%;
+    height: auto;
     border-radius: 10px;
     object-fit: cover;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive Design */
+/* Responsive Adjustments */
 @media (max-width: 900px) {
     .gallery-item {
-        width: 45%; /* Two items per row */
+        width: calc(50% - 10px); /* 2 items per row */
     }
 }
 
 @media (max-width: 600px) {
     .gallery-item {
-        width: 100%; /* One item per row */
+        width: 100%; /* 1 item per row */
     }
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+    margin-top: 20px;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding doesn't affect layout */
+    overflow: hidden; /* Prevent content from being squashed */
 }
