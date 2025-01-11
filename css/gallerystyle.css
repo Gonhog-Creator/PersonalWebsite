@@ -87,6 +87,7 @@
 
     /* Main Content Section */
     .main-section {
+        flex: 1;
         position: relative;
         height: 70vh;
         display: flex;
