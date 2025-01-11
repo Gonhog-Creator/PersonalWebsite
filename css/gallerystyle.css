@@ -155,17 +155,21 @@
         max-width: 100%;
         box-sizing: border-box; /* Ensure padding doesn't affect width */
     }
-    
-    .gallery img {
-        flex-grow: 1;
-        flex-basis: calc(33.333% - 10px); /* Adjust for 3 images per row */
-        width: 100%;
-        height: auto;
-        border-radius: 10px;
-        object-fit: cover;
-        object-position: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+   
+      /* Gallery Items */
+      .gallery-item {
+          width: 30%; /* Adjust the item size (e.g., 30% for 3 columns) */
+          margin-bottom: 15px; /* Space between rows */
+          float: left; /* Ensure items align horizontally before Masonry applies */
+      }
+      
+      .gallery-item img {
+          width: 100%; /* Images fill their container */
+          display: block; /* Prevent inline gaps between images */
+          border-radius: 10px;
+          object-fit: cover;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
 
     @media (max-width: 900px) {
         .gallery {
