@@ -100,19 +100,24 @@ body {
 
 /* Gallery Wrapper */
 .gallery-wrapper {
-    padding: 20px 0; /* Add spacing above and below the gallery */
+    padding: 20px 0; /* Add vertical padding for spacing */
     margin: 0 auto; /* Center the gallery */
-    max-width: 1400px; /* Set max-width for the gallery container */
-    overflow: hidden; /* Prevent overlapping gallery items */
+    width: 100%; /* Allow the gallery wrapper to take full width */
+    max-width: 1400px; /* Set max-width for gallery container */
+    box-sizing: border-box; /* Ensure padding doesn't add extra width */
+    overflow: hidden; /* Prevent items from overflowing outside */
 }
 
 /* Gallery Container */
 .gallery {
-    display: block; /* Ensure Masonry can manage the layout */
-    position: relative; /* Allow Masonry to position items absolutely */
+    display: block;
     margin: 0 auto; /* Center the gallery container */
-    max-width: 100%; /* Ensure no overflow */
+    width: 100%; /* Ensure the gallery spans the full width of its parent */
+    max-width: 100%; /* Prevent overflowing the container */
+    position: relative; /* Allow Masonry to manage item positioning */
+    box-sizing: border-box; /* Include padding and border in width calculation */
 }
+
 
 /* Gallery Item */
 .gallery-item {
