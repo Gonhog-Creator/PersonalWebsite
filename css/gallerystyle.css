@@ -98,15 +98,20 @@ body {
     font-size: 1.2rem;
 }
 
-/* Gallery Container */
-.gallery {
+/* Gallery Wrapper */
+.gallery-wrapper {
+    padding: 20px 0; /* Add spacing above and below the gallery */
+    margin: 0 auto; /* Center the gallery */
+    max-width: 1400px; /* Set max-width for the gallery container */
+    overflow: hidden; /* Prevent overlapping gallery items */
 }
 
-/* Gallery Items */
-.gallery-item {
-    width: calc(33.333% - 10px); /* 3 items per row, accounting for the gutter */
-    margin-bottom: 15px;
-    position: absolute; /* Allow Masonry to take full control of positioning */
+/* Gallery Container */
+.gallery {
+    display: block; /* Ensure Masonry can manage the layout */
+    position: relative; /* Allow Masonry to position items absolutely */
+    margin: 0 auto; /* Center the gallery container */
+    max-width: 100%; /* Ensure no overflow */
 }
 
 .gallery-item img {
