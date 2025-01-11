@@ -68,22 +68,20 @@
 </body>
     <!-- Add Masonry.js via CDN -->
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
         var elem = document.querySelector('.gallery');
     
-        // Ensure images are fully loaded before initializing Masonry
+        // Initialize Masonry only after all images are loaded
         imagesLoaded(elem, function () {
             new Masonry(elem, {
-                itemSelector: '.gallery-item', // Target gallery items
-                columnWidth: '.gallery-item', // Use gallery-item as column width
-                percentPosition: true,        // Use percentage-based widths
-                gutter: 15                    // Space between items
+                itemSelector: '.gallery-item',
+                columnWidth: '.gallery-item',
+                percentPosition: true,
+                gutter: 15
             });
         });
     });
     </script>
-    
-    <!-- Add imagesLoaded.js via CDN -->
-    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
 </html>
