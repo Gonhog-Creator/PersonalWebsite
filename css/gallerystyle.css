@@ -1,7 +1,4 @@
-
-
-
-    /* General Reset */
+   /* General Reset */
     body, h1, h2, p, ul, li, a {
         margin: 0;
         padding: 0;
@@ -10,10 +7,9 @@
     }
 
     body {
-        display: flex;
-        flex-direction: column; /* Stack header, main, and footer vertically */
-        min-height: 100vh; /* Ensure the body fills the viewport height */
-        background-color: #949494; /* Fix incorrect double '#' in your color */
+        line-height: 1.6;
+        background-color: ##949494;
+        color: #333;
     }
 
    /* Page Header */
@@ -89,15 +85,15 @@
     }
 
 
-    /* Main Section Layout */
+    /* Main Content Section */
     .main-section {
-        flex: 1; /* Make the main section grow to fill remaining height */
+        position: relative;
+        height: 70vh;
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
         color: white;
-        position: relative; /* Ensures it stays in normal flow */
     }
 
     .main-section img {
@@ -137,6 +133,7 @@
         text-align: center;
         padding: 15px 0;
         position: relative;
+        bottom: 0;
         width: 100%;
     }
     
