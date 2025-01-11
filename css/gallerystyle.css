@@ -2,7 +2,6 @@
 body, h1, h2, p, ul, li, a {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: Inter, sans-serif;
 }
 
@@ -100,53 +99,45 @@ body {
 
 /* Gallery Wrapper */
 .gallery-wrapper {
-    padding: 20px 0; /* Add vertical padding for spacing */
-    margin: 0 auto; /* Center the gallery */
-    width: 100%; /* Allow the gallery wrapper to take full width */
-    max-width: 1400px; /* Set max-width for gallery container */
-    box-sizing: border-box; /* Ensure padding doesn't add extra width */
-    overflow: hidden; /* Prevent items from overflowing outside */
+    padding: 20px 0;
+    margin: 0 auto;
+    width: 100%; /* Ensure full width */
+    max-width: 1400px; /* Max width for the gallery */
+    overflow: hidden; /* Prevent overflow */
 }
-
 /* Gallery Container */
 .gallery {
-    display: block;
-    margin: 0 auto; /* Center the gallery container */
-    width: 100%; /* Ensure the gallery spans the full width of its parent */
-    max-width: 100%; /* Prevent overflowing the container */
-    position: relative; /* Allow Masonry to manage item positioning */
-    box-sizing: border-box; /* Include padding and border in width calculation */
+    display: block; /* Allow masonry to manage this */
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
 }
-
 
 /* Gallery Item */
 .gallery-item {
-    width: calc(33.333% - 10px); /* 3 items per row (adjust width if necessary) */
-    margin-bottom: 15px; /* Space between items */
-    position: relative; /* Required for Masonry to position items correctly */
+    width: calc(33.333% - 10px); /* 3 items per row */
+    margin-bottom: 15px;
+    position: relative;
 }
 
 .gallery-item img {
-    width: 100%; /* Ensure the images fill their container */
+    width: 100%; /* Ensure images fill their container */
     height: auto;
-    border-radius: 10px; /* Round the image corners */
-    object-fit: cover; /* Ensure images scale without stretching */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    object-fit: cover;
 }
 
-
-/* Responsive Adjustments */
 @media (max-width: 900px) {
     .gallery-item {
-        width: calc(50% - 10px); /* 2 items per row */
+        width: calc(50% - 10px); /* 2 items per row on medium screens */
     }
 }
 
 @media (max-width: 600px) {
     .gallery-item {
-        width: 100%; /* 1 item per row */
+        width: 100%; /* 1 item per row on small screens */
     }
 }
+
 
 /* Footer */
 footer {
