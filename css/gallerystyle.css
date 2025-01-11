@@ -10,9 +10,10 @@
     }
 
     body {
-        line-height: 1.6;
-        background-color: ##949494;
-        color: #333;
+        display: flex;
+        flex-direction: column; /* Stack header, main, and footer vertically */
+        min-height: 100vh; /* Ensure the body fills the viewport height */
+        background-color: #949494; /* Fix incorrect double '#' in your color */
     }
 
    /* Page Header */
@@ -88,15 +89,15 @@
     }
 
 
-    /* Main Content Section */
+    /* Main Section Layout */
     .main-section {
-        position: relative;
-        height: 70vh;
+        flex: 1; /* Make the main section grow to fill remaining height */
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
         color: white;
+        position: relative; /* Ensures it stays in normal flow */
     }
 
     .main-section img {
