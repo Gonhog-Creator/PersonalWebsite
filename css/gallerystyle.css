@@ -1,7 +1,9 @@
+
 /* General Reset */
 body, h1, h2, p, ul, li, a {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: Inter, sans-serif;
 }
 
@@ -99,45 +101,40 @@ body {
 
 /* Gallery Wrapper */
 .gallery-wrapper {
-    padding: 20px 0;
-    margin: 0 auto;
-    width: 100%; /* Ensure full width */
-    max-width: 1400px; /* Max width for the gallery */
-    overflow: hidden; /* Prevent overflow */
-}
-/* Gallery Container */
-.gallery {
-    display: block; /* Allow masonry to manage this */
-    width: 100%;
-    margin: 0 auto;
-    padding: 0;
+    padding: 20px 0; /* Add spacing above and below the gallery */
+    margin: 0 auto; /* Center the gallery */
+    max-width: 1400px; /* Set max-width for the gallery container */
+    overflow: hidden; /* Prevent overlapping gallery items */
 }
 
-/* Gallery Item */
-.gallery-item {
-    width: calc(33.333% - 10px); /* 3 items per row */
-    margin-bottom: 15px;
-    position: relative;
+/* Gallery Container */
+.gallery {
+    display: block; /* Ensure Masonry can manage the layout */
+    position: relative; /* Allow Masonry to position items absolutely */
+    margin: 0 auto; /* Center the gallery container */
+    max-width: 100%; /* Ensure no overflow */
 }
 
 .gallery-item img {
-    width: 100%; /* Ensure images fill their container */
+    width: 100%;
     height: auto;
+    border-radius: 10px;
     object-fit: cover;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Responsive Adjustments */
 @media (max-width: 900px) {
     .gallery-item {
-        width: calc(50% - 10px); /* 2 items per row on medium screens */
+        width: calc(50% - 10px); /* 2 items per row */
     }
 }
 
 @media (max-width: 600px) {
     .gallery-item {
-        width: 100%; /* 1 item per row on small screens */
+        width: 100%; /* 1 item per row */
     }
 }
-
 
 /* Footer */
 footer {
