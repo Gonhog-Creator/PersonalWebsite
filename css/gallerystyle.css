@@ -114,13 +114,21 @@ body {
     max-width: 100%; /* Ensure no overflow */
 }
 
-.gallery-item img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    object-fit: cover;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+/* Gallery Item */
+.gallery-item {
+    width: calc(33.333% - 10px); /* 3 items per row (adjust width if necessary) */
+    margin-bottom: 15px; /* Space between items */
+    position: relative; /* Required for Masonry to position items correctly */
 }
+
+.gallery-item img {
+    width: 100%; /* Ensure the images fill their container */
+    height: auto;
+    border-radius: 10px; /* Round the image corners */
+    object-fit: cover; /* Ensure images scale without stretching */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
 
 /* Responsive Adjustments */
 @media (max-width: 900px) {
