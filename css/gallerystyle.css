@@ -24,7 +24,10 @@ body {
 }
 
 .page-header .header-content {
-    max-width: 1200px;
+    display: flex;
+    justify-content: space-between; /* Separate header text and icons */
+    align-items: center;
+    max-width: 1600px;
     margin: 0 auto;
 }
 
@@ -67,9 +70,9 @@ body {
 }
 
 .social-icons a {
-    text-decoration: none; /* Remove underline */
-    color: inherit; /* Inherit text color */
     display: inline-block;
+    text-decoration: none; /* Remove underline */
+    color: inherit;
     transition: transform 0.3s ease;
 }
 
@@ -133,6 +136,11 @@ body {
     position: relative; /* Allow Masonry to position items absolutely */
     margin: 0 auto; /* Center the gallery container */
     max-width: 100%; /* Ensure no overflow */
+}
+
+.gallery-item {
+    width: calc(33.333% - 10px); /* 3 items per row */
+    margin: 0 5px 15px; /* Add spacing */
 }
 
 .gallery-item img {
