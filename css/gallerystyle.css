@@ -58,6 +58,25 @@ body {
     color: #555;
 }
 
+/* Social Icons*/
+.social-icons {
+    display: flex;
+    justify-content: flex-end; /* Align icons to the right */
+    gap: 10px; /* Add spacing between icons */
+    margin-top: 10px; /* Add some space above */
+}
+
+.social-icons a {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Inherit text color */
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
 /* Main Section */
 .main-section {
     position: relative;
@@ -67,6 +86,7 @@ body {
     align-items: center;
     text-align: center;
     color: white;
+    flex: 1; /* Allow this section to grow and push footer down */
 }
 
 .main-section img {
@@ -141,10 +161,10 @@ footer {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 15px 20px;
+    padding: 15px 0;
     margin-top: 20px;
-    position: relative;
     width: 100%;
-    box-sizing: border-box; /* Ensure padding doesn't affect layout */
-    overflow: hidden; /* Prevent content from being squashed */
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1; /* Ensure it's above background layers */
 }
