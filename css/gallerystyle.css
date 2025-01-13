@@ -24,9 +24,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.header-content {
-    display: flex;
-    justify-content: space-between; /* Space out header content */
+.page-header .header-content {
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -61,26 +59,6 @@ body {
     color: #555;
 }
 
-/* Social Icons*/
-.social-icons {
-    margin-left: auto; /* Push icons to the right */
-    display: flex;
-    gap: 15px; /* Add spacing between icons */
-}
-
-.social-icons a {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none; /* Remove underline */
-    color: inherit;
-    transition: transform 0.3s ease;
-}
-
-.social-icons a:hover {
-    transform: scale(1.1); /* Slightly enlarge on hover */
-}
-
-
 /* Main Section */
 .main-section {
     position: relative;
@@ -90,7 +68,6 @@ body {
     align-items: center;
     text-align: center;
     color: white;
-    flex: 1; /* Allow this section to grow and push footer down */
 }
 
 .main-section img {
@@ -139,18 +116,12 @@ body {
     max-width: 100%; /* Ensure no overflow */
 }
 
-.gallery-item {
-    width: calc(33.333% - 10px); /* 3 items per row */
-    margin: 0 5px 15px; /* Add spacing */
-}
-
 .gallery-item img {
     width: 100%;
     height: auto;
     border-radius: 10px;
     object-fit: cover;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-height: 300px; /* Optional: Limit the height */
 }
 
 /* Responsive Adjustments */
@@ -171,10 +142,10 @@ footer {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 15px 0;
+    padding: 15px 20px;
     margin-top: 20px;
-    width: 100%;
-    box-sizing: border-box;
     position: relative;
-    z-index: 1; /* Ensure it's above background layers */
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding doesn't affect layout */
+    overflow: hidden; /* Prevent content from being squashed */
 }
