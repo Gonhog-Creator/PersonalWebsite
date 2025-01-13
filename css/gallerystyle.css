@@ -116,12 +116,19 @@ body {
     max-width: 100%; /* Ensure no overflow */
 }
 
+.gallery-item {
+    width: calc(33.333% - 10px); /* Ensure 3 items per row */
+    margin: 0 5px 15px; /* Add spacing */
+    max-width: 400px; /* Limit the maximum width */
+}
+
 .gallery-item img {
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    object-fit: cover;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ensure the image fits within the item's width */
+    height: auto; /* Maintain aspect ratio */
+    max-height: 300px; /* Optional: Limit the height */
+    object-fit: cover; /* Ensure the image covers the allocated space */
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
 }
 
 /* Responsive Adjustments */
