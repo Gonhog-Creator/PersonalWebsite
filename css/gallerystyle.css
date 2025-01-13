@@ -1,4 +1,5 @@
 
+
 /* General Reset */
 body, h1, h2, p, ul, li, a {
     margin: 0;
@@ -23,11 +24,10 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.page-header .header-content {
+.header-content {
     display: flex;
-    justify-content: space-between; /* Separate header text and icons */
-    align-items: center;
-    max-width: 1600px;
+    justify-content: space-between; /* Space out header content */
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -79,6 +79,7 @@ body {
 .social-icons a:hover {
     transform: scale(1.1); /* Slightly enlarge on hover */
 }
+
 
 /* Main Section */
 .main-section {
@@ -149,6 +150,7 @@ body {
     border-radius: 10px;
     object-fit: cover;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 300px; /* Optional: Limit the height */
 }
 
 /* Responsive Adjustments */
