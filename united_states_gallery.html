@@ -66,7 +66,6 @@
         <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
     </footer>
 </body>
-    <!-- Add Masonry.js via CDN -->
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script>
@@ -74,14 +73,14 @@
         var elem = document.querySelector('.gallery');
     
         // Initialize Masonry only after all images are loaded
-        imagesLoaded(elem, function () {
-            new Masonry(elem, {
-                itemSelector: '.gallery-item',
-                columnWidth: '.gallery-item',
-                percentPosition: true,
-                gutter: 15,
-            });
-            // Ensure layout is applied after images are loaded
+        var msnry = new Masonry(elem, {
+            itemSelector: '.gallery-item',
+            columnWidth: '.gallery-item',
+            percentPosition: true,
+            gutter: 10,
+        });
+    
+        // Ensure layout is applied after images are loaded
         imagesLoaded(elem, function () {
             msnry.layout();
             // Re-center the gallery by setting margin to auto
