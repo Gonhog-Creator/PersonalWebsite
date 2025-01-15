@@ -81,6 +81,11 @@
                 percentPosition: true,
                 gutter: 15,
             });
+            // Ensure layout is applied after images are loaded
+        imagesLoaded(elem, function () {
+            msnry.layout();
+            // Re-center the gallery by setting margin to auto
+            elem.style.margin = "0 auto";
         });
     });
     </script>
