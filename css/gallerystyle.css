@@ -103,8 +103,8 @@ body {
 /* Gallery Wrapper */
 .gallery-wrapper {
     /*overflow: hidden; /* Prevent overlapping gallery items */
-    /*display: block; /* Ensure Masonry can manage the layout */
-    /*justify-content: center; /* Center horizontally */
+    display: block; /* Ensure Masonry can manage the layout */
+    justify-content: center; /* Center horizontally */
     align-items: flex-start; /* Align items to the top */
     padding: 20px 0; /* Spacing above and below the gallery */
     margin: 0 auto; /* Center the wrapper */
@@ -116,8 +116,8 @@ body {
 /* Gallery Container */
 .gallery {
     display: block; /* Ensure Masonry can manage the layout */
-    /*position: relative; /* Allow Masonry to position items absolutely */
-    /*margin: 10 auto; /* Center the gallery container */
+    position: relative; /* Allow Masonry to position items absolutely */
+    margin: 10 auto; /* Center the gallery container */
     /*max-width: 100%; /* Ensure no overflow */
 }
 
@@ -125,8 +125,7 @@ body {
     width: 400px;
     max-width: 100%; /* Prevents overflow on smaller screens */
     height: auto; /* Maintain aspect ratio */
-    /*max-height: 300px; /* Optional: Limit the height */*/
-    /*object-fit: cover; /* Ensure the image covers the allocated space */
+    object-fit: cover;  /*Ensure the image covers the allocated space */
     border-radius: 10px; /* Add rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Optional: Add shadow */
     box-sizing: border-box; /* Includes margins in width calculation */
