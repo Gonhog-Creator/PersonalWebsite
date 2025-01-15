@@ -102,7 +102,9 @@ body {
 
 /* Gallery Wrapper */
 .gallery-wrapper {
-
+    overflow: hidden; /* Prevent overlapping gallery items */
+    display: block; /* Ensure Masonry can manage the layout */
+    justify-content: center; /* Center horizontally */
     align-items: flex-start; /* Align items to the top */
     padding: 20px 0; /* Spacing above and below the gallery */
     margin: 0 auto; /* Center the wrapper */
@@ -110,11 +112,6 @@ body {
     box-sizing: border-box; /* Ensure padding is included in width calculation */
     background-color: #d3d3d3;
 }
-
-/* Gallery Container */
-.gallery {
-    
-
 
 /* Gallery Container */
 .gallery {
