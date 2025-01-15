@@ -80,6 +80,17 @@ body {
     z-index: -1;
 }
 
+.main-section .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
 .main-section h1 {
     font-size: 3rem;
     margin-bottom: 15px;
@@ -91,10 +102,10 @@ body {
 
 /* Gallery Wrapper */
 .gallery-wrapper {
-    /*overflow: hidden; /* Prevent overlapping gallery items */
+    overflow: hidden; /* Prevent overlapping gallery items */
     display: block; /* Ensure Masonry can manage the layout */
     justify-content: center; /* Center horizontally */
-    align-items: flex-start; /* Align items to the top */
+
     padding: 20px 0; /* Spacing above and below the gallery */
     margin: 0 auto; /* Center the wrapper */
     max-width: 1800px; /* Optional: Set a max width for the container */
