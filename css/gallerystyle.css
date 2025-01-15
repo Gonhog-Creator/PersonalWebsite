@@ -102,12 +102,16 @@ body {
 
 /* Gallery Wrapper */
 .gallery-wrapper {
-    color: #333;
-    padding: 20px 0; /* Add spacing above and below the gallery */
-    margin: 0 auto; /* Center the gallery */
-    max-width: 1600px; /* Set max-width for the gallery container */
-    overflow: hidden; /* Prevent overlapping gallery items */
+    display: flex; /* Flexbox to align the gallery */
+    justify-content: center; /* Center horizontally */
+    align-items: flex-start; /* Align items to the top */
+    padding: 20px 0; /* Spacing above and below the gallery */
+    margin: 0 auto; /* Center the wrapper */
+    max-width: 1400px; /* Optional: Set a max width for the container */
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+    background-color: #d3d3d3;
 }
+
 
 /* Gallery Container */
 .gallery {
