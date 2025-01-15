@@ -102,9 +102,10 @@ body {
 
 /* Gallery Wrapper */
 .gallery-wrapper {
+    color: #333;
     padding: 20px 0; /* Add spacing above and below the gallery */
     margin: 0 auto; /* Center the gallery */
-    max-width: 1400px; /* Set max-width for the gallery container */
+    max-width: 1600px; /* Set max-width for the gallery container */
     overflow: hidden; /* Prevent overlapping gallery items */
 }
 
@@ -118,7 +119,7 @@ body {
 
 .gallery-item img {
     width: 300px;
-    
+    max-width: 100%; /* Prevents overflow on smaller screens */
     height: auto; /* Maintain aspect ratio */
     /*max-height: 300px; /* Optional: Limit the height */*/
     object-fit: cover; /* Ensure the image covers the allocated space */
