@@ -117,8 +117,8 @@ body {
 .gallery {
     display: block; /* Ensure Masonry can manage the layout */
     position: relative; /* Allow Masonry to position items absolutely */
-    margin: 10 auto; /* Center the gallery container */
-    max-width: 100%; /* Ensure no overflow */
+    /*margin: 10 auto; /* Center the gallery container */
+    /*max-width: 100%; /* Ensure no overflow */
 }
 
 .gallery-item img {
@@ -126,10 +126,10 @@ body {
     max-width: 100%; /* Prevents overflow on smaller screens */
     height: auto; /* Maintain aspect ratio */
     /*max-height: 300px; /* Optional: Limit the height */*/
-    object-fit: cover; /* Ensure the image covers the allocated space */
+    /*object-fit: cover; /* Ensure the image covers the allocated space */
     border-radius: 10px; /* Add rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Optional: Add shadow */
-     box-sizing: border-box; /* Includes margins in width calculation */
+    box-sizing: border-box; /* Includes margins in width calculation */
 }
 
 /* Responsive Adjustments */
