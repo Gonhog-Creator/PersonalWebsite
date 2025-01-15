@@ -115,12 +115,14 @@ body {
 
 /* Gallery Container */
 .gallery {
-    display: block; /* Ensure Masonry can manage the layout */
-    position: relative; /* Allow Masonry to position items absolutely */
-    margin: 10 auto; /* Center the gallery container */
-    /*max-width: 100%; /* Ensure no overflow */
+    display: flex; /* Use flexbox for layout */
+    flex-wrap: wrap; /* Wrap items to the next row */
+    justify-content: center; /* Center items horizontally */
+    gap: 10px; /* Consistent spacing between items */
+    margin: 0 auto; /* Center the gallery itself inside the wrapper */
+    max-width: 100%; /* Prevent the gallery from overflowing */
+    padding: 0; /* Remove unnecessary padding */
 }
-
 .gallery-item img {
     width: 400px;
     max-width: 100%; /* Prevents overflow on smaller screens */
