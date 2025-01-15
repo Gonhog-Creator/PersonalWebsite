@@ -117,9 +117,10 @@ body {
 }
 
 .gallery-item img {
+    width: 400px;
     width: 100%; /* Ensure the image fits within the item's width */
     height: auto; /* Maintain aspect ratio */
-    max-height: 300px; /* Optional: Limit the height */
+    /*max-height: 300px; /* Optional: Limit the height */*/
     object-fit: cover; /* Ensure the image covers the allocated space */
     border-radius: 10px; /* Add rounded corners */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
