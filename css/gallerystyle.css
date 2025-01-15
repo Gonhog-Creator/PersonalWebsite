@@ -118,7 +118,7 @@ body {
 }
 
 .gallery-item img {
-    width: 300px;
+    width: 400px;
     max-width: 100%; /* Prevents overflow on smaller screens */
     height: auto; /* Maintain aspect ratio */
     /*max-height: 300px; /* Optional: Limit the height */*/
