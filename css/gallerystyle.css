@@ -105,7 +105,7 @@ body {
     overflow: hidden; /* Prevent overlapping gallery items */
     display: block; /* Ensure Masonry can manage the layout */
     justify-content: center; /* Center horizontally */
-
+    align-items: flex-start; /* Align items to the top */
     padding: 20px 0; /* Spacing above and below the gallery */
     margin: 0 auto; /* Center the wrapper */
     max-width: 1800px; /* Optional: Set a max width for the container */
@@ -121,7 +121,7 @@ body {
     gap: 10px; /* Consistent spacing between items */
     margin: 0 auto; /* Center the gallery itself inside the wrapper */
     max-width: 100%; /* Prevent the gallery from overflowing */
-    padding: 0; /* Remove unnecessary padding */
+    padding-left: 10; /* Remove unnecessary padding */
 }
 .gallery-item img {
     width: 400px;
