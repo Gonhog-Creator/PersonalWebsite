@@ -104,7 +104,7 @@ body {
 .gallery-wrapper {
     display: flex; /* Flexbox to align the gallery */
     justify-content: center; /* Center horizontally */
-    align-items: flex-start; /* Align items to the top */
+
     padding: 20px 0; /* Spacing above and below the gallery */
     margin: 0 auto; /* Center the wrapper */
     max-width: 1800px; /* Optional: Set a max width for the container */
