@@ -121,7 +121,6 @@ body {
 
 /* Gallery */
 .gallery {
-    display: flex; /* Use flexbox for layout */
     max-width: 100%; /* Prevent the gallery from overflowing */
     width: 100%;
 }
