@@ -122,6 +122,7 @@ body {
     margin: 0 auto; /* Center the gallery itself inside the wrapper */
     max-width: 100%; /* Prevent the gallery from overflowing */
     padding-left: 10; /* Remove unnecessary padding */
+    padding-left: 13%; /* Add a buffer on the left side to counteract Masonry Centering Issue*/
 }
 .gallery-item img {
     width: 400px;
