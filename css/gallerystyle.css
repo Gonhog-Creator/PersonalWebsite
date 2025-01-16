@@ -10,9 +10,13 @@ body, h1, h2, p, ul, li, a {
 }
 
 body {
-    line-height: 1.6;
-    background-color: #949494;
-    color: #333;
+    display: flex; /* Enable Flexbox for the entire page */
+    justify-content: center; /* Center the gallery horizontally */
+    align-items: flex-start; /* Align the gallery at the top */
+    min-height: 100vh; /* Ensure the body takes the full height of the viewport */
+    margin: 0; /* Remove default body margins */
+    background-color: #949494; /* Background color for the page */
+    font-family: Inter, sans-serif;
 }
 
 /* Page Header */
@@ -119,17 +123,17 @@ body {
     display: flex; /* Masonry will still apply its layout */
     flex-wrap: wrap; /* Allow wrapping in case Masonry fails */
     gap: 10px; /* Consistent spacing between items */
-    max-width: 1800px; /* Optional: Set a max-width for the gallery */
+    max-width: 1200px; /* Optional: Set a max-width for the gallery */
     margin: 20px auto; /* Center with top and bottom margins */
 }
+
 .gallery-item img {
-    width: 400px;
-    max-width: 100%; /* Prevents overflow on smaller screens */
-    height: auto; /* Maintain aspect ratio */
-    object-fit: cover;  /*Ensure the image covers the allocated space */
+    width: 100%; /* Let Masonry control the size */
+    height: auto; /* Maintain the aspect ratio */
+    object-fit: cover; /* Ensure images fill their allocated space */
     border-radius: 10px; /* Add rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Optional: Add shadow */
-    box-sizing: border-box; /* Includes margins in width calculation */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+    box-sizing: border-box; /* Includes padding/border in size calculation */
 }
 
 /* Responsive Adjustments */
