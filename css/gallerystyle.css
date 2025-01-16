@@ -153,3 +153,13 @@ footer {
     box-sizing: border-box; /* Ensure padding doesn't affect layout */
     overflow: hidden; /* Prevent content from being squashed */
 }
+
+.gallery-wrapper {
+    border: 2px solid red;
+}
+.gallery {
+    border: 2px solid blue;
+}
+.gallery-item {
+    border: 2px solid green;
+}
