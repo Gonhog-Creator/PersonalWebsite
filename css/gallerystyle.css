@@ -117,7 +117,7 @@ body {
 .gallery-container {
     display: flex; /* Use flexbox for layout */
     justify-content: center; /* Center the gallery horizontally */
-    max-width: 100%; /* Prevent the gallery from overflowing */
+    max-width: 90%; /* Prevent the gallery from overflowing */
 }
 
 /* Gallery */
