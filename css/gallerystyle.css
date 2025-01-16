@@ -116,7 +116,11 @@ body {
 
 /* Gallery Container */
 .gallery {
- margin: 0 auto; /* Center the gallery inside the wrapper */
+    display: flex; /* Masonry will still apply its layout */
+    flex-wrap: wrap; /* Allow wrapping in case Masonry fails */
+    gap: 10px; /* Consistent spacing between items */
+    max-width: 1800px; /* Optional: Set a max-width for the gallery */
+    margin: 20px auto; /* Center with top and bottom margins */
 }
 .gallery-item img {
     width: 400px;
