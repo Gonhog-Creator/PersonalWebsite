@@ -122,6 +122,7 @@ body {
 /* Gallery */
 .gallery {
     max-width: 100%; /* Prevent the gallery from overflowing */
+    margin: 0 auto;
 }
 
 .gallery-item img {
