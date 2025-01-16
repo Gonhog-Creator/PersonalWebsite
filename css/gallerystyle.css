@@ -12,9 +12,6 @@ body, h1, h2, p, ul, li, a {
 body {
     display: flex; /* Enable Flexbox for the entire page */
     justify-content: center; /* Center the gallery horizontally */
-    align-items: flex-start; /* Align the gallery at the top */
-    min-height: 100vh; /* Ensure the body takes the full height of the viewport */
-    margin: 0; /* Remove default body margins */
     background-color: #949494; /* Background color for the page */
     font-family: Inter, sans-serif;
 }
