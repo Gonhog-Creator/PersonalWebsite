@@ -127,7 +127,7 @@ body {
 }
 
 .gallery-item img {
-    width: 400px;
+    width: calc(25% - 10px); /* Four columns with a 10px gap */
     max-width: 100%; /* Prevents overflow on smaller screens */
     height: auto; /* Maintain aspect ratio */
     object-fit: cover;  /*Ensure the image covers the allocated space */
