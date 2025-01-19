@@ -126,8 +126,12 @@ body {
     width: 90%;
 }
 
+.gallery-item {
+    width: calc(25% - 10px); /* Four columns with a 10px gap */
+}
+
 .gallery-item img {
-    width: calc(25%); /* Four columns with a 10px gap */
+    width: 100%;
     max-width: 100%; /* Prevents overflow on smaller screens */
     height: auto; /* Maintain aspect ratio */
     border-radius: 10px; /* Add rounded corners */
