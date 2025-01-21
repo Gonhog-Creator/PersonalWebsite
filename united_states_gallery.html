@@ -73,19 +73,17 @@
     document.addEventListener("DOMContentLoaded", function () {
         var elem = document.querySelector('.gallery');
     
-        // Initialize Masonry only after all images are loaded
+        // Initialize Masonry
         var msnry = new Masonry(elem, {
             itemSelector: '.gallery-item',
-            columnWidth: '.gallery-item',
-            percentPosition: true,
-            gutter: 10,
+            columnWidth: '.gallery-item', // Set column width based on gallery-item
+            percentPosition: true,       // Use percentage-based widths
+            gutter: 10,                  // Match gutter size to CSS
         });
     
-        // Ensure layout is applied after images are loaded
+        // Re-layout after images load
         imagesLoaded(elem, function () {
             msnry.layout();
-            // Re-center the gallery by setting margin to auto
-            elem.style.margin = "0 auto"; 
         });
     });
     </script>
