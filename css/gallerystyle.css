@@ -126,7 +126,9 @@ body {
     width: 90%;
 }
 
-
+.gallery-item {
+    width: 25%;
+}
 
 .gallery-item img {
     width: 100%;
