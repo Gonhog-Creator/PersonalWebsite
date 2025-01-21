@@ -100,44 +100,43 @@ body {
     font-size: 1.2rem;
 }
 
-/* Gallery Wrapper */
-.gallery-wrapper {
-    overflow: hidden; /* Prevent overlapping gallery items */
-    display: block; /* Ensure Masonry can manage the layout */
-    justify-content: center; /* Center horizontally */
-    align-items: flex-start; /* Align items to the top */
-    padding: 20px 0; /* Spacing above and below the gallery */
-    margin: 0 auto; /* Center the wrapper */
-    max-width: 1800px; /* Optional: Set a max width for the container */
-    box-sizing: border-box; /* Ensure padding is included in width calculation */
-    background-color: #d3d3d3;
-}
-
 /* Gallery Container */
 .gallery-container {
     display: flex; /* Use flexbox for layout */
     justify-content: center; /* Center the gallery horizontally */
 }
 
-/* Gallery */
-.gallery {
-    max-width: 100%; /* Prevent the gallery from overflowing */
+/* Updated Gallery Styles */
+.gallery-wrapper {
+    display: block; /* Ensure Masonry can manage the layout properly */
+    padding: 20px; /* Add some padding for better visuals */
     margin: 0 auto;
-    width: 90%;
+    max-width: 100%; /* Prevent overflow issues */
+    box-sizing: border-box; /* Include padding in calculations */
+    background-color: #d3d3d3;
+    border: 2px solid red; /* Debugging border */
+}
+
+.gallery {
+    margin: 0 auto; /* Center the gallery */
+    width: 100%; /* Take up the full width of the wrapper */
+    border: 2px solid blue; /* Debugging border */
 }
 
 .gallery-item {
-    width: 20%;
+    width: calc(20% - 10px); /* Adjust for gutter (space between items) */
+    margin-bottom: 10px; /* Space between rows */
+    border: 2px solid green; /* Debugging border */
 }
 
 .gallery-item img {
+    display: block; /* Remove any extra inline spacing */
     width: 100%;
-    max-width: 100%; /* Prevents overflow on smaller screens */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 10px; /* Add rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Optional: Add shadow */
-    box-sizing: border-box; /* Includes margins in width calculation */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
+
 
 /* Responsive Adjustments */
 @media (max-width: 900px) {
