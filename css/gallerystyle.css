@@ -132,15 +132,19 @@ body {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 900px) {
+@media (max-width: 1200px) {
     .gallery-item {
-        width: calc(50% - 10px);
+        width: calc(25% - 10px); /* 4 columns */
     }
 }
-
+@media (max-width: 900px) {
+    .gallery-item {
+        width: calc(50% - 10px); /* 2 columns */
+    }
+}
 @media (max-width: 600px) {
     .gallery-item {
-        width: 100%;
+        width: 100%; /* 1 column */
     }
 }
 
