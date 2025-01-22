@@ -1,5 +1,3 @@
-
-
 /* General Reset */
 body, h1, h2, p, ul, li, a {
     margin: 0;
@@ -85,7 +83,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent dark background */
+    background-color: rgba(0, 0, 0, 0.7);
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
@@ -102,52 +100,47 @@ body {
 
 /* Gallery Container */
 .gallery-container {
-    display: flex; /* Use flexbox for layout */
-    justify-content: center; /* Center the gallery horizontally */
+    display: flex;
+    justify-content: center;
 }
 
-/* Updated Gallery Styles */
 .gallery-wrapper {
-    display: block; /* Ensure Masonry can manage the layout properly */
-    padding: 20px; /* Add some padding for better visuals */
+    display: block;
+    padding: 20px;
     margin: 0 auto;
-    max-width: 100%; /* Prevent overflow issues */
-    box-sizing: border-box; /* Include padding in calculations */
+    max-width: 100%;
+    box-sizing: border-box;
     background-color: #d3d3d3;
-    border: 2px solid red; /* Debugging border */
 }
 
 .gallery {
-    margin: 0 auto; /* Center the gallery */
-    width: 100%; /* Take up the full width of the wrapper */
-    border: 2px solid blue; /* Debugging border */
+    margin: 0 auto;
+    width: 100%;
 }
 
 .gallery-item {
-    width: calc(20% - 10px); /* Adjust for gutter (space between items) */
-    margin-bottom: 10px; /* Space between rows */
-    border: 2px solid green; /* Debugging border */
+    width: calc(20% - 10px);
+    margin-bottom: 10px;
 }
 
 .gallery-item img {
-    display: block; /* Remove any extra inline spacing */
+    display: block;
     width: 100%;
     height: auto;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
 
-
 /* Responsive Adjustments */
 @media (max-width: 900px) {
     .gallery-item {
-        width: calc(50% - 10px); /* 2 items per row */
+        width: calc(50% - 10px);
     }
 }
 
 @media (max-width: 600px) {
     .gallery-item {
-        width: 100%; /* 1 item per row */
+        width: 100%;
     }
 }
 
@@ -160,16 +153,6 @@ footer {
     margin-top: 20px;
     position: relative;
     width: 100%;
-    box-sizing: border-box; /* Ensure padding doesn't affect layout */
-    overflow: hidden; /* Prevent content from being squashed */
-}
-
-.gallery-wrapper {
-    border: 2px solid red;
-}
-.gallery {
-    border: 2px solid blue;
-}
-.gallery-item {
-    border: 2px solid green;
+    box-sizing: border-box;
+    overflow: hidden;
 }
