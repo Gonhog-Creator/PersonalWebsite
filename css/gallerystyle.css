@@ -182,6 +182,23 @@ body {
     font-size: 1.2rem;
 }
 
+.hover-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease; /* Smooth fade-in effect */
+}
+
+.gallery-item:hover .hover-text {
+    opacity: 1; /* Make the text visible on hover */
+}
+
 /* Footer */
 footer {
     background-color: #333;
