@@ -220,7 +220,6 @@ body {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
-  display: flex; /* Flexbox for centering */
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
   padding: 20px; /* Padding around the modal */
@@ -270,8 +269,6 @@ body {
     opacity: 1;
   }
 }
-
-
 /* Footer */
 footer {
     background-color: #333;
@@ -434,41 +431,43 @@ footer {
             });
         });
     </script>
-
-  <div class="modal" id="photoModal">
+    
+<!-- Modal Structure -->
+<div class="modal">
   <span class="close">&times;</span>
-  <img class="modal-content" id="modalImage">
-  <div class="caption" id="modalCaption"></div>
+  <img class="modal-content" alt="Modal Image">
+  <div class="caption"></div>
+</div>
 
-      <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const modal = document.getElementById("photoModal");
-        const modalImage = document.getElementById("modalImage");
-        const modalCaption = document.getElementById("modalCaption");
-        const close = document.querySelector(".modal .close");
-    
-        // Open modal when a gallery image is clicked
-        document.querySelectorAll(".gallery-item img").forEach(img => {
-          img.addEventListener("click", () => {
-            modal.style.display = "block";
-            modalImage.src = img.dataset.full; // Use the full-resolution image
-            modalCaption.textContent = img.dataset.caption;
-          });
-        });
-    
-        // Close modal when "x" is clicked
-        close.addEventListener("click", () => {
-          modal.style.display = "none";
-        });
-    
-        // Close modal when clicking outside the image
-        modal.addEventListener("click", (e) => {
-          if (e.target === modal) {
-            modal.style.display = "none";
-          }
-        });
-      });
-    </script>
+// Modal functionality
+const modal = document.querySelector('.modal');
+const modalImage = document.querySelector('.modal-content');
+const caption = document.querySelector('.caption');
+const closeModal = document.querySelector('.close');
+
+// Ensure the modal is hidden initially
+modal.style.display = 'none';
+
+// Open modal when an image is clicked
+document.querySelectorAll('.gallery-item img').forEach(img => {
+  img.addEventListener('click', function () {
+    modal.style.display = 'flex'; // Flex to enable centering
+    modalImage.src = this.src;
+    caption.textContent = this.alt || 'Photo';
+  });
+});
+
+// Close modal on close button or background click
+closeModal.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+modal.addEventListener('click', e => {
+  if (e.target === modal) {
+    modal.style.display = 'none';
+  }
+});
+
 </div>
     
 </body>
