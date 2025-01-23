@@ -222,16 +222,15 @@ body {
   background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
-  padding: 20px; /* Padding around the modal */
-  box-sizing: border-box; /* Include padding in calculations */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .modal-content {
-  max-width: 90%; /* Limit the width of the image */
-  max-height: 90%; /* Limit the height of the image */
-  animation: zoomIn 0.3s; /* Smooth zoom-in effect */
-  border-radius: 10px; /* Add rounded corners to the image */
-  object-fit: contain; /* Ensure the image scales properly */
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  object-fit: contain;
 }
 
 .caption {
@@ -258,17 +257,7 @@ body {
   cursor: pointer;
 }
 
-/* Smooth zoom animation */
-@keyframes zoomIn {
-  from {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
+        
 /* Footer */
 footer {
     background-color: #333;
@@ -281,8 +270,6 @@ footer {
     box-sizing: border-box;
     overflow: hidden;
 }
-
-
     </style>
 </head>
 
@@ -319,7 +306,12 @@ footer {
     <div class="gallery-wrapper">
         <div class="gallery-container">
           <div class="gallery">
-              <div class="gallery-item"><img src="img/USA/usa (1).JPG" alt="Photo 1" data-full="img/USA/usa (1).JPG"> <div class="hover-text">Waterfall created by glaciermelt - Washington</div></div>
+              <div class="gallery-item">
+                  <div class="modal">
+                      <span class="close">&times;</span>
+                      <img class="modal-content" src="img/USA/usa (1).JPG" alt="Photo 1" data-full="img/USA/usa (1).JPG"> <div class="hover-text">Waterfall created by glaciermelt - Washington</div>
+                    </div> 
+              </div>
               <div class="gallery-item"><img src="img/USA/usa (3).JPG" alt="Photo 3"><div class="hover-text">Entrance to Reno - Nevada</div></div>
               <div class="gallery-item"><img src="img/USA/usa (4).JPG" alt="Photo 4"><div class="hover-text">Mojave Sand Dunes - California</div></div>
               <div class="gallery-item"><img src="img/USA/usa (5).JPG" alt="Photo 5"><div class="hover-text">Montezuma Castle - Arizona</div></div>
@@ -432,41 +424,39 @@ footer {
         });
     </script>
     
-<!-- Modal Structure -->
-<div class="modal">
-  <span class="close">&times;</span>
-  <img class="modal-content" alt="Modal Image">
-  <div class="caption"></div>
-</div>
-
-// Modal functionality
+// Get modal elements
 const modal = document.querySelector('.modal');
 const modalImage = document.querySelector('.modal-content');
 const caption = document.querySelector('.caption');
 const closeModal = document.querySelector('.close');
 
-// Ensure the modal is hidden initially
-modal.style.display = 'none';
+// Function to open modal
+function openModal(imageElement) {
+  modal.style.display = 'flex'; // Show modal
+  modalImage.src = imageElement.src; // Set modal image source
+  caption.textContent = imageElement.alt || 'Photo'; // Set caption from image alt text
+}
 
-// Open modal when an image is clicked
+// Function to close modal
+function hideModal() {
+  modal.style.display = 'none'; // Hide modal
+}
+
+// Attach event listeners to all gallery images
 document.querySelectorAll('.gallery-item img').forEach(img => {
-  img.addEventListener('click', function () {
-    modal.style.display = 'flex'; // Flex to enable centering
-    modalImage.src = this.src;
-    caption.textContent = this.alt || 'Photo';
-  });
+  img.addEventListener('click', () => openModal(img));
 });
 
-// Close modal on close button or background click
-closeModal.addEventListener('click', () => {
-  modal.style.display = 'none';
-});
+// Close modal when clicking the close button
+closeModal.addEventListener('click', hideModal);
 
-modal.addEventListener('click', e => {
-  if (e.target === modal) {
-    modal.style.display = 'none';
+// Close modal when clicking outside the image
+modal.addEventListener('click', event => {
+  if (event.target === modal) {
+    hideModal();
   }
 });
+
     
 </body>
 
