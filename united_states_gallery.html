@@ -210,52 +210,52 @@ body {
     opacity: 1; /* Make the text visible on hover */
 }
 
-/* Modal Styles */
-.modal {
-  display: none; /* Hidden by default */
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  padding: 20px;
-  box-sizing: border-box;
-}
+    /* Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-.modal-content {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 10px;
-  object-fit: contain;
-}
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px; /* Rounded corners */
+      object-fit: contain;
+    }
 
-.caption {
-  text-align: center;
-  color: white;
-  padding: 10px;
-  font-size: 1rem;
-}
+    .caption {
+      text-align: center;
+      color: white;
+      padding: 10px;
+      font-size: 1rem;
+    }
 
-.close {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  color: white;
-  font-size: 30px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 1001;
-}
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1001;
+    }
 
-.close:hover, .close:focus {
-  color: #ccc;
-  text-decoration: none;
-  cursor: pointer;
-}
+    .close:hover, .close:focus {
+      color: #ccc;
+      text-decoration: none;
+      cursor: pointer;
+    }
 
         
 /* Footer */
@@ -306,12 +306,7 @@ footer {
     <div class="gallery-wrapper">
         <div class="gallery-container">
           <div class="gallery">
-              <div class="gallery-item">
-                  <div class="modal">
-                      <span class="close">&times;</span>
-                      <img class="modal-content" src="img/USA/usa (1).JPG" alt="Photo 1" data-full="img/USA/usa (1).JPG"> <div class="hover-text">Waterfall created by glaciermelt - Washington</div>
-                    </div> 
-              </div>
+              <div class="gallery-item"><div class="modal"><span class="close">&times;</span><img class="modal-content" src="img/USA/usa (1).JPG" alt="Photo 1" data-full="img/USA/usa (1).JPG"> <div class="hover-text">Waterfall created by glaciermelt - Washington</div></div></div>
               <div class="gallery-item"><img src="img/USA/usa (3).JPG" alt="Photo 3"><div class="hover-text">Entrance to Reno - Nevada</div></div>
               <div class="gallery-item"><img src="img/USA/usa (4).JPG" alt="Photo 4"><div class="hover-text">Mojave Sand Dunes - California</div></div>
               <div class="gallery-item"><img src="img/USA/usa (5).JPG" alt="Photo 5"><div class="hover-text">Montezuma Castle - Arizona</div></div>
