@@ -230,15 +230,61 @@ footer {
   transition: filter 0.5s ease, transform 0.5s ease;
 }
 
-/* When fully loaded, remove the placeholder effect */
-.lazyload:loading {
-  filter: blur(10px);
-  transform: scale(1.05);
+/* Modal Styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
 }
 
-.lazyload:not(:loading) {
-  filter: blur(0);
-  transform: scale(1);
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 90%;
+  animation: zoomIn 0.3s; /* Smooth zoom-in effect */
+}
+
+.caption {
+  text-align: center;
+  color: white;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.close:hover, .close:focus {
+  color: #ccc;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Smooth zoom animation */
+@keyframes zoomIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
     </style>
 </head>
@@ -393,6 +439,36 @@ footer {
   <span class="close">&times;</span>
   <img class="modal-content" id="modalImage">
   <div class="caption" id="modalCaption"></div>
+
+      <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("photoModal");
+        const modalImage = document.getElementById("modalImage");
+        const modalCaption = document.getElementById("modalCaption");
+        const close = document.querySelector(".modal .close");
+    
+        // Open modal when a gallery image is clicked
+        document.querySelectorAll(".gallery-item img").forEach(img => {
+          img.addEventListener("click", () => {
+            modal.style.display = "block";
+            modalImage.src = img.dataset.full; // Use the full-resolution image
+            modalCaption.textContent = img.dataset.caption;
+          });
+        });
+    
+        // Close modal when "x" is clicked
+        close.addEventListener("click", () => {
+          modal.style.display = "none";
+        });
+    
+        // Close modal when clicking outside the image
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.style.display = "none";
+          }
+        });
+      });
+    </script>
 </div>
     
 </body>
