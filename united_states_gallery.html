@@ -1,12 +1,228 @@
-ra<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="css/gallerystyle.css">
+    /*<link rel="stylesheet" href="css/gallerystyle.css">*/
     <!-- Iconify Icons -->
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Photo Gallery</title>
+    <style>
+        /* General Reset */
+body, h1, h2, p, ul, li, a {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter, sans-serif;
+}
+
+body {
+    line-height: 1.6;
+    background-color: #949494;
+    color: #333;
+}
+
+/* Page Header */
+.page-header {
+    width: 100%;
+    background-color: #fff;
+    text-align: center;
+    padding: 20px 10px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-header .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header h1 {
+    font-family: 'Times New Roman', serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin: 10px 0;
+}
+
+.page-header hr {
+    border: none;
+    border-top: 1px solid #000;
+    width: 60%;
+    margin: 10px auto;
+}
+
+.page-header .navigation {
+    margin-top: 10px;
+}
+
+.page-header .navigation a {
+    text-decoration: none;
+    color: #333;
+    margin: 0 15px;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.page-header .navigation a:hover {
+    color: #555;
+}
+
+/* Main Section */
+.main-section {
+    position: relative;
+    height: 70vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.main-section img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.main-section .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.main-section h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.main-section p {
+    font-size: 1.2rem;
+}
+
+/* Gallery Container */
+.gallery-container {
+    display: flex;
+    justify-content: center;
+}
+
+.gallery-wrapper {
+    display: block;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 100%;
+    box-sizing: border-box;
+    background-color: #d3d3d3;
+}
+
+.gallery {
+    margin: 0 auto;
+    width: 100%;
+}
+
+.gallery-item {
+    width: calc(20% - 10px);
+    margin-bottom: 10px;
+}
+
+.gallery-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    .gallery-item {
+        width: calc(25% - 10px); /* 4 columns */
+    }
+}
+@media (max-width: 900px) {
+    .gallery-item {
+        width: calc(50% - 10px); /* 2 columns */
+    }
+}
+@media (max-width: 600px) {
+    .gallery-item {
+        width: 100%; /* 1 column */
+    }
+}
+
+.panorama-section {
+    position: relative;
+    width: 100%;
+    height: 50vh;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+.panorama-section img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+.panorama-section .content {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+}
+.panorama-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+.panorama-section p {
+    font-size: 1.2rem;
+}
+
+.hover-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease; /* Smooth fade-in effect */
+    border-radius: 10px;
+}
+
+.gallery-item:hover .hover-text {
+    opacity: 1; /* Make the text visible on hover */
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+    margin-top: 20px;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+    </style>
 </head>
 
 <body>
@@ -66,7 +282,7 @@ ra<!DOCTYPE html>
               <div class="gallery-item"><img src="img/USA/usa (23).JPG" alt="Photo 23"><div class="hover-text">Grand Canyon - Arizona</div></div>
               <div class="gallery-item"><img src="img/USA/usa (24).JPG" alt="Photo 24"><div class="hover-text">Flaming skies - Oregon</div></div>
               <div class="gallery-item"><img src="img/USA/usa (25).JPG" alt="Photo 25"><div class="hover-text">Standing in arches - Utah</div></div>
-              <div class="gallery-item"><img src="img/USA/usa (26).jpg" alt="Photo 26"><div class="hover-text">REPLACE</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (26).jpg" alt="Photo 26"><div class="hover-text">Rough Skinned Newt - Oregon</div></div>
               <div class="gallery-item"><img src="img/USA/usa (27).JPG" alt="Photo 27"><div class="hover-text">Standing in arches - Utah</div></div>
               <div class="gallery-item"><img src="img/USA/usa (28).JPG" alt="Photo 28"><div class="hover-text">Suguaro Cactus - Arizona</div></div>
               <div class="gallery-item"><img src="img/USA/usa (39).JPG" alt="Photo 29"><div class="hover-text">Bryce Canyon National Park - Arizona</div></div>
@@ -79,7 +295,7 @@ ra<!DOCTYPE html>
               <div class="gallery-item"><img src="img/USA/usa (36).jpg" alt="Photo 36"><div class="hover-text">Seattle - Washington</div></div>
               <div class="gallery-item"><img src="img/USA/usa (37).jpg" alt="Photo 37"><div class="hover-text">Rainbow clouds - Washington</div></div>
               <div class="gallery-item"><img src="img/USA/usa (38).JPG" alt="Photo 38"><div class="hover-text">Fern Canyon - Oregon</div></div>
-              <div class="gallery-item"><img src="img/USA/usa (39).JPG" alt="Photo 39"><div class="hover-text">REPLACE</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (39).JPG" alt="Photo 39"><div class="hover-text">Mount Ranier over Lost Lake - Oregon</div></div>
               <div class="gallery-item"><img src="img/USA/usa (40).jpg" alt="Photo 40"><div class="hover-text">Snowballs - Washington</div></div>
               <div class="gallery-item"><img src="img/USA/usa (41).JPG" alt="Photo 41"><div class="hover-text">Montezuma Well - Arizona</div></div>
               <div class="gallery-item"><img src="img/USA/usa (42).JPG" alt="Photo 42"><div class="hover-text">Backflip - Arizona</div></div>
@@ -89,6 +305,22 @@ ra<!DOCTYPE html>
               <div class="gallery-item"><img src="img/USA/usa (46).JPG" alt="Photo 46"><div class="hover-text">Interesting rock formation - Utah</div></div>
               <div class="gallery-item"><img src="img/USA/usa (47).JPG" alt="Photo 47"><div class="hover-text">Kalaloch Tree of Life - Oregon</div></div>
               <div class="gallery-item"><img src="img/USA/usa (48).JPG" alt="Photo 48"><div class="hover-text">Just hangin out</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (49).JPG" alt="Photo 49"><div class="hover-text">Dustdevil - Montana</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (50).JPG" alt="Photo 50"><div class="hover-text">River rapids - Montana</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (51).JPG" alt="Photo 51"><div class="hover-text">Waterfall - Montana</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (52).JPG" alt="Photo 52"><div class="hover-text">Lake MacDonald - Montana</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (53).JPG" alt="Photo 53"><div class="hover-text">Sunset - Montana</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (54).JPG" alt="Photo 54"><div class="hover-text">Mount Rushmore - South Dakota</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (55).JPG" alt="Photo 55"><div class="hover-text">Mount Rushmore - South Dakota</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (56).JPG" alt="Photo 56"><div class="hover-text">Sunset - South Dakota</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (57).JPG" alt="Photo 57"><div class="hover-text">Lichen on tree - Oregon</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (58).JPG" alt="Photo 58"><div class="hover-text">Mountain - Oregon</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (59).JPG" alt="Photo 59"><div class="hover-text">Lost Lake - Oregon</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (60).JPG" alt="Photo 60"><div class="hover-text">Mount Ranier with clouds - Oregon</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (61).JPG" alt="Photo 61"><div class="hover-text">Jeff relaxes - Oregon</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (62).JPG" alt="Photo 62"><div class="hover-text">Mount Ranier over Lost Lake - Oregon</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (63).JPG" alt="Photo 63"><div class="hover-text">Bird on tree - Oregon</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (64).JPG" alt="Photo 64"><div class="hover-text">Mountain Zen - Oregon</div></div>
           </div>
         </div>
     </div>
