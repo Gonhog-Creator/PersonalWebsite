@@ -276,7 +276,7 @@ footer {
     <div class="gallery-wrapper">
         <div class="gallery-container">
           <div class="gallery">
-              <div class="gallery-item"><a href="img/USA/usa (1).JPG" target="_blank"><img src="img/USA/usa (1).JPG" alt="Photo 1"></a><div class="hover-text">Waterfall created by glaciermelt - Washington</div></div>
+              <div class="gallery-item"><img src="img/USA/usa (1).JPG" alt="Photo 1" data-full="img/USA/usa (1).JPG"> <div class="hover-text">Waterfall created by glaciermelt - Washington</div></div>
               <div class="gallery-item"><img src="img/USA/usa (3).JPG" alt="Photo 3"><div class="hover-text">Entrance to Reno - Nevada</div></div>
               <div class="gallery-item"><img src="img/USA/usa (4).JPG" alt="Photo 4"><div class="hover-text">Mojave Sand Dunes - California</div></div>
               <div class="gallery-item"><img src="img/USA/usa (5).JPG" alt="Photo 5"><div class="hover-text">Montezuma Castle - Arizona</div></div>
@@ -354,7 +354,9 @@ footer {
         <a href="https://github.com" target="_blank"><i class="fab fa-github"></i> GitHub</a>
         <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
     </footer>
-        <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+    
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -386,6 +388,12 @@ footer {
             });
         });
     </script>
+
+  <div class="modal" id="photoModal">
+  <span class="close">&times;</span>
+  <img class="modal-content" id="modalImage">
+  <div class="caption" id="modalCaption"></div>
+</div>
     
 </body>
 
