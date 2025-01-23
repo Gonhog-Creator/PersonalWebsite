@@ -210,26 +210,6 @@ body {
     opacity: 1; /* Make the text visible on hover */
 }
 
-/* Footer */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 15px 20px;
-    margin-top: 20px;
-    position: relative;
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-}
-
-/* Placeholder styling */
-.lazyload {
-  filter: blur(10px); /* Adds blur */
-  transform: scale(1.05); /* Slightly scales the image */
-  transition: filter 0.5s ease, transform 0.5s ease;
-}
-
 /* Modal Styles */
 .modal {
   display: none; /* Hidden by default */
@@ -241,21 +221,18 @@ footer {
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
+  display: flex; /* Flexbox for centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  padding: 20px; /* Add padding around the content */
+  box-sizing: border-box; /* Include padding in calculations */
 }
 
 .modal-content {
-  margin: auto;
-  display: block;
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 90%; /* Limit the size of the image */
+  max-height: 90%; /* Ensure it doesn't overflow vertically */
   animation: zoomIn 0.3s; /* Smooth zoom-in effect */
-}
-
-.caption {
-  text-align: center;
-  color: white;
-  padding: 10px;
-  font-size: 1rem;
+  border-radius: 10px; /* Add rounded corners to the image */
 }
 
 .close {
@@ -286,6 +263,21 @@ footer {
     opacity: 1;
   }
 }
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+    margin-top: 20px;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+
     </style>
 </head>
 
