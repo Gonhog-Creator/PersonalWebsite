@@ -219,20 +219,27 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
   background-color: rgba(0, 0, 0, 0.8); /* Dimmed background */
   display: flex; /* Flexbox for centering */
   justify-content: center; /* Center horizontally */
   align-items: center; /* Center vertically */
-  padding: 20px; /* Add padding around the content */
+  padding: 20px; /* Padding around the modal */
   box-sizing: border-box; /* Include padding in calculations */
 }
 
 .modal-content {
-  max-width: 90%; /* Limit the size of the image */
-  max-height: 90%; /* Ensure it doesn't overflow vertically */
+  max-width: 90%; /* Limit the width of the image */
+  max-height: 90%; /* Limit the height of the image */
   animation: zoomIn 0.3s; /* Smooth zoom-in effect */
   border-radius: 10px; /* Add rounded corners to the image */
+  object-fit: contain; /* Ensure the image scales properly */
+}
+
+.caption {
+  text-align: center;
+  color: white;
+  padding: 10px;
+  font-size: 1rem;
 }
 
 .close {
@@ -263,6 +270,7 @@ body {
     opacity: 1;
   }
 }
+
 
 /* Footer */
 footer {
