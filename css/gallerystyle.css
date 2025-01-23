@@ -193,6 +193,7 @@ body {
     padding: 10px;
     opacity: 0;
     transition: opacity 0.3s ease; /* Smooth fade-in effect */
+    border-radius: 10px;
 }
 
 .gallery-item:hover .hover-text {
