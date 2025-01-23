@@ -222,6 +222,24 @@ footer {
     box-sizing: border-box;
     overflow: hidden;
 }
+
+/* Placeholder styling */
+.lazyload {
+  filter: blur(10px); /* Adds blur */
+  transform: scale(1.05); /* Slightly scales the image */
+  transition: filter 0.5s ease, transform 0.5s ease;
+}
+
+/* When fully loaded, remove the placeholder effect */
+.lazyload:loading {
+  filter: blur(10px);
+  transform: scale(1.05);
+}
+
+.lazyload:not(:loading) {
+  filter: blur(0);
+  transform: scale(1);
+}
     </style>
 </head>
 
@@ -258,7 +276,7 @@ footer {
     <div class="gallery-wrapper">
         <div class="gallery-container">
           <div class="gallery">
-              <div class="gallery-item"><img src="img/USA/usa (1).JPG" alt="Photo 1"><div class="hover-text">Waterfall created by glaciermelt - Washington</div></div>
+              <div class="gallery-item"><a href="img/USA/usa (1).JPG" target="_blank"><img src="img/USA/usa (1).JPG alt="Photo 1" class="lazyload"></a><div class="hover-text">Waterfall created by glaciermelt - Washington</div></div>
               <div class="gallery-item"><img src="img/USA/usa (3).JPG" alt="Photo 3"><div class="hover-text">Entrance to Reno - Nevada</div></div>
               <div class="gallery-item"><img src="img/USA/usa (4).JPG" alt="Photo 4"><div class="hover-text">Mojave Sand Dunes - California</div></div>
               <div class="gallery-item"><img src="img/USA/usa (5).JPG" alt="Photo 5"><div class="hover-text">Montezuma Castle - Arizona</div></div>
