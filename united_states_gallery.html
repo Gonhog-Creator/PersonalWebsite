@@ -424,38 +424,40 @@ footer {
         });
     </script>
     
-// Get modal elements
-const modal = document.querySelector('.modal');
-const modalImage = document.querySelector('.modal-content');
-const caption = document.querySelector('.caption');
-const closeModal = document.querySelector('.close');
+  <script>
+    // Get modal elements
+    const modal = document.querySelector('.modal');
+    const modalImage = document.querySelector('.modal-content');
+    const caption = document.querySelector('.caption');
+    const closeModal = document.querySelector('.close');
 
-// Function to open modal
-function openModal(imageElement) {
-  modal.style.display = 'flex'; // Show modal
-  modalImage.src = imageElement.src; // Set modal image source
-  caption.textContent = imageElement.alt || 'Photo'; // Set caption from image alt text
-}
+    // Function to open modal
+    function openModal(imageElement) {
+      modal.style.display = 'flex'; // Show modal
+      modalImage.src = imageElement.src; // Set modal image source
+      caption.textContent = imageElement.alt || 'Photo'; // Set caption from image alt text
+    }
 
-// Function to close modal
-function hideModal() {
-  modal.style.display = 'none'; // Hide modal
-}
+    // Function to close modal
+    function hideModal() {
+      modal.style.display = 'none'; // Hide modal
+    }
 
-// Attach event listeners to all gallery images
-document.querySelectorAll('.gallery-item img').forEach(img => {
-  img.addEventListener('click', () => openModal(img));
-});
+    // Attach event listeners to all gallery images
+    document.querySelectorAll('.gallery-item img').forEach(img => {
+      img.addEventListener('click', () => openModal(img));
+    });
 
-// Close modal when clicking the close button
-closeModal.addEventListener('click', hideModal);
+    // Close modal when clicking the close button
+    closeModal.addEventListener('click', hideModal);
 
-// Close modal when clicking outside the image
-modal.addEventListener('click', event => {
-  if (event.target === modal) {
-    hideModal();
-  }
-});
+    // Close modal when clicking outside the image
+    modal.addEventListener('click', event => {
+      if (event.target === modal) {
+        hideModal();
+      }
+    });
+  </script>
 
     
 </body>
