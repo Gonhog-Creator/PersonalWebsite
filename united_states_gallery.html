@@ -240,6 +240,29 @@ body {
     .modal .close:hover {
       color: red;
     }
+
+    /* Styling for the Panoramas button */
+    .panorama-btn {
+        display: inline-block;
+        background-color: #4CAF50; /* Green color for the button */
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-size: 18px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    /* Hover effect for the button */
+    .panorama-btn:hover {
+        background-color: #45a049; /* Slightly darker green on hover */
+        transform: scale(1.05); /* Slight zoom effect on hover */
+    }
+    
+    /* Optional: Add a focus state for accessibility */
+    .panorama-btn:focus {
+        outline: 2px solid #ff9800; /* Orange outline on focus */
+    }
         
 /* Footer */
 footer {
@@ -284,7 +307,7 @@ footer {
             <h1>United States of America</h1>
             <p>35 states, 20 national parks, 11,200 miles. Through two road trips through the western United States, I have seen a large swath of this great country and enjoyed every second of it.</p>
         </div>
-        <a href="#panorama" class="link"><i class="fas fa-tools"></i>Panoramas</a></a>
+        <a href="#panoramas" class="link panorama-btn"><i class="fas fa-tools"></i> Panoramas</a>
     </div>
 
     <div class="gallery-wrapper">
