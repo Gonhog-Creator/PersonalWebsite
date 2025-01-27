@@ -415,38 +415,33 @@ footer {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Initialize Masonry first without any layout
+    // Initialize Masonry first, but do not trigger layout immediately
     const masonry = new Masonry('.gallery', {
         itemSelector: '.gallery-item',
         columnWidth: '.gallery-item',
         percentPosition: true,
-        // Disable initial layout calculation
-        isInitLayout: false
+        isInitLayout: false  // Disable layout on init
     });
 
-    // Initialize lazysizes to automatically handle lazy loading of images
+    // Initialize lazysizes for automatic lazy loading
     lazysizes.init();
 
-    // Wait for all images to load using imagesLoaded
-    imagesLoaded('.gallery', function () {
-        // Recalculate Masonry layout once all images are loaded
-        masonry.layout();  // Recalculate the layout once images are loaded
+    // Use imagesLoaded to ensure all images are loaded before triggering Masonry layout
+    imagesLoaded('.gallery', { background: true }, function () {
+        // Recalculate layout after all images are loaded
+        masonry.layout();
     });
 
-    // Ensure that images will transition from blurred to sharp when they are loaded
+    // Ensure images transition from blurred to sharp after being loaded
     const lazyImages = document.querySelectorAll('img.lazyload');
     lazyImages.forEach((img) => {
         img.addEventListener('load', () => {
-            // Ensure lazyloaded class is applied after image is fully loaded
+            // Add lazyloaded class after image loads
             img.classList.add('lazyloaded');
-            // Trigger a reflow of the Masonry layout when each image is loaded
-            masonry.layout();
         });
     });
 });
 </script>
-
-
 
 
 
