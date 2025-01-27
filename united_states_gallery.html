@@ -409,36 +409,37 @@ footer {
     </footer>
 
     
-    <script src="https://cdn.jsdelivr.net/npm/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
-    <script src="https://unpkg.com/lazysizes@5.3.2/lazysizes.min.js"></script>
-    
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Initialize lazy loading for all images with the 'lazyload' class
-        const lazyImages = document.querySelectorAll('img.lazyload');
-    
-        lazyImages.forEach((img) => {
-            img.addEventListener('load', () => {
-                img.classList.add('lazyloaded');  // Add 'lazyloaded' class to remove blur
-            });
-        });
-    
-        // Initialize lazysizes to automatically handle lazy loading
-        lazysizes.init();
-    
-        // Initialize Masonry layout after images have loaded
-        const masonry = new Masonry('.gallery', {
-            itemSelector: '.gallery-item',
-            columnWidth: '.gallery-item',
-            percentPosition: true
-        });
-    
-        // Wait for all images to load and trigger Masonry layout reflow
-        imagesLoaded('.gallery', { background: true }, function () {
-            masonry.layout();
+<script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/imagesloaded@4.1.4/imagesloaded.pkgd.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Initialize Masonry layout
+    const masonry = new Masonry('.gallery', {
+        itemSelector: '.gallery-item',
+        columnWidth: '.gallery-item',
+        percentPosition: true
+    });
+
+    // Initialize lazysizes to automatically handle lazy loading of images
+    lazysizes.init();
+
+    // Wait for all images to load and trigger Masonry layout reflow
+    imagesLoaded('.gallery', function () {
+        masonry.layout();  // Recalculate the layout once images are loaded
+    });
+
+    // Ensure that images will transition from blurred to sharp when they are loaded
+    const lazyImages = document.querySelectorAll('img.lazyload');
+    lazyImages.forEach((img) => {
+        img.addEventListener('load', () => {
+            // Ensure lazyloaded class is applied after image is fully loaded
+            img.classList.add('lazyloaded');
         });
     });
-    </script>
+});
+</script>
+
 
 
     <script>
