@@ -414,18 +414,19 @@ footer {
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // Initialize Masonry layout
-    const masonry = new Masonry('.gallery', {
-        itemSelector: '.gallery-item',
-        columnWidth: '.gallery-item',
-        percentPosition: true
-    });
-
     // Initialize lazysizes to automatically handle lazy loading of images
     lazysizes.init();
 
-    // Wait for all images to load and trigger Masonry layout reflow
+    // Wait for all images to load using imagesLoaded
     imagesLoaded('.gallery', function () {
+        // Initialize Masonry layout once all images are loaded
+        const masonry = new Masonry('.gallery', {
+            itemSelector: '.gallery-item',
+            columnWidth: '.gallery-item',
+            percentPosition: true
+        });
+        
+        // Recalculate Masonry layout
         masonry.layout();  // Recalculate the layout once images are loaded
     });
 
@@ -439,6 +440,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+
 
 
 
