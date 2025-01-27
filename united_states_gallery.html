@@ -138,14 +138,14 @@ body {
     width: 100%;
     height: auto;
     border-radius: 10px;
-    filter: blur(5px);
+    filter: blur(10px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
     transition: filter 0.3s ease-in-out; /* Smooth transition when images load */
 }
 
 /* Once images are fully loaded, remove the blur */
 .gallery img.lazyloaded {
-    filter: blur(0);
+    filter: blur(0);  /* Clear blur when image is loaded */
 }
 
 /* Responsive Adjustments */
@@ -414,28 +414,32 @@ footer {
     
     <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Initialize Masonry layout (assuming you have Masonry loaded in your project)
+        // Initialize lazy loading for all images with the 'lazyload' class
+        const lazyImages = document.querySelectorAll('img.lazyload');
+    
+        lazyImages.forEach((img) => {
+            img.addEventListener('load', () => {
+                img.classList.add('lazyloaded');  // Add 'lazyloaded' class to remove blur
+            });
+        });
+    
+        // Initialize lazysizes to automatically handle lazy loading
+        lazysizes.init();
+    
+        // Initialize Masonry layout after images have loaded
         const masonry = new Masonry('.gallery', {
             itemSelector: '.gallery-item',
             columnWidth: '.gallery-item',
             percentPosition: true
         });
     
-        // Initialize lazy loading for all images with class 'lazyload'
-        const lazyImages = document.querySelectorAll('img.lazyload');
-    
-        // Trigger lazy loading when images are loaded
-        lazyImages.forEach((img) => {
-            img.addEventListener('load', () => {
-                img.classList.add('lazyloaded');  // Add lazyloaded class to remove blur
-                masonry.layout();  // Recalculate Masonry layout after image is loaded
-            });
+        // Wait for all images to load and trigger Masonry layout reflow
+        imagesLoaded('.gallery', { background: true }, function () {
+            masonry.layout();
         });
-    
-        // Set up lazy loading with lazysizes (this automatically handles the lazy loading)
-        lazySizes.init();
     });
     </script>
+
 
     <script>
         // Add hover functionality
