@@ -419,14 +419,11 @@ footer {
         </div>
         <section class="panorama-section">
             <a href="img/USA/panorama-USA-1.JPG" data-pswp-width="4000" data-pswp-height="2000">
-                <img src="img/USA/panorama-USA-1.JPG" class="lazyload" alt="Panorama 1">
+                <img src="img/USA/panorama-USA-1.JPG" alt="Panorama 1" class="lazyload">
             </a>
             <div class="hover-text">Standing over the big bend - Arizona</div>
         </section>
-        <section class="panorama-section"><img src="img/USA/panorama-USA-2.JPG" alt="Panorama 2" class="lazyload"><div class="hover-text">Mountain lake - Oregon</div></section>
-        <section class="panorama-section"><img src="img/USA/panorama-USA-3.JPG" alt="Panorama 3" class="lazyload"><div class="hover-text">Arizona wasteland</div></section>
-        <section class="panorama-section"><img src="img/USA/panorama-USA-4.JPG" alt="Panorama 4" class="lazyload"><div class="hover-text">Natural Bridges - Oragon</div></section>
-        <section class="panorama-section"><img src="img/USA/panorama-USA-5.JPG" alt="Panorama 5" class="lazyload"><div class="hover-text">Sunset over Arizona Wasteland</div></section>
+        <!-- Add other panoramas here with the same structure -->
     </section>
     
     <!-- Footer -->
@@ -506,14 +503,15 @@ footer {
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const lightbox = new PhotoSwipeLightbox({
-        gallery: '.panoramas', // Target the panorama section
-        children: 'a', // Select <a> elements inside the gallery
-        pswpModule: PhotoSwipe
+        gallery: '.panoramas',  // Target the container of panorama images
+        children: 'a', // Specify that the images inside <a> should trigger the gallery
+        pswpModule: PhotoSwipe // Initialize PhotoSwipe with this module
     });
 
-    lightbox.init();
+    lightbox.init(); // Initialize PhotoSwipe
 });
 </script>
+
     
 </body>
 
