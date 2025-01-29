@@ -23,12 +23,24 @@
             const lightbox = new PhotoSwipeLightbox({
                 gallery: '.panoramas',  // Target the container of panorama images
                 children: 'a', // Specify that the images inside <a> should trigger the gallery
-                pswpModule: PhotoSwipe // Initialize PhotoSwipe with this module
+                pswpModule: PhotoSwipe, // Initialize PhotoSwipe with this module
                 closeOnScroll: false,  // Keep the modal open on scroll
-                panToFit: true, // Allow panning (click and drag) to move the image    
+                pinchToClose: false,  // Disable pinch-to-close gesture
+                draggable: true, // Enable dragging of images
             });
 
             lightbox.init(); // Initialize PhotoSwipe
+
+            // Enable pan-to-drag functionality
+            const pswp = lightbox.pswp; // Get PhotoSwipe instance
+            pswp.options.getThumbBoundsFn = function(index) {
+                const img = pswp.items[index].img;
+                const rect = img.getBoundingClientRect();
+                return { x: rect.left, y: rect.top, w: rect.width };
+            };
+            pswp.listen('zoom gesture', function() {
+                pswp.ui.update();
+            });
         });
     </script>
 </body>
