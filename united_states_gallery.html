@@ -2,10 +2,6 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="css/gallerystyle.css">
-    <!-- PhotoSwipe CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.3.2/dist/photoswipe.css">
-    <!-- PhotoSwipe JS -->
-    <script src="https://cdn.jsdelivr.net/npm/photoswipe@5.3.2/dist/photoswipe.umd.min.js"></script>
     <!-- Iconify Icons -->
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <meta charset="UTF-8">
@@ -419,15 +415,13 @@ footer {
             <h1>Panoramas</h1>
             <p>For when normal resolutions just aren't enough.</p>
         </div>
-        <section class="panorama-section">
-            <a href="img/USA/panorama-USA-1.JPG" data-pswp-width="4000" data-pswp-height="2000">
-                <img src="img/USA/panorama-USA-1.JPG" alt="Panorama 1" class="lazyload">
-            </a>
-            <div class="hover-text">Standing over the big bend - Arizona</div>
-        </section>
-        <!-- Add other panoramas here with the same structure -->
+        <section class="panorama-section"><img src="img/USA/panorama-USA-1.JPG" alt="Panorama 1" class="lazyload"><div class="hover-text">Standing over the big bend - Arizona</div></div></section>
+        <section class="panorama-section"><img src="img/USA/panorama-USA-2.JPG" alt="Panorama 2" class="lazyload"><div class="hover-text">Mountain lake - Oregon</div></div></section>
+        <section class="panorama-section"><img src="img/USA/panorama-USA-3.JPG" alt="Panorama 3" class="lazyload"><div class="hover-text">Arizona wasteland</div></div></section>
+        <section class="panorama-section"><img src="img/USA/panorama-USA-4.JPG" alt="Panorama 4" class="lazyload"><div class="hover-text">Natural Bridges - Oragon</div></div></section>
+        <section class="panorama-section"><img src="img/USA/panorama-USA-5.JPG" alt="Panorama 5" class="lazyload"><div class="hover-text">Sunset over Arizona Wasteland</div></div></section>
     </section>
-    
+
     <!-- Footer -->
     <footer>
         <p>&copy; 2025 Your Name. All rights reserved.</p>
@@ -499,31 +493,6 @@ footer {
     }
   });
 </script>
-
-<!-- PhotoSwipe JS -->
-<script src="https://cdn.jsdelivr.net/npm/photoswipe@5.3.2/dist/photoswipe.umd.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const lightbox = new PhotoSwipeLightbox({
-        gallery: '.panoramas',  // Target the container of panorama images
-        children: 'a', // Specify that the images inside <a> should trigger the gallery
-        pswpModule: PhotoSwipe // Initialize PhotoSwipe with this module
-    });
-
-    lightbox.init(); // Initialize PhotoSwipe
-
-    // If needed, add a listener for opening the gallery for debugging
-    lightbox.on('opening', () => {
-        console.log('PhotoSwipe is opening');
-    });
-
-    // If needed, add a listener for closing the gallery for debugging
-    lightbox.on('closed', () => {
-        console.log('PhotoSwipe is closed');
-    });
-});
-</script>
-
 
     
 </body>
