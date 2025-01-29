@@ -20,6 +20,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Initialize the lightbox after the page has loaded
             const lightbox = new PhotoSwipeLightbox({
                 gallery: '.panoramas',  // Target the container of panorama images
                 children: 'a', // Specify that the images inside <a> should trigger the gallery
@@ -29,18 +30,21 @@
                 draggable: true, // Enable dragging of images
             });
 
-            lightbox.init(); // Initialize PhotoSwipe
-
-            // Enable pan-to-drag functionality
-            const pswp = lightbox.pswp; // Get PhotoSwipe instance
-            pswp.options.getThumbBoundsFn = function(index) {
-                const img = pswp.items[index].img;
-                const rect = img.getBoundingClientRect();
-                return { x: rect.left, y: rect.top, w: rect.width };
-            };
-            pswp.listen('zoom gesture', function() {
-                pswp.ui.update();
+            // Listen for when the gallery is opened
+            lightbox.on('opening', function() {
+                // Allow dragging functionality once PhotoSwipe is opened
+                const pswp = lightbox.pswp;
+                pswp.options.getThumbBoundsFn = function(index) {
+                    const img = pswp.items[index].img;
+                    const rect = img.getBoundingClientRect();
+                    return { x: rect.left, y: rect.top, w: rect.width };
+                };
+                pswp.listen('zoom gesture', function() {
+                    pswp.ui.update();
+                });
             });
+
+            lightbox.init(); // Initialize PhotoSwipe
         });
     </script>
 </body>
