@@ -18,16 +18,34 @@
     <!-- PhotoSwipe JS -->
     <script src="https://cdn.jsdelivr.net/npm/photoswipe@5.3.2/dist/photoswipe.umd.min.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const lightbox = new PhotoSwipeLightbox({
-                gallery: '.panoramas',  // Target the container of panorama images
-                children: 'a', // Specify that the images inside <a> should trigger the gallery
-                pswpModule: PhotoSwipe // Initialize PhotoSwipe with this module
+    document.addEventListener("DOMContentLoaded", function () {
+        const galleryElements = document.querySelectorAll('.panoramas a');
+    
+        // Create an array of items for PhotoSwipe
+        const items = Array.from(galleryElements).map((el) => ({
+            src: el.getAttribute('href'),
+            w: parseInt(el.getAttribute('data-pswp-width')),
+            h: parseInt(el.getAttribute('data-pswp-height'))
+        }));
+    
+        // Initialize PhotoSwipe when an image is clicked
+        galleryElements.forEach((el, index) => {
+            el.addEventListener('click', function (event) {
+                event.preventDefault();
+    
+                const pswp = new PhotoSwipe({
+                    dataSource: items,
+                    index: index,
+                    // Enable zoom and pan
+                    panToFit: true,
+                    modal: false,
+                    closeOnScroll: false
+                });
+    
+                pswp.init();
             });
-
-            lightbox.init(); // Initialize PhotoSwipe
         });
-    </script>
+    });
+
 </body>
 </html>
