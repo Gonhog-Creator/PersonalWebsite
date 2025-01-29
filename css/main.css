@@ -1239,15 +1239,13 @@ header .seperator-skew svg .fill-white {
 }
 
 .gallery-grid {
-    display: flex;
-    flex-wrap: wrap; /* Ensures images wrap if there's not enough space */
-    gap: 10px; /* Adds spacing between images */
-    justify-content: center; /* Centers the images */
-    align-items: center;
+  display: flex;
+  gap: 10px; /* Space between images */
+  justify-content: center; /* Center images horizontally */
+  flex-wrap: nowrap; /* Prevent wrapping */
 }
 
 .gallery-grid img {
-    width: 48%; /* Ensures the images take up half the width each */
-    height: auto; /* Maintains aspect ratio */
-    object-fit: cover; /* Ensures images are properly sized */
+  max-width: 50%; /* Make sure images don't exceed 50% of the container width */
+  height: auto; /* Maintain aspect ratio */
 }
