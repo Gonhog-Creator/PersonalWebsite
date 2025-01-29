@@ -1237,3 +1237,17 @@ header .seperator-skew svg .fill-white {
 .btn-blue:hover {
   background-color: #0056b3;
 }
+
+.gallery-grid {
+    display: flex;
+    flex-wrap: wrap; /* Ensures images wrap if there's not enough space */
+    gap: 10px; /* Adds spacing between images */
+    justify-content: center; /* Centers the images */
+    align-items: center;
+}
+
+.gallery-grid img {
+    width: 48%; /* Ensures the images take up half the width each */
+    height: auto; /* Maintains aspect ratio */
+    object-fit: cover; /* Ensures images are properly sized */
+}
