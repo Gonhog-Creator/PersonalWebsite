@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Details</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    /* Container for the entire project section */
+    .project-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    /* Column for images on the sides */
+    .project-column {
+      flex: 1;
+      padding: 10px;
+    }
+    .project-column img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    /* Text column in the center */
+    .project-text {
+      flex: 2;
+      padding: 20px;
+      text-align: left;
+    }
+    .project-text h1 {
+      margin-top: 0;
+      font-size: 2em;
+      color: #007acc;
+    }
+    .project-text p {
+      line-height: 1.6;
+      margin-bottom: 1em;
+    }
+    /* Responsive adjustments for smaller screens */
+    @media (max-width: 768px) {
+      .project-container {
+        flex-direction: column;
+        text-align: center;
+      }
+      .project-text {
+        margin: 20px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="project-container">
+    <!-- Left Image Column -->
+    <div class="project-column">
+      <img src="https://via.placeholder.com/300x400" alt="Project Image Left">
+    </div>
+    <!-- Text Column -->
+    <div class="project-text">
+      <h1>Project Title</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vestibulum nec sapien nec dignissim. Vivamus fringilla consequat nunc, a efficitur mi scelerisque id. Nullam id purus nec massa aliquet lacinia. Integer lacinia, ex id sodales fermentum, neque mi sollicitudin enim, vel porttitor quam dolor et libero.</p>
+      <p>Here you can describe your project in detail—what challenges were faced, what solutions were implemented, and what the final outcome was. Donec ultricies lorem ac libero vehicula tempus.</p>
+    </div>
+    <!-- Right Image Column -->
+    <div class="project-column">
+      <img src="https://via.placeholder.com/300x400" alt="Project Image Right">
+    </div>
+  </div>
+
+</body>
+</html>

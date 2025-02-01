@@ -7,5 +7,3 @@ My personal portfolio site.
 - HTML
 - SCSS
 - JavaScript
-
-
