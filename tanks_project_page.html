@@ -104,6 +104,39 @@
     .page-header .navigation a:hover {
         color: #555;
     }
+
+    /* Gallery Container */
+    .gallery-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .gallery-wrapper {
+        display: block;
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 100%;
+        box-sizing: border-box;
+        background-color: #d3d3d3;
+    }
+
+    .gallery {
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .gallery-item {
+        width: calc(20% - 10px);
+        margin-bottom: 10px;
+    }
+
+    .gallery-item img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    }
   </style>
   <header class="page-header">
       <div class="header-content">
@@ -178,6 +211,16 @@
       <img src="img/Aquariums/aquascape (6).JPG" alt="Photo 3">
     </div>
   </div>
+
+  <div class="gallery-wrapper">
+      <div class="gallery-container">
+        <div class="gallery">
+            <div class="gallery-item"><img src="img/Woodworking/woodworking (1).jpg" alt="Photo 1" class="lazyload"><div class="hover-text">Test</div></div>
+        </div>
+      </div>
+  </div>
+
+
 
 </body>
 </html>
