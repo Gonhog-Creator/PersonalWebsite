@@ -25,20 +25,51 @@
     a:hover {
       text-decoration: underline;
     }
-    /* Header */
-    header {
-      text-align: center;
-      margin-bottom: 40px;
+    /* Page Header */
+    .page-header {
+        width: 100%;
+        background-color: #fff;
+        text-align: center;
+        padding: 20px 10px;
+        border-bottom: 1px solid #ddd;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    header h1 {
-      font-size: 3rem;
-      margin-bottom: 10px;
-      color: #007acc;
+
+    .page-header .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
     }
-    header p {
-      font-size: 1.2rem;
-      color: #666;
+
+    .page-header h1 {
+        font-family: 'Times New Roman', serif;
+        font-size: 2.5rem;
+        font-weight: 400;
+        margin: 10px 0;
     }
+
+    .page-header hr {
+        border: none;
+        border-top: 1px solid #000;
+        width: 60%;
+        margin: 10px auto;
+    }
+
+    .page-header .navigation {
+        margin-top: 10px;
+    }
+
+    .page-header .navigation a {
+        text-decoration: none;
+        color: #333;
+        margin: 0 15px;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+    }
+
+    .page-header .navigation a:hover {
+        color: #555;
+    }
+
     /* About Section */
     .about-container {
       max-width: 800px;
