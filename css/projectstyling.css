@@ -1,0 +1,181 @@
+/* General Reset */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+}
+/* Container for the entire project section */
+.project-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+/* Column for images on the sides */
+.project-column {
+  flex: 1;
+  padding: 10px;
+}
+.project-column img {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 10px; /* Increased rounding */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+/* Text column in the center */
+.project-text {
+  flex: 2;
+  padding: 20px;
+  text-align: left;
+}
+.project-text h1 {
+  margin-top: 0;
+  font-size: 2em;
+  color: #007acc;
+}
+.project-text p {
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .project-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .project-text {
+    margin: 20px 0;
+  }
+}
+/* Page Header */
+.page-header {
+    width: 100%;
+    background-color: #fff;
+    text-align: center;
+    padding: 20px 10px;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.page-header .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.page-header h1 {
+    font-family: 'Times New Roman', serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin: 10px 0;
+}
+
+.page-header hr {
+    border: none;
+    border-top: 1px solid #000;
+    width: 60%;
+    margin: 10px auto;
+}
+
+.page-header .navigation {
+    margin-top: 10px;
+}
+
+.page-header .navigation a {
+    text-decoration: none;
+    color: #333;
+    margin: 0 15px;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.page-header .navigation a:hover {
+    color: #555;
+}
+
+/* Gallery Container */
+.gallery-container {
+    display: flex;
+    justify-content: center;
+}
+
+.gallery-wrapper {
+    display: block;
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 100%;
+    box-sizing: border-box;
+    background-color: #d3d3d3;
+}
+
+.gallery {
+    margin: 0 auto;
+    width: 100%;
+}
+
+.gallery-item {
+    width: calc(20% - 10px);
+    margin-bottom: 10px;
+}
+
+.gallery-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.hover-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    color: white;
+    text-align: center;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease; /* Smooth fade-in effect */
+    border-radius: 10px;
+}
+
+.gallery-item:hover .hover-text {
+    opacity: 1; /* Make the text visible on hover */
+}
+
+/* Video player styling */
+.project-video {
+  margin-top: 20px;
+  text-align: center; /* Center the video container */
+}
+.project-video video {
+  width: 100%;
+  max-width: 600px; /* Maximum width so the video isn't massive */
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  display: block;
+  margin: 0 auto; /* Center the video */
+}
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .project-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .project-text {
+    margin: 20px 0;
+  }
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
