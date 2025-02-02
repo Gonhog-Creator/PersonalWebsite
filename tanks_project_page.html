@@ -60,16 +60,80 @@
         margin: 20px 0;
       }
     }
+    /* Page Header */
+    .page-header {
+        width: 100%;
+        background-color: #fff;
+        text-align: center;
+        padding: 20px 10px;
+        border-bottom: 1px solid #ddd;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-header .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-header h1 {
+        font-family: 'Times New Roman', serif;
+        font-size: 2.5rem;
+        font-weight: 400;
+        margin: 10px 0;
+    }
+
+    .page-header hr {
+        border: none;
+        border-top: 1px solid #000;
+        width: 60%;
+        margin: 10px auto;
+    }
+
+    .page-header .navigation {
+        margin-top: 10px;
+    }
+
+    .page-header .navigation a {
+        text-decoration: none;
+        color: #333;
+        margin: 0 15px;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+    }
+
+    .page-header .navigation a:hover {
+        color: #555;
+    }
   </style>
+  <header class="page-header">
+      <div class="header-content">
+          <h1>JOSÉ MARÍA BARBEITO</h1>
+          <hr>
+          <nav class="navigation">
+              <a href="index.html">Home</a>
+              <a href="index.html#projects">Projects</a>
+              <a href="index.html#photography">Photography</a>
+              <a href="about.html">About Me</a>
+          </nav>
+           <div class="social-icons" style="margin-right: auto; display: flex; gap: 15px;">
+              <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+                  <span class="iconify" data-icon="skill-icons:instagram" data-inline="false" data-width="30px" data-height="30px"></span>
+              </a>
+              <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
+                  <span class="iconify" data-icon="skill-icons:linkedin" data-inline="false" data-width="30px" data-height="30px"></span>
+              </a>
+          </div>
+      </div>
+  </header>
 </head>
 <body>
 
   <div class="project-container">
     <!-- Left Image Column -->
     <div class="project-column">
-      <img src="frog_tank.JPEG">
-      <img src="cintronella.JFIF">
-      <img src="spotted_salamander.JPEG">
+      <img src="frog_tank.jpeg">
+      <img src="cintronella.jfif">
+      <img src="spotted_salamander.jpeg">
     </div>
     <!-- Text Column -->
     <div class="project-text">
@@ -80,9 +144,9 @@
     </div>
     <!-- Right Image Column -->
     <div class="project-column">
-      <img src="img\Aquariums\azureus_frog.jfif" alt="Photo 1">
-      <img src="img\Aquariums\costa_frog.JFIF" alt="Photo 2">
-      <img src="img\Aquariums\gulfuldocean_frog.jpg" alt="Photo 3">
+      <img src="img/Aquariums/azureus_frog.jfif" alt="Photo 1">
+      <img src="img/Aquariums/costa_frog.jfif" alt="Photo 2">
+      <img src="img/Aquariums/gulfuldocean_frog.jpg" alt="Photo 3">
     </div>
   </div>
 
