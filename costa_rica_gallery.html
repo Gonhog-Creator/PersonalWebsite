@@ -330,13 +330,12 @@
       });
     </script>
 
-    <div class="modal" id="imageModal"
-         style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; overflow:hidden;">
-      <span class="close" id="closeModal"
-            style="position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer;">&times;</span>
+    <!-- In your modal HTML -->
+    <div class="modal" id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; overflow:hidden;">
+      <span class="close" id="closeModal" style="position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer;">&times;</span>
       <div id="imageWrapper" style="position:relative; display:flex; justify-content:center; align-items:center; overflow:hidden; width:100%; height:100%;">
         <img id="modalImage" src="" alt=""
-             style="max-width:90vw; max-height:90vh; cursor:grab; transition: transform 0.1s ease; transform-origin: center;">
+             style="position:absolute; left:50%; top:50%; max-width:90vw; max-height:90vh; cursor:grab; transition: transform 0.1s ease; transform-origin: center;">
       </div>
     </div>
 
@@ -354,42 +353,28 @@
       let dragStartX = 0;
       let dragStartY = 0;
 
-      // Function to update image transform
+      // Update the transform combining CSS centering and our pan/zoom values
       function updateTransform() {
-        modalImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        modalImage.style.transform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px)) scale(${scale})`;
       }
 
-      // Function to center the image after it's loaded
+      // Centering simply resets the pan offsets
       function centerImage() {
-        const modalRect = modal.getBoundingClientRect();
-        const imgRect = modalImage.getBoundingClientRect();
-
-        // Calculate the correct translation to center the image
-        translateX = (modalRect.width - imgRect.width) / 2;
-        translateY = (modalRect.height - imgRect.height) / 2;
-
+        translateX = 0;
+        translateY = 0;
         updateTransform();
       }
 
       // Open modal and reset zoom/pan
       galleryImages.forEach(image => {
         image.addEventListener('click', () => {
-          // Reset zoom and pan
           scale = 1;
-          translateX = 0;
-          translateY = 0;
-          updateTransform();
-
+          centerImage();
           modal.style.display = 'flex';
-          modalImage.style.visibility = 'hidden'; // Hide until image is fully loaded
           modalImage.src = image.src;
           modalImage.alt = image.alt;
-
-          // Wait for the image to fully load and then center it
-          modalImage.onload = () => {
-            modalImage.style.visibility = 'visible'; // Show image after load
-            centerImage();
-          };
+          // We can call centerImage right away (the CSS ensures centering initially)
+          centerImage();
         });
       });
 
@@ -398,40 +383,35 @@
         modal.style.display = 'none';
       }
 
-      // Add event listeners for the close button and outside click
       closeModal.addEventListener('click', closeModalWindow);
       modal.addEventListener('click', (event) => {
-        if (event.target === modal) closeModalWindow();
+        if (event.target === modal || event.target === document.getElementById('imageWrapper')) {
+          closeModalWindow();
+        }
       });
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeModalWindow();
       });
 
-      // Zoom functionality: zoom in and out based on mouse wheel
+      // Zoom functionality
       modal.addEventListener('wheel', (e) => {
         e.preventDefault();
         const imgRect = modalImage.getBoundingClientRect();
         const pointerX = e.clientX - imgRect.left;
         const pointerY = e.clientY - imgRect.top;
-
         const oldScale = scale;
         if (e.deltaY < 0) {
           scale *= 1.1;
         } else {
           scale /= 1.1;
         }
-
-        // Clamp scale between 0.5 and 5
         scale = Math.max(0.5, Math.min(scale, 5));
-
-        // Adjust translation so the zoom feels natural
-        translateX = (pointerX - imgRect.width / 2) * (1 - scale / oldScale);
-        translateY = (pointerY - imgRect.height / 2) * (1 - scale / oldScale);
-
+        translateX += (pointerX - imgRect.width / 2) * (1 - scale / oldScale);
+        translateY += (pointerY - imgRect.height / 2) * (1 - scale / oldScale);
         updateTransform();
       });
 
-      // Panning functionality: click and drag the image
+      // Panning functionality
       modalImage.addEventListener('mousedown', (e) => {
         e.preventDefault();
         isDragging = true;
@@ -456,9 +436,6 @@
         document.removeEventListener('mouseup', onMouseUp);
       }
     </script>
-
-
-
 
 </body>
 
