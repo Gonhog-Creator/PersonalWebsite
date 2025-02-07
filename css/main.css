@@ -1248,5 +1248,5 @@ header .seperator-skew svg .fill-white {
 .gallery-grid img {
   max-width: 50%; /* Make sure images don't exceed 50% of the container width */
   height: auto; /* Maintain aspect ratio */
-  border-radius: 10px; 
+  border-radius: 10px;
 }
