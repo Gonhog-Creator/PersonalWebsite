@@ -67,29 +67,12 @@
                   <img src="img/Wolfspeed/cleanroom (1).jpg" alt="Machine related to Job 1">
                 </div>
             </div>
-
-            <div class="job">
-                <h2>Junior Engineer | Wafering Division | Wolfspeed</h2>
-                <p><strong>Summer 2023, Academic Year 2023-2024</strong></p>
-                <p>During my first intersnhip at Wolfspeed I began as a junior engineer in the Wafering Division, working on process imporvment, cost reduction, and failure analysis. I learned preliminary data analysis and general engineering practices while learning to operate wafer cutting tools, high powered metrology microscopes, and various other machinery. </p>
-                <ul class="work-experience-list">
-                    <li>Performed failure analysis on Disco Kabra tools to pinpoint process issues</li>
-                    <li>Contributed to various projects aimed at increasing tool uptime and increasing yield</li>
-                    <li>Collaborated on day to day process engineering tasks to keep the tools running</li>
-                    <li>Utilized X-ray diffraction techniques for crystal boule analysis</li>
-                </ul>
-                <div class = "job-images">
-                  <img src="img/Wolfspeed/disco (1).jpg" alt="Machine related to Job 1">
-                  <img src="img/Wolfspeed/disco (2).jpg" alt="Machine related to Job 1">
-                  <img src="img/Wolfspeed/wafering (1).png" alt="Machine related to Job 1">
-                </div>
-            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2025 José María Barbeito. All rights reserved.</p>
+        <p>&copy; 2025 JOSÉ MARÍA BARBEITO. All rights reserved.</p>
         <a href="https://github.com/Gonhog-Creator" target="_blank"><i class="fab fa-github"></i> GitHub</a>
         <a href="https://www.linkedin.com/in/jose-barbeito-04315b231/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
     </footer>

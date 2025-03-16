@@ -179,3 +179,16 @@ body {
 html {
     scroll-behavior: smooth;
 }
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+    margin-top: 20px;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}

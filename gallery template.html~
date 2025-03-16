@@ -308,6 +308,14 @@
         <section class="panorama-section"><img src="img/Costa Rica/costarica_panorama (39).jpg" alt="Panorama 39" class="lazyload"><div class="hover-text">49</div></section>
     </section>
 
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Your Name. All rights reserved.</p>
+        <a href="https://github.com/Gonhog-Creator" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        <a href="https://www.linkedin.com/in/jose-barbeito-04315b231/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+    </footer>
+
+
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script>
@@ -452,12 +460,6 @@
       }
     </script>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2025 José María Barbeito. All rights reserved.</p>
-        <a href="https://github.com/Gonhog-Creator" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-        <a href="https://www.linkedin.com/in/jose-barbeito-04315b231/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-    </footer>
 
 </body>
 

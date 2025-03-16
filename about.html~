@@ -163,7 +163,7 @@ footer {
 
   <div class="about-container">
     <div class="about-image">
-      <img class="profile-pic" src="img/profile.png" alt="Profile Image" style="max-width: 200px;">
+      <img class="profile-pic" src="img/profile.png" alt="Profile Image" style="max-width: 200px; padding-left: 20px;">
     </div>
     <div class="about-text">
       <h2>Hi, I'm Jose Maria Barbeito</h2>
