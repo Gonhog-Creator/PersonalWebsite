@@ -263,11 +263,11 @@
          <div class="photo-category">
           <h3>Astrophotography</h3>
           <div class="gallery-grid">
-            <img src="img/Astro/Orion Nebula Siriled 12.1.24.JPG" alt="Landscape 1">
-            <img src="img/Astro/M 31 Siril+Lightroom 12.12.24 Eagle Drive.JPG" alt="Landscape 2">
+            <img src="img/Astro/astro (12).JPG" alt="Landscape 1">
+            <img src="img/Astro/astro (22).JPG" alt="Landscape 2">
           </div>
           <div style="margin-top: 20px;">  <!-- Adds spacing above the button -->
-            <a href="united_states_gallery.html" class="btn-blue">View Full Gallery</a>
+            <a href="astro.html" class="btn-blue">View Full Gallery</a>
           </div>
         </div>
 
