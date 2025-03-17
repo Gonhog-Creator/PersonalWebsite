@@ -198,7 +198,7 @@
             <p>2024 - Present</p>
             <p>During my senior year at North Carolina State University, I joined the Liquid Rocketry Lab Advanced Projects team, where I actively contributed to the design, development, and testing of a turbine designed to extract energy from a rotating detonation engine.</p>
             <div class="project-links">
-              <a href="wolfspeed.html" class="btn-blue btn-small" style="margin-right:1.5%"> <i class="fas fa-external-link-alt"></i> Learn More</a>
+              <a href="rde.html" class="btn-blue btn-small" style="margin-right:1.5%"> <i class="fas fa-external-link-alt"></i> Learn More</a>
             </div>
           </div>
         </div>
@@ -260,6 +260,17 @@
         <p>Exploring the world through my lens.</p>
 
         <!-- Sub-section 1 -->
+         <div class="photo-category">
+          <h3>Astrophotography</h3>
+          <div class="gallery-grid">
+            <img src="img/Astro/Orion Nebula Siriled 12.1.24.JPG" alt="Landscape 1">
+            <img src="img/Astro/M 31 Siril+Lightroom 12.12.24 Eagle Drive.JPG" alt="Landscape 2">
+          </div>
+          <div style="margin-top: 20px;">  <!-- Adds spacing above the button -->
+            <a href="united_states_gallery.html" class="btn-blue">View Full Gallery</a>
+          </div>
+        </div>
+
         <div class="photo-category">
           <h3>United States</h3>
           <div class="gallery-grid">
