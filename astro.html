@@ -43,7 +43,7 @@
     <div class="gallery-wrapper">
         <div class="gallery-container">
           <div class="gallery">
-            <div class="gallery-item"><img src="img/Astro/astro (1).jpg" alt="Photo 1" class="lazyload"><div class="hover-text">Milky Way at Bald Head Island, NC</div></div>
+            <div class="gallery-item"><img src="img/Astro/astro (1).jpg" alt="Photo 1" class="lazyload" data-link="https://example.com/learn-more"><div class="hover-text">Milky Way at Bald Head Island, NC</div></div>
             <div class="gallery-item"><img src="img/Astro/astro (2).jpg" alt="Photo 2" class="lazyload"><div class="hover-text">Tree as Bald Head Island, NC</div></div>
             <div class="gallery-item"><img src="img/Astro/astro (3).jpg" alt="Photo 3" class="lazyload"><div class="hover-text">Bode's Galaxy and Cigarette Galaxy</div></div>
             <div class="gallery-item"><img src="img/Astro/astro (4).jpg" alt="Photo 4" class="lazyload"><div class="hover-text">Casper Ghost Nebula</div></div>
@@ -125,20 +125,21 @@
       });
     </script>
 
-    <!-- In your modal HTML -->
-    <div class="modal" id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; overflow:hidden;">
-      <span class="close" id="closeModal" style="position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer;">&times;</span>
-      <div id="imageWrapper" style="position:relative; display:flex; justify-content:center; align-items:center; overflow:hidden; width:100%; height:100%;">
-        <img id="modalImage" src="" alt=""
-             style="position:absolute; left:50%; top:50%; max-width:90vw; max-height:90vh; cursor:grab; transition: transform 0.1s ease; transform-origin: center;">
-      </div>
-    </div>
+<!-- Modal HTML -->
+<div class="modal" id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; overflow:hidden;">
+  <span class="close" id="closeModal" style="position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer;">&times;</span>
+  <div id="imageWrapper" style="position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; overflow-y:auto; width:80%; height:80%; background-color:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
+    <img id="modalImage" src="" alt="" style="max-width:100%; height:auto; margin-bottom:20px;">
+    <button id="learnMoreButton" style="background-color:#4CAF50; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">Learn More</button>
+  </div>
+</div>
 
     <script>
       const galleryImages = document.querySelectorAll('.gallery img, .panoramas img');
       const modal = document.getElementById('imageModal');
       const modalImage = document.getElementById('modalImage');
       const closeModal = document.getElementById('closeModal');
+  const learnMoreButton = document.getElementById('learnMoreButton');
 
       // Zoom and pan variables
       let scale = 1;
@@ -163,6 +164,9 @@
       // Open modal and reset zoom/pan
       galleryImages.forEach(image => {
         image.addEventListener('click', () => {
+
+learnMoreButton.href = image.getAttribute('data-link');
+
           scale = 1;
           centerImage();
           modal.style.display = 'flex';
