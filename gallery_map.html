@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="css/gallerymapstyle.css">
 </head>
 <body>
+  <button id="zoomEU" type="button">Zoom to European Union</button>
+  <div id="zoomInfo">Use scroll wheel to zoom and click+drag to move the map</div>
+  <button id="homePageBtn">Home Page</button>
   <div id="map"></div>
 
   <!-- Modal -->
@@ -22,12 +25,14 @@
   <script src="https://cdn.jsdelivr.net/npm/jvectormap@2.0.4/tests/assets/jquery-jvectormap-world-mill-en.js"></script>
 
   <script>
-    $(function() {
-      const oceanColor = '#001f3f'; // dark navy
-      const countryDefault = '#555555'; // dark grey
-      const highlightColor = '#FFD700'; // light gold
+    let mapObject;
+    let zoomedIn = false;
 
-      // Country codes mapped to gallery HTML files
+    $(function() {
+      const oceanColor = '#001f3f';
+      const countryDefault = '#555555';
+      const highlightColor = '#FFD700';
+
       const highlightedCountries = {
         US: 'united_states_gallery.html',
         AR: 'argentina_gallery.html',
@@ -38,16 +43,16 @@
         CR: 'costa_rica_gallery.html',
         SI: 'slovenia_gallery.html',
         AT: 'austria_gallery.html',
-        AU: 'australia_gallery.html'
+        AU: 'australia_gallery.html',
+        BE: 'belgium_gallery.html'
       };
 
-      // Prepare fill colors for highlighted countries
       const highlightValues = {};
       for (const code in highlightedCountries) {
         highlightValues[code] = highlightColor;
       }
 
-      const mapObject = $('#map').vectorMap({
+      mapObject = $('#map').vectorMap({
         map: 'world_mill_en',
         backgroundColor: oceanColor,
         regionStyle: {
@@ -73,6 +78,8 @@
             attribute: 'fill'
           }]
         },
+        zoomOnScroll: true,
+        panOnDrag: true,
         onRegionClick: function(event, code) {
           if (highlightedCountries.hasOwnProperty(code)) {
             window.location.href = highlightedCountries[code];
@@ -82,17 +89,48 @@
         }
       });
 
-      // Close modal on button click
+      $('#zoomEU').on('click', function() {
+        if (!zoomedIn) {
+          mapObject.vectorMap('set', 'focus', {
+            x: 0.50,
+            y: 0.35,
+            scale: 4,
+            animate: true
+          });
+          $(this).text('Back to World Map');
+          zoomedIn = true;
+        } else {
+          mapObject.vectorMap('set', 'focus', {
+            x: 0.5,
+            y: 0.5,
+            scale: 1,
+            animate: true
+          });
+          $(this).text('Zoom to European Union');
+          zoomedIn = false;
+        }
+      });
+
       $('#closeModalBtn').on('click', function() {
         $('#noGalleryModal').fadeOut(200);
       });
 
-      // Close modal on Escape key press
       $(document).on('keydown', function(e) {
         if (e.key === "Escape" || e.key === "Esc") {
           $('#noGalleryModal').fadeOut(200);
         }
       });
+
+      // Hide zoom info after 5 seconds
+      setTimeout(function() {
+        $('#zoomInfo').fadeOut(1000);
+      }, 5000);
+
+      $('#homePageBtn').on('click', function() {
+        // Replace 'index.html' with your actual home page URL if different
+        window.location.href = 'index.html';
+      });
+
     });
   </script>
 </body>

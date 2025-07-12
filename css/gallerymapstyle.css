@@ -1,47 +1,90 @@
-html, body {
-  height: 100%;
-  margin: 0;
-  background-color: #001f3f; /* dark navy ocean */
-}
-
-#map {
-  width: 100vw;
-  height: 100vh;
-}
-
+   html, body {
+      height: 100%;
+      margin: 0;
+      background-color: #001f3f;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      width: 100vw;
+      height: 100vh;
+    }
+    #zoomEU {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: rgba(255, 215, 0, 0.9);
+      border: none;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+    #zoomInfo {
+      position: fixed;
+      top: 50px;
+      right: 15px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      z-index: 10000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      user-select: none;
+      max-width: 200px;
+      text-align: center;
+    }
+    /* Modal styles */
     #noGalleryModal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    #noGalleryModal .modal-content {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    #closeModalBtn {
+      margin-top: 15px;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      background-color: #001f3f;
+      color: white;
+      border-radius: 4px;
+    }
+    #closeModalBtn:hover {
+      background-color: #003366;
+    }
 
-#noGalleryModal .modal-content {
-  background: white;
-  padding: 20px 30px;
-  border-radius: 8px;
-  text-align: center;
-  font-family: Arial, sans-serif;
-  font-size: 18px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
+    #homePageBtn {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        background: rgba(255, 215, 0, 0.9); /* light gold with some transparency */
+        border: none;
+        border-radius: 4px; padding: 6px 12px;
+        font-size: 14px;
+        cursor: pointer;
+        z-index: 10000;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        user-select: none;
+    }
 
-#noGalleryModal button {
-  margin-top: 15px;
-  padding: 8px 16px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  background-color: #001f3f;
-  color: white;
-  border-radius: 4px;
-}
-#noGalleryModal button:hover {
-  background-color: #003366;
-}
+    #homePageBtn:hover {
+        background: rgba(255, 215, 0, 1);
+    }
