@@ -125,18 +125,13 @@
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var elem = document.querySelector('.gallery');
-        // Initialize Masonry
-        var msnry = new Masonry(elem, {
-            itemSelector: '.gallery-item',
-            columnWidth: '.gallery-item', // Set column width based on gallery-item
-            percentPosition: true,       // Use percentage-based widths
-            gutter: 10,                  // Match gutter size to CSS
-        });
-        // Re-layout after images load
-        imagesLoaded(elem, function () {
-            msnry.layout();
-        });
+      var elem = document.querySelector('.gallery');
+      var msnry = new Masonry(elem, {
+        itemSelector: '.gallery-item',
+        columnWidth: '.gallery-item',
+        percentPosition: true,
+        gutter: 10,
+      });
     });
     </script>
 
