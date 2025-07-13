@@ -121,6 +121,7 @@ body {
 .gallery-item {
     width: calc(20% - 10px);
     margin-bottom: 10px;
+    display: block;
 }
 
 .gallery-item img {
