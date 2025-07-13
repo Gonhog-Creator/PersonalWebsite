@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="css/gallerystyle.css">
+    <script src="js/gallery.js" defer></script>
     <!-- Iconify Icons -->
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <meta charset="UTF-8">
@@ -90,151 +91,16 @@
 
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var elem = document.querySelector('.gallery');
-        // Initialize Masonry
-        var msnry = new Masonry(elem, {
-            itemSelector: '.gallery-item',
-            columnWidth: '.gallery-item', // Set column width based on gallery-item
-            percentPosition: true,       // Use percentage-based widths
-            gutter: 10,                  // Match gutter size to CSS
-        });
-        // Re-layout after images load
-        imagesLoaded(elem, function () {
-            msnry.layout();
-        });
-    });
-    </script>
 
-    <script>
-      // Select both gallery items and panorama sections
-      const hoverItems = document.querySelectorAll('.gallery-item, .panorama-section');
+    <!-- Modal HTML -->
+    <div class="modal" id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; overflow:hidden;">
+      <span class="close" id="closeModal" style="position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer;">&times;</span>
+      <div id="imageWrapper" style="position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; overflow-y:auto; width:80%; height:80%; background-color:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
+        <img id="modalImage" src="" alt="" style="max-width:100%; height:auto; margin-bottom:20px;">
+        <button id="learnMoreButton" style="background-color:#4CAF50; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">Learn More</button>
+      </div>
+    </div>
 
-      hoverItems.forEach(item => {
-        // Find the hover text element within the item
-        const overlay = item.querySelector('.hover-text');
-        if (overlay) {
-          item.addEventListener('mouseenter', () => {
-            overlay.style.opacity = '1';
-          });
-          item.addEventListener('mouseleave', () => {
-            overlay.style.opacity = '0';
-          });
-        }
-      });
-    </script>
-
-<!-- Modal HTML -->
-<div class="modal" id="imageModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; overflow:hidden;">
-  <span class="close" id="closeModal" style="position:absolute; top:20px; right:30px; color:white; font-size:30px; cursor:pointer;">&times;</span>
-  <div id="imageWrapper" style="position:relative; display:flex; flex-direction:column; justify-content:center; align-items:center; overflow-y:auto; width:80%; height:80%; background-color:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
-    <img id="modalImage" src="" alt="" style="max-width:100%; height:auto; margin-bottom:20px;">
-    <button id="learnMoreButton" style="background-color:#4CAF50; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">Learn More</button>
-  </div>
-</div>
-
-    <script>
-      const galleryImages = document.querySelectorAll('.gallery img, .panoramas img');
-      const modal = document.getElementById('imageModal');
-      const modalImage = document.getElementById('modalImage');
-      const closeModal = document.getElementById('closeModal');
-  const learnMoreButton = document.getElementById('learnMoreButton');
-
-      // Zoom and pan variables
-      let scale = 1;
-      let translateX = 0;
-      let translateY = 0;
-      let isDragging = false;
-      let dragStartX = 0;
-      let dragStartY = 0;
-
-      // Update the transform combining CSS centering and our pan/zoom values
-      function updateTransform() {
-        modalImage.style.transform = `translate(calc(-50% + ${translateX}px), calc(-50% + ${translateY}px)) scale(${scale})`;
-      }
-
-      // Centering simply resets the pan offsets
-      function centerImage() {
-        translateX = 0;
-        translateY = 0;
-        updateTransform();
-      }
-
-      // Open modal and reset zoom/pan
-      galleryImages.forEach(image => {
-        image.addEventListener('click', () => {
-
-learnMoreButton.href = image.getAttribute('data-link');
-
-          scale = 1;
-          centerImage();
-          modal.style.display = 'flex';
-          modalImage.src = image.src;
-          modalImage.alt = image.alt;
-          // We can call centerImage right away (the CSS ensures centering initially)
-          centerImage();
-        });
-      });
-
-      // Close modal window
-      function closeModalWindow() {
-        modal.style.display = 'none';
-      }
-
-      closeModal.addEventListener('click', closeModalWindow);
-      modal.addEventListener('click', (event) => {
-        if (event.target === modal || event.target === document.getElementById('imageWrapper')) {
-          closeModalWindow();
-        }
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModalWindow();
-      });
-
-      // Zoom functionality
-      modal.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const imgRect = modalImage.getBoundingClientRect();
-        const pointerX = e.clientX - imgRect.left;
-        const pointerY = e.clientY - imgRect.top;
-        const oldScale = scale;
-        if (e.deltaY < 0) {
-          scale *= 1.1;
-        } else {
-          scale /= 1.1;
-        }
-        scale = Math.max(0.5, Math.min(scale, 5));
-        translateX += (pointerX - imgRect.width / 2) * (1 - scale / oldScale);
-        translateY += (pointerY - imgRect.height / 2) * (1 - scale / oldScale);
-        updateTransform();
-      });
-
-      // Panning functionality
-      modalImage.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        isDragging = true;
-        dragStartX = e.clientX - translateX;
-        dragStartY = e.clientY - translateY;
-        modalImage.style.cursor = 'grabbing';
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-      });
-
-      function onMouseMove(e) {
-        if (!isDragging) return;
-        translateX = e.clientX - dragStartX;
-        translateY = e.clientY - dragStartY;
-        updateTransform();
-      }
-
-      function onMouseUp() {
-        isDragging = false;
-        modalImage.style.cursor = 'grab';
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      }
-    </script>
 
     <!-- Footer -->
     <footer>
