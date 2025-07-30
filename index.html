@@ -84,7 +84,6 @@
                   ><i class="fas fa-camera"></i> Photography</a
                 >
               </li>
-              </li>
               <li>
                 <a href="about.html" class="link"
                   ><i class="fas fa-paper-plane"></i> About Me</a
@@ -130,7 +129,6 @@
             </div>
 
             </div>
-          </div>
         </nav>
 
         <!-- HERO -->
@@ -153,10 +151,9 @@
         <!-- SOCIAL LINKS -->
         <div class="socials" data-aos="fade-in">
           <ul>
-            <li class="bg-blue"><a href="https://www.linkedin.com/in/jose-barbeito-04315b231/"
-              target="_blank"><span class="socials-text">LinkedIn</span> <i class="fab fa-linkedin fa-2x"></i
-            ></a></li>
+            <li class="bg-blue"><a href="https://www.linkedin.com/in/jose-barbeito-04315b231/" target="_blank"><span class="socials-text">LinkedIn</span><i class="fab fa-linkedin fa-2x"></i></a></li>
             <li class="bg-white"><a class="text-dark-grey" href="mailto:jbarbei@ncsu.edu"><span class="socials-text">Email</span><i class="fas fa-envelope fa-2x"></i></a></li>
+            <li class="bg-blue"><a href="https://www.instagram.com/day_by_day_jmb/" target="_blank"><span class="socials-text">Instagram</span><i class="fab fa-instagram fa-2x"></i></a></li>
           </ul>
         </div>
       </div>
@@ -398,7 +395,7 @@
           <div class="footer-icon-links">
             <a href="https://www.linkedin.com/in/jose-barbeito-04315b231/" target="_blank"><i class="fab fa-linkedin fa-2x"></i></a>
             <a href="https://github.com/Gonhog-Creator" target="_blank"><i class="fab fa-github-square fa-2x"></i></a>
-            <a href="mailto:jbarbei@ncsu.edu"><i class="fas fa-envelope fa-2x"></i></a>
+            <a href="https://www.instagram.com/day_by_day_jmb/" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
           </div>
         </div>
       </div>
@@ -442,6 +439,48 @@
       AOS.init();
     </script>
 
+    <!-- Custom Particles for Social Media Tabs -->
+    <script src="js/particles.js"></script>
+    
+    <!-- Test button for debugging -->
+    <button id="testParticles" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      Test Particles
+    </button>
+    <script>
+      document.getElementById('testParticles').addEventListener('click', function() {
+        const testParticle = document.createElement('div');
+        testParticle.style.position = 'fixed';
+        testParticle.style.width = '10px';
+        testParticle.style.height = '10px';
+        testParticle.style.background = 'red';
+        testParticle.style.borderRadius = '50%';
+        testParticle.style.top = '50%';
+        testParticle.style.left = '50%';
+        testParticle.style.transform = 'translate(-50%, -50%)';
+        testParticle.style.zIndex = '1000';
+        document.body.appendChild(testParticle);
+        
+        // Animate the test particle
+        const duration = 2000; // 2 seconds
+        const start = performance.now();
+        
+        function animate(currentTime) {
+          const elapsed = currentTime - start;
+          const progress = Math.min(elapsed / duration, 1);
+          
+          testParticle.style.transform = `translate(calc(-50% + ${progress * 200}px), -50%)`;
+          testParticle.style.opacity = 1 - progress;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            document.body.removeChild(testParticle);
+          }
+        }
+        
+        requestAnimationFrame(animate);
+      });
+    </script>
 
   </body>
 </html>

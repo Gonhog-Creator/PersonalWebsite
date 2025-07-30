@@ -531,7 +531,7 @@ header .hero .hero-btns {
 header .socials {
   position: absolute;
   bottom: 40%;
-  left: -125px;
+  left: -150px;
 }
 
 header .socials ul {
@@ -554,16 +554,137 @@ header .socials ul li a {
   text-align: right;
   height: 100%;
   width: 100%;
-  padding: 15px 20px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  padding: 10px 20px 10px 30px;
+  transition: all 0.3s ease;
 }
 
 header .socials ul li a i {
   font-size: 1.75rem;
-  margin-left: 1.5rem;
+  margin-left: 2.75rem;
+  position: relative;
+  z-index: 3;
+  min-width: 30px;
+  text-align: center;
+}
+
+header .socials ul li a span {
+  font-size: 1rem;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-right: 15px;
+  position: relative;
+  z-index: 3;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+}
+
+header .socials ul li a:hover span {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Background colors */
+header .socials ul li a.bg-blue {
+  background-color: #3b82f6;
+  color: white;
+}
+
+header .socials ul li a.bg-white {
+  background-color: white;
+  color: #1e40af;
+}
+
+/* Ensure text and icons are visible on both backgrounds */
+header .socials ul li a.bg-white,
+header .socials ul li a.bg-white i,
+header .socials ul li a.bg-white .socials-text,
+header .socials ul li a.text-dark-grey,
+header .socials ul li a.text-dark-grey i,
+header .socials ul li a.text-dark-grey .socials-text {
+  color: #6b7280 !important;  /* Changed to gray for better visibility on white */
+  transition: color 0.3s ease;
+}
+
+/* Hover effect for white tab */
+header .socials ul li a.bg-white:hover,
+header .socials ul li a.bg-white:hover i,
+header .socials ul li a.bg-white:hover .socials-text {
+  color: #4b5563 !important;  /* Slightly darker gray on hover */
+}
+
+/* Particle effect */
+@keyframes moveRight {
+  0% {
+    transform: translateX(-20px) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(0) scale(1.2);
+  }
+  30% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0;
+    transform: translateX(250px) scale(0.8);
+  }
+  100% {
+    transform: translateX(300px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Ensure smooth animation */
+.particle {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: translateZ(0) scale(1.0, 1.0);
+}
+
+.particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.particle {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform, opacity;
+}
+
+/* Blue particles for white background */
+header .socials ul li a.bg-white .particle {
+  background-color: rgba(59, 130, 246, 0.8) !important;
 }
 
 header .socials ul li:hover {
-  transform: translateX(115px);
+  transform: translateX(150px);
 }
 
 header .scroll-btn-container {
