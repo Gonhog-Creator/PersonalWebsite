@@ -439,48 +439,5 @@
       AOS.init();
     </script>
 
-    <!-- Custom Particles for Social Media Tabs -->
-    <script src="js/particles.js"></script>
-    
-    <!-- Test button for debugging -->
-    <button id="testParticles" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer;">
-      Test Particles
-    </button>
-    <script>
-      document.getElementById('testParticles').addEventListener('click', function() {
-        const testParticle = document.createElement('div');
-        testParticle.style.position = 'fixed';
-        testParticle.style.width = '10px';
-        testParticle.style.height = '10px';
-        testParticle.style.background = 'red';
-        testParticle.style.borderRadius = '50%';
-        testParticle.style.top = '50%';
-        testParticle.style.left = '50%';
-        testParticle.style.transform = 'translate(-50%, -50%)';
-        testParticle.style.zIndex = '1000';
-        document.body.appendChild(testParticle);
-        
-        // Animate the test particle
-        const duration = 2000; // 2 seconds
-        const start = performance.now();
-        
-        function animate(currentTime) {
-          const elapsed = currentTime - start;
-          const progress = Math.min(elapsed / duration, 1);
-          
-          testParticle.style.transform = `translate(calc(-50% + ${progress * 200}px), -50%)`;
-          testParticle.style.opacity = 1 - progress;
-          
-          if (progress < 1) {
-            requestAnimationFrame(animate);
-          } else {
-            document.body.removeChild(testParticle);
-          }
-        }
-        
-        requestAnimationFrame(animate);
-      });
-    </script>
-
   </body>
 </html>
