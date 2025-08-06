@@ -82,4 +82,4 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+Old Files/next-env.d.ts
