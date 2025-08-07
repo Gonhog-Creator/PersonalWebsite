@@ -2,6 +2,7 @@
   "[project]/src/components/Photography/Photography.tsx [app-client] (ecmascript, next/dynamic entry)": {
     "id": "[project]/src/components/Photography/Photography.tsx [app-client] (ecmascript, next/dynamic entry)",
     "files": [
+      "static/chunks/src_components_Photography_WorldMap_tsx_999eeb59._.js",
       "static/chunks/src_components_Photography_Photography_tsx_9c0db65d._.js",
       "static/chunks/src_components_Photography_Photography_tsx_cef7b0e5._.js"
     ]

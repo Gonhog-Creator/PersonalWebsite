@@ -1,0 +1,161 @@
+'use client';
+
+import { useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+interface WorkExperience {
+  id: number;
+  title: string;
+  role: string;
+  period: string;
+  description: string;
+  image: string;
+  link: string;
+  skills: string[];
+}
+
+const Work = () => {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+    });
+  }, []);
+
+  const workExperiences: WorkExperience[] = [
+    {
+      id: 1,
+      title: 'Wolfspeed',
+      role: 'Process Engineering Intern & Co-op',
+      period: 'May 2022 - May 2025',
+      description: 'During two summer internships and part-time co-ops at Wolfspeed, I gained hands-on experience working on precision measurements, recipe qualification, and process optimization. I contributed to the development and testing of cutting-edge semiconductor technology, focusing on improving yield and process efficiency in a high-volume manufacturing environment.',
+      image: '/img/Wolfspeed/Wolfspeed Purple Logo.png',
+      link: '/projects/wolfspeed',
+      skills: ['Process Optimization', 'Data Analysis', 'Statistical Process Control', 'JMP']
+    },
+    {
+      id: 2,
+      title: 'NC State Liquid Rocketry Lab',
+      role: 'Advanced Projects Team Member',
+      period: 'January 2024 - Present',
+      description: 'As part of the Advanced Projects team, I contribute to the design, development, and testing of a turbine system for a rotating detonation engine. My work involves computational fluid dynamics analysis, mechanical design, and hands-on testing to improve engine efficiency and reliability.',
+      image: '/img/RDE/RDE_cover.png',
+      link: '/rde',
+      skills: ['Mechanical Design', 'CFD Analysis', 'Prototyping', 'Project Management']
+    }
+  ];
+
+  return (
+    <section className="w-full bg-white dark:bg-gray-900 transition-colors duration-300 py-16 md:py-24">
+      <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto">
+        <div className="w-full flex justify-center">
+          <div className="w-full max-w-4xl space-y-16">
+            {workExperiences.map((experience, index) => (
+              <div 
+                key={experience.id}
+                className="flex flex-col md:flex-row gap-8 lg:gap-12 p-6 rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+              >
+                <div className="md:w-5/12">
+                  <div className="relative overflow-hidden rounded-xl aspect-[4/3] border-2 border-blue-100 dark:border-gray-700">
+                    <Image
+                      src={experience.image}
+                      alt={experience.title}
+                      fill
+                      className="object-cover transition-transform duration-500 hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      priority={index < 2}
+                    />
+                  </div>
+                </div>
+                
+                <div className="md:w-7/12 flex flex-col justify-center">
+                  <div className="mb-2">
+                    <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full">
+                      {experience.period}
+                    </span>
+                  </div>
+                  
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    {experience.title}
+                  </h3>
+                  
+                  <p className="text-lg text-blue-600 dark:text-blue-400 font-medium mb-4">
+                    {experience.role}
+                  </p>
+                  
+                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                    {experience.description}
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {experience.skills.map((skill, i) => (
+                      <span 
+                        key={i}
+                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm rounded-full"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div>
+                    <Link
+                      href={experience.link}
+                      className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200 group"
+                    >
+                      View Project Details
+                      <svg 
+                        className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
+                        <path 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round" 
+                          strokeWidth={2} 
+                          d="M14 5l7 7m0 0l-7 7m7-7H3" 
+                        />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          
+            <div className="mt-16 text-center" data-aos="fade-up">
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-300"
+              >
+                <svg 
+                  className="w-5 h-5 mr-2" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" 
+                  />
+                </svg>
+                Download Full Resume
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Work;
