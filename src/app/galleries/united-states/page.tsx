@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Masonry from 'react-masonry-css';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft, FaTimes } from 'react-icons/fa';
 
@@ -205,9 +206,38 @@ export default function UnitedStatesGallery() {
         </div>
       </div>
 
+      {/* Navigation Section */}
+      <section className="w-full bg-gray-900 py-12">
+        <div className="w-full flex justify-center px-4">
+          <div className="flex items-center justify-center gap-32">
+            <GradientButton 
+              variant="variant"
+              className="px-10 py-5 text-lg font-bold transform scale-150 origin-center"
+              onClick={() => {}}
+            >
+              Photos
+            </GradientButton>
+            <GradientButton 
+              variant="variant"
+              className="px-10 py-5 text-lg font-bold transform scale-150 origin-center"
+              onClick={() => {}}
+            >
+              Panoramas
+            </GradientButton>
+            <GradientButton 
+              variant="variant"
+              className="px-10 py-5 text-lg font-bold transform scale-150 origin-center"
+              onClick={() => {}}
+            >
+              Drone Videos
+            </GradientButton>
+          </div>
+        </div>
+      </section>
+
       {/* Gallery Grid */}
-      <div className="w-full bg-[#05001a] py-12 px-0">
-        <div className="w-full max-w-full px-0">
+      <div className="w-full bg-gray-900 pb-12">
+        <div className="w-full px-4">
           <Masonry
             breakpointCols={{
               default: 5,
@@ -216,17 +246,28 @@ export default function UnitedStatesGallery() {
               800: 2,
               500: 1
             }}
-            className="flex w-auto justify-center"
-            columnClassName="px-1"
+            className="flex w-auto"
+            columnClassName="masonry-column"
           >
             {galleryImages.map((image) => (
               <div 
                 key={image.id} 
-                className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4"
+                className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
                 onClick={() => openLightbox(image)}
               >
-                <div className="relative w-full p-2">
-                  <div className="w-full overflow-hidden">
+                <div className="relative w-full overflow-hidden rounded-lg">
+                  <style jsx global>{`
+                    .masonry-column {
+                      padding-left: 8px;
+                      padding-right: 8px;
+                    }
+                    .masonry-column > div {
+                      margin-bottom: 16px;
+                      border-radius: 0.5rem;
+                      overflow: hidden;
+                    }
+                  `}</style>
+                  <div className="relative w-full h-full">
                     <Image
                       src={image.src}
                       alt={image.alt}
@@ -236,11 +277,11 @@ export default function UnitedStatesGallery() {
                       style={{ display: 'block' }}
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
                     />
-                  </div>
-                  <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
-                    <p className="text-white text-xs md:text-sm">
-                      {image.alt} - {image.location}
-                    </p>
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                      <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
+                        {image.alt} - {image.location}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
