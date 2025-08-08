@@ -1,5 +1,9 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/galleries/united-states/page": "app/galleries/united-states/page.js"
+  "/galleries/page": "app/galleries/page.js",
+  "/galleries/united-states/page": "app/galleries/united-states/page.js",
+  "/gallery_map/[countryCode]/page": "app/gallery_map/[countryCode]/page.js",
+  "/gallery_map/page": "app/gallery_map/page.js",
+  "/page": "app/page.js"
 }

@@ -71,16 +71,7 @@ h2 {
   display: inline-block;
 }
 
-h2:after {
-  content: '';
-  position: absolute;
-  width: 50%;
-  height: 4px;
-  bottom: -10px;
-  left: 0;
-  background: var(--primary);
-  border-radius: 2px;
-}
+/* Removed h2:after to remove the blue bar */
 
 p {
   margin-bottom: 1.25rem;
@@ -275,8 +266,8 @@ a:hover {
     --color-3: #469396;
     --color-4: #f1ffa5;
     --border-angle: 200deg;
-    --border-color-1: hsla(320, 75%, 90%, 0.6);
-    --border-color-2: hsla(320, 50%, 90%, 0.15);
+    --border-color-1: transparent;
+    --border-color-2: transparent;
   }
 
   .gradient-button-variant:hover {

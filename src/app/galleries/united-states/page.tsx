@@ -1,11 +1,18 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft, FaTimes } from 'react-icons/fa';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the GalleryNavbar with SSR disabled
+const GalleryNavbar = dynamic(
+  () => import('@/components/gallery/GalleryNavbar'),
+  { ssr: false }
+);
 
 interface GalleryImage {
   id: number;
@@ -118,8 +125,11 @@ const breakpointColumnsObj = {
   500: 1,
 };
 
+type GalleryView = 'photos' | 'panoramas' | 'drone';
+
 export default function UnitedStatesGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
   const router = useRouter();
 
   const openLightbox = (image: GalleryImage) => {
@@ -161,47 +171,39 @@ export default function UnitedStatesGallery() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#05001a]">
-      {/* Navigation Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-4 text-center">
-          <h1 className="text-2xl font-serif text-black mb-2">JOSÉ MARÍA BARBEITO</h1>
-          <hr className="border-t border-black w-1/2 mx-auto my-2" />
-          <nav className="mt-2">
-            <a href="/" className="mx-4 text-gray-800 hover:text-gray-600 transition-colors">Home</a>
-            <a href="/#projects" className="mx-4 text-gray-800 hover:text-gray-600 transition-colors">Projects</a>
-            <a href="/#photography" className="mx-4 text-gray-800 hover:text-gray-600 transition-colors">Photography</a>
-            <a href="/about" className="mx-4 text-gray-800 hover:text-gray-600 transition-colors">About Me</a>
-          </nav>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Navigation Bar */}
+      <GalleryNavbar />
+      
+      {/* Back button */}
+      <button
+        onClick={() => router.back()}
+        className="fixed top-20 left-4 z-20 flex items-center px-4 py-2 bg-black/70 text-white rounded-full backdrop-blur-sm hover:bg-black/80 transition-colors duration-200 shadow-lg md:top-24"
+      >
+        <FaArrowLeft className="mr-2" />
+        Back to Map
+      </button>
 
       {/* Hero Section with Panorama */}
-      <div className="relative h-screen">
+      <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
             src="/img/USA/panorama-USA-1.JPG"
             alt="USA Panorama"
             fill
-            className="object-cover"
+            className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-black/60"></div>
+          <div className="absolute inset-0 bg-black/30"></div>
         </div>
         
         <div className="relative h-full flex items-center justify-center text-center px-4">
-          <div className="bg-black/70 p-8 rounded-lg max-w-4xl">
+          <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">United States of America</h1>
-            <p className="text-xl text-gray-100 mb-6">
+            <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
               35 states, 20 national parks, 11,200 miles. Through two road trips through the western United States, 
               I have seen a large swath of this great country and enjoyed every second of it.
             </p>
-            <a 
-              href="#panoramas" 
-              className="inline-block mt-4 text-white hover:text-gray-300 transition-colors"
-            >
-              Panoramas
-            </a>
           </div>
         </div>
       </div>
@@ -209,25 +211,25 @@ export default function UnitedStatesGallery() {
       {/* Navigation Section */}
       <section className="w-full bg-gray-900 py-12">
         <div className="w-full flex justify-center px-4">
-          <div className="flex items-center justify-center gap-32">
+          <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
             <GradientButton 
-              variant="variant"
-              className="px-10 py-5 text-lg font-bold transform scale-150 origin-center"
-              onClick={() => {}}
-            >
-              Photos
-            </GradientButton>
-            <GradientButton 
-              variant="variant"
-              className="px-10 py-5 text-lg font-bold transform scale-150 origin-center"
-              onClick={() => {}}
+              variant={currentView === 'panoramas' ? 'variant' : 'outline'}
+              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+              onClick={() => setCurrentView('panoramas')}
             >
               Panoramas
             </GradientButton>
             <GradientButton 
-              variant="variant"
-              className="px-10 py-5 text-lg font-bold transform scale-150 origin-center"
-              onClick={() => {}}
+              variant={currentView === 'photos' ? 'variant' : 'outline'}
+              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+              onClick={() => setCurrentView('photos')}
+            >
+              Photos
+            </GradientButton>
+            <GradientButton 
+              variant={currentView === 'drone' ? 'variant' : 'outline'}
+              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+              onClick={() => setCurrentView('drone')}
             >
               Drone Videos
             </GradientButton>
@@ -235,59 +237,106 @@ export default function UnitedStatesGallery() {
         </div>
       </section>
 
-      {/* Gallery Grid */}
+      {/* Gallery Content */}
       <div className="w-full bg-gray-900 pb-12">
-        <div className="w-full px-4">
-          <Masonry
-            breakpointCols={{
-              default: 5,
-              1600: 4,
-              1200: 3,
-              800: 2,
-              500: 1
-            }}
-            className="flex w-auto"
-            columnClassName="masonry-column"
-          >
-            {galleryImages.map((image) => (
-              <div 
-                key={image.id} 
-                className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
-                onClick={() => openLightbox(image)}
-              >
-                <div className="relative w-full overflow-hidden rounded-lg">
-                  <style jsx global>{`
-                    .masonry-column {
-                      padding-left: 8px;
-                      padding-right: 8px;
-                    }
-                    .masonry-column > div {
-                      margin-bottom: 16px;
-                      border-radius: 0.5rem;
-                      overflow: hidden;
-                    }
-                  `}</style>
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      width={800}
-                      height={600}
-                      className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                      style={{ display: 'block' }}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+        {currentView === 'photos' ? (
+          <div className="w-full px-4">
+            <Masonry
+              breakpointCols={{
+                default: 5,
+                1600: 4,
+                1200: 3,
+                800: 2,
+                500: 1
+              }}
+              className="flex w-auto"
+              columnClassName="masonry-column"
+            >
+              {galleryImages.map((image) => (
+                <div 
+                  key={image.id} 
+                  className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
+                  onClick={() => openLightbox(image)}
+                >
+                  <div className="relative w-full overflow-hidden rounded-lg">
+                    <style jsx global>{`
+                      .masonry-column {
+                        padding-left: 8px;
+                        padding-right: 8px;
+                      }
+                      .masonry-column > div {
+                        margin-bottom: 16px;
+                        border-radius: 0.5rem;
+                        overflow: hidden;
+                      }
+                    `}</style>
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        width={800}
+                        height={600}
+                        className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                        style={{ display: 'block' }}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
+                          {image.alt} - {image.location}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Masonry>
+          </div>
+        ) : null}
+
+        {currentView === 'panoramas' && (
+          <div className="w-full">
+            <div className="w-full flex flex-col items-center justify-center py-12 px-4">
+              <div className="w-full max-w-5xl mx-auto px-4">
+                <div className="w-full">
+                  <h2 className="text-2xl md:text-3xl font-bold text-white text-center">
+                    Maybe with a big enough photo I can see every state bird
+                  </h2>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              {[
+                { id: 1, location: 'Arizona' },
+                { id: 2, location: 'Utah' },
+                { id: 3, location: 'California' }
+              ].map((item) => (
+                <div key={item.id} className="group relative w-full h-[70vh] overflow-hidden">
+                  <Image
+                    src={`/img/USA/panorama-USA-${item.id}.JPG`}
+                    alt={`Panoramic view of ${item.location}`}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="100vw"
+                  />
+                  <div className="absolute inset-0 flex items-end">
+                    <div className="w-full h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                       <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                        {image.alt} - {image.location}
+                        {`Panoramic view - ${item.location}`}
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </Masonry>
-        </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentView === 'drone' && (
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
+            <h2 className="text-3xl font-bold text-white mb-6">Drone Videos Coming Soon</h2>
+            <p className="text-gray-300 text-lg">Check back later for amazing aerial footage!</p>
+          </div>
+        )}
       </div>
 
       {/* Lightbox */}
