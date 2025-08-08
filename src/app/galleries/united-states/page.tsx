@@ -5,8 +5,10 @@ import { useState, useEffect, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { useRouter } from 'next/navigation';
-import { FaArrowLeft, FaTimes } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
+import { ProjectHeader } from '@/components/gallery/ProjectHeader';
+import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 
 // Dynamically import the GalleryNavbar with SSR disabled
 const GalleryNavbar = dynamic(
@@ -171,20 +173,11 @@ export default function UnitedStatesGallery() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Navigation Bar */}
-      <GalleryNavbar />
-      
-      {/* Back button */}
-      <button
-        onClick={() => router.back()}
-        className="fixed top-20 left-4 z-20 flex items-center px-4 py-2 bg-black/70 text-white rounded-full backdrop-blur-sm hover:bg-black/80 transition-colors duration-200 shadow-lg md:top-24"
-      >
-        <FaArrowLeft className="mr-2" />
-        Back to Map
-      </button>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Project Header */}
+      <ProjectHeader />
 
-      {/* Hero Section with Panorama */}
+      {/* Header with title and navigation */}
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
@@ -332,9 +325,11 @@ export default function UnitedStatesGallery() {
         )}
 
         {currentView === 'drone' && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-12">
-            <h2 className="text-3xl font-bold text-white mb-6">Drone Videos Coming Soon</h2>
-            <p className="text-gray-300 text-lg">Check back later for amazing aerial footage!</p>
+          <div className="w-full min-h-[50vh] flex items-center justify-center">
+            <div className="text-center px-4 py-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Drone Videos Coming Soon</h2>
+              <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">Check back later for amazing aerial footage!</p>
+            </div>
           </div>
         )}
       </div>
@@ -353,13 +348,12 @@ export default function UnitedStatesGallery() {
             <FaTimes size={24} />
           </button>
           <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
-            <Image
+            <ZoomableImage
               src={selectedImage.src}
               alt={selectedImage.alt}
               fill
               className="object-contain"
               priority
-              style={{ maxWidth: '100%', maxHeight: '100%' }}
             />
             <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-4 text-white text-center">
               <p className="font-medium">{selectedImage.alt} - {selectedImage.location}</p>
