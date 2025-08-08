@@ -4,9 +4,8 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import { GalleriesHeader } from '@/components/Galleries/GalleriesHeader';
+import { MagneticButton } from '@/components/ui/magnetic-button';
 
 // Gallery data with panorama images
 const galleries = [
@@ -14,84 +13,91 @@ const galleries = [
     id: 'united-states',
     title: 'United States',
     image: '/img/USA/panorama-USA-1.JPG',
-    count: 24,
+    count: 70,
     location: 'North America'
   },
   {
     id: 'argentina',
     title: 'Argentina',
-    image: '/img/Argentina/panorama-argentina-1.JPG',
-    count: 18,
+    image: '/img/Argentina/argentina_panorama (10).jpg',
+    count: 121,
     location: 'South America'
   },
   {
     id: 'australia',
     title: 'Australia',
-    image: '/img/Australia/panorama-australia-1.JPG',
-    count: 11,
+    image: '/img/Australia/panorama-australia (10).jpg',
+    count: 125,
     location: 'Oceania'
   },
   {
     id: 'costa-rica',
     title: 'Costa Rica',
-    image: '/img/Costa Rica/panorama-costarica-1.JPG',
-    count: 14,
+    image: '/img/Costa Rica/panorama-costarica (17).jpg',
+    count: 229,
     location: 'Central America'
   },
   {
     id: 'france',
     title: 'France',
-    image: '/img/France/panorama-france-1.JPG',
-    count: 10,
+    image: '/img/France/france_panorama (6).jpg',
+    count: 143,
     location: 'Europe'
   },
   {
     id: 'belgium',
     title: 'Belgium',
-    image: '/img/Belgium/panorama-belgium-1.JPG',
-    count: 6,
+    image: '/img/Belgium/belgium_panorama (9).jpg',
+    count: 96,
     location: 'Europe'
   },
   {
     id: 'switzerland',
     title: 'Switzerland',
-    image: '/img/Switzerland/panorama-switzerland-1.JPG',
-    count: 15,
+    image: '/img/Switzerland/switzerland_panorama (16).jpg',
+    count: 74,
     location: 'Europe'
   },
   {
     id: 'austria',
     title: 'Austria',
-    image: '/img/Austria/panorama-austria-1.JPG',
-    count: 7,
+    image: '/img/Austria/austria_panorama (22).jpg',
+    count: 223,
     location: 'Europe'
   },
   {
     id: 'slovenia',
     title: 'Slovenia',
-    image: '/img/Slovenia/panorama-slovenia-1.JPG',
-    count: 9,
+    image: '/img/Slovenia/slovenia_panorama (8).jpg',
+    count: 69,
     location: 'Europe'
   },
   {
     id: 'germany',
     title: 'Germany',
-    image: '/img/Germany/panorama-germany-1.JPG',
-    count: 12,
+    image: '/img/Germany/germany_panorama (2).jpg',
+    count: 214,
     location: 'Europe'
   },
   {
     id: 'united-kingdom',
     title: 'United Kingdom',
-    image: '/img/United Kingdom/panorama-uk-1.JPG',
-    count: 8,
+    image: '/img/United Kingdom/united_kingdom_panorama (2).jpg',
+    count: 102,
     location: 'Europe'
   },
   {
     id: 'greece',
     title: 'Greece',
-    image: '/img/Greece/panorama-greece-1.JPG',
-    count: 13,
+    image: '/img/Greece/greece_panorama (5).jpg',
+    count: 134,
+    location: 'Europe'
+  },
+  {
+    id: 'scotland',
+    title: 'Scotland',
+    image: '/img/Scotland/scotland_panorama (3).jpg',
+    count: 58,
     location: 'Europe'
   }
 ];
@@ -99,20 +105,26 @@ const galleries = [
 export default function GalleriesPage() {
   const router = useRouter();
 
+  // Sort galleries alphabetically by title
+  const sortedGalleries = [...galleries].sort((a, b) => a.title.localeCompare(b.title));
+
+  // Check if images exist on component mount (silently)
   useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
+    sortedGalleries.forEach(gallery => {
+      fetch(gallery.image, { method: 'HEAD' }).catch(() => {});
     });
-  }, []);
+  }, [sortedGalleries]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <GalleriesHeader />
       
-      <main className="pt-32 pb-16">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12" data-aos="fade-up">
+      <main className="pt-16">
+        {/* Adjustable height section */}
+        <div className="h-32 bg-transparent"></div>
+        
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 px-4" data-aos="fade-up">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               All <span className="text-blue-600 dark:text-blue-400">Galleries</span>
             </h1>
@@ -120,48 +132,53 @@ export default function GalleriesPage() {
           </div>
 
         <div className="w-full">
-          {galleries.map((gallery, index) => (
+          {sortedGalleries.map((gallery, index) => (
             <div 
               key={gallery.id}
-              data-aos="fade-up"
-              data-aos-delay={100 + (index * 50)}
               className="relative w-full mb-8 overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300"
             >
-              <div 
-                className="relative w-full h-[60vh] min-h-[500px] bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${gallery.image})`,
-                  backgroundPosition: 'center center',
-                  backgroundSize: 'cover',
-                  backgroundRepeat: 'no-repeat',
-                  filter: 'brightness(0.9)'
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent">
-                  <div className="absolute bottom-0 left-0 right-0 p-8 text-center">
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">{gallery.title}</h2>
-                    <div className="flex justify-center">
+              <div className="relative w-full h-[35vh] min-h-[250px] bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                <div className="absolute inset-0 w-full h-full">
+                  <img
+                    src={gallery.image}
+                    alt={`${gallery.title} panorama`}
+                    className="w-full h-full object-cover object-center brightness-90"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const errorDiv = document.createElement('div');
+                      errorDiv.className = 'absolute inset-0 bg-black/60 flex items-center justify-center';
+                      errorDiv.innerHTML = `
+                        <p class="text-white text-lg">Image not available</p>
+                      `;
+                      target.parentNode?.appendChild(errorDiv);
+                    }}
+                  />
+                </div>
+                <div className="absolute inset-0 bg-black/10"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center p-8 max-w-3xl mx-auto">
+                    <div className="mb-8">
+                      <h2 className="text-5xl md:text-6xl font-bold text-white mb-4">{gallery.title}</h2>
+                      <p className="text-white text-xl">
+                        <span className="text-white">{gallery.location}</span> • 
+                        <span className="text-white">{gallery.count} photos</span>
+                      </p>
+                    </div>
+                    <MagneticButton distance={0.3}>
                       <Link 
                         href={`/galleries/${gallery.id}`}
-                        className="inline-flex items-center justify-center px-10 py-3 border-2 border-white/20 bg-blue-600/90 hover:bg-blue-700 text-white text-lg font-medium rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                        className="inline-flex items-center justify-center px-16 py-6 text-lg font-medium bg-white text-blue-800 hover:bg-gray-100 transition-colors duration-300 rounded-sm relative overflow-hidden"
+                        style={{
+                          minWidth: '200px',
+                          minHeight: '60px',
+                          textAlign: 'center',
+                          lineHeight: '1.2'
+                        }}
                       >
                         View Gallery
-                        <svg 
-                          className="ml-3 w-5 h-5" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24" 
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth={2} 
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" 
-                          />
-                        </svg>
                       </Link>
-                    </div>
+                    </MagneticButton>
                   </div>
                 </div>
               </div>
