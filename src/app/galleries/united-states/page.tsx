@@ -297,29 +297,33 @@ export default function UnitedStatesGallery() {
                 </div>
               </div>
             </div>
-            <div className="space-y-4">
-              {[
-                { id: 1, location: 'Arizona' },
-                { id: 2, location: 'Utah' },
-                { id: 3, location: 'California' }
-              ].map((item) => (
-                <div key={item.id} className="group relative w-full h-[70vh] overflow-hidden">
-                  <Image
-                    src={`/img/USA/panorama-USA-${item.id}.JPG`}
-                    alt={`Panoramic view of ${item.location}`}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    sizes="100vw"
-                  />
-                  <div className="absolute inset-0 flex items-end">
-                    <div className="w-full h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                        {`Panoramic view - ${item.location}`}
-                      </p>
+            <div className="w-full max-w-full overflow-hidden">
+              <div className="w-full py-8">
+                {[
+                  { id: 1, location: 'Arizona' },
+                  { id: 2, location: 'Utah' },
+                  { id: 3, location: 'California' }
+                ].map((item) => (
+                  <div key={item.id} className="w-full group relative" style={{ marginBottom: '40px' }}>
+                    <Image
+                      src={`/img/USA/panorama-USA-${item.id}.JPG`}
+                      alt={`Panoramic view of ${item.location}`}
+                      width={4000}
+                      height={1000}
+                      className="w-full h-auto"
+                      style={{ display: 'block' }}
+                      sizes="100vw"
+                    />
+                    <div className="absolute inset-0 flex items-end justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-full py-3 bg-black/80 flex flex-col items-center">
+                        <p className="text-white text-sm md:text-base font-medium text-center px-2">
+                          {`Panoramic view - ${item.location}`}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         )}
