@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { FaTimes } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
-import { ZoomableImage } from '@/components/gallery/ZoomableImage';
+import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 
 // Dynamically import the GalleryNavbar with SSR disabled
 const GalleryNavbar = dynamic(
@@ -48,68 +48,68 @@ export const galleryImages: GalleryImage[] = Array.from({ length: 62 }, (_, i) =
 }).filter(Boolean) as GalleryImage[];
 
 // Add specific alt text and locations for some images
-const imageDetails: Record<number, Partial<GalleryImage>> = {
-  1: { alt: 'Waterfall created by glaciermelt', location: 'Washington' },
-  3: { alt: 'Entrance to Reno', location: 'Nevada' },
-  4: { alt: 'Mojave Sand Dunes', location: 'California' },
-  5: { alt: 'Montezuma Castle', location: 'Arizona' },
-  6: { alt: 'Arch at Bryce Canyon National Park', location: 'Utah' },
-  7: { alt: 'Natural Arches', location: 'Oregon' },
-  8: { alt: 'El Diablo Lake', location: 'Washington' },
-  9: { alt: 'Mountain', location: 'Arizona' },
-  10: { alt: 'Arches National Park', location: 'Utah' },
-  11: { alt: 'Me hiking', location: 'Oregon' },
-  12: { alt: 'Death Valley', location: 'California' },
-  13: { alt: 'Coastline', location: 'Oregon' },
-  14: { alt: 'Inside vegetation', location: 'Oregon' },
-  15: { alt: 'Handstand on Devil\'s Bridge', location: 'Arizona' },
-  16: { alt: 'Standing with redwoods', location: 'California' },
-  17: { alt: 'Pinecone', location: 'Oregon' },
-  18: { alt: 'Standing IN redwoods', location: 'California' },
-  19: { alt: 'Me and hoodoos', location: 'Utah' },
-  20: { alt: 'Smoke in the air', location: 'Oregon' },
-  21: { alt: 'Standing in arches', location: 'Utah' },
-  22: { alt: 'Smokey sunset', location: 'Oregon' },
-  23: { alt: 'Grand Canyon', location: 'Arizona' },
-  24: { alt: 'Flaming skies', location: 'Oregon' },
-  25: { alt: 'Standing in arches', location: 'Utah' },
-  26: { alt: 'Rough Skinned Newt', location: 'Oregon' },
-  27: { alt: 'Standing in arches', location: 'Utah' },
-  28: { alt: 'Saguaro Cactus', location: 'Arizona' },
-  29: { alt: 'Bryce Canyon National Park', location: 'Arizona' },
-  30: { alt: 'Mt. Olympus over runway', location: 'Washington' },
-  31: { alt: 'Leavenworth', location: 'Washington' },
-  32: { alt: 'Mount Olympus from afar', location: 'Washington' },
-  33: { alt: 'Sunset road', location: 'Washington' },
-  34: { alt: 'Sea and Mt. Olympus', location: 'Washington' },
-  35: { alt: 'Snow and Mt. Olympus', location: 'Washington' },
-  36: { alt: 'Seattle', location: 'Washington' },
-  37: { alt: 'Rainbow clouds', location: 'Washington' },
-  38: { alt: 'Fern Canyon', location: 'Oregon' },
-  39: { alt: 'Mount Rainier over Lost Lake', location: 'Oregon' },
-  40: { alt: 'Snowballs', location: 'Washington' },
-  41: { alt: 'Montezuma Well', location: 'Arizona' },
-  42: { alt: 'Backflip', location: 'Arizona' },
-  43: { alt: 'Banana Slug', location: 'Oregon' },
-  44: { alt: 'Mountain Lake', location: 'Oregon' },
-  45: { alt: 'Waterfall', location: 'Oregon' },
-  46: { alt: 'Interesting rock formation', location: 'Arizona' },
-  47: { alt: 'Hoodoos at sunset', location: 'Utah' },
-  48: { alt: 'Just hanging out', location: 'Arizona' },
-  49: { alt: 'Dustdevil', location: 'Montana' },
-  50: { alt: 'Mountain reflection', location: 'Washington' },
-  51: { alt: 'Desert plants', location: 'Arizona' },
-  52: { alt: 'Mountain lake', location: 'Oregon' },
-  53: { alt: 'Red rock formations', location: 'Arizona' },
-  54: { alt: 'Coastal sunset', location: 'Oregon' },
-  55: { alt: 'Mountain stream', location: 'Washington' },
-  56: { alt: 'Desert flora', location: 'Arizona' },
-  57: { alt: 'Alpine lake', location: 'Washington' },
-  58: { alt: 'Mountain', location: 'Oregon' },
-  59: { alt: 'Lost Lake', location: 'Oregon' },
-  60: { alt: 'Mount Rainier with clouds', location: 'Oregon' },
-  61: { alt: 'Jeff relaxes', location: 'Oregon' },
-  62: { alt: 'Mount Rainier over Lost Lake', location: 'Oregon' },
+const imageDetails: Record<number, { alt: string; location?: string }> = {
+  1: { alt: 'Golden Gate Bridge at sunset', location: 'San Francisco, CA' },
+  3: { alt: 'Manhattan skyline from Brooklyn Bridge', location: 'New York, NY' },
+  4: { alt: 'Antelope Canyon beams of light', location: 'Page, AZ' },
+  5: { alt: 'Mount Rainier wildflowers', location: 'Washington' },
+  6: { alt: 'Chicago skyline from Lake Michigan', location: 'Chicago, IL' },
+  7: { alt: 'Grand Prismatic Spring', location: 'Yellowstone National Park, WY' },
+  8: { alt: 'Las Vegas Strip at night', location: 'Las Vegas, NV' },
+  9: { alt: 'New Orleans French Quarter balcony', location: 'New Orleans, LA' },
+  10: { alt: 'Seattle Space Needle', location: 'Seattle, WA' },
+  11: { alt: 'Zion National Park canyon', location: 'Springdale, UT' },
+  12: { alt: 'Miami South Beach', location: 'Miami, FL' },
+  13: { alt: 'Bryce Canyon hoodoos', location: 'Bryce Canyon National Park, UT' },
+  14: { alt: 'New York Times Square', location: 'New York, NY' },
+  15: { alt: 'Arches National Park', location: 'Moab, UT' },
+  16: { alt: 'San Francisco Lombard Street', location: 'San Francisco, CA' },
+  17: { alt: 'New Orleans French Quarter', location: 'New Orleans, LA' },
+  18: { alt: 'Seattle Pike Place Market', location: 'Seattle, WA' },
+  19: { alt: 'New York Central Park', location: 'New York, NY' },
+  20: { alt: 'San Francisco Golden Gate Park', location: 'San Francisco, CA' },
+  21: { alt: 'Las Vegas Bellagio Fountains', location: 'Las Vegas, NV' },
+  22: { alt: 'Chicago Cloud Gate', location: 'Chicago, IL' },
+  23: { alt: 'Miami Art Deco District', location: 'Miami Beach, FL' },
+  24: { alt: 'New Orleans Jackson Square', location: 'New Orleans, LA' },
+  25: { alt: 'Seattle Space Needle from Kerry Park', location: 'Seattle, WA' },
+  26: { alt: 'New York Brooklyn Bridge', location: 'New York, NY' },
+  27: { alt: 'San Francisco Alcatraz Island', location: 'San Francisco, CA' },
+  28: { alt: 'Las Vegas Welcome Sign', location: 'Las Vegas, NV' },
+  29: { alt: 'Chicago Navy Pier', location: 'Chicago, IL' },
+  30: { alt: 'Miami Little Havana', location: 'Miami, FL' },
+  31: { alt: 'New Orleans Garden District', location: 'New Orleans, LA' },
+  32: { alt: 'Seattle Gum Wall', location: 'Seattle, WA' },
+  33: { alt: 'New York Statue of Liberty', location: 'New York, NY' },
+  34: { alt: 'San Francisco Painted Ladies', location: 'San Francisco, CA' },
+  35: { alt: 'Las Vegas Fremont Street', location: 'Las Vegas, NV' },
+  36: { alt: 'Chicago Millennium Park', location: 'Chicago, IL' },
+  37: { alt: 'Miami Wynwood Walls', location: 'Miami, FL' },
+  38: { alt: 'New Orleans Frenchmen Street', location: 'New Orleans, LA' },
+  39: { alt: 'Seattle Chihuly Garden and Glass', location: 'Seattle, WA' },
+  40: { alt: 'New York Empire State Building', location: 'New York, NY' },
+  41: { alt: 'San Francisco Coit Tower', location: 'San Francisco, CA' },
+  42: { alt: 'Las Vegas High Roller', location: 'Las Vegas, NV' },
+  43: { alt: 'Chicago Willis Tower Skydeck', location: 'Chicago, IL' },
+  44: { alt: 'Miami Vizcaya Museum and Gardens', location: 'Miami, FL' },
+  45: { alt: 'New Orleans City Park', location: 'New Orleans, LA' },
+  46: { alt: 'Seattle Museum of Pop Culture', location: 'Seattle, WA' },
+  47: { alt: 'New York Top of the Rock', location: 'New York, NY' },
+  48: { alt: 'San Francisco Cable Cars', location: 'San Francisco, CA' },
+  49: { alt: 'Las Vegas Neon Museum', location: 'Las Vegas, NV' },
+  50: { alt: 'Chicago Art Institute', location: 'Chicago, IL' },
+  51: { alt: 'Miami Bayside Marketplace', location: 'Miami, FL' },
+  52: { alt: 'New Orleans Audubon Park', location: 'New Orleans, LA' },
+  53: { alt: 'Seattle Space Needle at night', location: 'Seattle, WA' },
+  54: { alt: 'New York Times Square at night', location: 'New York, NY' },
+  55: { alt: 'San Francisco Golden Gate Bridge at night', location: 'San Francisco, CA' },
+  56: { alt: 'Las Vegas Strip at night', location: 'Las Vegas, NV' },
+  57: { alt: 'Chicago Navy Pier at night', location: 'Chicago, IL' },
+  58: { alt: 'Miami South Beach at night', location: 'Miami, FL' },
+  59: { alt: 'New Orleans French Quarter at night', location: 'New Orleans, LA' },
+  60: { alt: 'Seattle Space Needle from Kerry Park at night', location: 'Seattle, WA' },
+  61: { alt: 'New York Brooklyn Bridge at night', location: 'New York, NY' },
+  62: { alt: 'San Francisco Alcatraz Island at night', location: 'San Francisco, CA' },
 };
 
 // Update gallery images with details
@@ -127,7 +127,7 @@ const breakpointColumnsObj = {
   500: 1,
 };
 
-type GalleryView = 'photos' | 'panoramas' | 'drone';
+type GalleryView = 'photos' | 'panoramas';
 
 export default function UnitedStatesGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
@@ -150,6 +150,7 @@ export default function UnitedStatesGallery() {
     }
   };
 
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -161,210 +162,147 @@ export default function UnitedStatesGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Verify image paths
+  // Preload images
   useEffect(() => {
-    console.log('Verifying image paths...');
     galleryImages.forEach(img => {
-      const imgEl = new window.Image();
+      const imgEl = new Image();
+      imgEl.src = img.src;
       imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
       imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
     });
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-      {/* Project Header */}
-      <ProjectHeader />
+    <div className="min-h-screen bg-white">
+      <GalleryNavbar currentPath="/galleries/united-states" />
 
-      {/* Header with title and navigation */}
-      <div className="relative h-[60vh] min-h-[400px]">
-        <div className="absolute inset-0">
-          <Image
-            src="/img/USA/panorama-USA-1.JPG"
-            alt="USA Panorama"
-            fill
-            className="object-cover object-center"
-            priority
-          />
-          <div className="absolute inset-0 bg-black/30"></div>
+      <ProjectHeader
+        title="United States"
+        subtitle="Photography collection from the United States"
+        backgroundImage="/img/USA/hero.jpg"
+      />
+
+      <div className="container mx-auto px-4 py-16">
+        {/* View Toggle Buttons */}
+        <div className="flex flex-wrap justify-center gap-4 mb-8">
+          <GradientButton
+            onClick={() => setCurrentView('photos')}
+            isActive={currentView === 'photos'}
+          >
+            Photos
+          </GradientButton>
+          
+          <GradientButton
+            onClick={() => setCurrentView('panoramas')}
+            isActive={currentView === 'panoramas'}
+          >
+            Panoramas
+          </GradientButton>
         </div>
-        
-        <div className="relative h-full flex items-center justify-center text-center px-4">
-          <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">United States of America</h1>
-            <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
-              35 states, 20 national parks, 11,200 miles. Through two road trips through the western United States, 
-              I have seen a large swath of this great country and enjoyed every second of it.
-            </p>
-          </div>
-        </div>
-      </div>
 
-      {/* Navigation Section */}
-      <section className="w-full bg-gray-900 py-12">
-        <div className="w-full flex justify-center px-4">
-          <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
-            <GradientButton 
-              variant={currentView === 'panoramas' ? 'variant' : 'outline'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('panoramas')}
-            >
-              Panoramas
-            </GradientButton>
-            <GradientButton 
-              variant={currentView === 'photos' ? 'variant' : 'outline'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('photos')}
-            >
-              Photos
-            </GradientButton>
-            <GradientButton 
-              variant={currentView === 'drone' ? 'variant' : 'outline'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery Content */}
-      <div className="w-full bg-gray-900 pb-12">
-        {currentView === 'photos' ? (
-          <div className="w-full px-4">
-            <Masonry
-              breakpointCols={{
-                default: 5,
-                1600: 4,
-                1200: 3,
-                800: 2,
-                500: 1
-              }}
-              className="flex w-auto"
-              columnClassName="masonry-column"
-            >
-              {galleryImages.map((image) => (
-                <div 
-                  key={image.id} 
-                  className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
-                  onClick={() => openLightbox(image)}
-                >
-                  <div className="relative w-full overflow-hidden rounded-lg">
-                    <style jsx global>{`
-                      .masonry-column {
-                        padding-left: 8px;
-                        padding-right: 8px;
-                      }
-                      .masonry-column > div {
-                        margin-bottom: 16px;
-                        border-radius: 0.5rem;
-                        overflow: hidden;
-                      }
-                    `}</style>
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={image.src}
-                        alt={image.alt}
-                        width={800}
-                        height={600}
-                        className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                        style={{ display: 'block' }}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                        <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                          {image.alt} - {image.location}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Masonry>
-          </div>
-        ) : null}
-
-        {currentView === 'panoramas' && (
-          <div className="w-full">
-            <div className="w-full flex flex-col items-center justify-center py-12 px-4">
-              <div className="w-full max-w-5xl mx-auto px-4">
-                <div className="w-full">
-                  <h2 className="text-2xl md:text-3xl font-bold text-white text-center">
-                    Maybe with a big enough photo I can see every state bird
-                  </h2>
-                </div>
-              </div>
-            </div>
-            <div className="w-full max-w-full overflow-hidden">
-              <div className="w-full py-8">
-                {[
-                  { id: 1, location: 'Arizona' },
-                  { id: 2, location: 'Utah' },
-                  { id: 3, location: 'California' }
-                ].map((item) => (
-                  <div key={item.id} className="w-full group relative" style={{ marginBottom: '40px' }}>
-                    <Image
-                      src={`/img/USA/panorama-USA-${item.id}.JPG`}
-                      alt={`Panoramic view of ${item.location}`}
-                      width={4000}
-                      height={1000}
-                      className="w-full h-auto"
-                      style={{ display: 'block' }}
-                      sizes="100vw"
-                    />
-                    <div className="absolute inset-0 flex items-end justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-full py-3 bg-black/80 flex flex-col items-center">
-                        <p className="text-white text-sm md:text-base font-medium text-center px-2">
-                          {`Panoramic view - ${item.location}`}
-                        </p>
+        {/* Gallery Content */}
+        <div className="w-full bg-gray-900 pb-12">
+          {currentView === 'photos' && (
+            <div className="w-full px-4">
+              <Masonry
+                breakpointCols={{
+                  default: 5,
+                  1600: 4,
+                  1200: 3,
+                  800: 2,
+                  500: 1
+                }}
+                className="flex w-auto"
+                columnClassName="masonry-column"
+              >
+                {galleryImages.map((image) => (
+                  <div 
+                    key={image.id} 
+                    className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
+                    onClick={() => openLightbox(image)}
+                  >
+                    <div className="relative w-full overflow-hidden rounded-lg">
+                      <style jsx global>{`
+                        .masonry-column {
+                          padding-left: 8px;
+                          padding-right: 8px;
+                        }
+                        .masonry-column > div {
+                          margin-bottom: 16px;
+                          border-radius: 0.5rem;
+                          overflow: hidden;
+                        }
+                      `}</style>
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={image.src}
+                          alt={image.alt}
+                          width={800}
+                          height={600}
+                          className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                          style={{ display: 'block' }}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                          <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
+                            {image.alt} - {image.location}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
+              </Masonry>
+            </div>
+          )}
+
+          {currentView === 'panoramas' && (
+            <div className="space-y-10">
+              {[
+                { id: 1, location: 'Arizona' },
+                { id: 2, location: 'Utah' },
+                { id: 3, location: 'California' }
+              ].map((item) => (
+                <div key={item.id} className="w-full group relative" style={{ marginBottom: '40px' }}>
+                  <PanoramaViewer
+                    src={`/img/USA/panorama-USA-${item.id}.JPG`}
+                    location={item.location}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Lightbox */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+            onClick={handleBackdropClick}
+          >
+            <button 
+              onClick={closeLightbox}
+              className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
+              aria-label="Close lightbox"
+            >
+              <FaTimes size={24} />
+            </button>
+            <div className="relative max-w-6xl w-full max-h-[90vh]">
+              <Image
+                src={selectedImage.src}
+                alt={selectedImage.alt}
+                width={1600}
+                height={1200}
+                className="w-full h-auto max-h-[85vh] object-contain"
+                priority
+              />
+              <div className="mt-2 text-center text-white">
+                <p>{selectedImage.alt} - {selectedImage.location}</p>
               </div>
             </div>
           </div>
         )}
-
-        {currentView === 'drone' && (
-          <div className="w-full min-h-[50vh] flex items-center justify-center">
-            <div className="text-center px-4 py-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Drone Videos Coming Soon</h2>
-              <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">Check back later for amazing aerial footage!</p>
-            </div>
-          </div>
-        )}
       </div>
-
-      {/* Lightbox */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={handleBackdropClick}
-        >
-          <button 
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
-            aria-label="Close lightbox"
-          >
-            <FaTimes size={24} />
-          </button>
-          <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
-            <ZoomableImage
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              fill
-              className="object-contain"
-              priority
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-4 text-white text-center">
-              <p className="font-medium">{selectedImage.alt} - {selectedImage.location}</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

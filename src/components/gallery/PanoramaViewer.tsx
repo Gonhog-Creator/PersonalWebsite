@@ -207,7 +207,7 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
         <div className="absolute inset-0 flex items-end justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="w-full py-3 bg-black/80 flex flex-col items-center">
             <p className="text-white text-sm md:text-base font-medium text-center px-2">
-              {`Panoramic view - ${location}`}
+              {location}
             </p>
           </div>
         </div>
@@ -271,7 +271,7 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
             
             <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-center py-3">
               <p className="text-sm md:text-base">
-                {`${imageProps.alt || 'Panorama view'} - ${location}`}
+                {location}
               </p>
               <p className="text-xs text-gray-300 mt-1">
                 {scale > 1 ? 'Drag to pan • Double-click to reset' : 'Double-click to zoom'}

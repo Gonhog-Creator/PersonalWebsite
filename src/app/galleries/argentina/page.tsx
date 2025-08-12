@@ -9,6 +9,7 @@ import { FaTimes } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
+import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 
 // Dynamically import the GalleryNavbar with SSR disabled
 const GalleryNavbar = dynamic(
@@ -35,14 +36,12 @@ export const galleryImages: GalleryImage[] = Array.from({ length: 105 }, (_, i) 
   return {
     id,
     src: getImagePath(id),
-    alt: `Photo ${id}`,
-    location: 'Argentina'
+    alt: `Photo ${id}`
   };
 });
 
 // Add specific alt text for all images
 const imageDetails: Record<number, { alt: string }> = {
-    1: { alt: 'Arafed man doing a handstand on a rock near a body of water.' },
   1: { alt: 'Arafed iceberg with a boat in the water near a mountain.' },
   2: { alt: 'There is a man standing in a doorway looking out at the water.' },
   2: { alt: 'There is a large iceberg with a rainbow in the sky.' },
@@ -344,10 +343,14 @@ export default function ArgentinaGallery() {
         {currentView === 'panoramas' && (
           <div className="w-full">
             <div className="w-full bg-gray-900 py-12">
-              <div className="container mx-auto px-4">
-                <h2 className="text-2xl md:text-3xl font-bold text-white text-center">
-                  Stunning panoramic views of Argentina's diverse landscapes
-                </h2>
+              <div className="w-full flex justify-center">
+                <div className="w-full max-w-4xl px-4">
+                  <div className="w-full text-center">
+                    <h2 className="text-2xl md:text-3xl font-bold text-white">
+                      I promise I got every speck of glacier.
+                    </h2>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="w-full max-w-full overflow-hidden">
@@ -362,13 +365,13 @@ export default function ArgentinaGallery() {
                   { id: 7, location: 'Salta' },
                   { id: 8, location: 'Iguazu Falls' },
                   { id: 9, location: 'Ushuaia' }
-                ].map((item) => (
-                  <div key={item.id} className="w-full" style={{ marginBottom: '40px' }}>
+                ].map((item, index) => (
+                  <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
                       src={`/img/Argentina/argentina_panorama (${item.id}).jpg`}
-                      alt={`Panoramic view of ${item.location}`}
+                      alt={`${item.location}`}
                       location={item.location}
-                      priority={item.id <= 2}
+                      priority={index <= 1}
                     />
                   </div>
                 ))}
