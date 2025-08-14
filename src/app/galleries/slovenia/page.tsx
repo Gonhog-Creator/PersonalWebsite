@@ -9,6 +9,7 @@ import { FaTimes } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
+import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 
 // Dynamically import the GalleryNavbar with SSR disabled
 const GalleryNavbar = dynamic(
@@ -29,30 +30,100 @@ const getImagePath = (id: number) => {
   return `${basePath} (${id}).jpg`;
 };
 
-// Generate gallery images array
-export const galleryImages: GalleryImage[] = Array.from({ length: 25 }, (_, i) => {
-  const id = i + 1;
-  return {
-    id,
-    src: getImagePath(id),
-    alt: `Photo ${id}`,
-    location: 'Slovenia'
-  };
-});
+// List of missing photo numbers to exclude
+const missingPhotos = [];
+
+// Generate gallery images array, excluding missing photos
+export const galleryImages: GalleryImage[] = Array.from(
+  { length: 57 },
+  (_, i) => ({
+    id: i + 1,
+    src: getImagePath(i + 1),
+    alt: `Photo ${i + 1}`,
+    location: 'Slovenia'  // Default location
+  })
+).filter(image => !missingPhotos.includes(image.id));
 
 // Add specific alt text for all images
 const imageDetails: Record<number, { alt: string }> = {
-  // Add your image descriptions here
-  // Format: id: { alt: 'description' },
-  // Example:
-  // 1: { alt: 'Lake Bled with island church' },
-  // 2: { alt: 'Vintgar Gorge wooden walkway' },
+  1: { alt: 'DescriptionComingSoon' },
+  1: { alt: 'DescriptionComingSoon' },
+  2: { alt: 'DescriptionComingSoon' },
+  2: { alt: 'DescriptionComingSoon' },
+  3: { alt: 'DescriptionComingSoon' },
+  3: { alt: 'DescriptionComingSoon' },
+  4: { alt: 'DescriptionComingSoon' },
+  4: { alt: 'DescriptionComingSoon' },
+  5: { alt: 'DescriptionComingSoon' },
+  5: { alt: 'DescriptionComingSoon' },
+  6: { alt: 'DescriptionComingSoon' },
+  6: { alt: 'DescriptionComingSoon' },
+  7: { alt: 'DescriptionComingSoon' },
+  7: { alt: 'DescriptionComingSoon' },
+  8: { alt: 'DescriptionComingSoon' },
+  8: { alt: 'DescriptionComingSoon' },
+  9: { alt: 'DescriptionComingSoon' },
+  9: { alt: 'DescriptionComingSoon' },
+  10: { alt: 'DescriptionComingSoon' },
+  10: { alt: 'DescriptionComingSoon' },
+  11: { alt: 'DescriptionComingSoon' },
+  11: { alt: 'DescriptionComingSoon' },
+  12: { alt: 'DescriptionComingSoon' },
+  12: { alt: 'DescriptionComingSoon' },
+  13: { alt: 'DescriptionComingSoon' },
+  14: { alt: 'DescriptionComingSoon' },
+  15: { alt: 'DescriptionComingSoon' },
+  16: { alt: 'DescriptionComingSoon' },
+  17: { alt: 'DescriptionComingSoon' },
+  18: { alt: 'DescriptionComingSoon' },
+  19: { alt: 'DescriptionComingSoon' },
+  20: { alt: 'DescriptionComingSoon' },
+  21: { alt: 'DescriptionComingSoon' },
+  22: { alt: 'DescriptionComingSoon' },
+  23: { alt: 'DescriptionComingSoon' },
+  24: { alt: 'DescriptionComingSoon' },
+  25: { alt: 'DescriptionComingSoon' },
+  26: { alt: 'DescriptionComingSoon' },
+  27: { alt: 'DescriptionComingSoon' },
+  28: { alt: 'DescriptionComingSoon' },
+  29: { alt: 'DescriptionComingSoon' },
+  30: { alt: 'DescriptionComingSoon' },
+  31: { alt: 'DescriptionComingSoon' },
+  32: { alt: 'DescriptionComingSoon' },
+  33: { alt: 'DescriptionComingSoon' },
+  34: { alt: 'DescriptionComingSoon' },
+  35: { alt: 'DescriptionComingSoon' },
+  36: { alt: 'DescriptionComingSoon' },
+  37: { alt: 'DescriptionComingSoon' },
+  38: { alt: 'DescriptionComingSoon' },
+  39: { alt: 'DescriptionComingSoon' },
+  40: { alt: 'DescriptionComingSoon' },
+  41: { alt: 'DescriptionComingSoon' },
+  42: { alt: 'DescriptionComingSoon' },
+  43: { alt: 'DescriptionComingSoon' },
+  44: { alt: 'DescriptionComingSoon' },
+  45: { alt: 'DescriptionComingSoon' },
+  46: { alt: 'DescriptionComingSoon' },
+  47: { alt: 'DescriptionComingSoon' },
+  48: { alt: 'DescriptionComingSoon' },
+  49: { alt: 'DescriptionComingSoon' },
+  50: { alt: 'DescriptionComingSoon' },
+  51: { alt: 'DescriptionComingSoon' },
+  52: { alt: 'DescriptionComingSoon' },
+  53: { alt: 'DescriptionComingSoon' },
+  54: { alt: 'DescriptionComingSoon' },
+  55: { alt: 'DescriptionComingSoon' },
+  56: { alt: 'DescriptionComingSoon' },
+  57: { alt: 'DescriptionComingSoon' },
 };
+
 
 // Update gallery images with details
 galleryImages.forEach(img => {
   if (imageDetails[img.id]) {
-    Object.assign(img, imageDetails[img.id]);
+    img.alt = imageDetails[img.id].alt;
+  } else {
+    console.warn(`No description found for image ${img.id}`);
   }
 });
 
@@ -87,7 +158,6 @@ export default function SloveniaGallery() {
     }
   };
 
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -99,116 +169,233 @@ export default function SloveniaGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Preload images
+  // Verify image paths
   useEffect(() => {
+    console.log('Verifying image paths...');
     galleryImages.forEach(img => {
-      const imgEl = new Image();
-      imgEl.src = img.src;
+      const imgEl = new window.Image();
       imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
       imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+      imgEl.src = img.src;
     });
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      <GalleryNavbar currentPath="/galleries/slovenia" />
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      {/* Project Header */}
+      <ProjectHeader />
 
-      <ProjectHeader
-        title="Slovenia"
-        subtitle="Photography collection from Slovenia"
-        backgroundImage="/img/Slovenia/hero.jpg"
-      />
-
-      <div className="container mx-auto px-4 py-16">
-        {/* View Toggle Buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mb-8">
-          <GradientButton
-            onClick={() => setCurrentView('photos')}
-            isActive={currentView === 'photos'}
-          >
-            Photos
-          </GradientButton>
-          
-          <GradientButton
-            onClick={() => setCurrentView('panoramas')}
-            isActive={currentView === 'panoramas'}
-          >
-            Panoramas
-          </GradientButton>
+      {/* Header with title and navigation */}
+      <div className="relative h-[60vh] min-h-[400px]">
+        <div className="absolute inset-0">
+          <Image
+            src="/img/Slovenia/slovenia_panorama (4).jpg"
+            alt="Slovenia Panorama"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/5"></div>
         </div>
 
-        {/* Main Content */}
-        {currentView === 'photos' && (
-          <Masonry
-            breakpointCols={breakpointColumnsObj}
-            className="masonry-grid flex w-auto"
-            columnClassName="masonry-column px-2"
-          >
-            {galleryImages.map((image) => (
-              <div
-                key={image.id}
-                className="mb-4 cursor-pointer group"
-                onClick={() => openLightbox(image)}
-              >
-                <div className="relative w-full overflow-hidden rounded-lg">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    width={800}
-                    height={600}
-                    className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300" />
+        <div className="relative h-full flex items-center justify-center text-center px-4">
+          <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Slovenia</h1>
+            <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
+              Bled’s iconic lake, the breathtaking Vintgar Gorge hike, and scenic bike rides through lush landscapes. Slovenia is a country of enchanting nature and charming adventures.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Section */}
+      <section className="w-full bg-gray-900 py-12">
+        <div className="w-full flex justify-center px-4">
+          <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
+            <GradientButton
+              variant={currentView === 'panoramas' ? 'variant' : 'outline'}
+              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+              onClick={() => setCurrentView('panoramas')}
+            >
+              Panoramas
+            </GradientButton>
+            <GradientButton
+              variant={currentView === 'photos' ? 'variant' : 'outline'}
+              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+              onClick={() => setCurrentView('photos')}
+            >
+              Photos
+            </GradientButton>
+            <GradientButton
+              variant={currentView === 'drone' ? 'variant' : 'outline'}
+              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+              onClick={() => setCurrentView('drone')}
+            >
+              Drone Videos
+            </GradientButton>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Content */}
+      <div className="w-full bg-gray-900 pb-12">
+        {currentView === 'photos' ? (
+          <div className="w-full px-4">
+            <Masonry
+              breakpointCols={{
+                default: 5,
+                1600: 4,
+                1200: 3,
+                800: 2,
+                500: 1
+              }}
+              className="flex w-auto"
+              columnClassName="masonry-column"
+            >
+              {galleryImages.map((image) => (
+                <div
+                  key={image.id}
+                  className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
+                  onClick={() => openLightbox(image)}
+                >
+                  <div className="relative w-full overflow-hidden rounded-lg">
+                    <style jsx global>{`
+                      .masonry-column {
+                        padding-left: 8px;
+                        padding-right: 8px;
+                      }
+                      .masonry-column > div {
+                        margin-bottom: 16px;
+                        border-radius: 0.5rem;
+                        overflow: hidden;
+                      }
+                    `}</style>
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        width={800}
+                        height={600}
+                        className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                        style={{ display: 'block' }}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
+                          {image.alt}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Masonry>
+          </div>
+        ) : null}
+
+        {currentView === 'panoramas' && (
+          <div className="w-full">
+            <div className="w-full bg-gray-900 py-12">
+              <div className="w-full flex justify-center">
+                <div className="w-full max-w-4xl px-4">
+                  <div className="w-full text-center">
+                    <h2 className="text-2xl md:text-3xl font-bold text-white">
+                      Castles on the hillside, can you spot them?
+                    </h2>
+                  </div>
                 </div>
               </div>
-            ))}
-          </Masonry>
-        )}
-
-        {/* Panoramas Section */}
-        {currentView === 'panoramas' && (
-          <div className="space-y-10">
-            {[1, 2, 3].map((id) => (
-              <div key={id} className="w-full group relative" style={{ marginBottom: '40px' }}>
-                <PanoramaViewer
-                  src={`/img/Slovenia/panorama-slovenia-${id}.JPG`}
-                  location="Slovenia"
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Lightbox */}
-        {selectedImage && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
-            onClick={handleBackdropClick}
-          >
-            <button
-              onClick={closeLightbox}
-              className="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 z-10 p-2"
-              aria-label="Close lightbox"
-            >
-              <FaTimes />
-            </button>
-            <div className="relative max-w-6xl w-full max-h-[90vh]">
-              <Image
-                src={selectedImage.src}
-                alt={selectedImage.alt}
-                width={1600}
-                height={1200}
-                className="w-full h-auto max-h-[85vh] object-contain"
-                priority
-              />
-              <div className="mt-2 text-center text-white">
-                <p>{selectedImage.alt}</p>
+            </div>
+            <div className="w-full max-w-full overflow-hidden">
+              <div className="w-full py-8">
+                {[
+                  { id: 1, location: 'DescriptionComingSoon' },
+                  { id: 2, location: 'DescriptionComingSoon' },
+                  { id: 3, location: 'DescriptionComingSoon' },
+                  { id: 4, location: 'DescriptionComingSoon' },
+                  { id: 5, location: 'DescriptionComingSoon' },
+                  { id: 6, location: 'DescriptionComingSoon' },
+                  { id: 7, location: 'DescriptionComingSoon' },
+                  { id: 8, location: 'DescriptionComingSoon' },
+                  { id: 9, location: 'DescriptionComingSoon' },
+                  { id: 10, location: 'DescriptionComingSoon' },
+                  { id: 11, location: 'DescriptionComingSoon' },
+                  { id: 12, location: 'DescriptionComingSoon' },
+                  { id: 13, location: 'DescriptionComingSoon' },
+                  { id: 14, location: 'DescriptionComingSoon' },
+                  { id: 15, location: 'DescriptionComingSoon' },
+                  { id: 16, location: 'DescriptionComingSoon' },
+                  { id: 17, location: 'DescriptionComingSoon' },
+                  { id: 18, location: 'DescriptionComingSoon' },
+                  { id: 19, location: 'DescriptionComingSoon' },
+                  { id: 20, location: 'DescriptionComingSoon' },
+                  { id: 21, location: 'DescriptionComingSoon' },
+                  { id: 22, location: 'DescriptionComingSoon' },
+                  { id: 23, location: 'DescriptionComingSoon' },
+                ].map((item, index) => (
+                  <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
+                    <PanoramaViewer
+                      src={`/img/Slovenia/slovenia_panorama (${item.id}).jpg`}
+                      alt={`${item.location}`}
+                      location={item.location}
+                      priority={index <= 1}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         )}
+
+        {currentView === 'drone' && (
+          <div className="w-full flex justify-center items-center min-h-screen py-16">
+            <div className="w-full max-w-6xl px-4 flex flex-col items-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Slovenia 2025 Recap</h2>
+              <div className="aspect-w-16 aspect-h-9 w-full max-w-6xl">
+                <video
+                  className="w-full h-auto rounded-lg shadow-xl"
+                  controls
+                  loop
+                  playsInline
+                  src="/vids/Slovenia 2025 Recap 2k.mp4"
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              {/* Add space below the video */}
+              <div className="h-32 w-full"></div>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Lightbox */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+          onClick={handleBackdropClick}
+        >
+          <button
+            onClick={closeLightbox}
+            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
+            aria-label="Close lightbox"
+          >
+            <FaTimes size={24} />
+          </button>
+          <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
+            <ZoomableImage
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              fill
+              className="object-contain"
+              priority
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-4 text-white text-center">
+              <p className="font-medium">{selectedImage.alt}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

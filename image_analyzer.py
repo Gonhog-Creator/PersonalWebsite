@@ -55,5 +55,5 @@ def generate_descriptions(directory):
 
 
 # Run analysis
-gallery_path = "public/img/France"
+gallery_path = "public/img/Slovenia"
 generate_descriptions(gallery_path)

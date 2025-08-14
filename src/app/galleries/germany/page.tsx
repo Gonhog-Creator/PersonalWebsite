@@ -31,7 +31,7 @@ const getImagePath = (id: number) => {
 };
 
 // List of missing photo numbers to exclude
-const missingPhotos = [147];
+const missingPhotos = [];
 
 // Generate gallery images array, excluding missing photos
 export const galleryImages: GalleryImage[] = Array.from(
@@ -214,7 +214,7 @@ const breakpointColumnsObj = {
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
 
-export default function CostaRicaGallery() {
+export default function GermanyGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
   const router = useRouter();
@@ -272,7 +272,7 @@ export default function CostaRicaGallery() {
             className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/5"></div>
         </div>
 
         <div className="relative h-full flex items-center justify-center text-center px-4">
@@ -399,15 +399,6 @@ export default function CostaRicaGallery() {
                   { id: 10, location: 'DescriptionComingSoon' },
                   { id: 11, location: 'DescriptionComingSoon' },
                   { id: 12, location: 'DescriptionComingSoon' },
-                  { id: 13, location: 'DescriptionComingSoon' },
-                  { id: 14, location: 'DescriptionComingSoon' },
-                  { id: 15, location: 'DescriptionComingSoon' },
-                  { id: 16, location: 'DescriptionComingSoon' },
-                  { id: 17, location: 'DescriptionComingSoon' },
-                  { id: 18, location: 'DescriptionComingSoon' },
-                  { id: 19, location: 'DescriptionComingSoon' },
-                  { id: 20, location: 'DescriptionComingSoon' },
-                  { id: 21, location: 'DescriptionComingSoon' },
                 ].map((item, index) => (
                   <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer

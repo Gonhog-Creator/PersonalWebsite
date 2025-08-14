@@ -80,7 +80,7 @@ const galleries = [
     location: 'Europe'
   },
   {
-    id: 'united-kingdom',
+    id: 'uk',
     title: 'United Kingdom',
     image: '/img/United Kingdom/united_kingdom_panorama (2).jpg',
     count: 102,

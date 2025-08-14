@@ -241,7 +241,7 @@ export default function ArgentinaGallery() {
             className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/5"></div>
         </div>
 
         <div className="relative h-full flex items-center justify-center text-center px-4">

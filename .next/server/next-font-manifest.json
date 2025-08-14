@@ -18,24 +18,6 @@
       "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
       "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
     ],
-    "[project]/src/app/galleries/austria/page": [
-      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
-      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
-      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
-      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
-    ],
-    "[project]/src/app/galleries/belgium/page": [
-      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
-      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
-      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
-      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
-    ],
-    "[project]/src/app/galleries/costa-rica/page": [
-      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
-      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
-      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
-      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
-    ],
     "[project]/src/app/galleries/france/page": [
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
       "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
@@ -48,7 +30,43 @@
       "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
       "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
     ],
+    "[project]/src/app/galleries/greece/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
+      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
+      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
+      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
+    ],
     "[project]/src/app/galleries/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
+      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
+      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
+      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
+    ],
+    "[project]/src/app/galleries/scotland/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
+      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
+      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
+      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
+    ],
+    "[project]/src/app/galleries/slovenia/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
+      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
+      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
+      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
+    ],
+    "[project]/src/app/galleries/switzerland/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
+      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
+      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
+      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
+    ],
+    "[project]/src/app/galleries/uk/page": [
+      "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
+      "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
+      "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",
+      "static/media/d6a3bca80e8ab876-s.p.1b3fc2df.woff2"
+    ],
+    "[project]/src/app/galleries/united-states/page": [
       "static/media/06ba6ef833b337bc-s.p.0faac26c.woff2",
       "static/media/c10460301fe15208-s.p.ceb30ded.woff2",
       "static/media/47ffe33d88a9769a-s.p.47b51c64.woff2",

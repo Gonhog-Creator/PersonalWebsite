@@ -211,7 +211,7 @@ const breakpointColumnsObj = {
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
 
-export default function CostaRicaGallery() {
+export default function FranceGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
   const router = useRouter();
@@ -269,7 +269,7 @@ export default function CostaRicaGallery() {
             className="object-cover object-center"
             priority
           />
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/5"></div>
         </div>
 
         <div className="relative h-full flex items-center justify-center text-center px-4">

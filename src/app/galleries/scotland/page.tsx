@@ -26,7 +26,7 @@ interface GalleryImage {
 
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
-  const basePath = '/img/Switzerland/switzerland';
+  const basePath = '/img/Scotland/scotland';
   return `${basePath} (${id}).jpg`;
 };
 
@@ -35,12 +35,12 @@ const missingPhotos = [];
 
 // Generate gallery images array, excluding missing photos
 export const galleryImages: GalleryImage[] = Array.from(
-  { length: 49 },
+  { length: 47 },
   (_, i) => ({
     id: i + 1,
     src: getImagePath(i + 1),
     alt: `Photo ${i + 1}`,
-    location: 'Switzerland'  // Default location
+    location: 'Scotland'  // Default location
   })
 ).filter(image => !missingPhotos.includes(image.id));
 
@@ -69,32 +69,18 @@ const imageDetails: Record<number, { alt: string }> = {
   11: { alt: 'DescriptionComingSoon' },
   11: { alt: 'DescriptionComingSoon' },
   12: { alt: 'DescriptionComingSoon' },
-  12: { alt: 'DescriptionComingSoon' },
-  13: { alt: 'DescriptionComingSoon' },
   13: { alt: 'DescriptionComingSoon' },
   14: { alt: 'DescriptionComingSoon' },
-  14: { alt: 'DescriptionComingSoon' },
-  15: { alt: 'DescriptionComingSoon' },
   15: { alt: 'DescriptionComingSoon' },
   16: { alt: 'DescriptionComingSoon' },
-  16: { alt: 'DescriptionComingSoon' },
-  17: { alt: 'DescriptionComingSoon' },
   17: { alt: 'DescriptionComingSoon' },
   18: { alt: 'DescriptionComingSoon' },
-  18: { alt: 'DescriptionComingSoon' },
-  19: { alt: 'DescriptionComingSoon' },
   19: { alt: 'DescriptionComingSoon' },
   20: { alt: 'DescriptionComingSoon' },
-  20: { alt: 'DescriptionComingSoon' },
-  21: { alt: 'DescriptionComingSoon' },
   21: { alt: 'DescriptionComingSoon' },
   22: { alt: 'DescriptionComingSoon' },
-  22: { alt: 'DescriptionComingSoon' },
-  23: { alt: 'DescriptionComingSoon' },
   23: { alt: 'DescriptionComingSoon' },
   24: { alt: 'DescriptionComingSoon' },
-  24: { alt: 'DescriptionComingSoon' },
-  25: { alt: 'DescriptionComingSoon' },
   25: { alt: 'DescriptionComingSoon' },
   26: { alt: 'DescriptionComingSoon' },
   27: { alt: 'DescriptionComingSoon' },
@@ -118,8 +104,6 @@ const imageDetails: Record<number, { alt: string }> = {
   45: { alt: 'DescriptionComingSoon' },
   46: { alt: 'DescriptionComingSoon' },
   47: { alt: 'DescriptionComingSoon' },
-  48: { alt: 'DescriptionComingSoon' },
-  49: { alt: 'DescriptionComingSoon' },
 };
 
 
@@ -142,7 +126,7 @@ const breakpointColumnsObj = {
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
 
-export default function SwitzerlandGallery() {
+export default function ScotlandGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
   const router = useRouter();
@@ -194,8 +178,8 @@ export default function SwitzerlandGallery() {
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
-            src="/img/Switzerland/switzerland_panorama (17).jpg"
-            alt="Switzerland Panorama"
+            src="/img/Scotland/scotland_panorama (1).jpg"
+            alt="Scotland Panorama"
             fill
             className="object-cover object-center"
             priority
@@ -205,10 +189,10 @@ export default function SwitzerlandGallery() {
 
         <div className="relative h-full flex items-center justify-center text-center px-4">
           <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Switzerland</h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Scotland</h1>
             <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
-              Towering peaks and alpine charm in Grindelwald, where majestic mountains meet serene valleys.
-              Switzerland is a place of stunning vistas and unforgettable mountain adventures.
+              Backpacking through Scotland means embracing the rain-soaked landscapes, exploring the historic charm of St Andrews,
+              and experiencing the vibrant culture of its cities. Every moment is an adventure in this rugged and beautiful land
             </p>
           </div>
         </div>
@@ -306,7 +290,7 @@ export default function SwitzerlandGallery() {
                 <div className="w-full max-w-4xl px-4">
                   <div className="w-full text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-white">
-                      Have you ever seen every mountain peak at once?
+                      Tried to get every Scotsman in the picture.
                     </h2>
                   </div>
                 </div>
@@ -326,24 +310,10 @@ export default function SwitzerlandGallery() {
                   { id: 9, location: 'DescriptionComingSoon' },
                   { id: 10, location: 'DescriptionComingSoon' },
                   { id: 11, location: 'DescriptionComingSoon' },
-                  { id: 12, location: 'DescriptionComingSoon' },
-                  { id: 13, location: 'DescriptionComingSoon' },
-                  { id: 14, location: 'DescriptionComingSoon' },
-                  { id: 15, location: 'DescriptionComingSoon' },
-                  { id: 16, location: 'DescriptionComingSoon' },
-                  { id: 17, location: 'DescriptionComingSoon' },
-                  { id: 18, location: 'DescriptionComingSoon' },
-                  { id: 19, location: 'DescriptionComingSoon' },
-                  { id: 20, location: 'DescriptionComingSoon' },
-                  { id: 21, location: 'DescriptionComingSoon' },
-                  { id: 22, location: 'DescriptionComingSoon' },
-                  { id: 23, location: 'DescriptionComingSoon' },
-                  { id: 24, location: 'DescriptionComingSoon' },
-                  { id: 25, location: 'DescriptionComingSoon' },
                 ].map((item, index) => (
                   <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`/img/Switzerland/switzerland_panorama (${item.id}).jpg`}
+                      src={`/img/Scotland/scotland_panorama (${item.id}).jpg`}
                       alt={`${item.location}`}
                       location={item.location}
                       priority={index <= 1}
@@ -358,14 +328,14 @@ export default function SwitzerlandGallery() {
         {currentView === 'drone' && (
           <div className="w-full flex justify-center items-center min-h-screen py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Switzerland 2025 Recap</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Scotland Recap</h2>
               <div className="aspect-w-16 aspect-h-9 w-full max-w-6xl">
                 <video
                   className="w-full h-auto rounded-lg shadow-xl"
                   controls
                   loop
                   playsInline
-                  src="/vids/Switzerland 2025 Recap 2k.mp4"
+                  src="/vids/Scotland 2025 Recap 2k.mp4"
                 >
                   Your browser does not support the video tag.
                 </video>
