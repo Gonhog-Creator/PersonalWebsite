@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { SilverBorderButton } from '../ui/SilverBorderButton';
 
 interface WorkExperience {
   id: number;
@@ -40,7 +41,7 @@ const Work = () => {
       id: 2,
       title: 'NC State Liquid Rocketry Lab',
       role: 'Advanced Projects Team Member',
-      period: 'January 2024 - Present',
+      period: 'August 2024 - May 2025',
       description: 'As part of the Advanced Projects team, I contribute to the design, development, and testing of a turbine system for a rotating detonation engine. My work involves computational fluid dynamics analysis, mechanical design, and hands-on testing to improve engine efficiency and reliability.',
       image: '/img/RDE/RDE_cover.png',
       link: '/rde',
@@ -52,7 +53,8 @@ const Work = () => {
     <section className="w-full bg-white dark:bg-gray-900 transition-colors duration-300 py-16 md:py-24">
       <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto">
         <div className="w-full flex justify-center">
-          <div className="w-full max-w-4xl space-y-16">
+          <div className="w-full max-w-4xl">
+            <div className="flex flex-col gap-12">
             {workExperiences.map((experience, index) => (
               <div 
                 key={experience.id}
@@ -103,54 +105,25 @@ const Work = () => {
                     ))}
                   </div>
                   
-                  <div>
-                    <Link
+                  <div className="h-6"></div>
+                  
+                  <div className="text-center">
+                    <SilverBorderButton 
+                      as="a" 
                       href={experience.link}
-                      className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors duration-200 group"
+                      width="180px"
+                      height="45px"
+                      className="text-sm"
                     >
                       View Project Details
-                      <svg 
-                        className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth={2} 
-                          d="M14 5l7 7m0 0l-7 7m7-7H3" 
-                        />
-                      </svg>
-                    </Link>
+                    </SilverBorderButton>
                   </div>
                 </div>
               </div>
             ))}
           
-            <div className="mt-16 text-center" data-aos="fade-up">
-              <a
-                href="/resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-300"
-              >
-                <svg 
-                  className="w-5 h-5 mr-2" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" 
-                  />
-                </svg>
-                Download Full Resume
-              </a>
             </div>
+            {/* Resume download button removed as per user request */}
           </div>
         </div>
       </div>

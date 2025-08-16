@@ -22,6 +22,11 @@ const Photography = dynamic(
   { ssr: false, loading: () => <div className="py-20 text-center">Loading photography...</div> }
 );
 
+const Skills = dynamic(
+  () => import('@/components/Skills/Skills').then(mod => mod.default),
+  { ssr: false, loading: () => <div className="py-20 text-center">Loading skills...</div> }
+);
+
 export default function Home() {
   const [formData, setFormData] = useState({
     name: '',
@@ -64,8 +69,7 @@ export default function Home() {
         <section id="about" className="py-20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white transition-colors duration-200">About Me</h2>
-              <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
+              <h2 className="text-4xl font-bold mb-4 dark:text-white">About <span className="text-blue-600 dark:text-blue-400">Me</span></h2>
             </div>
             
             <div className="flex flex-col lg:flex-row items-center gap-12">
@@ -93,43 +97,16 @@ export default function Home() {
                     <p className="text-gray-600 dark:text-gray-300">NC State University</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800 dark:text-gray-300">Degree:</h4>
+                    <h4 className="font-semibold text-gray-800 dark:text-gray-300">Degrees:</h4>
                     <p className="text-gray-600 dark:text-gray-300">M.S. Material Science Engineering</p>
+                    <p className="text-gray-600 dark:text-gray-300">B.S. Chemical Engineering</p>
                   </div>
                 </div>
-                
-                <a 
-                  href="#contact" 
-                  className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 dark:bg-blue-800 dark:hover:bg-blue-900"
-                >
-                  Contact Me
-                </a>
               </div>
               
-              <div className="lg:w-1/2" data-aos="fade-left">
-                <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white transition-colors duration-200">My Skills</h3>
-                <div className="space-y-4">
-                  {[
-                    { name: 'Chemical Engineering', level: 90 },
-                    { name: 'Material Science', level: 85 },
-                    { name: 'Data Analysis', level: 80 },
-                    { name: 'Laboratory Techniques', level: 85 },
-                    { name: 'Project Management', level: 75 },
-                    { name: 'Technical Writing', level: 80 },
-                  ].map((skill) => (
-                    <div key={skill.name}>
-                      <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{skill.name}</span>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                        <div 
-                          className="bg-blue-600 dark:bg-blue-800 h-2.5 rounded-full" 
-                          style={{ width: `${skill.level}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
+              <div className="lg:w-1/2 flex items-center justify-center h-full min-h-[400px]" data-aos="fade-left">
+                <div className="w-full h-full max-w-md flex items-center justify-center">
+                  <Skills />
                 </div>
               </div>
             </div>
@@ -140,8 +117,7 @@ export default function Home() {
         <section id="experience" className="py-20 bg-gray-50 dark:bg-gray-800">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white transition-colors duration-200">My Experience</h2>
-              <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
+              <h2 className="text-4xl font-bold mb-4 dark:text-white">My <span className="text-blue-600 dark:text-blue-400">Experience</span></h2>
             </div>
             <Work />
           </div>
@@ -151,8 +127,7 @@ export default function Home() {
         <section id="photography" className="py-20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 dark:text-white">My Photography</h2>
-              <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
+              <h2 className="text-4xl font-bold mb-4 dark:text-white">My <span className="text-blue-600 dark:text-blue-400">Photography</span></h2>
             </div>
             <Photography />
           </div>

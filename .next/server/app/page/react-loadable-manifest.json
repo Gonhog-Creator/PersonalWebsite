@@ -1,16 +1,26 @@
 {
+  "[project]/src/components/Skills/Skills.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/src/components/Skills/Skills.tsx [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/node_modules_7f7be971._.js",
+      "static/chunks/src_76312653._.js",
+      "static/chunks/src_components_Skills_Skills_tsx_cef7b0e5._.js"
+    ]
+  },
   "[project]/src/components/Photography/Photography.tsx [app-client] (ecmascript, next/dynamic entry)": {
     "id": "[project]/src/components/Photography/Photography.tsx [app-client] (ecmascript, next/dynamic entry)",
     "files": [
-      "static/chunks/src_components_Photography_WorldMap_tsx_999eeb59._.js",
-      "static/chunks/src_components_Photography_Photography_tsx_9c0db65d._.js",
+      "static/chunks/src_components_Photography_WorldMap_tsx_529d3132._.js",
+      "static/chunks/node_modules_e80f078d._.js",
+      "static/chunks/src_8cf10a0f._.js",
       "static/chunks/src_components_Photography_Photography_tsx_cef7b0e5._.js"
     ]
   },
   "[project]/src/components/Work/Work.tsx [app-client] (ecmascript, next/dynamic entry)": {
     "id": "[project]/src/components/Work/Work.tsx [app-client] (ecmascript, next/dynamic entry)",
     "files": [
-      "static/chunks/src_components_Work_Work_tsx_5bbcede4._.js",
+      "static/chunks/node_modules_e80f078d._.js",
+      "static/chunks/src_5f6a27d9._.js",
       "static/chunks/src_components_Work_Work_tsx_cef7b0e5._.js"
     ]
   }

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import dynamic from 'next/dynamic';
+import { SilverBorderButton } from "@/components/ui/SilverBorderButton";
 
 // Dynamically import the WorldMap component with no SSR
 const WorldMap = dynamic(
@@ -105,15 +106,6 @@ const Photography = () => {
   return (
     <section className="py-16 md:py-24 bg-white dark:bg-gray-900 transition-colors duration-300" id="photography">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12" data-aos="fade-up">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            My <span className="text-blue-600 dark:text-blue-400">Photography</span>
-          </h2>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-            Exploring the world through my lens.
-          </p>
-        </div>
 
         {/* World Map Section */}
         <div className="w-full flex flex-col items-center mb-16" data-aos="fade-up">
@@ -132,12 +124,15 @@ const Photography = () => {
               </div>
             </div>
             <div className="mt-8 text-center">
-              <a 
-                href="/gallery_map" 
-                className="inline-flex items-center justify-center px-14 py-5 text-xl font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg transform hover:-translate-y-0.5"
+              <SilverBorderButton 
+                as="a" 
+                href="/gallery_map"
+                width="220px"
+                height="50px"
+                className="text-base"
               >
                 View Map
-              </a>
+              </SilverBorderButton>
             </div>
           </div>
         </div>
@@ -162,12 +157,15 @@ const Photography = () => {
             </div>
           </div>
           <div className="text-center mt-6">
-            <a 
-              href="/astro" 
-              className="inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            <SilverBorderButton 
+              as="a" 
+              href="/astro"
+              width="180px"
+              height="45px"
+              className="text-sm"
             >
               View Full Gallery
-            </a>
+            </SilverBorderButton>
           </div>
         </div>
 
@@ -191,12 +189,15 @@ const Photography = () => {
             </div>
           </div>
           <div className="text-center mt-6">
-            <a 
-              href="/galleries" 
-              className="inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            <SilverBorderButton 
+              as="a" 
+              href="/galleries"
+              width="180px"
+              height="45px"
+              className="text-sm"
             >
               View All Galleries
-            </a>
+            </SilverBorderButton>
           </div>
         </div>
         

@@ -41,26 +41,29 @@ const WorldMap = ({ onCountryClick }: WorldMapProps) => {
         preserveAspectRatio="xMidYMid meet"
       >
         {/* Background */}
-        <rect width="100%" height="100%" fill="#1e3a8a" />
+        <rect width="100%" height="100%" fill="#f3f4f6" className="dark:fill-gray-800" />
         
         {/* Continents (simplified shapes) */}
         <path 
           d="M200,100 Q300,50 400,100 Q500,150 500,250 Q450,400 300,400 Q200,350 150,250 Q150,150 200,100 Z" 
-          fill="#1e40af" 
-          stroke="#1e3a8a" 
-          strokeWidth="2"
+          fill="#e5e7eb" 
+          className="dark:fill-gray-700"
+          stroke="#d1d5db"
+          strokeWidth="1"
         />
         <path 
           d="M400,100 Q500,150 600,100 Q700,150 700,250 Q650,350 600,300 Q550,250 500,300 Q450,250 400,200 Z" 
-          fill="#1e40af" 
-          stroke="#1e3a8a" 
-          strokeWidth="2"
+          fill="#e5e7eb" 
+          className="dark:fill-gray-700"
+          stroke="#d1d5db"
+          strokeWidth="1"
         />
         <path 
           d="M200,400 Q300,450 400,400 Q450,350 500,400 Q550,450 600,400 Q650,350 700,400 Q750,450 800,400 Q850,350 850,250 Q900,200 950,250 L950,500 L50,500 L50,400 Q100,350 150,400 Z" 
-          fill="#1e40af" 
-          stroke="#1e3a8a" 
-          strokeWidth="2"
+          fill="#e5e7eb" 
+          className="dark:fill-gray-700"
+          stroke="#d1d5db"
+          strokeWidth="1"
         />
         
         {/* Country markers */}
