@@ -132,7 +132,7 @@ export const CircularRevealHeading = ({
                     >
                         <textPath
                             href="#curve"
-                            className="fill-[url(#textGradient)] hover:fill-[#2d3436]"
+                            className="fill-[url(#textGradient)]"
                             startOffset={startOffset}
                             textLength={`${segmentDegrees * 1.8}`}
                             lengthAdjust="spacingAndGlyphs"
@@ -188,24 +188,18 @@ export const CircularRevealHeading = ({
                     }}
                 />
 
-                <motion.div className="absolute inset-0 flex items-center justify-center">
-                    <AnimatePresence>
-                        {!activeImage && (
-                            <motion.div
-                                initial={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ duration: 0.3 }}
-                                className="relative z-10 p-6 rounded-3xl bg-[#e6e6e6]"
-                                whileHover={{
-                                    boxShadow: "inset 3px 3px 6px #d1d1d1, inset -3px -3px 6px #ffffff"
-                                }}
-                            >
-                                {centerText}
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </motion.div>
+                <div className="absolute inset-0 flex items-center justify-center z-10">
+                    <div className="p-6">
+                        <div className="text-center" style={{
+                            background: 'linear-gradient(90deg, #666666 0%, #444444 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            filter: 'url(#textShadow)'
+                        }}>
+                            {centerText}
+                        </div>
+                    </div>
+                </div>
 
                 <motion.div
                     className="absolute inset-0"

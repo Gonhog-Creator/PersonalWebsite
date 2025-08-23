@@ -5,11 +5,17 @@ import dynamic from 'next/dynamic';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Icon } from '@iconify/react';
 import { faEnvelope, faPhone, faMapMarkerAlt, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin, faGithub, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { Header } from '@/components/Header/Header';
 import { Hero } from '@/components/Hero/Hero';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
+
+const WavyBackground = dynamic(
+  () => import('@/components/ui/wavy-background').then(mod => mod.WavyBackground),
+  { ssr: false }
+);
 
 // Dynamically import components with proper loading states
 const Work = dynamic(
@@ -26,6 +32,8 @@ const Skills = dynamic(
   () => import('@/components/Skills/Skills').then(mod => mod.default),
   { ssr: false, loading: () => <div className="py-20 text-center">Loading skills...</div> }
 );
+
+
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -124,7 +132,7 @@ export default function Home() {
         </section>
         
         {/* Photography Section */}
-        <section id="photography" className="py-20">
+        <section id="photography" className="pt-20 pb-8">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-4 dark:text-white">My <span className="text-blue-600 dark:text-blue-400">Photography</span></h2>
@@ -132,20 +140,74 @@ export default function Home() {
             <Photography />
           </div>
         </section>
-        
+
+        {/* Technical Skills Section */}
+        <section id="technical-skills" className="relative py-12 overflow-hidden">
+          <WavyBackground
+            className="max-w-7xl mx-auto"
+            colors={["#38bdf8", "#818cf8", "#c084fc", "#e879f9", "#22d3ee"]}
+            waveWidth={50}
+            backgroundFill="#101828"
+            blur={8}
+            speed="fast"
+            waveOpacity={0.3}
+          >
+            <div className="container mx-auto px-4 relative z-10">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold mb-8 text-gray-800 dark:text-white">
+                  Technical <span className="text-blue-600 dark:text-blue-400">Skills</span>
+                </h2>
+              </div>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
+                {[
+                  { name: 'Lightroom', icon: 'logos:adobe-lightroom' },
+                  { name: 'Photoshop', icon: 'logos:adobe-photoshop' },
+                  { name: 'Excel', icon: 'vscode-icons:file-type-excel' },
+                  { name: 'Arduino', icon: 'logos:arduino' },
+                  { name: 'Ansys', icon: 'simple-icons:ansys' },
+                  { name: 'JSL', icon: 'tabler:code' },
+                  { name: 'SPC', icon: 'healthicons:chart-line-outline' },
+                  { name: 'Matlab', icon: 'vscode-icons:file-type-matlab' },
+                  { name: 'JavaScript', icon: 'logos:javascript' },
+                  { name: 'HTML', icon: 'vscode-icons:file-type-html' },
+                  { name: 'Python', icon: 'logos:python' },
+                  { name: 'Java', icon: 'logos:java' },
+                ].map((skill, index) => (
+                  <div 
+                    key={skill.name}
+                    className="flex flex-col items-center p-4 hover:opacity-80 transition-opacity duration-300"
+                    data-aos="fade-up"
+                    data-aos-delay={index * 50}
+                  >
+                    <div className="w-20 h-20 flex items-center justify-center mb-3">
+                      <Icon 
+                        icon={skill.icon} 
+                        className="w-full h-full text-gray-700 dark:text-gray-200"
+                        width="90"
+                        height="90"
+                      />
+                    </div>
+                    <span className="text-gray-200 font-medium text-center">{skill.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </WavyBackground>
+        </section>
+
         {/* Contact Section */}
         <section id="contact" className="py-20 bg-gray-50 dark:bg-gray-800">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 dark:text-white">Get In Touch</h2>
-              <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
-              <p className="text-gray-600 dark:text-gray-300 mt-4 max-w-2xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-2 dark:text-white">Get In Touch</h2>
+              <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                 Have a question or want to work together? Feel free to reach out!
               </p>
             </div>
             
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 md:p-12 transition-colors duration-300" data-aos="fade-up">
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 md:p-10 transition-all duration-300 transform hover:shadow-xl" data-aos="fade-up">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -281,17 +343,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Work Experience Section */}
-        <section id="work" className="min-h-screen">
-          <Work />
-        </section>
-
-        {/* Photography Section */}
-        <section id="photography" className="min-h-screen">
-          <Photography />
-        </section>
-
       </main>
 
       <footer className="bg-gray-100 dark:bg-gray-800 py-12">
