@@ -16,7 +16,7 @@ interface NavLink {
 const navLinks: NavLink[] = [
   { name: 'Home', href: '/', icon: 'mdi:home' },
   { name: 'About', href: '/#about', icon: 'mdi:account' },
-  { name: 'Experience', href: '/#experience', icon: 'mdi:briefcase' },
+  { name: 'Experience', href: '/#experience', icon: 'mdi:coffee' },
   { name: 'Photography', href: '/#photography', icon: 'mdi:camera' },
   { name: 'Contact', href: '/#contact', icon: 'mdi:email' },
 ];

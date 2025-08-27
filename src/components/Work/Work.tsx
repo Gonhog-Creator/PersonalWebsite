@@ -42,9 +42,9 @@ const Work = () => {
       title: 'NC State Liquid Rocketry Lab',
       role: 'Advanced Projects Team Member',
       period: 'August 2024 - May 2025',
-      description: 'As part of the Advanced Projects team, I contribute to the design, development, and testing of a turbine system for a rotating detonation engine. My work involves computational fluid dynamics analysis, mechanical design, and hands-on testing to improve engine efficiency and reliability.',
+      description: 'As part of the Advanced Projects team, I contributed to the design, development, and testing of a turbine system for a rotating detonation engine. My work involved computational fluid dynamics analysis, mechanical design, and hands-on testing to improve engine efficiency and reliability.',
       image: '/img/RDE/RDE_cover.png',
-      link: '/rde',
+      link: '/projects/ncsu-rocketry',
       skills: ['Mechanical Design', 'CFD Analysis', 'Prototyping', 'Project Management']
     }
   ];
@@ -93,7 +93,7 @@ const Work = () => {
                   <p className="text-gray-600 dark:text-gray-300 mb-6">
                     {experience.description}
                   </p>
-                  
+
                   <div className="flex flex-wrap gap-2 mb-6">
                     {experience.skills.map((skill, i) => (
                       <span 

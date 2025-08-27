@@ -40,7 +40,7 @@ const navLinks = [
     {
         name: 'Experience',
         href: '/#experience',
-        icon: 'mdi:briefcase'
+        icon: 'mdi:coffee'
     },
     {
         name: 'Photography',

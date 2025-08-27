@@ -72,12 +72,18 @@ export const WavyBackground = ({
     nt += getSpeed();
     for (i = 0; i < n; i++) {
       ctx.beginPath();
-      ctx.lineWidth = waveWidth || 50;
+      ctx.lineWidth = 12; // Thin line
       ctx.strokeStyle = waveColors[i % waveColors.length];
-      for (x = 0; x < w; x += 5) {
-        var y = noise(x / 800, 0.3 * i, nt) * 100;
-        ctx.lineTo(x, y + h * 0.5); // adjust for height, currently at 50% of the container
+      
+      // Position the wave at 1/4 of the container height
+      const verticalPos = h * 0.25;
+      
+      // Draw wave with significantly increased amplitude
+      for (x = 0; x < w; x += 3) {
+        const y = noise(x / 300, 0.1 * i, nt) * 80; // Increased amplitude to 80 and adjusted frequency
+        ctx.lineTo(x, y + verticalPos);
       }
+      
       ctx.stroke();
       ctx.closePath();
     }

@@ -124,11 +124,18 @@ export function ParticlesBackground() {
   return (
     <div 
       id="particles-js" 
-      className="fixed top-0 left-0 w-full h-full z-0"
+      className="absolute inset-0 w-full h-full z-0"
       style={{ 
         background: 'transparent',
-        pointerEvents: 'auto' // Enable pointer events for interaction
+        pointerEvents: 'none',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
       }}
     />
   );
-}
+};
+
+export default ParticlesBackground;

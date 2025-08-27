@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { getRandomPalette } from '@/lib/colorPalettes';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +12,11 @@ import { faLinkedin, faGithub, faInstagram, faTwitter } from '@fortawesome/free-
 import { Header } from '@/components/Header/Header';
 import { Hero } from '@/components/Hero/Hero';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
+
+const ParticlesBackground = dynamic(
+  () => import('@/components/ParticlesBackground/ParticlesBackground').then(mod => mod.default || mod),
+  { ssr: false }
+);
 
 const WavyBackground = dynamic(
   () => import('@/components/ui/wavy-background').then(mod => mod.WavyBackground),
@@ -182,24 +188,25 @@ export default function Home() {
         </section>
 
         {/* Technical Skills Section */}
-        <section id="technical-skills" className="relative py-12 overflow-hidden">
+        <section id="technical-skills" className="relative py-8 overflow-hidden">
           <WavyBackground
-            className="max-w-7xl mx-auto"
-            colors={["#38bdf8", "#818cf8", "#c084fc", "#e879f9", "#22d3ee"]}
-            waveWidth={50}
+            className="max-w-7xl mx-auto h-[300px]"
+            colors={getRandomPalette()}
+            waveWidth={60}
             backgroundFill="#101828"
-            blur={8}
+            blur={4}
             speed="fast"
-            waveOpacity={0.3}
+            waveOpacity={0.5}
+            containerClassName="h-[300px]"
           >
             <div className="container mx-auto px-4 relative z-10">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold mb-8 text-gray-800 dark:text-white">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">
                   Technical <span className="text-blue-600 dark:text-blue-400">Skills</span>
                 </h2>
               </div>
               
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
                 {[
                   { name: 'Lightroom', icon: 'logos:adobe-lightroom' },
                   { name: 'Photoshop', icon: 'logos:adobe-photoshop' },
@@ -244,7 +251,6 @@ export default function Home() {
                 <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
                   Send <span className="text-blue-600">Email</span>
                 </h2>
-                <div className="w-20 h-1 bg-blue-600 mx-auto"></div>
               </div>
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 w-full">
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -345,14 +351,16 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-gray-100 dark:bg-gray-800 py-12">
-        <div className="container mx-auto px-4 text-center">
-          <p>© 2025 Jose Maria Barbeito. All rights reserved.</p>
+      <footer className="relative h-[6vh] w-full">
+        <div className="absolute inset-0 w-full h-full">
+          <ParticlesBackground />
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 py-2 bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-sm">
+          <div className="container mx-auto px-4 text-center">
+            <p className="text-gray-300 text-sm md:text-base">© 2025 Jose Maria Barbeito. All rights reserved.</p>
+          </div>
         </div>
       </footer>
-
-      {/* Particles.js Background */}
-      <div id="particles-js" className="fixed top-0 left-0 w-full h-full -z-10"></div>
     </div>
   );
 }
