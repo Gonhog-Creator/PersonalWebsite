@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build && next export -o docs",
+    "postbuild": "echo 'Build complete! Run npm run deploy to deploy to GitHub Pages'",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "gh-pages -d docs",
+    "predeploy": "npm run build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.0",
@@ -42,16 +45,19 @@
     "tailwind-merge": "^3.3.1",
     "three": "^0.179.1"
   },
+  "homepage": "https://gonhog-creator.github.io/PersonalWebsite/",
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
+    "gh-pages": "^6.1.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.4.5",
+    "gh-pages": "^6.3.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.6",
     "typescript": "^5"
