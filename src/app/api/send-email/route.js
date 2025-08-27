@@ -1,5 +1,15 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
+
+// Configure SendGrid with API key from environment variables
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
+
+const isProduction = process.env.NODE_ENV === 'production';
+const RECIPIENT_EMAIL = process.env.EMAIL_RECIPIENT || 'josemaria.barbeito@icloud.com';
+const SENDER_EMAIL = process.env.EMAIL_SENDER || 'noreply@yourdomain.com';
 
 export async function POST(request) {
   // Set CORS headers
@@ -25,44 +35,67 @@ export async function POST(request) {
       );
     }
 
-    // Create a test account for development
-    const testAccount = await nodemailer.createTestAccount();
+    if (isProduction && process.env.SENDGRID_API_KEY) {
+      // Use SendGrid in production
+      const msg = {
+        to: RECIPIENT_EMAIL,
+        from: {
+          email: SENDER_EMAIL,
+          name: `${name} (via Contact Form)`
+        },
+        replyTo: email,
+        subject: `Contact Form: ${subject}`,
+        text: message,
+        html: `
+          <h3>New Contact Form Submission</h3>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+        `,
+      };
 
-    // Create a transporter using the test account
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      },
-    });
+      await sgMail.send(msg);
+    } else {
+      // Fallback to test account in development
+      const testAccount = await nodemailer.createTestAccount();
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass,
+        },
+      });
 
-    // Send mail with defined transport object
-    const info = await transporter.sendMail({
-      from: `"${name}" <${email}>`,
-      to: 'josemaria.barbeito@icloud.com', // Updated recipient email
-      subject: `Contact Form: ${subject}`,
-      text: message,
-      html: `
-        <h3>New Contact Form Submission</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br>')}</p>
-      `,
-    });
+      const info = await transporter.sendMail({
+        from: `"${name}" <${testAccount.user}>`,
+        to: RECIPIENT_EMAIL,
+        subject: `[TEST] Contact Form: ${subject}`,
+        text: message,
+        html: `
+          <h3>TEST EMAIL - New Contact Form Submission</h3>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+          <p><em>This is a test email. In production, this would be sent to ${RECIPIENT_EMAIL}</em></p>
+        `,
+      });
 
-    const previewUrl = nodemailer.getTestMessageUrl(info);
-    console.log('Preview URL:', previewUrl);
+      const previewUrl = nodemailer.getTestMessageUrl(info);
+      console.log('Development email preview URL:', previewUrl);
+    }
 
     return new NextResponse(
       JSON.stringify({ 
         success: true,
-        message: 'Email sent successfully',
-        previewUrl
+        message: isProduction 
+          ? 'Email sent successfully!' 
+          : 'Test email sent. Check the console for the preview link.'
       }),
       { status: 200, headers }
     );

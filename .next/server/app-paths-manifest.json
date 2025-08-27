@@ -1,7 +1,6 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js",
-  "/projects/ncsu-rocketry/page": "app/projects/ncsu-rocketry/page.js",
-  "/projects/wolfspeed/page": "app/projects/wolfspeed/page.js"
+  "/gallery_map/page": "app/gallery_map/page.js",
+  "/page": "app/page.js"
 }
