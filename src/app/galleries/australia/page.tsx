@@ -158,7 +158,6 @@ type GalleryView = 'photos' | 'panoramas' | 'drone';
 
 export default function AustraliaGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-{{ ... }}
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
 
 
