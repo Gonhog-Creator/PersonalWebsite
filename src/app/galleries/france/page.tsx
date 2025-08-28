@@ -196,8 +196,6 @@ const imageDetails: Record<number, { alt: string }> = {
 galleryImages.forEach(img => {
   if (imageDetails[img.id]) {
     img.alt = imageDetails[img.id].alt;
-  } else {
-    console.warn(`No description found for image ${img.id}`);
   }
 });
 
@@ -214,7 +212,7 @@ type GalleryView = 'photos' | 'panoramas' | 'drone';
 export default function FranceGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
-  const router = useRouter();
+
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);

@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { useRouter } from 'next/navigation';
@@ -11,11 +11,7 @@ import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 
-// Dynamically import the GalleryNavbar with SSR disabled
-const GalleryNavbar = dynamic(
-  () => import('@/components/gallery/GalleryNavbar'),
-  { ssr: false }
-);
+
 
 interface GalleryImage {
   id: number;
@@ -173,20 +169,12 @@ galleryImages.forEach(img => {
   }
 });
 
-// Masonry breakpoints
-const breakpointColumnsObj = {
-  default: 4,
-  1100: 3,
-  700: 2,
-  500: 1,
-};
-
 type GalleryView = 'photos' | 'panoramas' | 'drone';
 
 export default function ArgentinaGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
-  const router = useRouter();
+
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);

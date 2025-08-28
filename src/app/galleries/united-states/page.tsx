@@ -116,19 +116,14 @@ export const galleryImages: GalleryImage[] = Array.from(
 ).filter(image => !missingPhotos.includes(image.id));
 
 // Masonry breakpoints
-const breakpointColumnsObj = {
-  default: 4,
-  1100: 3,
-  700: 2,
-  500: 1,
-};
+
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
 
 export default function USAGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
-  const router = useRouter();
+
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -230,13 +225,7 @@ export default function USAGallery() {
         {currentView === 'photos' ? (
           <div className="w-full px-4">
             <Masonry
-              breakpointCols={{
-                default: 5,
-                1600: 4,
-                1200: 3,
-                800: 2,
-                500: 1
-              }}
+              breakpointCols={breakpointCols}
               className="flex w-auto"
               columnClassName="masonry-column"
             >

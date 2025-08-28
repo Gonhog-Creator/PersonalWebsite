@@ -5,13 +5,11 @@ import dynamic from 'next/dynamic';
 import { getRandomPalette } from '@/lib/colorPalettes';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Icon } from '@iconify/react';
-import { faEnvelope, faPhone, faMapMarkerAlt, faDownload } from '@fortawesome/free-solid-svg-icons';
-import { faLinkedin, faGithub, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
+// Icons are used in the component (using custom Icon component)
 import { Header } from '@/components/Header/Header';
 import { Hero } from '@/components/Hero/Hero';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
+import { Icon } from '@/components/ui/Icon'; // Importing our custom Icon component
 
 const ParticlesBackground = dynamic(
   () => import('@/components/ParticlesBackground/ParticlesBackground').then(mod => mod.default || mod),
@@ -61,7 +59,7 @@ export default function Home() {
       <Sidebar />
       <Header />
       <Hero />
-      
+
       <main className="relative bg-white dark:bg-gray-900">
         {/* About Section */}
         <section id="about" className="py-20">
@@ -69,18 +67,18 @@ export default function Home() {
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-4 dark:text-white">About <span className="text-blue-600 dark:text-blue-400">Me</span></h2>
             </div>
-            
+
             <div className="flex flex-col lg:flex-row items-center gap-12">
               <div className="lg:w-1/2" data-aos="fade-right">
                 <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-200">Who am I?</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-                  I'm a passionate Chemical Engineer and Material Scientist with a strong interest in materials innovation and sustainable technologies. 
-                  I'm currently pursuing my education at North Carolina State University and will be starting my Master's degree in August 2025.
+                  I&apos;m a passionate Chemical Engineer and Material Scientist with a strong interest in materials innovation and sustainable technologies.
+                  I&apos;m currently pursuing my education at North Carolina State University and will be starting my Master&apos;s degree in August 2025.
                 </p>
                 <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                   My journey in engineering has equipped me with skills in materials characterization, process optimization, and data analysis, along with a problem-solving mindset that I apply to both my academic and personal projects.
                 </p>
-                
+
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div>
                     <h4 className="font-semibold text-gray-800 dark:text-gray-300 transition-colors duration-200">Name:</h4>
@@ -101,7 +99,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="lg:w-1/2 flex items-center justify-center h-full min-h-[400px]" data-aos="fade-left">
                 <div className="w-full h-full max-w-md flex items-center justify-center">
                   <Skills />
@@ -110,7 +108,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        
+
         {/* Work Experience Section */}
         <section id="experience" className="py-20 bg-gray-50 dark:bg-gray-800">
           <div className="container mx-auto px-4">
@@ -120,7 +118,7 @@ export default function Home() {
             <Work />
           </div>
         </section>
-        
+
         {/* Photography Section */}
         <section id="photography" className="pt-20 pb-8">
           <div className="container mx-auto px-4">
@@ -149,7 +147,7 @@ export default function Home() {
                   Technical <span className="text-blue-600 dark:text-blue-400">Skills</span>
                 </h2>
               </div>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
                 {[
                   { name: 'Lightroom', icon: 'logos:adobe-lightroom' },
@@ -165,15 +163,15 @@ export default function Home() {
                   { name: 'Python', icon: 'logos:python' },
                   { name: 'Java', icon: 'logos:java' },
                 ].map((skill, index) => (
-                  <div 
+                  <div
                     key={skill.name}
                     className="flex flex-col items-center p-4 hover:opacity-80 transition-opacity duration-300"
                     data-aos="fade-up"
                     data-aos-delay={index * 50}
                   >
                     <div className="w-20 h-20 flex items-center justify-center mb-3">
-                      <Icon 
-                        icon={skill.icon} 
+                      <Icon
+                        icon={skill.icon}
                         className="w-full h-full text-gray-700 dark:text-gray-200"
                         width="90"
                         height="90"
@@ -196,8 +194,8 @@ export default function Home() {
               </h2>
               <p className="text-gray-600 dark:text-gray-300">Feel free to reach out to me!</p>
             </div>
-            
-            <div 
+
+            <div
               className={`bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 transform ${
                 isHovered ? 'scale-105 shadow-blue-500/20' : 'shadow-lg'
               }`}
@@ -207,28 +205,28 @@ export default function Home() {
             >
               <div className="p-8 flex flex-col items-center text-center cursor-pointer">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center transition-transform duration-300 hover:rotate-12">
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-8 w-8 text-blue-600 dark:text-blue-400" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-8 w-8 text-blue-600 dark:text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
                     stroke="currentColor"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" 
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
                 </div>
-                
+
                 <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Email Me!</h3>
                 <p className="text-blue-600 dark:text-blue-400 font-mono text-lg transition-all duration-300 hover:tracking-wider">
-                  josemaria.barreito@icloud.com
+                  josemaria.barbeito@icloud.com
                 </p>
               </div>
-              
+
               <div className={`h-1.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-1000 ${
                 isHovered ? 'opacity-100' : 'opacity-70'
               }`}></div>

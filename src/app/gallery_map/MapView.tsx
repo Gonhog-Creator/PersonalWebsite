@@ -37,7 +37,7 @@ interface CountryData {
       iso_a2: string;
       [key: string]: any;
     };
-    geometry: any;
+    geometry: GeoJSON.Geometry;
   }>;
 }
 
@@ -69,7 +69,7 @@ const MapWithNoSSR = dynamic(
       onEachFeature: (feature: any, layer: any) => void;
       onZoomToEU: () => void;
       zoomedIn: boolean;
-      router: any;
+      router: ReturnType<typeof useRouter>;
     }) {
       return (
         <MapContainer 
@@ -346,7 +346,7 @@ export default function MapView() {
   }, [countriesWithGalleries, router]);
 
   // Handle map instance when it's created
-  const handleMapCreated = useCallback((mapInstance: any) => {
+  const handleMapCreated = useCallback((mapInstance: L.Map) => {
     // Store the map instance in state
     setMap(mapInstance);
     

@@ -187,8 +187,6 @@ const imageDetails: Record<number, { alt: string }> = {
 galleryImages.forEach(img => {
   if (imageDetails[img.id]) {
     img.alt = imageDetails[img.id].alt;
-  } else {
-    console.warn(`No description found for image ${img.id}`);
   }
 });
 
@@ -202,10 +200,10 @@ const breakpointColumnsObj = {
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
 
-export default function ScotlandGallery() {
+export default function GreeceGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
-  const router = useRouter();
+
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -365,7 +363,7 @@ export default function ScotlandGallery() {
                 <div className="w-full max-w-4xl px-4">
                   <div className="w-full text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-white">
-                      Even Hercules didn't see this much ocean.
+                      Even Hercules didn&apos;t see this much ocean.
                     </h2>
                   </div>
                 </div>

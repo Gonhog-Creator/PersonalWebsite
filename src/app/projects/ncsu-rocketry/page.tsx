@@ -96,7 +96,7 @@ export default function NCSURocketryPage() {
               <div className="w-full md:w-1/2" data-aos="fade-right">
                 <div className="space-y-6 text-gray-700 dark:text-gray-300">
                   <p className="text-center md:text-left">
-                    As part of the NC State Liquid Rocketry Lab, I collaborated with Dr. James Braun's research group to develop
+                    As part of the NC State Liquid Rocketry Lab, I collaborated with Dr. James Braun&apos;s research group to develop
                     a novel power extraction system for Rotating Detonation Rocket Engines (RDREs). Our team designed and
                     manufactured a bladed turbine that harnesses the high-energy exhaust gases from an RDRE to generate
                     electrical power.
@@ -250,7 +250,7 @@ export default function NCSURocketryPage() {
                     />
                   </div>
                   <p className="text-sm text-blue-200 italic">
-                    Our team's RDRE turbine power extraction system design
+                    Our team&apos;s RDRE turbine power extraction system design
                   </p>
                 </div>
                 
@@ -260,12 +260,12 @@ export default function NCSURocketryPage() {
                 
                 <div className="bg-white/5 rounded-lg p-6">
                   <p className="text-blue-100 text-xl font-medium">
-                    "Design and Analysis of Axial Turbine Power Extraction from a Small-Scale Rotating Detonation Rocket Combustor"
+                    &quot;Design and Analysis of Axial Turbine Power Extraction from a Small-Scale Rotating Detonation Rocket Combustor&quot;
                   </p>
                 </div>
                 
                 <p className="text-blue-100">
-                  Corey Thunes, Donovan Ngum, Ellie Murray, <strong>Jose Barbeito</strong>, Lucas Nicol, Rodrigo Dacosta, Trevor Larsen and James Braun<br />
+                  Corey Thunes, Donovan Ngum, Ellie Murray, &lt;strong&gt;Jose Barbeito&lt;/strong&gt;, Lucas Nicol, Rodrigo Dacosta, Trevor Larsen and James Braun&lt;br /&gt;
                   North Carolina State University (Raleigh, NC)
                 </p>
               </div>
