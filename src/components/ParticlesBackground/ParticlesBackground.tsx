@@ -2,7 +2,14 @@
 
 import { useEffect, useCallback } from 'react';
 
-interface ParticleConfig {
+// Type for the particles.js function
+type ParticlesJS = {
+  (tagId: string, params: unknown, callback?: () => void): void;
+  load: (tagId: string, path: string | unknown, callback?: () => void) => void;
+};
+
+// Type definitions for particles.js
+interface ParticlesConfig {
   particles: {
     number: {
       value: number;
@@ -16,6 +23,13 @@ interface ParticleConfig {
     };
     shape: {
       type: string;
+      stroke?: {
+        width: number;
+        color: string;
+      };
+      polygon?: {
+        nb_sides: number;
+      };
     };
     opacity: {
       value: number;
@@ -99,25 +113,29 @@ interface ParticleConfig {
     };
   };
   retina_detect: boolean;
-}
+};
 
-declare global {
-  interface Window {
-    particlesJS: (id: string, config: ParticleConfig) => void;
-  }
-}
+// Import the Window type from particles.d.ts
 
 interface ParticlesBackgroundProps {
-  particleCount?: number;
   className?: string;
+  particleCount?: number;
 }
 
-export function ParticlesBackground({ particleCount = 60, className = '' }: ParticlesBackgroundProps) {
+export function ParticlesBackground({ 
+  className = '', 
+  particleCount = 60 
+}: ParticlesBackgroundProps) {
   const initParticles = useCallback(() => {
-    window.particlesJS('particles-js', {
+    if (typeof window === 'undefined') return;
+
+    const particlesJS = (window as unknown as { particlesJS?: ParticlesJS }).particlesJS;
+    if (!particlesJS) return;
+
+    const config: ParticlesConfig = {
       particles: {
         number: { 
-          value: 60,
+          value: particleCount,
           density: { 
             enable: true, 
             value_area: 800 
@@ -126,8 +144,15 @@ export function ParticlesBackground({ particleCount = 60, className = '' }: Part
         color: { 
           value: '#ffffff' 
         },
-        shape: { 
-          type: 'circle' 
+        shape: {
+          type: 'circle',
+          stroke: {
+            width: 0,
+            color: '#000000'
+          },
+          polygon: {
+            nb_sides: 5
+          }
         },
         opacity: {
           value: 0.5,
@@ -191,31 +216,54 @@ export function ParticlesBackground({ particleCount = 60, className = '' }: Part
               opacity: 1
             }
           },
-          push: {
-            particles_nb: 4
+          bubble: {
+            distance: 400,
+            size: 40,
+            duration: 2,
+            opacity: 8,
+            speed: 3
           },
           repulse: {
             distance: 100,
             duration: 0.4
+          },
+          push: {
+            particles_nb: 4
+          },
+          remove: {
+            particles_nb: 2
           }
         }
       },
       retina_detect: true
+    };
+
+    (window as unknown as { particlesJS: ParticlesJS }).particlesJS('particles-js', config, function() {
+      console.log('callback - particles.js config loaded');
     });
-  }, []);
+  }, [particleCount]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    if (!window.particlesJS) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
-      script.async = true;
-      script.onload = initParticles;
-      document.body.appendChild(script);
-    } else {
+    // Check if particlesJS is already loaded
+    const particlesJS = (window as unknown as { particlesJS?: ParticlesJS }).particlesJS;
+    if (particlesJS) {
       initParticles();
+      return;
     }
+
+    // Load particles.js if not already loaded
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
+    script.async = true;
+    script.onload = () => {
+      const particlesJS = (window as unknown as { particlesJS?: ParticlesJS }).particlesJS;
+      if (particlesJS) {
+        initParticles();
+      }
+    };
+    document.body.appendChild(script);
 
     return () => {
       const particlesContainer = document.getElementById('particles-js');
@@ -228,9 +276,10 @@ export function ParticlesBackground({ particleCount = 60, className = '' }: Part
   return (
     <div 
       id="particles-js" 
-      className={`fixed top-0 left-0 w-full h-full -z-10 ${className}`} 
+      className={`absolute inset-0 w-full h-full ${className}`}
+      aria-hidden="true"
     />
   );
-};
+}
 
 export default ParticlesBackground;

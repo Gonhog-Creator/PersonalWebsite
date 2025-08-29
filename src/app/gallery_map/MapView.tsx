@@ -1,10 +1,12 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
 import L, { Map as LeafletMap, Layer, FeatureGroup } from 'leaflet';
 import type { GeoJSON as GeoJSONType, GeoJSONOptions } from 'leaflet';
+
 
 // Type for country feature properties
 interface CountryProperties {
@@ -13,28 +15,20 @@ interface CountryProperties {
   [key: string]: unknown;
 }
 
-type Geometry = GeoJSONType.Geometry;
-
 // Type for country feature
-interface CountryFeature extends GeoJSONType.Feature<Geometry, CountryProperties> {
-  type: 'Feature';
+type CountryFeature = GeoJSON.Feature<GeoJSON.Geometry, CountryProperties> & {
   id?: string | number;
-  properties: CountryProperties;
-  geometry: Geometry;
-}
+};
 
 // Type for country data
-interface CountryData extends GeoJSONType.FeatureCollection<Geometry, CountryProperties> {
-  type: 'FeatureCollection';
-  features: CountryFeature[];
-}
+type CountryData = GeoJSON.FeatureCollection<GeoJSON.Geometry, CountryProperties>;
 
 // Type for map style function
-type CountryStyleFunction = (feature: CountryFeature) => GeoJSONType.PathOptions;
+type CountryStyleFunction = (feature?: CountryFeature) => L.PathOptions;
 
 // Countries with galleries
 const countriesWithGalleries = [
-  'US', 'AR', 'CH', 'DE', 'FR', 'GB', 'CR', 'SI', 'AT', 'AU', 'BE', 'GR'
+    'US', 'AR', 'CH', 'DE', 'FR', 'GB', 'CR', 'SI', 'AT', 'AU', 'BE', 'GR'
 ] as const;
 
 type CountryCode = typeof countriesWithGalleries[number];
@@ -42,9 +36,22 @@ type CountryCode = typeof countriesWithGalleries[number];
 // Helper component to handle dynamic map loading
 const MapWithNoSSR = dynamic(
   () => import('react-leaflet').then((mod) => {
-    const { MapContainer, TileLayer, GeoJSON } = mod;
+    const { MapContainer, TileLayer, GeoJSON, useMap } = mod;
     
-    return function MapComponent({ 
+    // Create a controller component to handle map instance
+  const MapController = ({ onMapCreated }: { onMapCreated: (map: LeafletMap) => void }) => {
+    const map = useMap();
+    
+    useEffect(() => {
+      if (map) {
+        onMapCreated(map);
+      }
+    }, [map, onMapCreated]);
+    
+    return null;
+  };
+
+  return function MapComponent({ 
       center, 
       zoom, 
       minZoom, 
@@ -79,13 +86,15 @@ const MapWithNoSSR = dynamic(
           zoomSnap={0.1}
           zoomDelta={0.5}
           wheelPxPerZoomLevel={60}
-          whenCreated={onMapCreated}
+          whenReady={() => {}}
         >
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             opacity={0.3}
           />
+          
+          <MapController onMapCreated={onMapCreated} />
           
           {countriesData && (
             <GeoJSON
@@ -107,7 +116,7 @@ const MapWithNoSSR = dynamic(
             gap: '8px'
           }}>
             <button
-              onClick={() => router.push('/')}
+              onClick={() => window.location.href = '/'}
               style={{
                 backgroundColor: '#1e40af',
                 color: 'white',
@@ -179,15 +188,19 @@ const NoGalleryModal = ({
 };
 
 // Style function for country features
-function getCountryStyle(feature: CountryFeature, countries: readonly string[]): L.PathOptions {
+const getCountryStyle = (
+  feature: CountryFeature, 
+  galleryCountries: readonly string[] = countriesWithGalleries as readonly string[]
+): L.PathOptions => {
+  
   const countryCode = feature.properties.iso_a2;
-  const hasGallery = countriesWithGalleries.includes(countryCode);
+  const hasGallery = galleryCountries.includes(countryCode);
   
   return {
-    weight: hasGallery ? 1.2 : 0.3, // Thicker border for gallery countries, very thin for others
-    color: hasGallery ? '#1e40af' : 'rgba(30, 64, 175, 0.5)', // Darker blue for gallery countries, semi-transparent for others
-    fillColor: hasGallery ? '#3b82f6' : 'rgba(30, 64, 175, 0.1)', // Solid blue for gallery countries, very subtle for others
-    fillOpacity: hasGallery ? 0.7 : 0.2, // More opaque for gallery countries
+    weight: hasGallery ? 1.2 : 0.3,
+    color: hasGallery ? '#1e40af' : 'rgba(30, 64, 175, 0.5)',
+    fillColor: hasGallery ? '#3b82f6' : 'rgba(30, 64, 175, 0.1)',
+    fillOpacity: hasGallery ? 0.7 : 0.2,
     opacity: 1,
     dashArray: '',
     fillRule: 'evenodd',
@@ -199,8 +212,9 @@ export default function MapView() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<LeafletMap | null>(null);
   const [countriesData, setCountriesData] = useState<CountryData | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<CountryFeature | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // These state variables are used in the component's event handlers
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [hoveredCountry, setHoveredCountry] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -233,10 +247,10 @@ export default function MapView() {
   }, [isClient, map]);
 
   // Memoize the country style function
-  const countryStyle = useCallback((feature: CountryFeature) => 
-    getCountryStyle(feature, countriesWithGalleries),
-    []
-  );
+  const countryStyle = useCallback((feature?: CountryFeature) => {
+    if (!feature) return {};
+    return getCountryStyle(feature, countriesWithGalleries as readonly string[]);
+  }, []);
 
   // Handle mouse move for tooltip positioning
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -266,7 +280,7 @@ export default function MapView() {
 
     const handleMouseOut = (e: L.LeafletEvent) => {
       const target = e.target as L.Path;
-      target.setStyle(getCountryStyle(feature, countriesWithGalleries));
+      target.setStyle(getCountryStyle(feature, countriesWithGalleries as readonly string[]));
       setHoveredCountry('');
     };
 
@@ -274,7 +288,7 @@ export default function MapView() {
       if (hasGallery) {
         router.push(`/galleries/${countryCode.toLowerCase()}`);
       } else {
-        setSelectedCountry(feature.properties.name);
+        setSelectedCountry(feature);
         setIsModalOpen(true);
       }
     };
@@ -294,14 +308,12 @@ export default function MapView() {
     
     // Set initial view and settings
     mapInstance.setView([20, 0], 3);
-    mapInstance.scrollWheelZoom.disable();
     mapInstance.setMinZoom(3);
+    mapInstance.setMaxZoom(18);
     
     // Add zoom control
-    const zoomControl = L.control.zoom({ 
-      position: 'topright',
-      zoomInTitle: 'Zoom in',
-      zoomOutTitle: 'Zoom out (min zoom)'
+    const zoomControl = L.control.zoom({
+      position: 'bottomright'
     });
     zoomControl.addTo(mapInstance);
     
@@ -320,6 +332,7 @@ export default function MapView() {
     return () => {
       window.removeEventListener('resize', handleResize);
       if (resizeTimeout) clearTimeout(resizeTimeout);
+      zoomControl.remove();
     };
   }, []);
 
@@ -405,15 +418,14 @@ export default function MapView() {
             countriesData={countriesData}
             countryStyle={countryStyle}
             onEachFeature={onEachFeature}
-            router={router}
           />
         )}
         
         {/* Modal */}
-        {showModal && (
+        {isModalOpen && (
           <div 
             className="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000]"
-            onClick={() => setShowModal(false)}
+            onClick={() => setIsModalOpen(false)}
           >
             <div 
               style={{
@@ -443,7 +455,7 @@ export default function MapView() {
                 <span style={{ 
                   fontWeight: '600',
                   color: '#ffffff'
-                }}> {currentCountry}</span> yet.
+                }}> {selectedCountry?.properties?.name || 'this location'}</span> yet.
               </p>
               <div style={{
                 display: 'flex',
@@ -451,7 +463,7 @@ export default function MapView() {
                 gap: '12px'
               }}>
                 <button
-                  onClick={() => setShowModal(false)}
+                  onClick={() => setIsModalOpen(false)}
                   style={{
                     backgroundColor: '#1f2937',
                     color: '#60a5fa',

@@ -27,6 +27,13 @@ const getImagePath = (id: number) => {
 // List of missing photo numbers to exclude
 const missingPhotos: number[] = [2];
 
+// Masonry layout breakpoints
+const breakpointCols = {
+  default: 3,
+  1100: 2,
+  700: 1
+};
+
 // Image details with descriptions and locations
 const imageDetails: Record<number, { alt: string; location: string }> = {
   1: { alt: 'Waterfall created by glaciermelt', location: 'Washington' },

@@ -30,26 +30,15 @@ const missingPhotos: number[] = [];
 // Image details for alt text
 const imageDetails: Record<number, { alt: string }> = {
   1: { alt: 'DescriptionComingSoon' },
-  1: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
   2: { alt: 'DescriptionComingSoon' },
   3: { alt: 'DescriptionComingSoon' },
-  3: { alt: 'DescriptionComingSoon' },
-  4: { alt: 'DescriptionComingSoon' },
   4: { alt: 'DescriptionComingSoon' },
   5: { alt: 'DescriptionComingSoon' },
-  5: { alt: 'DescriptionComingSoon' },
-  6: { alt: 'DescriptionComingSoon' },
   6: { alt: 'DescriptionComingSoon' },
   7: { alt: 'DescriptionComingSoon' },
-  7: { alt: 'DescriptionComingSoon' },
-  8: { alt: 'DescriptionComingSoon' },
   8: { alt: 'DescriptionComingSoon' },
   9: { alt: 'DescriptionComingSoon' },
-  9: { alt: 'DescriptionComingSoon' },
   10: { alt: 'DescriptionComingSoon' },
-  10: { alt: 'DescriptionComingSoon' },
-  11: { alt: 'DescriptionComingSoon' },
   11: { alt: 'DescriptionComingSoon' },
   12: { alt: 'DescriptionComingSoon' },
   13: { alt: 'DescriptionComingSoon' },
@@ -107,14 +96,15 @@ const panoramaLocations = [
 export default function ScotlandGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 47 }, (_, i) => {
+    return Array.from({ length: 213 }, (_, i) => {
       const id = i + 1;
+      const details = imageDetails[id] || {};
       return {
         id,
         src: getImagePath(id),
-        alt: `Photo ${id}`,
-        location: 'Scotland',
-        ...(imageDetails[id] || {})
+        location: 'France',
+        ...details,
+        alt: details.alt || `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);

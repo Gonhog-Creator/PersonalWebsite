@@ -53,7 +53,7 @@ const GradientButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gradien
       const button = buttonRef.current;
       const span = spanRef.current;
 
-      const handleMouseMove = (e: MouseEvent) => {
+      const handleMouseMove = (e: globalThis.MouseEvent) => {
         const rect = button.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -69,8 +69,9 @@ const GradientButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gradien
         span.style.setProperty('--gradient-angle', `${angle}deg`);
       };
 
-      button.addEventListener('mousemove', handleMouseMove);
-      return () => button.removeEventListener('mousemove', handleMouseMove);
+      const mouseMoveHandler = handleMouseMove as EventListener;
+      button.addEventListener('mousemove', mouseMoveHandler);
+      return () => button.removeEventListener('mousemove', mouseMoveHandler);
     }, []);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement | HTMLAnchorElement>) => {

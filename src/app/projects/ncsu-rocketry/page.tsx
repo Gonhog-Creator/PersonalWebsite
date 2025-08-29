@@ -7,7 +7,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { FaUniversity, FaRocket, FaCog, FaChartLine, FaTools, FaArrowLeft, FaWind, FaFlask } from 'react-icons/fa';
-import ParticlesBackground from '@/components/ParticlesBackground/ParticlesBackground';
+import { ParticlesBackground } from '@/components/ParticlesBackground/ParticlesBackground';
 
 export default function NCSURocketryPage() {
   useEffect(() => {

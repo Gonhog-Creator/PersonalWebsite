@@ -255,12 +255,13 @@ export default function CostaRicaGallery() {
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 213 }, (_, i) => {
       const id = i + 1;
+      const details = imageDetails[id] || {};
       return {
         id,
         src: getImagePath(id),
-        alt: `Photo ${id}`,
         location: 'Costa Rica',
-        ...(imageDetails[id] || {})
+        ...details,
+        alt: details.alt || `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);

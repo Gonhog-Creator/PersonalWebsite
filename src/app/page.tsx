@@ -12,7 +12,7 @@ import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { Icon } from '@/components/ui/Icon'; // Importing our custom Icon component
 
 const ParticlesBackground = dynamic(
-  () => import('@/components/ParticlesBackground/ParticlesBackground').then(mod => mod.default || mod),
+  () => import('@/components/ParticlesBackground/ParticlesBackground').then(mod => mod.ParticlesBackground || mod.default || mod),
   { ssr: false }
 );
 

@@ -30,54 +30,29 @@ const missingPhotos: number[] = [];
 // Image details for alt text
 const imageDetails: Record<number, { alt: string }> = {
   1: { alt: 'DescriptionComingSoon' },
-  1: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
   2: { alt: 'DescriptionComingSoon' },
   3: { alt: 'DescriptionComingSoon' },
-  3: { alt: 'DescriptionComingSoon' },
-  4: { alt: 'DescriptionComingSoon' },
   4: { alt: 'DescriptionComingSoon' },
   5: { alt: 'DescriptionComingSoon' },
-  5: { alt: 'DescriptionComingSoon' },
-  6: { alt: 'DescriptionComingSoon' },
   6: { alt: 'DescriptionComingSoon' },
   7: { alt: 'DescriptionComingSoon' },
-  7: { alt: 'DescriptionComingSoon' },
-  8: { alt: 'DescriptionComingSoon' },
   8: { alt: 'DescriptionComingSoon' },
   9: { alt: 'DescriptionComingSoon' },
-  9: { alt: 'DescriptionComingSoon' },
-  10: { alt: 'DescriptionComingSoon' },
   10: { alt: 'DescriptionComingSoon' },
   11: { alt: 'DescriptionComingSoon' },
-  11: { alt: 'DescriptionComingSoon' },
-  12: { alt: 'DescriptionComingSoon' },
   12: { alt: 'DescriptionComingSoon' },
   13: { alt: 'DescriptionComingSoon' },
-  13: { alt: 'DescriptionComingSoon' },
-  14: { alt: 'DescriptionComingSoon' },
   14: { alt: 'DescriptionComingSoon' },
   15: { alt: 'DescriptionComingSoon' },
-  15: { alt: 'DescriptionComingSoon' },
-  16: { alt: 'DescriptionComingSoon' },
   16: { alt: 'DescriptionComingSoon' },
   17: { alt: 'DescriptionComingSoon' },
-  17: { alt: 'DescriptionComingSoon' },
-  18: { alt: 'DescriptionComingSoon' },
   18: { alt: 'DescriptionComingSoon' },
   19: { alt: 'DescriptionComingSoon' },
-  19: { alt: 'DescriptionComingSoon' },
-  20: { alt: 'DescriptionComingSoon' },
   20: { alt: 'DescriptionComingSoon' },
   21: { alt: 'DescriptionComingSoon' },
-  21: { alt: 'DescriptionComingSoon' },
-  22: { alt: 'DescriptionComingSoon' },
   22: { alt: 'DescriptionComingSoon' },
   23: { alt: 'DescriptionComingSoon' },
-  23: { alt: 'DescriptionComingSoon' },
   24: { alt: 'DescriptionComingSoon' },
-  24: { alt: 'DescriptionComingSoon' },
-  25: { alt: 'DescriptionComingSoon' },
   25: { alt: 'DescriptionComingSoon' },
   26: { alt: 'DescriptionComingSoon' },
   27: { alt: 'DescriptionComingSoon' },
@@ -122,14 +97,15 @@ const panoramaLocations = [
 export default function SwitzerlandGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 49 }, (_, i) => {
+    return Array.from({ length: 213 }, (_, i) => {
       const id = i + 1;
+      const details = imageDetails[id] || {};
       return {
         id,
         src: getImagePath(id),
-        alt: `Photo ${id}`,
-        location: 'Switzerland',
-        ...(imageDetails[id] || {})
+        location: 'France',
+        ...details,
+        alt: details.alt || `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);

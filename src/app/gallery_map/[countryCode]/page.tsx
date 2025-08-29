@@ -1,7 +1,22 @@
-'use client';
+import CountryRedirectClient from './CountryRedirectClient';
 
-import { useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+// This function generates the static paths at build time
+export async function generateStaticParams() {
+  return [
+    { countryCode: 'us' },
+    { countryCode: 'ar' },
+    { countryCode: 'ch' },
+    { countryCode: 'de' },
+    { countryCode: 'fr' },
+    { countryCode: 'gb' },
+    { countryCode: 'cr' },
+    { countryCode: 'si' },
+    { countryCode: 'at' },
+    { countryCode: 'au' },
+    { countryCode: 'be' },
+    { countryCode: 'gr' }
+  ];
+}
 
 // Map of country codes to their gallery paths
 const countryToGalleryMap: Record<string, string> = {
@@ -19,25 +34,6 @@ const countryToGalleryMap: Record<string, string> = {
   'gr': '/galleries/greece'
 };
 
-export default function CountryRedirect() {
-  const router = useRouter();
-  const params = useParams();
-  const countryCode = params.countryCode as string;
-
-  useEffect(() => {
-    const galleryPath = countryToGalleryMap[countryCode.toLowerCase()];
-    if (galleryPath) {
-      router.replace(galleryPath);
-    } else {
-      router.replace('/404');
-    }
-  }, [countryCode, router]);
-
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Redirecting to gallery...</h1>
-      </div>
-    </div>
-  );
+export default function CountryRedirectPage() {
+  return <CountryRedirectClient />;
 }

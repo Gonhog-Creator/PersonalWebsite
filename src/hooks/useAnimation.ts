@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 /**
@@ -202,7 +202,7 @@ export function useCountUp(
   const [count, setCount] = useState(start);
   const [isComplete, setIsComplete] = useState(false);
   const startTimeRef = useRef<number | null>(null);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (end === start) {

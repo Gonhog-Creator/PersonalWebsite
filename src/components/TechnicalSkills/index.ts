@@ -1,3 +1,1 @@
-import TechnicalSkills from './TechnicalSkills';
-
-export default TechnicalSkills;
+export { TechnicalSkills } from './TechnicalSkills';

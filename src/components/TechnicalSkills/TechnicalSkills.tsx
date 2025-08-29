@@ -2,7 +2,7 @@
 
 import { Icon } from '@iconify/react';
 
-const TechnicalSkills = () => {
+export const TechnicalSkills = () => {
   const skills = [
     { name: 'Lightroom', icon: 'logos:adobe-lightroom' },
     { name: 'Photoshop', icon: 'logos:adobe-photoshop' },

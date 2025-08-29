@@ -19,7 +19,7 @@ export function ParticleEffect({ isHovered, isWhiteBg }: ParticleEffectProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const isMounted = useRef(true);
-  const animationFrameRef = useRef<number>();
+  const animationFrameRef = useRef<number | undefined>(undefined);
 
   // Clean up all animations
   const cleanup = useCallback(() => {

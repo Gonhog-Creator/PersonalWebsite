@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 /**

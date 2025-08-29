@@ -1,1 +1,1 @@
-self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{},"appUsingSizeAdjust":false,"pagesUsingSizeAdjust":false}';
+self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/josemariabarbeito/PycharmProjects/PersonalWebsite/src/app/layout":["static/media/71824326c5c723a3.p.woff2","static/media/c97d4358b5ad6f1f.p.woff2","static/media/e4af272ccee01ff0.p.woff2","static/media/5d258b355fefebcb.p.woff2"]},"appUsingSizeAdjust":false,"pagesUsingSizeAdjust":false}';

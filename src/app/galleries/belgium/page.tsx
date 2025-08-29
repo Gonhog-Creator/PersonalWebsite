@@ -29,24 +29,15 @@ const missingPhotos = [36, 47];
 
 // Image details for alt text
 const imageDetails: Record<number, { alt: string }> = {
-    1: { alt: 'Arafed man with a backpack and a backpack on his back.' },
-  1: { alt: 'Arafed view of a canal with people walking on it and a church in the background.' },
+  1: { alt: 'Arafed man with a backpack and a backpack on his back.' },
   2: { alt: 'There is a man riding a bike down a cobblestone street.' },
-  2: { alt: 'Arafed view of a city with a clock tower and a clock tower.' },
   3: { alt: 'Baskets of doughnuts and other pastries are on display in a store window.' },
-  3: { alt: 'Arafed view of a city with a sunset in the background.' },
   4: { alt: 'There are many people waiting at the train station for the train.' },
-  4: { alt: 'Arafed view of a city with a sunset in the background.' },
   5: { alt: 'There is a long hallway with a bunch of stairs and a sign.' },
-  5: { alt: 'There are many houses in the picture.' },
   6: { alt: 'There is a statue of a man riding a horse in a park.' },
-  6: { alt: 'Arafed view of a city with a sunset in the background.' },
   7: { alt: 'There is a glass of beer sitting on a table.' },
-  7: { alt: 'Arafed view of a city with a sunset in the background.' },
   8: { alt: 'Arafed view of a tall building with a clock tower.' },
-  8: { alt: 'Arafed view of a city with a sunset in the background.' },
   9: { alt: 'There is a river running through a city with buildings on both sides.' },
-  9: { alt: 'Arafed view of a city with a tall tower and a clock tower.' },
   10: { alt: 'There is a large building with statues on the top of it.' },
   11: { alt: 'Several people riding bikes down a cobblestone street in a city.' },
   12: { alt: 'There are many chairs and tables on the street in the city.' },
@@ -144,12 +135,13 @@ export default function BelgiumGallery() {
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 89 }, (_, i) => {
       const id = i + 1;
+      const details = imageDetails[id] || {};
       return {
         id,
         src: getImagePath(id),
-        alt: `Photo ${id}`,
         location: 'Belgium',
-        ...(imageDetails[id] || {})
+        ...details,
+        alt: details.alt || `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);

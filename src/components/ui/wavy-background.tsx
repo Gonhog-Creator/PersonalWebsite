@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createNoise3D } from "simplex-noise";
 
 export const WavyBackground = ({
@@ -27,13 +27,13 @@ export const WavyBackground = ({
   [key: string]: unknown;
 }) => {
   const noise = createNoise3D();
-  let w: number,
-    h: number,
-    nt: number,
-    i: number,
+  let i: number,
     x: number,
     ctx: CanvasRenderingContext2D | null = null,
     canvas: HTMLCanvasElement | null = null;
+  const ntRef = useRef(0);
+  const wRef = useRef(0);
+  const hRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const getSpeed = () => {
     switch (speed) {
@@ -48,17 +48,30 @@ export const WavyBackground = ({
 
   const init = () => {
     canvas = canvasRef.current;
+    if (!canvas) return;
+    
     ctx = canvas.getContext("2d");
-    w = ctx.canvas.width = window.innerWidth;
-    h = ctx.canvas.height = window.innerHeight;
+    if (!ctx) return;
+    
+    wRef.current = canvas.width = window.innerWidth;
+    hRef.current = canvas.height = window.innerHeight;
     ctx.filter = `blur(${blur}px)`;
-    nt = 0;
-    window.onresize = function () {
-      w = ctx.canvas.width = window.innerWidth;
-      h = ctx.canvas.height = window.innerHeight;
+    ntRef.current = 0;
+    
+    const handleResize = () => {
+      if (!canvas || !ctx) return;
+      wRef.current = canvas.width = window.innerWidth;
+      hRef.current = canvas.height = window.innerHeight;
       ctx.filter = `blur(${blur}px)`;
     };
+    
+    window.addEventListener('resize', handleResize);
     render();
+    
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   };
 
   const waveColors = colors ?? [
@@ -71,34 +84,34 @@ export const WavyBackground = ({
   const drawWave = useCallback((n: number) => {
     if (!ctx) return;
     
-    nt += getSpeed();
+    ntRef.current += getSpeed();
     for (i = 0; i < n; i++) {
       ctx.beginPath();
       ctx.lineWidth = 12; // Thin line
       ctx.strokeStyle = waveColors[i % waveColors.length];
       
       // Position the wave at 1/4 of the container height
-      const verticalPos = h * 0.25;
+      const verticalPos = hRef.current * 0.25;
       
       // Draw wave with significantly increased amplitude
-      for (x = 0; x < w; x += 3) {
-        const y = noise(x / 300, 0.1 * i, nt) * 80; // Increased amplitude to 80 and adjusted frequency
+      for (x = 0; x < wRef.current; x += 3) {
+        const y = noise(x / 300, 0.1 * i, ntRef.current) * 80; // Increased amplitude to 80 and adjusted frequency
         ctx.lineTo(x, y + verticalPos);
       }
       
       ctx.stroke();
       ctx.closePath();
     }
-  }, [ctx, noise, nt, waveColors, h, w]);
+  }, [ctx, noise, waveColors]);
 
-  const animationId = useRef<number>();
+  const animationId = useRef<number | null>(null);
   
   const render = useCallback(() => {
     if (!ctx) return;
     
     ctx.fillStyle = backgroundFill || "black";
     ctx.globalAlpha = waveOpacity || 0.5;
-    ctx.fillRect(0, 0, w, h);
+    ctx.fillRect(0, 0, wRef.current, hRef.current);
     drawWave(5);
     animationId.current = requestAnimationFrame(render);
   }, [ctx, backgroundFill, waveOpacity, drawWave]);
@@ -113,14 +126,14 @@ export const WavyBackground = ({
       if (!context) return;
       
       ctx = context;
-      w = ctx.canvas.width = window.innerWidth;
-      h = ctx.canvas.height = window.innerHeight;
+      wRef.current = ctx.canvas.width = window.innerWidth;
+      hRef.current = ctx.canvas.height = window.innerHeight;
       ctx.filter = `blur(${blur}px)`;
       
       const handleResize = () => {
         if (!ctx) return;
-        w = ctx.canvas.width = window.innerWidth;
-        h = ctx.canvas.height = window.innerHeight;
+        wRef.current = ctx.canvas.width = window.innerWidth;
+        hRef.current = ctx.canvas.height = window.innerHeight;
         ctx.filter = `blur(${blur}px)`;
       };
       

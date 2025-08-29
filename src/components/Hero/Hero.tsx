@@ -49,7 +49,7 @@ export function Hero() {
                   text="Jose Maria Barbeito"
                   speed={50}
                   maxIterations={1}
-                  animateOn="view"
+                  animateOn="inView"
                   revealDirection="start"
                   sequential={true}
                   useOriginalCharsOnly={true}
@@ -64,7 +64,7 @@ export function Hero() {
                   text="Chemical Engineer &"
                   speed={50}
                   maxIterations={1}
-                  animateOn="view"
+                  animateOn="inView"
                   revealDirection="start"
                   sequential={true}
                   useOriginalCharsOnly={true}
@@ -77,7 +77,7 @@ export function Hero() {
                   text="Material Scientist"
                   speed={50}
                   maxIterations={1}
-                  animateOn="view"
+                  animateOn="inView"
                   revealDirection="start"
                   sequential={true}
                   useOriginalCharsOnly={true}
@@ -92,7 +92,7 @@ export function Hero() {
                   text="I'm currently studying Chemical Engineering and Material Science"
                   speed={50}
                   maxIterations={1}
-                  animateOn="view"
+                  animateOn="inView"
                   revealDirection="start"
                   sequential={true}
                   useOriginalCharsOnly={true}
@@ -105,7 +105,7 @@ export function Hero() {
                   text="at North Carolina State University. In August 2025, I will be"
                   speed={50}
                   maxIterations={1}
-                  animateOn="view"
+                  animateOn="inView"
                   revealDirection="start"
                   sequential={true}
                   useOriginalCharsOnly={true}
@@ -118,7 +118,7 @@ export function Hero() {
                   text="starting my Masters in Material Science Engineering at NC State!"
                   speed={50}
                   maxIterations={1}
-                  animateOn="view"
+                  animateOn="inView"
                   revealDirection="start"
                   sequential={true}
                   useOriginalCharsOnly={true}

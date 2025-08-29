@@ -253,9 +253,9 @@ export default function AustriaGallery() {
       return {
         id,
         src: getImagePath(id),
-        alt: details.alt || `Photo ${id}`,
         location: 'Austria',
-        ...details
+        ...details,
+        alt: details.alt || `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);

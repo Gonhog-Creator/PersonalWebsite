@@ -30,48 +30,27 @@ const missingPhotos = [147];
 // Image details for alt text
 const imageDetails: Record<number, { alt: string }> = {
   // Scenic views and landscapes
-1: { alt: 'Arafed man doing a handstand on a mountain top.' },
   1: { alt: 'There are many people walking around in the courtyard of a palace.' },
-  2: { alt: 'There is a man doing a handstand on a mountain top.' },
   2: { alt: 'There is a bridge over a river with a boat going under it.' },
-  3: { alt: 'Arafed view of a village on a hill with a church on top.' },
   3: { alt: 'Aerial view of a city with a castle on a hill.' },
   4: { alt: 'Arafed view of a town on a hill with a full moon in the sky.' },
-  4: { alt: 'Arafed view of a town on a hill with a steeple.' },
-  5: { alt: 'Arafed crane in the foreground of a city skyline at sunset.' },
   5: { alt: 'Arafed view of a garden with a circular lawn and a building in the background.' },
-  6: { alt: 'Araffe view of a city with a lot of buildings and a tall building.' },
   6: { alt: 'There is a large castle on a hill with a clock tower.' },
-  7: { alt: 'Araffes of locks attached to a fence with a red umbrella.' },
   7: { alt: 'There is a large garden with a lot of trees and bushes.' },
-  8: { alt: 'There is a fountain with a fountain head in front of a building.' },
   8: { alt: 'Araffe view of a city with a lot of buildings and a tall tower.' },
-  9: { alt: 'Arafed view of a large white building with a clock tower.' },
   9: { alt: 'Arafed view of a city with a large cathedral and a crane.' },
-  10: { alt: 'People riding bikes on a street with a windmill in the background.' },
   10: { alt: 'Boats are docked on the river in a city with tall buildings.' },
   11: { alt: 'Araful looking street with people walking and cars parked on both sides.' },
-  11: { alt: 'Boats are on the river in front of a large building.' },
-  12: { alt: 'There is a large glass dome with a statue in it.' },
   12: { alt: 'People walking around a courtyard in front of a large building.' },
-  13: { alt: 'There are many different types of food in the display case.' },
   13: { alt: 'There is a boat that is floating down the river in the city.' },
   14: { alt: 'Araffe wheel with white spokes and a sky background.' },
-  14: { alt: 'There is a plane flying over a mountain with a clear sky.' },
-  15: { alt: 'There is a large building with a statue on top of it.' },
   15: { alt: 'Arafed view of a winding road in the mountains with a view of a valley.' },
   16: { alt: 'Arafed arch with a statue on top of it in a courtyard.' },
-  16: { alt: 'There is a large rock formation on the side of a mountain.' },
-  17: { alt: 'There is a pigeon that is sitting on a ledge by the water.' },
   17: { alt: 'Arafed view of a city with a clock tower and a sunset.' },
-  18: { alt: 'There are many people walking on the boardwalk near a building.' },
   18: { alt: 'Aerial view of a city with a large park and a river.' },
   19: { alt: 'Arafed view of a large cathedral with a clock tower.' },
-  19: { alt: 'There is a view of a winding road in the mountains.' },
   20: { alt: 'Araffe ferris wheel in front of a city skyline at sunset.' },
-  20: { alt: 'Aerial view of a city with a river and a park.' },
   21: { alt: 'Sunset over a bridge with a boat in the water.' },
-  21: { alt: 'There is a view of a mountain with a road going through it.' },
   22: { alt: 'There is a statue of a man on a horse in a plaza.' },
   23: { alt: 'There are many people walking through a hallway in a building.' },
   24: { alt: 'Arafed ceiling with a painting of a banquet in a palace.' },
@@ -191,14 +170,15 @@ const panoramaLocations = [
 export default function FranceGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 122 }, (_, i) => {
+    return Array.from({ length: 213 }, (_, i) => {
       const id = i + 1;
+      const details = imageDetails[id] || {};
       return {
         id,
         src: getImagePath(id),
-        alt: `Photo ${id}`,
         location: 'France',
-        ...(imageDetails[id] || {})
+        ...details,
+        alt: details.alt || `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
