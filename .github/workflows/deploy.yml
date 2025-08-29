@@ -39,15 +39,9 @@ jobs:
           npm run build
           
           echo "Preparing deployment directory..."
-          mkdir -p out
           
-          # Copy public files
-          if [ -d "public" ]; then
-            echo "Copying public directory contents..."
-            cp -r public/. out/
-          fi
-          
-          # Ensure .nojekyll exists
+          # The static export is already in the out directory
+          # We just need to ensure .nojekyll is there
           touch out/.nojekyll
           
           echo "Build directory contents:"
@@ -55,9 +49,6 @@ jobs:
           
           echo "Out directory contents:"
           ls -la out/
-          
-          echo "Next.js output directory:"
-          ls -la .next/standalone/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
