@@ -86,7 +86,7 @@ export default function WorldMap() {
 
   // Set view to show all markers when map is ready
   useEffect(() => {
-    if (map && Object.keys(countryCoordinates).length > 0) {
+    if (mapRef.current && isMapReady && Object.keys(countryCoordinates).length > 0) {
       const markers = Object.values(countryCoordinates);
       if (markers.length === 0) return;
       
@@ -125,7 +125,7 @@ export default function WorldMap() {
                 mapRef.current = mapInstance;
                 setIsMapReady(true);
               }
-            }
+            }}
             className="z-0"
           >
             <TileLayer

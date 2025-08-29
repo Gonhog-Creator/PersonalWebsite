@@ -6,22 +6,29 @@ const nextConfig = {
   output: 'export',
   basePath: isProd ? `/${repo}` : '',
   assetPrefix: isProd ? `/${repo}/` : '',
+  
+  // For static export
   images: {
     unoptimized: true,
   },
+  
   trailingSlash: true,
-  // Optional: Add this if you're using environment variables
-  env: {
-    // Add any environment variables here
-  },
-  // Optional: Add this if you're using dynamic routes
-  // This will ensure all routes are properly exported
-  exportPathMap: async function() {
-    return {
-      '/': { page: '/' },
-      // Add other static pages here
-      // '/about': { page: '/about' },
+  reactStrictMode: true,
+  
+  // Webpack configuration for handling specific modules
+  webpack: (config, { isServer }) => {
+    // Handle Node.js modules that might be problematic in the browser
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      os: false,
     };
+    
+    // Handle canvas module if needed
+    config.externals = [...(config.externals || []), { canvas: 'canvas' }];
+    
+    return config;
   },
 };
 
