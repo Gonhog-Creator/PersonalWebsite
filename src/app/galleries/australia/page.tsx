@@ -1,21 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
-import { useRouter } from 'next/navigation';
 import { FaTimes } from 'react-icons/fa';
-import dynamic from 'next/dynamic';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-
-// Dynamically import the GalleryNavbar with SSR disabled
-const GalleryNavbar = dynamic(
-  () => import('@/components/gallery/GalleryNavbar'),
-  { ssr: false }
-);
 
 interface GalleryImage {
   id: number;
@@ -24,24 +16,15 @@ interface GalleryImage {
   location: string;
 }
 
+type GalleryView = 'photos' | 'panoramas' | 'drone';
+
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
   const basePath = '/img/Australia/australia';
   return `${basePath} (${id}).jpg`;
 };
 
-// Generate gallery images array
-export const galleryImages: GalleryImage[] = Array.from({ length: 99 }, (_, i) => {
-  const id = i + 1;
-  return {
-    id,
-    src: getImagePath(id),
-    alt: `Photo ${id}`,
-    location: 'Australia'  // Default location
-  };
-});
-
-// Add specific alt text for all images
+// Image details for alt text
 const imageDetails: Record<number, { alt: string }> = {
   1: { alt: 'Adelaide Central Market' },
   2: { alt: 'Smoked meats' },
@@ -144,22 +127,39 @@ const imageDetails: Record<number, { alt: string }> = {
   99: { alt: 'Sunset at Alice Springs' },
 };
 
-// Update gallery images with details
-galleryImages.forEach(img => {
-  if (imageDetails[img.id]) {
-    img.alt = imageDetails[img.id].alt;
-  }
-});
-
 // Masonry breakpoints
 
 
-type GalleryView = 'photos' | 'panoramas' | 'drone';
+// Panorama locations data
+const panoramaLocations = [
+  { id: 1, location: 'Sydney' },
+  { id: 2, location: 'Melbourne' },
+  { id: 3, location: 'Great Barrier Reef' },
+  { id: 4, location: 'Uluru' },
+  { id: 5, location: 'Great Ocean Road' },
+  { id: 6, location: 'Kakadu National Park' },
+  { id: 7, location: 'Perth' },
+  { id: 8, location: 'Tasmania' },
+  { id: 9, location: 'The Pinnacles' }
+];
 
 export default function AustraliaGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
-
+  
+  // Generate gallery images with useMemo
+  const galleryImages = useMemo<GalleryImage[]>(() => {
+    return Array.from({ length: 99 }, (_, i) => {
+      const id = i + 1;
+      const details = imageDetails[id] || { alt: `Australia Photo ${id}` };
+      return {
+        id,
+        src: getImagePath(id),
+        alt: details.alt,
+        location: 'Australia' // Default location, can be updated if needed
+      };
+    });
+  }, []);
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -234,21 +234,21 @@ export default function AustraliaGallery() {
         <div className="w-full flex justify-center px-4">
           <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
             <GradientButton
-              variant={currentView === 'panoramas' ? 'variant' : 'outline'}
+              variant={currentView === 'panoramas' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('panoramas')}
             >
               Panoramas
             </GradientButton>
             <GradientButton
-              variant={currentView === 'photos' ? 'variant' : 'outline'}
+              variant={currentView === 'photos' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('photos')}
             >
               Photos
             </GradientButton>
             <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'outline'}
+              variant={currentView === 'drone' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('drone')}
             >

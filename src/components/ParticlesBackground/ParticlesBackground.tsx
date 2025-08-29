@@ -2,13 +2,117 @@
 
 import { useEffect, useCallback } from 'react';
 
+interface ParticleConfig {
+  particles: {
+    number: {
+      value: number;
+      density: {
+        enable: boolean;
+        value_area: number;
+      };
+    };
+    color: {
+      value: string;
+    };
+    shape: {
+      type: string;
+    };
+    opacity: {
+      value: number;
+      random: boolean;
+      anim: {
+        enable: boolean;
+        speed: number;
+        opacity_min: number;
+        sync: boolean;
+      };
+    };
+    size: {
+      value: number;
+      random: boolean;
+      anim: {
+        enable: boolean;
+        speed: number;
+        size_min: number;
+        sync: boolean;
+      };
+    };
+    line_linked: {
+      enable: boolean;
+      distance: number;
+      color: string;
+      opacity: number;
+      width: number;
+    };
+    move: {
+      enable: boolean;
+      speed: number;
+      direction: string;
+      random: boolean;
+      straight: boolean;
+      out_mode: string;
+      bounce: boolean;
+      attract: {
+        enable: boolean;
+        rotateX: number;
+        rotateY: number;
+      };
+    };
+  };
+  interactivity: {
+    detect_on: string;
+    events: {
+      onhover: {
+        enable: boolean;
+        mode: string;
+      };
+      onclick: {
+        enable: boolean;
+        mode: string;
+      };
+      resize: boolean;
+    };
+    modes: {
+      grab: {
+        distance: number;
+        line_linked: {
+          opacity: number;
+        };
+      };
+      bubble: {
+        distance: number;
+        size: number;
+        duration: number;
+        opacity: number;
+        speed: number;
+      };
+      repulse: {
+        distance: number;
+        duration: number;
+      };
+      push: {
+        particles_nb: number;
+      };
+      remove: {
+        particles_nb: number;
+      };
+    };
+  };
+  retina_detect: boolean;
+}
+
 declare global {
   interface Window {
-    particlesJS: (id: string, config: any) => void;
+    particlesJS: (id: string, config: ParticleConfig) => void;
   }
 }
 
-export function ParticlesBackground() {
+interface ParticlesBackgroundProps {
+  particleCount?: number;
+  className?: string;
+}
+
+export function ParticlesBackground({ particleCount = 60, className = '' }: ParticlesBackgroundProps) {
   const initParticles = useCallback(() => {
     window.particlesJS('particles-js', {
       particles: {
@@ -124,16 +228,7 @@ export function ParticlesBackground() {
   return (
     <div 
       id="particles-js" 
-      className="absolute inset-0 w-full h-full z-0"
-      style={{ 
-        background: 'transparent',
-        pointerEvents: 'none',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0
-      }}
+      className={`fixed top-0 left-0 w-full h-full -z-10 ${className}`} 
     />
   );
 };

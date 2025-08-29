@@ -1,16 +1,29 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, MouseEvent, KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
-interface SilverBorderButtonProps extends React.HTMLAttributes<HTMLDivElement> {
+interface BaseButtonProps {
   children: React.ReactNode;
   width?: string;
   height?: string;
   disabled?: boolean;
-  as?: 'a' | 'button';
-  href?: string;
+  className?: string;
+  onClick?: (e: MouseEvent<HTMLElement> | KeyboardEvent<HTMLElement>) => void;
 }
+
+interface ButtonProps extends BaseButtonProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
+  as?: 'button';
+  href?: never;
+}
+
+interface LinkButtonProps extends BaseButtonProps, Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
+  as: 'a';
+  href: string;
+}
+
+type SilverBorderButtonProps = ButtonProps | LinkButtonProps;
 
 const SilverBorderButton = ({
   children,
@@ -38,12 +51,17 @@ const SilverBorderButton = ({
         button.style.setProperty('--r', `${angleRef.current}deg`);
       }
       animationId = requestAnimationFrame(animate);
+      animationFrameRef.current = animationId;
     };
     
     animationId = requestAnimationFrame(animate);
+    animationFrameRef.current = animationId;
     
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
     };
   }, []);
 
@@ -69,7 +87,9 @@ const SilverBorderButton = ({
     if (disabled) return;
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      if (props.onClick) (props.onClick as any)();
+      if (props.onClick) {
+        props.onClick(e);
+      }
     }
   };
 

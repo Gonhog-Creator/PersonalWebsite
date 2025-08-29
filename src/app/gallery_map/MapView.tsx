@@ -1,45 +1,43 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
+import L, { Map as LeafletMap, Layer, FeatureGroup } from 'leaflet';
+import type { GeoJSON as GeoJSONType, GeoJSONOptions } from 'leaflet';
 
-// Dynamically import components with SSR disabled
-const MapContainer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.MapContainer),
-  { ssr: false }
-);
+// Type for country feature properties
+interface CountryProperties {
+  name: string;
+  iso_a2: string;
+  [key: string]: unknown;
+}
 
-const TileLayer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.TileLayer),
-  { ssr: false }
-);
+type Geometry = GeoJSONType.Geometry;
 
-const GeoJSON = dynamic(
-  () => import('react-leaflet').then((mod) => mod.GeoJSON),
-  { ssr: false }
-);
+// Type for country feature
+interface CountryFeature extends GeoJSONType.Feature<Geometry, CountryProperties> {
+  type: 'Feature';
+  id?: string | number;
+  properties: CountryProperties;
+  geometry: Geometry;
+}
+
+// Type for country data
+interface CountryData extends GeoJSONType.FeatureCollection<Geometry, CountryProperties> {
+  type: 'FeatureCollection';
+  features: CountryFeature[];
+}
+
+// Type for map style function
+type CountryStyleFunction = (feature: CountryFeature) => GeoJSONType.PathOptions;
 
 // Countries with galleries
 const countriesWithGalleries = [
   'US', 'AR', 'CH', 'DE', 'FR', 'GB', 'CR', 'SI', 'AT', 'AU', 'BE', 'GR'
-];
+] as const;
 
-// Type for country data
-interface CountryData {
-  type: string;
-  features: Array<{
-    type: string;
-    properties: {
-      name: string;
-      iso_a2: string;
-      [key: string]: any;
-    };
-    geometry: GeoJSON.Geometry;
-  }>;
-}
+type CountryCode = typeof countriesWithGalleries[number];
 
 // Helper component to handle dynamic map loading
 const MapWithNoSSR = dynamic(
@@ -54,22 +52,16 @@ const MapWithNoSSR = dynamic(
       onMapCreated,
       countriesData,
       countryStyle,
-      onEachFeature,
-      onZoomToEU,
-      zoomedIn,
-      router
+      onEachFeature
     }: {
       center: [number, number];
       zoom: number;
       minZoom: number;
       maxZoom: number;
-      onMapCreated: (map: any) => void;
+      onMapCreated: (map: LeafletMap) => void;
       countriesData: CountryData | null;
-      countryStyle: any;
-      onEachFeature: (feature: any, layer: any) => void;
-      onZoomToEU: () => void;
-      zoomedIn: boolean;
-      router: ReturnType<typeof useRouter>;
+      countryStyle: CountryStyleFunction;
+      onEachFeature: (feature: CountryFeature, layer: Layer) => void;
     }) {
       return (
         <MapContainer 
@@ -146,15 +138,15 @@ const MapWithNoSSR = dynamic(
   }
 );
 
-function NoGalleryModal({ 
-  isOpen, 
-  country, 
-  onClose 
-}: { 
-  isOpen: boolean; 
-  country: string; 
-  onClose: () => void 
-}) {
+const NoGalleryModal = ({
+  isOpen,
+  country,
+  onClose
+}: {
+  isOpen: boolean;
+  country: string;
+  onClose: () => void;
+}) => {
   if (!isOpen) return null;
   
   return (
@@ -163,54 +155,20 @@ function NoGalleryModal({
       onClick={onClose}
     >
       <div 
-        style={{
-          backgroundColor: '#1f2937',
-          padding: '24px',
-          borderRadius: '8px',
-          maxWidth: '90%',
-          width: '400px',
-          color: 'white',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
-        }}
+        className="bg-gray-800 p-6 rounded-lg max-w-[90%] w-[400px] text-white shadow-xl"
         onClick={e => e.stopPropagation()}
       >
-        <h3 style={{ 
-          fontSize: '20px', 
-          fontWeight: 'bold', 
-          marginBottom: '16px',
-          color: '#f3f4f6'
-        }}>
+        <h3 className="text-xl font-bold mb-4 text-gray-100">
           No Gallery Available
         </h3>
-        <p style={{ 
-          marginBottom: '24px',
-          color: '#e5e7eb'
-        }}>
+        <p className="mb-6 text-gray-200">
           Sorry, there are no photo galleries available for 
-          <span style={{ 
-            fontWeight: '600',
-            color: '#ffffff'
-          }}> {country}</span> yet.
+          <span className="font-semibold text-white"> {country}</span> yet.
         </p>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          gap: '12px'
-        }}>
+        <div className="flex justify-end gap-3">
           <button
             onClick={onClose}
-            style={{
-              backgroundColor: '#1f2937',
-              color: '#60a5fa',
-              fontWeight: '500',
-              padding: '8px 20px',
-              borderRadius: '4px',
-              border: '1px solid #374151',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1f2937'}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#1f2937'}
+            className="px-5 py-2 rounded border border-gray-600 text-blue-400 font-medium transition-colors hover:bg-gray-700"
           >
             Dismiss
           </button>
@@ -218,10 +176,10 @@ function NoGalleryModal({
       </div>
     </div>
   );
-}
+};
 
-// Move the country style function outside the component to avoid recreation
-const getCountryStyle = (feature: any, countriesWithGalleries: string[]) => {
+// Style function for country features
+function getCountryStyle(feature: CountryFeature, countries: readonly string[]): L.PathOptions {
   const countryCode = feature.properties.iso_a2;
   const hasGallery = countriesWithGalleries.includes(countryCode);
   
@@ -237,117 +195,101 @@ const getCountryStyle = (feature: any, countriesWithGalleries: string[]) => {
 };
 
 export default function MapView() {
-  // All hooks must be called unconditionally at the top level
   const router = useRouter();
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<any>(null);
+  const [map, setMap] = useState<LeafletMap | null>(null);
   const [countriesData, setCountriesData] = useState<CountryData | null>(null);
-  const [isClient, setIsClient] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [currentCountry, setCurrentCountry] = useState('');
-  const [tooltip, setTooltip] = useState({ show: false, name: '', x: 0, y: 0 });
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [hoveredCountry, setHoveredCountry] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
 
-  // Set client-side flag on mount
+  // Set client-side flag and load data
   useEffect(() => {
     setIsClient(true);
-    return () => setIsClient(false);
-  }, []);
-
-  // Load countries data
-  useEffect(() => {
-    if (!isClient) return;
-
-    const loadCountriesData = async () => {
+    
+    const loadData = async () => {
       try {
         const response = await fetch('https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson');
-        const data = await response.json();
+        const data = await response.json() as CountryData;
         setCountriesData(data);
       } catch (error) {
-        console.error('Error loading countries data:', error);
+        console.error('Error loading map data:', error);
       } finally {
         setIsLoading(false);
       }
     };
     
-    loadCountriesData();
-  }, [isClient]);
+    loadData();
+    
+    return () => {
+      if (map) {
+        map.remove();
+        setMap(null);
+      }
+    };
+  }, [isClient, map]);
 
-  // Memoize the country style function with dependency on countriesWithGalleries
-  const countryStyle = useCallback((feature: any) => 
+  // Memoize the country style function
+  const countryStyle = useCallback((feature: CountryFeature) => 
     getCountryStyle(feature, countriesWithGalleries),
-    [countriesWithGalleries]
+    []
   );
 
-  // Handle feature events
   // Handle mouse move for tooltip positioning
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     setCursorPos({ x: e.clientX, y: e.clientY });
   }, []);
 
-  const onEachFeature = useCallback((feature: any, layer: any) => {
-    const countryCode = feature.properties.iso_a2;
-    const countryName = feature.properties.name;
+  const onEachFeature = useCallback((feature: CountryFeature, layer: Layer) => {
+    const countryCode = feature.properties.iso_a2 as CountryCode;
     const hasGallery = countriesWithGalleries.includes(countryCode);
-    
-    layer.on({
-      mouseover: (e: any) => {
-        const layer = e.target;
-        layer.setStyle({
-          weight: 1.5,
-          color: '#1e40af',
-          fillColor: '#3b82f6',
-          fillOpacity: 0.9,
-          dashArray: ''
-        });
-        setHoveredCountry(countryName);
-        setTooltip(prev => ({ ...prev, show: true, name: countryName }));
-      },
-      
-      mousemove: (e: any) => {
-        // Update tooltip position to follow cursor
-        setCursorPos({ x: e.originalEvent.clientX, y: e.originalEvent.clientY });
-      },
-      
-      mouseout: (e: any) => {
-        const layer = e.target;
-        const countryCode = feature.properties.iso_a2;
-        const hasGallery = countriesWithGalleries.includes(countryCode);
-        
-        if (layer && typeof layer.setStyle === 'function') {
-          layer.setStyle({
-            weight: hasGallery ? 1.2 : 0.3,
-            color: hasGallery ? '#1e40af' : 'rgba(30, 64, 175, 0.5)',
-            fillColor: hasGallery ? '#3b82f6' : 'rgba(30, 64, 175, 0.1)',
-            fillOpacity: hasGallery ? 0.7 : 0.2,
-            dashArray: ''
-          });
-        }
-        
-        setHoveredCountry('');
-        setTooltip(prev => ({ ...prev, show: false }));
-      },
-      
-      click: (e: any) => {
-        const layer = e.target;
-        const countryCode = feature.properties.iso_a2;
-        const hasGallery = countriesWithGalleries.includes(countryCode);
-        
-        if (hasGallery) {
-          router.push(`/gallery_map/${countryCode.toLowerCase()}`);
-        } else {
-          setCurrentCountry(countryName);
-          setShowModal(true);
-        }
+
+    const handleMouseOver = (e: L.LeafletEvent) => {
+      const target = e.target as L.Path;
+      const layerStyle: L.PathOptions = {
+        weight: 2,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+      };
+
+      target.setStyle(layerStyle);
+      if (!L.Browser.ie && !L.Browser.edge) {
+        target.bringToFront();
       }
-    });
-  }, [countriesWithGalleries, router]);
+      
+      setHoveredCountry(feature.properties.name);
+    };
+
+    const handleMouseOut = (e: L.LeafletEvent) => {
+      const target = e.target as L.Path;
+      target.setStyle(getCountryStyle(feature, countriesWithGalleries));
+      setHoveredCountry('');
+    };
+
+    const handleClick = () => {
+      if (hasGallery) {
+        router.push(`/galleries/${countryCode.toLowerCase()}`);
+      } else {
+        setSelectedCountry(feature.properties.name);
+        setIsModalOpen(true);
+      }
+    };
+
+    if (layer instanceof L.Path) {
+      layer.on({
+        mouseover: handleMouseOver,
+        mouseout: handleMouseOut,
+        click: handleClick
+      });
+    }
+  }, [router]);
 
   // Handle map instance when it's created
-  const handleMapCreated = useCallback((mapInstance: L.Map) => {
-    // Store the map instance in state
+  const setMapInstance = useCallback((mapInstance: LeafletMap) => {
     setMap(mapInstance);
     
     // Set initial view and settings
@@ -363,9 +305,13 @@ export default function MapView() {
     });
     zoomControl.addTo(mapInstance);
     
-    // Handle window resize
+    // Handle window resize with debounce
+    let resizeTimeout: NodeJS.Timeout;
     const handleResize = () => {
-      mapInstance.invalidateSize();
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        mapInstance.invalidateSize();
+      }, 100);
     };
     
     window.addEventListener('resize', handleResize);
@@ -373,19 +319,9 @@ export default function MapView() {
     // Return cleanup function
     return () => {
       window.removeEventListener('resize', handleResize);
-      mapInstance.remove();
+      if (resizeTimeout) clearTimeout(resizeTimeout);
     };
   }, []);
-
-  // Cleanup function to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      if (map) {
-        map.remove();
-        setMap(null);
-      }
-    };
-  }, [map]);
 
   // Show loading state while data is being loaded
   if (isLoading || !isClient || !countriesData) {
@@ -465,7 +401,7 @@ export default function MapView() {
             zoom={3}
             minZoom={3}
             maxZoom={18}
-            onMapCreated={setMap}
+            onMapCreated={setMapInstance}
             countriesData={countriesData}
             countryStyle={countryStyle}
             onEachFeature={onEachFeature}

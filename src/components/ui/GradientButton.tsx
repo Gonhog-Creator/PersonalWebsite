@@ -1,7 +1,8 @@
 'use client';
 
-import type { HTMLAttributes, ElementType } from 'react';
-import Link from 'next/link';
+import { forwardRef, useRef, useEffect, MouseEvent as ReactMouseEvent } from 'react';
+import Link, { LinkProps as NextLinkProps } from 'next/link';
+import { cn } from '@/lib/utils';
 
 interface BaseButtonProps {
   children?: React.ReactNode;
@@ -11,16 +12,18 @@ interface BaseButtonProps {
   size?: 'sm' | 'default' | 'lg';
   variant?: 'default' | 'outline' | 'ghost';
   disabled?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-interface ButtonProps extends BaseButtonProps, React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends BaseButtonProps, Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
   as?: 'button';
   href?: never;
 }
 
-interface LinkProps extends BaseButtonProps, Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
+interface LinkProps extends BaseButtonProps, Omit<NextLinkProps, 'href' | 'onClick' | 'className'> {
   as: 'a';
   href: string;
+  className?: string;
 }
 
 type GradientButtonProps = ButtonProps | LinkProps;
@@ -74,7 +77,7 @@ const GradientButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gradien
       if (props.disabled) return;
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        if (props.onClick) (props.onClick as any)();
+        if (props.onClick) props.onClick(e as unknown as React.MouseEvent<HTMLElement>);
       }
     };
 
@@ -112,7 +115,7 @@ const GradientButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gradien
       const { href, ...rest } = props as LinkProps;
       return (
         <Link
-          ref={setRefs as any}
+          ref={setRefs as React.Ref<HTMLAnchorElement>}
           href={href}
           className={buttonClasses}
           style={{
@@ -135,7 +138,7 @@ const GradientButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gradien
     const { type = 'button', ...buttonProps } = props as ButtonProps;
     return (
       <button
-        ref={setRefs as any}
+        ref={setRefs as React.Ref<HTMLButtonElement>}
         type={type}
         className={buttonClasses}
         style={{

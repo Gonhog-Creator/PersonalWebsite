@@ -76,9 +76,8 @@ const countryNames: Record<CountryCode, string> = {
 export default function WorldMap() {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const [map, setMap] = useState<any>(null);
-  const [showModal, setShowModal] = useState(false);
-  const [currentCountry, setCurrentCountry] = useState<string>('');
+  const [map, setMap] = useState<L.Map | null>(null);
+
 
   // Set client-side flag on mount
   useEffect(() => {
@@ -164,28 +163,7 @@ export default function WorldMap() {
         </div>
       </div>
 
-      {/* Modal for countries without galleries */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
-            <h2 className="text-2xl font-bold mb-4">Coming Soon</h2>
-            <p className="mb-6">
-              {currentCountry ? 
-                `The gallery for ${currentCountry} is not available yet.` : 
-                'This gallery is not available yet.'
-              }
-            </p>
-            <div className="flex justify-end">
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }

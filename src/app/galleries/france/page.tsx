@@ -1,21 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
-import { useRouter } from 'next/navigation';
 import { FaTimes } from 'react-icons/fa';
-import dynamic from 'next/dynamic';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-
-// Dynamically import the GalleryNavbar with SSR disabled
-const GalleryNavbar = dynamic(
-  () => import('@/components/gallery/GalleryNavbar'),
-  { ssr: false }
-);
 
 interface GalleryImage {
   id: number;
@@ -23,6 +15,8 @@ interface GalleryImage {
   alt: string;
   location: string;
 }
+
+type GalleryView = 'photos' | 'panoramas' | 'drone';
 
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
@@ -33,18 +27,7 @@ const getImagePath = (id: number) => {
 // List of missing photo numbers to exclude
 const missingPhotos = [147];
 
-// Generate gallery images array, excluding missing photos
-export const galleryImages: GalleryImage[] = Array.from(
-  { length: 122 },
-  (_, i) => ({
-    id: i + 1,
-    src: getImagePath(i + 1),
-    alt: `Photo ${i + 1}`,
-    location: 'France'  // Default location
-  })
-).filter(image => !missingPhotos.includes(image.id));
-
-// Add specific alt text for all images
+// Image details for alt text
 const imageDetails: Record<number, { alt: string }> = {
   // Scenic views and landscapes
 1: { alt: 'Arafed man doing a handstand on a mountain top.' },
@@ -192,24 +175,33 @@ const imageDetails: Record<number, { alt: string }> = {
   122: { alt: 'There is a small church in the middle of a vineyard.' },
 };
 
-// Update gallery images with details
-galleryImages.forEach(img => {
-  if (imageDetails[img.id]) {
-    img.alt = imageDetails[img.id].alt;
-  }
-});
-
-// Masonry breakpoints
-const breakpointColumnsObj = {
-  default: 4,
-  1100: 3,
-  700: 2,
-  500: 1,
-};
-
-type GalleryView = 'photos' | 'panoramas' | 'drone';
+// Panorama locations data
+const panoramaLocations = [
+  { id: 1, location: 'Paris' },
+  { id: 2, location: 'Versailles' },
+  { id: 3, location: 'Mont Saint-Michel' },
+  { id: 4, location: 'Loire Valley' },
+  { id: 5, location: 'Provence' },
+  { id: 6, location: 'French Riviera' },
+  { id: 7, location: 'Bordeaux' },
+  { id: 8, location: 'Normandy' },
+  { id: 9, location: 'Alsace' }
+];
 
 export default function FranceGallery() {
+  // Generate gallery images with useMemo, excluding missing photos
+  const galleryImages = useMemo<GalleryImage[]>(() => {
+    return Array.from({ length: 122 }, (_, i) => {
+      const id = i + 1;
+      return {
+        id,
+        src: getImagePath(id),
+        alt: `Photo ${id}`,
+        location: 'France',
+        ...(imageDetails[id] || {})
+      };
+    }).filter(image => !missingPhotos.includes(image.id));
+  }, []);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
 
@@ -286,21 +278,21 @@ export default function FranceGallery() {
         <div className="w-full flex justify-center px-4">
           <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
             <GradientButton
-              variant={currentView === 'panoramas' ? 'variant' : 'outline'}
+              variant={currentView === 'panoramas' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('panoramas')}
             >
               Panoramas
             </GradientButton>
             <GradientButton
-              variant={currentView === 'photos' ? 'variant' : 'outline'}
+              variant={currentView === 'photos' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('photos')}
             >
               Photos
             </GradientButton>
             <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'outline'}
+              variant={currentView === 'drone' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('drone')}
             >

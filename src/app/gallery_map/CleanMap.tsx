@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
 
@@ -18,7 +17,6 @@ const TileLayer = dynamic(
 
 export default function CleanMap() {
   const [isClient, setIsClient] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);

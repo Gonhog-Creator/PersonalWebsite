@@ -15,7 +15,7 @@ export const WavyBackground = ({
   waveOpacity = 0.5,
   ...props
 }: {
-  children?: any;
+  children?: React.ReactNode;
   className?: string;
   containerClassName?: string;
   colors?: string[];
@@ -24,7 +24,7 @@ export const WavyBackground = ({
   blur?: number;
   speed?: "slow" | "fast";
   waveOpacity?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }) => {
   const noise = createNoise3D();
   let w: number,
@@ -32,8 +32,8 @@ export const WavyBackground = ({
     nt: number,
     i: number,
     x: number,
-    ctx: any,
-    canvas: any;
+    ctx: CanvasRenderingContext2D | null = null,
+    canvas: HTMLCanvasElement | null = null;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const getSpeed = () => {
     switch (speed) {
@@ -68,7 +68,9 @@ export const WavyBackground = ({
     "#e879f9",
     "#22d3ee",
   ];
-  const drawWave = (n: number) => {
+  const drawWave = useCallback((n: number) => {
+    if (!ctx) return;
+    
     nt += getSpeed();
     for (i = 0; i < n; i++) {
       ctx.beginPath();
@@ -87,23 +89,57 @@ export const WavyBackground = ({
       ctx.stroke();
       ctx.closePath();
     }
-  };
+  }, [ctx, noise, nt, waveColors, h, w]);
 
-  let animationId: number;
-  const render = () => {
+  const animationId = useRef<number>();
+  
+  const render = useCallback(() => {
+    if (!ctx) return;
+    
     ctx.fillStyle = backgroundFill || "black";
     ctx.globalAlpha = waveOpacity || 0.5;
     ctx.fillRect(0, 0, w, h);
     drawWave(5);
-    animationId = requestAnimationFrame(render);
-  };
+    animationId.current = requestAnimationFrame(render);
+  }, [ctx, backgroundFill, waveOpacity, drawWave]);
 
   useEffect(() => {
-    init();
-    return () => {
-      cancelAnimationFrame(animationId);
+    // Initialize canvas and start animation
+    const init = () => {
+      if (!canvasRef.current) return;
+      
+      canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
+      if (!context) return;
+      
+      ctx = context;
+      w = ctx.canvas.width = window.innerWidth;
+      h = ctx.canvas.height = window.innerHeight;
+      ctx.filter = `blur(${blur}px)`;
+      
+      const handleResize = () => {
+        if (!ctx) return;
+        w = ctx.canvas.width = window.innerWidth;
+        h = ctx.canvas.height = window.innerHeight;
+        ctx.filter = `blur(${blur}px)`;
+      };
+      
+      window.addEventListener('resize', handleResize);
+      render();
+      
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
     };
-  }, []);
+    
+    init();
+    
+    return () => {
+      if (animationId.current) {
+        cancelAnimationFrame(animationId.current);
+      }
+    };
+  }, [blur, render]);
 
   const [isSafari, setIsSafari] = useState(false);
   useEffect(() => {

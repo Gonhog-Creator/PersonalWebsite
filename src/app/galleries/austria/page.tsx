@@ -1,21 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
-import { useRouter } from 'next/navigation';
 import { FaTimes } from 'react-icons/fa';
-import dynamic from 'next/dynamic';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-
-// Dynamically import the GalleryNavbar with SSR disabled
-const GalleryNavbar = dynamic(
-  () => import('@/components/gallery/GalleryNavbar'),
-  { ssr: false }
-);
 
 interface GalleryImage {
   id: number;
@@ -24,6 +16,8 @@ interface GalleryImage {
   location: string;
 }
 
+type GalleryView = 'photos' | 'panoramas' | 'drone';
+
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
   const basePath = '/img/Austria/austria';
@@ -31,67 +25,33 @@ const getImagePath = (id: number) => {
 };
 
 // List of missing photo numbers to exclude
-const missingPhotos = [38, 28, 40, 41, 51, 52, 54, 56, 60, 89, 92, 111, , 117,127, 129, 130, 160];
+const missingPhotos = [38, 28, 40, 41, 51, 52, 54, 56, 60, 89, 92, 111, 117, 127, 129, 130, 160];
 
-// Generate gallery images array, excluding missing photos
-export const galleryImages: GalleryImage[] = Array.from(
-  { length: 215 },
-  (_, i) => ({
-    id: i + 1,
-    src: getImagePath(i + 1),
-    alt: `Photo ${i + 1}`,
-    location: 'Austria'  // Default location
-  })
-).filter(image => !missingPhotos.includes(image.id));
-
-// Add specific alt text for all images
+// Image details for alt text
 const imageDetails: Record<number, { alt: string }> = {
   1: { alt: 'There is a smoke coming out of a chimney on a building.' },
-  1: { alt: 'There is a view of a city from a hill top.' },
   2: { alt: 'Arafed image of a diagram of a large rock with a bunch of tools.' },
-  2: { alt: 'There is a view of a city from a high up.' },
   3: { alt: 'There is a man standing in a cave with a light shining through it.' },
-  3: { alt: 'There is a man standing on a cliff looking at the mountains.' },
   4: { alt: 'There is a man standing in a cave with a lantern.' },
-  4: { alt: 'There is a view of a mountain valley with a winding road.' },
   5: { alt: 'Araffe with a large pretzel in his hands at a table.' },
-  5: { alt: 'Mountains are in the background.' },
   6: { alt: 'There is a small house on a hill with a lot of trees.' },
-  6: { alt: 'There is a view of a city from a high up.' },
   7: { alt: 'There is a man sitting on a bench with a suitcase.' },
-  7: { alt: 'Mountains with a valley in the foreground and a road in the foreground.' },
   8: { alt: 'People are riding on a train in a tunnel with a light on.' },
-  8: { alt: 'Mountains with a valley in the distance and a road in the foreground.' },
   9: { alt: 'Arafed statue of the virgin of guadalupe in a cave.' },
-  9: { alt: 'Mountains with a valley below and a valley below with a valley below.' },
   10: { alt: 'There is a plaque on the wall that says it is a great place to see.' },
-  10: { alt: 'There is a man sitting on a ledge looking out over a mountain.' },
   11: { alt: 'People walking in a tunnel with neon lights and signs.' },
-  11: { alt: 'Mountains with a few people on top of them and a few trees.' },
   12: { alt: 'There are many people standing around a machine in a building.' },
-  12: { alt: 'There is a man standing on a rock looking at the mountains.' },
   13: { alt: 'There is a clock that reads your speed on the wall.' },
-  13: { alt: 'There is a lone tree in front of a mountain range.' },
   14: { alt: 'There is a plaque with a quote on it that says what i could do.' },
-  14: { alt: 'Buildings with spires and towers in a city with a castle in the background.' },
   15: { alt: 'There is a white object with a branch on it in the dark.' },
-  15: { alt: 'Buildings along the river in a city with a bridge.' },
   16: { alt: 'Yellow building with a clock on the front of it in a city.' },
-  16: { alt: 'Arafed view of a city with a park and a river.' },
   17: { alt: 'Arafed sign showing instructions to use a slide safety device.' },
-  17: { alt: 'People walking around a courtyard in front of a large building.' },
   18: { alt: 'There is a painting on the wall of a church with a sunburst.' },
-  18: { alt: 'There is a room with a bed, chairs, and a table.' },
   19: { alt: 'There is a view of a river and a bridge from a hill.' },
-  19: { alt: 'There are two men standing in a room with blue walls.' },
   20: { alt: 'There is a very large altar with a large clock in it.' },
-  20: { alt: 'There is a fountain with statues on it in a park.' },
   21: { alt: 'There is a large gold statue in a church with a window.' },
-  21: { alt: 'Araffe view of a large building with a clock tower in the middle of a field.' },
   22: { alt: 'There is a view of a town from a hill top.' },
-  22: { alt: 'Arafed view of a city square with a clock tower in the background.' },
   23: { alt: 'People are standing in a large room with a lot of boxes on the floor.' },
-  23: { alt: 'Arafed view of a large building with a clock tower.' },
   24: { alt: 'Mountains and valleys with a river running through them.' },
   25: { alt: 'There is a large ornate painting on the wall of a church.' },
   26: { alt: 'There is a small house in the middle of a green valley.' },
@@ -271,27 +231,37 @@ const imageDetails: Record<number, { alt: string }> = {
   215: { alt: 'Araffes on a ferris wheel with a sky background.' },
 };
 
-// Update gallery images with details
-galleryImages.forEach(img => {
-  if (imageDetails[img.id]) {
-    img.alt = imageDetails[img.id].alt;
-  }
-});
-
-// Masonry breakpoints
-const breakpointColumnsObj = {
-  default: 4,
-  1100: 3,
-  700: 2,
-  500: 1,
-};
-
-type GalleryView = 'photos' | 'panoramas' | 'drone';
+// Panorama locations data
+const panoramaLocations = [
+  { id: 1, location: 'Vienna' },
+  { id: 2, location: 'Salzburg' },
+  { id: 3, location: 'Innsbruck' },
+  { id: 4, location: 'Hallstatt' },
+  { id: 5, location: 'Graz' },
+  { id: 6, location: 'Salzkammergut' },
+  { id: 7, location: 'Wachau Valley' },
+  { id: 8, location: 'Zell am See' },
+  { id: 9, location: 'Bad Gastein' }
+];
 
 export default function AustriaGallery() {
+  // Generate gallery images with useMemo, excluding missing photos
+  const galleryImages = useMemo<GalleryImage[]>(() => {
+    return Array.from({ length: 215 }, (_, i) => {
+      const id = i + 1;
+      const details = imageDetails[id] || {};
+      return {
+        id,
+        src: getImagePath(id),
+        alt: details.alt || `Photo ${id}`,
+        location: 'Austria',
+        ...details
+      };
+    }).filter(image => !missingPhotos.includes(image.id));
+  }, []);
+
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
-
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -364,21 +334,21 @@ export default function AustriaGallery() {
         <div className="w-full flex justify-center px-4">
           <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
             <GradientButton
-              variant={currentView === 'panoramas' ? 'variant' : 'outline'}
+              variant={currentView === 'panoramas' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('panoramas')}
             >
               Panoramas
             </GradientButton>
             <GradientButton
-              variant={currentView === 'photos' ? 'variant' : 'outline'}
+              variant={currentView === 'photos' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('photos')}
             >
               Photos
             </GradientButton>
             <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'outline'}
+              variant={currentView === 'drone' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('drone')}
             >
@@ -459,35 +429,7 @@ export default function AustriaGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {[
-                  { id: 1, location: 'DescriptionComingSoon' },
-                  { id: 2, location: 'DescriptionComingSoon' },
-                  { id: 3, location: 'DescriptionComingSoon' },
-                  { id: 4, location: 'DescriptionComingSoon' },
-                  { id: 5, location: 'DescriptionComingSoon' },
-                  { id: 6, location: 'DescriptionComingSoon' },
-                  { id: 7, location: 'DescriptionComingSoon' },
-                  { id: 8, location: 'DescriptionComingSoon' },
-                  { id: 9, location: 'DescriptionComingSoon' },
-                  { id: 10, location: 'DescriptionComingSoon' },
-                  { id: 11, location: 'DescriptionComingSoon' },
-                  { id: 12, location: 'DescriptionComingSoon' },
-                  { id: 13, location: 'DescriptionComingSoon' },
-                  { id: 14, location: 'DescriptionComingSoon' },
-                  { id: 15, location: 'DescriptionComingSoon' },
-                  { id: 16, location: 'DescriptionComingSoon' },
-                  { id: 17, location: 'DescriptionComingSoon' },
-                  { id: 18, location: 'DescriptionComingSoon' },
-                  { id: 19, location: 'DescriptionComingSoon' },
-                  { id: 20, location: 'DescriptionComingSoon' },
-                  { id: 21, location: 'DescriptionComingSoon' },
-                  { id: 22, location: 'DescriptionComingSoon' },
-                  { id: 23, location: 'DescriptionComingSoon' },
-                  { id: 24, location: 'DescriptionComingSoon' },
-                  { id: 25, location: 'DescriptionComingSoon' },
-                  { id: 26, location: 'DescriptionComingSoon' }
-
-                ].map((item, index) => (
+                {panoramaLocations.map((item, index) => (
                   <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
                       src={`/img/Austria/austria_panorama (${item.id}).jpg`}

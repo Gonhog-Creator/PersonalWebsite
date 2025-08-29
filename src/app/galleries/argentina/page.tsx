@@ -1,24 +1,27 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
-import { useRouter } from 'next/navigation';
 import { FaTimes } from 'react-icons/fa';
-import dynamic from 'next/dynamic';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 
-
+interface ImageDetails {
+  alt: string;
+  location?: string;
+}
 
 interface GalleryImage {
   id: number;
   src: string;
   alt: string;
-  location: string;
+  location?: string;
 }
+
+type GalleryView = 'photos' | 'panoramas' | 'drone';
 
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
@@ -26,52 +29,25 @@ const getImagePath = (id: number) => {
   return `${basePath} (${id}).jpg`;
 };
 
-// Generate gallery images array
-export const galleryImages: GalleryImage[] = Array.from({ length: 105 }, (_, i) => {
-  const id = i + 1;
-  return {
-    id,
-    src: getImagePath(id),
-    alt: `Photo ${id}`
-  };
-});
-
-// Add specific alt text for all images
-const imageDetails: Record<number, { alt: string }> = {
+// Image details for alt text and location
+const imageDetails: Record<number, ImageDetails> = {
   1: { alt: 'Arafed iceberg with a boat in the water near a mountain.' },
-  2: { alt: 'There is a man standing in a doorway looking out at the water.' },
   2: { alt: 'There is a large iceberg with a rainbow in the sky.' },
   3: { alt: 'Mountains with a body of water in the foreground and a blue sky.' },
-  3: { alt: 'There is a large iceberg in the middle of a lake.' },
   4: { alt: 'There is a small river running through a grassy field.' },
-  4: { alt: 'There is a large iceberg in the middle of a lake.' },
   5: { alt: 'Mountains and a body of water with a few clouds in the sky.' },
-  5: { alt: 'People standing on a bridge looking at a glacier in the distance.' },
   6: { alt: 'There is a horse that is standing in the grass by the trees.' },
-  6: { alt: 'There is a large glacier that is melting in the water.' },
   7: { alt: 'Mountains in the distance with a lake and a few trees.' },
-  7: { alt: 'There is a large iceberg that is in the water.' },
   8: { alt: 'There is a rainbow that is in the sky over the water.' },
-  8: { alt: 'Mountains with snow on them and a few trees in the foreground.' },
-  9: { alt: 'There is a rainbow that is in the sky over the water.' },
   9: { alt: 'There is a large lake in the middle of a mountain with a few people.' },
-  10: { alt: 'There is a rainbow that is in the sky over the water.' },
   10: { alt: 'There is a man standing on a rock overlooking a mountain lake.' },
   11: { alt: 'Mountains with a rainbow in the sky and a lake in the foreground.' },
-  11: { alt: 'There are many people standing on the edge of a mountain.' },
   12: { alt: 'There is a rainbow in the sky over a glacier and a rainbow.' },
-  12: { alt: 'Mountains with a few clouds in the sky and a body of water.' },
   13: { alt: 'Rainbow over a glacier with a rainbow in the sky.' },
-  13: { alt: 'There is a rainbow in the sky over a mountain lake.' },
   14: { alt: 'Araffes of ice with a rainbow in the sky.' },
-  14: { alt: 'There is a rainbow in the sky over a mountain lake.' },
   15: { alt: 'Araffes of ice on a mountain side with a mountain in the background.' },
-  15: { alt: 'There is a rainbow in the sky over a glacier with a rainbow.' },
   16: { alt: 'There is a large iceberg with a small amount of water.' },
-  16: { alt: 'There is a large iceberg with a rainbow in the sky.' },
-  17: { alt: 'There is a large glacier with a large amount of ice on it.' },
   17: { alt: 'Arafed iceberg with a glacier in the background and mountains in the background.' },
-  18: { alt: 'There is a large glacier with a large amount of ice on it.' },
   18: { alt: 'There is a large iceberg that is in the middle of the water.' },
   19: { alt: 'Arafed icebergs are melting in the water near a mountain.' },
   20: { alt: 'Arafed map of the area of the park with a picture of the area.' },
@@ -162,16 +138,27 @@ const imageDetails: Record<number, { alt: string }> = {
   105: { alt: 'They are standing in the grass with a frisbee in their hand.' },
 };
 
-// Update gallery images with details
-galleryImages.forEach(img => {
-  if (imageDetails[img.id]) {
-    Object.assign(img, imageDetails[img.id]);
-  }
-});
-
-type GalleryView = 'photos' | 'panoramas' | 'drone';
-
 export default function ArgentinaGallery() {
+  // Generate gallery images with useMemo
+  const galleryImages = useMemo<GalleryImage[]>(() => {
+    return Array.from({ length: 105 }, (_, i) => {
+      const details = imageDetails[i + 1] || { alt: `Photo ${i + 1}` };
+      const image: GalleryImage = {
+        id: i + 1,
+        src: getImagePath(i + 1),
+        alt: details.alt,
+        location: undefined
+      };
+      
+      // Add location if it exists in the details
+      if (details.location) {
+        image.location = details.location;
+      }
+      
+      return image;
+    });
+  }, []);
+
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
 
@@ -204,15 +191,31 @@ export default function ArgentinaGallery() {
   }, []);
 
   // Verify image paths
+  // Debug effect to verify image paths (development only)
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
+
+  // Panorama locations data
+  const panoramaLocations = [
+    { id: 1, location: 'Patagonia' },
+    { id: 2, location: 'El Chalten' },
+    { id: 3, location: 'Perito Moreno Glacier' },
+    { id: 4, location: 'Buenos Aires' },
+    { id: 5, location: 'Mendoza' },
+    { id: 6, location: 'Bariloche' },
+    { id: 7, location: 'Salta' },
+    { id: 8, location: 'Iguazu Falls' },
+    { id: 9, location: 'Ushuaia' }
+  ];
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -248,21 +251,21 @@ export default function ArgentinaGallery() {
         <div className="w-full flex justify-center px-4">
           <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
             <GradientButton
-              variant={currentView === 'panoramas' ? 'variant' : 'outline'}
+              variant={currentView === 'panoramas' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('panoramas')}
             >
               Panoramas
             </GradientButton>
             <GradientButton
-              variant={currentView === 'photos' ? 'variant' : 'outline'}
+              variant={currentView === 'photos' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('photos')}
             >
               Photos
             </GradientButton>
             <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'outline'}
+              variant={currentView === 'drone' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('drone')}
             >
@@ -343,17 +346,7 @@ export default function ArgentinaGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {[
-                  { id: 1, location: 'Patagonia' },
-                  { id: 2, location: 'El Chalten' },
-                  { id: 3, location: 'Perito Moreno Glacier' },
-                  { id: 4, location: 'Buenos Aires' },
-                  { id: 5, location: 'Mendoza' },
-                  { id: 6, location: 'Bariloche' },
-                  { id: 7, location: 'Salta' },
-                  { id: 8, location: 'Iguazu Falls' },
-                  { id: 9, location: 'Ushuaia' }
-                ].map((item, index) => (
+                {panoramaLocations.map((item, index) => (
                   <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
                       src={`/img/Argentina/argentina_panorama (${item.id}).jpg`}

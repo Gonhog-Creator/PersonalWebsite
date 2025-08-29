@@ -49,7 +49,7 @@ export function generateId(): string {
  * @param wait - Wait time in milliseconds
  * @returns Debounced function
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -148,7 +148,14 @@ export function getRandomInt(min: number, max: number): number {
 type RGB = `rgb(${number}, ${number}, ${number})`;
 type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
 type HEX = `#${string}`;
-type Color = RGB | RGBA | HEX | string;
+type Color = RGB | RGBA | HEX | (string & {});
+
+interface RGBValues {
+  r: number;
+  g: number;
+  b: number;
+  a?: number;
+}
 
 /**
  * Lightens or darkens a color
@@ -156,33 +163,91 @@ type Color = RGB | RGBA | HEX | string;
  * @param amount - Amount to adjust (-1 to 1)
  * @returns Adjusted color
  */
-export function adjustColor(color: Color, amount: number): string {
-  try {
-    // Convert hex to RGB
-    let r: number, g: number, b: number;
+/**
+ * Parses a color string into RGB values
+ */
+function parseColor(color: string): RGBValues | null {
+  // Handle hex colors
+  if (color.startsWith('#')) {
+    const hex = color.replace('#', '');
+    const bigint = parseInt(hex, 16);
+    if (isNaN(bigint)) return null;
     
-    if (color.startsWith('#')) {
-      const hex = color.replace('#', '');
-      const bigint = parseInt(hex, 16);
-      r = (bigint >> 16) & 255;
-      g = (bigint >> 8) & 255;
-      b = bigint & 255;
-    } else if (color.startsWith('rgb')) {
-      const [rStr, gStr, bStr] = color.match(/\d+/g) || [];
-      r = parseInt(rStr || '0');
-      g = parseInt(gStr || '0');
-      b = parseInt(bStr || '0');
-    } else {
-      return color;
+    if (hex.length === 3) {
+      // Handle shorthand hex (#RGB)
+      const r = parseInt(hex[0] + hex[0], 16);
+      const g = parseInt(hex[1] + hex[1], 16);
+      const b = parseInt(hex[2] + hex[2], 16);
+      return { r, g, b };
+    } else if (hex.length === 6) {
+      // Handle full hex (RRGGBB)
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      return { r, g, b };
+    } else if (hex.length === 8) {
+      // Handle hex with alpha (RRGGBBAA)
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      const a = parseInt(hex.substring(6, 8), 16) / 255;
+      return { r, g, b, a };
     }
+  }
+  
+  // Handle rgb/rgba colors
+  const rgbMatch = color.match(/^rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+)\s*)?\)$/i);
+  if (rgbMatch) {
+    const r = parseInt(rgbMatch[1], 10);
+    const g = parseInt(rgbMatch[2], 10);
+    const b = parseInt(rgbMatch[3], 10);
+    const a = rgbMatch[4] ? parseFloat(rgbMatch[4]) : undefined;
+    
+    if (a !== undefined) {
+      return { r, g, b, a };
+    }
+    return { r, g, b };
+  }
+  
+  // Handle named colors (basic support)
+  const ctx = document.createElement('canvas').getContext('2d');
+  if (ctx) {
+    ctx.fillStyle = color;
+    const rgba = ctx.fillStyle;
+    if (rgba !== 'rgba(0, 0, 0, 0)') {
+      return parseColor(rgba);
+    }
+  }
+  
+  return null;
+}
 
-    // Adjust color
+export function adjustColor(color: Color, amount: number): string {
+  if (typeof color !== 'string') {
+    console.warn('Invalid color type provided to adjustColor');
+    return typeof color === 'string' ? color : '#000000';
+  }
+
+  try {
+    const rgb = parseColor(color);
+    if (!rgb) return color;
+
+    // Adjust color components
     const adjust = (value: number) => {
       const newValue = value + Math.round(amount * 255);
       return Math.min(255, Math.max(0, newValue));
     };
 
-    return `rgb(${adjust(r)}, ${adjust(g)}, ${adjust(b)})`;
+    const r = adjust(rgb.r);
+    const g = adjust(rgb.g);
+    const b = adjust(rgb.b);
+
+    // Preserve alpha if it exists
+    if (rgb.a !== undefined) {
+      return `rgba(${r}, ${g}, ${b}, ${rgb.a})`;
+    }
+    
+    return `rgb(${r}, ${g}, ${b})`;
   } catch (e) {
     console.error('Error adjusting color:', e);
     return color;

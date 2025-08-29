@@ -7,11 +7,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { FaUniversity, FaRocket, FaCog, FaChartLine, FaTools, FaArrowLeft, FaWind, FaFlask } from 'react-icons/fa';
-
-const ParticlesBackground = dynamic(
-  () => import('@/components/ParticlesBackground/ParticlesBackground').then(mod => mod.default || mod),
-  { ssr: false }
-);
+import ParticlesBackground from '@/components/ParticlesBackground/ParticlesBackground';
 
 export default function NCSURocketryPage() {
   useEffect(() => {
@@ -304,7 +300,10 @@ export default function NCSURocketryPage() {
 
       <footer className="relative h-[6vh] w-full">
         <div className="absolute inset-0 w-full h-full">
-          <ParticlesBackground />
+          <ParticlesBackground 
+            particleCount={30}
+            className="opacity-30"
+          />
         </div>
         <div className="absolute bottom-0 left-0 right-0 py-2 bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-sm">
           <div className="container mx-auto px-4 text-center">

@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
+import Image from 'next/image';
 import Link from 'next/link';
 import { GalleriesHeader } from '@/components/Galleries/GalleriesHeader';
 import { MagneticButton } from '@/components/ui/magnetic-button';
@@ -103,8 +102,6 @@ const galleries = [
 ];
 
 export default function GalleriesPage() {
-  const router = useRouter();
-
   // Sort galleries alphabetically by title
   const sortedGalleries = [...galleries].sort((a, b) => a.title.localeCompare(b.title));
 
@@ -132,17 +129,19 @@ export default function GalleriesPage() {
           </div>
 
         <div className="w-full">
-          {sortedGalleries.map((gallery, index) => (
+          {sortedGalleries.map((gallery) => (
             <div 
               key={gallery.id}
               className="relative w-full mb-8 overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300"
             >
               <div className="relative w-full h-[35vh] min-h-[250px] bg-gray-100 dark:bg-gray-800 overflow-hidden">
                 <div className="absolute inset-0 w-full h-full">
-                  <img
+                  <Image
                     src={gallery.image}
                     alt={`${gallery.title} panorama`}
-                    className="w-full h-full object-cover object-center brightness-90"
+                    fill
+                    className="object-cover object-center brightness-90"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
