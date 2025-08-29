@@ -73,7 +73,7 @@ export default function Home() {
                 <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-200">Who am I?</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
                   I&apos;m a passionate Chemical Engineer and Material Scientist with a strong interest in materials innovation and sustainable technologies.
-                  I&apos;m currently pursuing my education at North Carolina State University and will be starting my Master&apos;s degree in August 2025.
+                  I&apos;m currently pursuing my education at North Carolina State University and will be starting my Master&apos;s degree in October 2025 In Italy.
                 </p>
                 <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                   My journey in engineering has equipped me with skills in materials characterization, process optimization, and data analysis, along with a problem-solving mindset that I apply to both my academic and personal projects.
