@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 
@@ -76,7 +76,8 @@ const countryNames: Record<CountryCode, string> = {
 export default function WorldMap() {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const [map, setMap] = useState<L.Map | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
 
 
   // Set client-side flag on mount
@@ -86,15 +87,15 @@ export default function WorldMap() {
 
   // Set view to show all markers when map is ready
   useEffect(() => {
-    if (map && Object.keys(countryCoordinates).length > 0) {
+    if (mapRef.current && Object.keys(countryCoordinates).length > 0) {
       const markers = Object.values(countryCoordinates);
       if (markers.length === 0) return;
       
       // Create a bounds object to fit all markers
       const bounds = L.latLngBounds(markers);
-      map.fitBounds(bounds.pad(0.5)); // Add some padding around the markers
+      mapRef.current.fitBounds(bounds.pad(0.5)); // Add some padding around the markers
     }
-  }, [map]);
+  }, [isMapReady]);
 
   const handleMarkerClick = (code: CountryCode) => {
     router.push(`/galleries/${code.toLowerCase()}`);
@@ -120,7 +121,12 @@ export default function WorldMap() {
             center={[20, 0]} 
             zoom={2} 
             style={{ height: '100%', width: '100%', borderRadius: '0.5rem' }}
-            whenCreated={setMap}
+            ref={(mapInstance) => {
+              if (mapInstance) {
+                mapRef.current = mapInstance;
+                setIsMapReady(true);
+              }
+            }}
             className="z-0"
           >
             <TileLayer
