@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "postbuild": "echo 'Build complete! Run npm run deploy to deploy to GitHub Pages'",
+    "dev": "next dev",
+    "build": "next build && next export",
+    "postbuild": "touch out/.nojekyll && cp CNAME out/CNAME || true",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "gh-pages -d out",
+    "deploy": "gh-pages -d out -t true",
     "predeploy": "npm run build"
   },
   "dependencies": {
