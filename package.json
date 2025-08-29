@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "mkdir -p out && cp -r public/. out/ && touch out/.nojekyll",
+    "postbuild": "cp -r public/. out/ && touch out/.nojekyll",
     "start": "next start",
     "lint": "next lint",
     "deploy": "gh-pages -d out -t true",
