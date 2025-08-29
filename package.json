@@ -5,12 +5,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "touch out/.nojekyll && cp public/CNAME out/CNAME 2>/dev/null || true",
-    "export": "npm run build && next export",
+    "postbuild": "mkdir -p out && cp -r .next/standalone/. out/ && cp -r .next/static out/.next/ && cp -r public/* out/ && touch out/.nojekyll",
     "start": "next start",
     "lint": "next lint",
     "deploy": "gh-pages -d out -t true",
-    "predeploy": "npm run export"
+    "predeploy": "npm run build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.0",

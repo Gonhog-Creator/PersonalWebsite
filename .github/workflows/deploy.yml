@@ -30,24 +30,21 @@ jobs:
           npm ci --prefer-offline
           npm list
 
-      - name: Build and Export
+      - name: Build
         run: |
+          echo "Installing dependencies..."
+          npm ci
+          
           echo "Running build..."
           npm run build
           
-          echo "Running export..."
-          npm run export
-          
-          echo "Creating necessary files..."
+          echo "Copying files for deployment..."
           mkdir -p out
+          cp -r .next/standalone/. out/
+          mkdir -p out/.next/static
+          cp -r .next/static/. out/.next/static/
+          cp -r public/. out/
           touch out/.nojekyll
-          
-          echo "Copying CNAME file..."
-          if [ -f "public/CNAME" ]; then
-            cp public/CNAME out/
-          else
-            echo "No CNAME file found in public directory"
-          fi
           
           echo "Build directory contents:"
           ls -la out/
