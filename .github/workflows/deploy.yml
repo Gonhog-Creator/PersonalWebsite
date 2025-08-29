@@ -30,7 +30,7 @@ jobs:
           npm ci --prefer-offline
           npm list
 
-      - name: Build
+      - name: Install and Build
         run: |
           echo "Installing dependencies..."
           npm ci
@@ -40,13 +40,26 @@ jobs:
           
           echo "Copying files for deployment..."
           mkdir -p out
-          cp -r .next/standalone/. out/
-          mkdir -p out/.next/static
-          cp -r .next/static/. out/.next/static/
-          cp -r public/. out/
+          
+          # Copy the static export files
+          if [ -d "out" ]; then
+            echo "Copying out directory contents..."
+            cp -r out/. out/
+          fi
+          
+          # Copy public files
+          if [ -d "public" ]; then
+            echo "Copying public directory contents..."
+            cp -r public/. out/
+          fi
+          
+          # Ensure .nojekyll exists
           touch out/.nojekyll
           
           echo "Build directory contents:"
+          ls -la
+          
+          echo "Out directory contents:"
           ls -la out/
 
       - name: Deploy to GitHub Pages
