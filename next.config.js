@@ -1,21 +1,33 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
+
 const isProd = process.env.NODE_ENV === 'production';
 const isGHPages = process.env.GH_PAGES === 'true';
 const repo = 'PersonalWebsite';
 
-// Only use basePath when deploying to GitHub Pages
-const basePath = isGHPages ? `/${repo}` : '';
+// For GitHub Pages deployment
+const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
+
+// Use empty basePath for custom domain, otherwise use repo name for GitHub Pages
+const basePath = isGithubActions && process.env.USE_CUSTOM_DOMAIN !== 'true' ? `/${repo}` : '';
 
 const nextConfig = {
   output: 'export',
   distDir: 'out',
   basePath: basePath,
-  assetPrefix: basePath ? `${basePath}/` : '',
+  assetPrefix: basePath ? `${basePath}/` : '/',
   
-  // For static export
+  // For static export with images
   images: {
     unoptimized: true,
+    // Disable image optimization since we're using static export
+    loader: 'default',
+    // Ensure paths are relative for static export
+    path: basePath ? `${basePath}/_next/image` : '/_next/image',
   },
+  
+  // Configure output file tracing
+  outputFileTracingRoot: path.join(__dirname, '../../'),
   
   trailingSlash: true,
   reactStrictMode: true,
@@ -23,6 +35,9 @@ const nextConfig = {
   // Environment variables for client-side
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
+    NEXT_PUBLIC_SITE_URL: isGithubActions && process.env.USE_CUSTOM_DOMAIN === 'true' 
+      ? 'https://www.josebarbeito.com' 
+      : basePath ? `https://gonhog-creator.github.io${basePath}` : 'http://localhost:3000',
   },
   
   // Webpack configuration for handling specific modules
