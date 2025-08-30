@@ -31,6 +31,8 @@ jobs:
           npm list
 
       - name: Install and Build
+        env:
+          GH_PAGES: 'true'
         run: |
           echo "Installing dependencies..."
           npm ci

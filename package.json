@@ -5,11 +5,15 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "postbuild": "cp -r public/. out/ && touch out/.nojekyll",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "gh-pages -d out -t true",
-    "predeploy": "npm run build"
+    "postbuild": "cp -r public/. out/ && touch out/.nojekyll",
+    "clean": "rm -rf .next out node_modules/.cache",
+    "build:local": "npm run clean && NODE_ENV=production next build",
+    "build:gh-pages": "npm run clean && GH_PAGES=true NODE_ENV=production next build",
+    "predeploy": "npm run build:gh-pages",
+    "deploy": "gh-pages -d out",
+    "serve:prod": "npx serve@latest out -p 3000"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.0",
