@@ -5,6 +5,10 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  NODE_VERSION: '20.x'
+  CACHE_NAME: 'node-modules'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -14,46 +18,65 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Debug Node.js and npm versions
+      - name: Debug environment
         run: |
+          echo "Node.js version:"
           node -v
+          echo "npm version:"
           npm -v
+          echo "Current directory:"
+          pwd
 
       - name: Install dependencies
-        run: |
-          npm ci --prefer-offline
-          npm list
+        run: npm ci
 
-      - name: Install and Build
+      - name: Build with Next.js
         env:
+          # Build configuration
+          NODE_ENV: 'production'
+          
+          # GitHub Pages configuration
           GH_PAGES: 'true'
           USE_CUSTOM_DOMAIN: 'true'
           GITHUB_ACTIONS: 'true'
-          NEXT_TELEMETRY_DISABLED: '1'
-        run: |
-          echo "Installing dependencies..."
-          npm ci --prefer-offline
           
+          # Next.js configuration
+          NEXT_TELEMETRY_DISABLED: '1'
+          NEXT_PUBLIC_BASE_URL: 'https://www.josebarbeito.com'
+          NEXT_PUBLIC_SITE_URL: 'https://www.josebarbeito.com'
+          
+          # Build optimizations
+          NODE_OPTIONS: '--max_old_space_size=4096'
+        run: |
           echo "Running build..."
           npm run build:gh-pages
           
-          # Create a nojekyll file to prevent GitHub Pages from processing Next.js files
+          # Create necessary files for GitHub Pages
           touch out/.nojekyll
+          touch out/.gitkeep
           
           # Verify the build output
           echo "Build directory contents:"
           ls -la out/
           
-          # Check for important files
-          echo "Checking for important files..."
+          # Check for important files and directories
+          echo "Checking for _next directory..."
+          ls -la out/_next/ || echo "_next directory not found"
+          
+          echo "Checking for static files..."
           ls -la out/_next/static/ || echo "_next/static not found"
-          ls -la out/_next/static/css/ || echo "_next/static/css not found"
+          
+          echo "Checking for CSS files..."
+          find out -name '*.css' | xargs ls -la || echo "No CSS files found"
+          
+          echo "Checking for JS files..."
+          find out -name '*.js' | head -n 5 | xargs ls -la || echo "No JS files found"
           
           echo "Preparing deployment directory..."
           
@@ -70,17 +93,33 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
+          # GitHub token for authentication
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Deployment settings
           branch: gh-pages
           folder: out
           clean: true
           clean-exclude: |
             CNAME
             .nojekyll
+            .gitkeep
             **/*
-          commit-message: 'Deploy to GitHub Pages - $(date)'
+            
+          # Commit settings
+          commit-message: 'Deploy to GitHub Pages - $(date +"%Y-%m-%d %H:%M:%S")'
           tag: v1.0.0
-          tag-message: 'Deployed v1.0.0 - $(date)'
+          tag-message: 'Deployed v1.0.0 - $(date +"%Y-%m-%d %H:%M:%S")'
+          
+          # Deployment options
+          single-commit: true
+          force: true
+          
+          # Preserve files
+          preserve: true
+          
+          # Custom domain settings
+          cname: 'www.josebarbeito.com'
 
       - name: Upload build artifacts
         if: ${{ failure() }}

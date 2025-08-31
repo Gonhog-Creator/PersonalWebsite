@@ -1,47 +1,59 @@
 /** @type {import('next').NextConfig} */
 const path = require('path');
 
+// Environment variables
 const isProd = process.env.NODE_ENV === 'production';
-const isGHPages = process.env.GH_PAGES === 'true';
-const repo = 'PersonalWebsite';
-
-// For GitHub Pages deployment
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
+const useCustomDomain = process.env.USE_CUSTOM_DOMAIN === 'true';
 
-// Use empty basePath for custom domain, otherwise use repo name for GitHub Pages
-const basePath = isGithubActions && process.env.USE_CUSTOM_DOMAIN !== 'true' ? `/${repo}` : '';
+// Base configuration
+let basePath = '';
+let assetPrefix = '';
+
+// For GitHub Pages with custom domain
+if (isGithubActions && useCustomDomain) {
+  basePath = '';
+  assetPrefix = '';
+} 
+// For GitHub Pages without custom domain
+else if (isGithubActions) {
+  const repo = 'PersonalWebsite';
+  basePath = `/${repo}`;
+  assetPrefix = `/${repo}/`;
+}
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  basePath = '';
+  assetPrefix = '';
+}
 
 const nextConfig = {
+  // Static export configuration
   output: 'export',
   distDir: 'out',
   basePath: basePath,
-  assetPrefix: basePath ? `${basePath}/` : '/',
+  assetPrefix: assetPrefix,
   trailingSlash: true,
   
-  // For static export with images
+  // Image optimization for static export
   images: {
     unoptimized: true,
     loader: 'default',
     path: basePath ? `${basePath}/_next/image` : '/_next/image',
   },
   
-  // Ensure all static assets are properly exported
-  experimental: {
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-  },
-  
-  trailingSlash: true,
-  reactStrictMode: true,
-  
   // Environment variables for client-side
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
-    NEXT_PUBLIC_SITE_URL: isGithubActions && process.env.USE_CUSTOM_DOMAIN === 'true' 
+    NEXT_PUBLIC_SITE_URL: useCustomDomain 
       ? 'https://www.josebarbeito.com' 
-      : basePath ? `https://gonhog-creator.github.io${basePath}` : 'http://localhost:3000',
+      : basePath 
+        ? `https://gonhog-creator.github.io${basePath}` 
+        : 'http://localhost:3000',
   },
   
-  // Webpack configuration for handling specific modules
+  // Webpack configuration
   webpack: (config, { isServer }) => {
     // Handle Node.js modules that might be problematic in the browser
     if (!isServer) {
@@ -58,12 +70,34 @@ const nextConfig = {
     
     return config;
   },
+  
+  // Enable React strict mode
+  reactStrictMode: true,
+  
+  // Production optimizations
+  productionBrowserSourceMaps: false,
+  compress: true,
+  
+  // Disable ETag generation
+  generateEtags: false,
+  
+  // Disable powered by header
+  poweredByHeader: false,
+  
+  // Output file tracing configuration
+  outputFileTracingRoot: path.join(__dirname, '../../'),
+  
+  // Enable static optimization
+  experimental: {
+    optimizeCss: true,
+  },
 };
 
-// For local development, we need to handle the base path differently
-if (!isGHPages && isProd) {
+// For local development, ensure base paths are empty
+if (!isGHPages && !isGithubActions) {
   nextConfig.basePath = '';
   nextConfig.assetPrefix = '';
+  nextConfig.env.NEXT_PUBLIC_BASE_PATH = '';
 }
 
 module.exports = nextConfig;
