@@ -16,18 +16,19 @@ const nextConfig = {
   distDir: 'out',
   basePath: basePath,
   assetPrefix: basePath ? `${basePath}/` : '/',
+  trailingSlash: true,
   
   // For static export with images
   images: {
     unoptimized: true,
-    // Disable image optimization since we're using static export
     loader: 'default',
-    // Ensure paths are relative for static export
     path: basePath ? `${basePath}/_next/image` : '/_next/image',
   },
   
-  // Configure output file tracing
-  outputFileTracingRoot: path.join(__dirname, '../../'),
+  // Ensure all static assets are properly exported
+  experimental: {
+    outputFileTracingRoot: path.join(__dirname, '../../'),
+  },
   
   trailingSlash: true,
   reactStrictMode: true,

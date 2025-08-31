@@ -35,6 +35,9 @@ const firaCode = Fira_Code({
   adjustFontFallback: false,
 });
 
+// Base path for static exports
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+
 // Viewport settings
 export const viewport: Viewport = {
   width: 'device-width',
@@ -45,6 +48,12 @@ export const viewport: Viewport = {
     { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
   ],
   colorScheme: 'light dark',
+};
+
+// Generate absolute URL for static assets
+const getAssetPath = (path: string) => {
+  if (path.startsWith('http') || path.startsWith('//')) return path;
+  return `${basePath}${path.startsWith('/') ? '' : '/'}${path}`;
 };
 
 // Metadata for SEO

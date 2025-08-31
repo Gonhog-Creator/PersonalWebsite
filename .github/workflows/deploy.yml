@@ -35,19 +35,25 @@ jobs:
           GH_PAGES: 'true'
           USE_CUSTOM_DOMAIN: 'true'
           GITHUB_ACTIONS: 'true'
+          NEXT_TELEMETRY_DISABLED: '1'
         run: |
           echo "Installing dependencies..."
-          npm ci
+          npm ci --prefer-offline
           
           echo "Running build..."
-          npm run build
+          npm run build:gh-pages
+          
+          # Create a nojekyll file to prevent GitHub Pages from processing Next.js files
+          touch out/.nojekyll
           
           # Verify the build output
           echo "Build directory contents:"
           ls -la out/
           
-          echo "Checking for site.webmanifest..."
-          ls -la out/site.webmanifest || echo "site.webmanifest not found"
+          # Check for important files
+          echo "Checking for important files..."
+          ls -la out/_next/static/ || echo "_next/static not found"
+          ls -la out/_next/static/css/ || echo "_next/static/css not found"
           
           echo "Preparing deployment directory..."
           
