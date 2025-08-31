@@ -123,13 +123,13 @@ const Photography = () => {
                 />
               </div>
             </div>
-            <div className="mt-8 text-center">
+            <div className="mt-8 flex justify-center">
               <SilverBorderButton 
                 as="a" 
                 href="/gallery_map"
                 width="220px"
                 height="50px"
-                className="text-base"
+                className="text-base mx-auto"
               >
                 View Map
               </SilverBorderButton>
@@ -156,13 +156,13 @@ const Photography = () => {
               />
             </div>
           </div>
-          <div className="text-center mt-6">
+          <div className="flex justify-center mt-6">
             <SilverBorderButton 
               as="a" 
               href="/astro"
               width="180px"
               height="45px"
-              className="text-sm"
+              className="text-sm mx-auto"
             >
               View Full Gallery
             </SilverBorderButton>
@@ -188,13 +188,13 @@ const Photography = () => {
               />
             </div>
           </div>
-          <div className="text-center mt-6">
+          <div className="flex justify-center mt-6">
             <SilverBorderButton 
               as="a" 
               href="/galleries"
               width="180px"
               height="45px"
-              className="text-sm"
+              className="text-sm mx-auto"
             >
               View All Galleries
             </SilverBorderButton>

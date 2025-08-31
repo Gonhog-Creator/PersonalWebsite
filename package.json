@@ -14,7 +14,7 @@
     "build:gh-pages": "npm run clean && GH_PAGES=true USE_CUSTOM_DOMAIN=true NODE_ENV=production DISABLE_ESLINT_PLUGIN=true next build",
     
     "deploy:auto": "npm run build:gh-pages && git add . && git commit -m 'Build for GitHub Pages' && git push",
-    "deploy:manual": "npm run build:gh-pages && gh-pages -d out -t",
+    "deploy:manual": "npm run build:gh-pages && npx gh-pages --dist out --dotfiles --nojekyll --message 'Manual deployment' --branch gh-pages",
     
     "serve:prod": "npm run build:local && npx serve@latest out -p 3000",
     "serve:gh-pages": "npm run build:gh-pages && npx serve@latest out -p 3000"

@@ -118,14 +118,14 @@ const nextConfig = {
         : 'http://localhost:3000',
   },
   
-  // Disable ESLint during build
+  // Enable ESLint during build
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   
-  // Disable TypeScript type checking during build
+  // Enable TypeScript type checking during build
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   
   // Webpack configuration
