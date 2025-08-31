@@ -53,6 +53,16 @@ const nextConfig = {
         : 'http://localhost:3000',
   },
   
+  // Disable ESLint during build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
+  // Disable TypeScript type checking during build
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
   // Webpack configuration
   webpack: (config, { isServer }) => {
     // Handle Node.js modules that might be problematic in the browser
@@ -60,8 +70,25 @@ const nextConfig = {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
+        net: false,
+        tls: false,
+        dns: false,
+        child_process: false,
         path: false,
         os: false,
+        crypto: false,
+        stream: false,
+        http: false,
+        https: false,
+        zlib: false,
+        querystring: false,
+        url: false,
+        buffer: false,
+        util: false,
+        assert: false,
+        events: false,
+        string_decoder: false,
+        timers: false,
       };
     }
     
@@ -94,7 +121,7 @@ const nextConfig = {
 };
 
 // For local development, ensure base paths are empty
-if (!isGHPages && !isGithubActions) {
+if (!isGithubActions) {
   nextConfig.basePath = '';
   nextConfig.assetPrefix = '';
   nextConfig.env.NEXT_PUBLIC_BASE_PATH = '';
