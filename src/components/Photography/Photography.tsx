@@ -1,19 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import dynamic from 'next/dynamic';
 import { SilverBorderButton } from "@/components/ui/SilverBorderButton";
-
-// Dynamically import the WorldMap component with no SSR
-const WorldMap = dynamic(
-  () => import('./WorldMap'),
-  { ssr: false }
-);
 
 type GalleryItem = {
   id: string;
@@ -25,8 +17,6 @@ type GalleryItem = {
   date: string;
   aspectRatio?: string;
 };
-
-type TabType = 'world-map' | 'astrophotography' | 'all-galleries';
 
 const galleries: GalleryItem[] = [
   {
@@ -91,8 +81,6 @@ const galleries: GalleryItem[] = [
   },
 ];
 
-// Get unique categories for filters
-const categories = ['all', ...new Set(galleries.map(gallery => gallery.category))];
 
 const Photography = () => {
   // Initialize AOS
@@ -142,18 +130,28 @@ const Photography = () => {
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Astrophotography</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <img 
-                src="/img/Astro/astro (12).jpg" 
-                alt="Astrophotography 1" 
-                className="w-full h-64 object-cover"
-              />
+              <div className="relative w-full h-64">
+                <Image 
+                  src="/img/Astro/astro (12).jpg" 
+                  alt="Astrophotography 1" 
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+              </div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <img 
-                src="/img/Astro/astro (22).jpg" 
-                alt="Astrophotography 2" 
-                className="w-full h-64 object-cover"
-              />
+              <div className="relative w-full h-64">
+                <Image 
+                  src="/img/Astro/astro (22).jpg" 
+                  alt="Astrophotography 2" 
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+              </div>
             </div>
           </div>
           <div className="flex justify-center mt-6">
@@ -174,18 +172,28 @@ const Photography = () => {
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">View All Galleries</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <img 
-                src="/img/Greece/greece (67).jpg" 
-                alt="Greece" 
-                className="w-full h-64 object-cover"
-              />
+              <div className="relative w-full h-64">
+                <Image 
+                  src="/img/Greece/greece (67).jpg" 
+                  alt="Greece" 
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+              </div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <img 
-                src="/img/Costa Rica/costarica (124).jpg" 
-                alt="Costa Rica" 
-                className="w-full h-64 object-cover"
-              />
+              <div className="relative w-full h-64">
+                <Image 
+                  src="/img/Costa Rica/costarica (124).jpg" 
+                  alt="Costa Rica" 
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+              </div>
             </div>
           </div>
           <div className="flex justify-center mt-6">

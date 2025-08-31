@@ -107,7 +107,7 @@ const SilverBorderButton = ({
   };
 
   if (isLink) {
-    const { as: _, ...linkProps } = props as LinkButtonProps;
+    const { as: _unusedAs, ...linkProps } = props as LinkButtonProps;
     return (
       <a
         {...commonProps}
@@ -127,7 +127,7 @@ const SilverBorderButton = ({
     );
   }
 
-  const { as: _, ...buttonProps } = props as ButtonProps;
+  const { as: _unusedAs, ...buttonProps } = props as ButtonProps;
   return (
     <button
       {...commonProps}
