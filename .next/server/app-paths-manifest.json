@@ -2,8 +2,8 @@
   "/api/send-email/route": "app/api/send-email/route.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/galleries/argentina/page": "app/galleries/argentina/page.js",
   "/galleries/australia/page": "app/galleries/australia/page.js",
+  "/galleries/argentina/page": "app/galleries/argentina/page.js",
   "/galleries/austria/page": "app/galleries/austria/page.js",
   "/galleries/belgium/page": "app/galleries/belgium/page.js",
   "/galleries/costa-rica/page": "app/galleries/costa-rica/page.js",
@@ -14,11 +14,11 @@
   "/galleries/slovenia/page": "app/galleries/slovenia/page.js",
   "/galleries/greece/page": "app/galleries/greece/page.js",
   "/galleries/switzerland/page": "app/galleries/switzerland/page.js",
-  "/galleries/uk/page": "app/galleries/uk/page.js",
   "/galleries/united-states/page": "app/galleries/united-states/page.js",
   "/gallery_map/page": "app/gallery_map/page.js",
-  "/projects/ncsu-rocketry/page": "app/projects/ncsu-rocketry/page.js",
+  "/galleries/uk/page": "app/galleries/uk/page.js",
   "/page": "app/page.js",
+  "/projects/ncsu-rocketry/page": "app/projects/ncsu-rocketry/page.js",
   "/projects/wolfspeed/page": "app/projects/wolfspeed/page.js",
   "/gallery_map/[countryCode]/page": "app/gallery_map/[countryCode]/page.js"
 }

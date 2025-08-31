@@ -9,10 +9,13 @@
     "lint": "next lint",
     "postbuild": "node scripts/copy-assets.js",
     "clean": "rm -rf .next out node_modules/.cache",
+    
     "build:local": "npm run clean && NODE_ENV=production DISABLE_ESLINT_PLUGIN=true next build",
     "build:gh-pages": "npm run clean && GH_PAGES=true USE_CUSTOM_DOMAIN=true NODE_ENV=production DISABLE_ESLINT_PLUGIN=true next build",
-    "predeploy": "npm run build:gh-pages",
-    "deploy": "gh-pages -d out -t",
+    
+    "deploy:auto": "npm run build:gh-pages && git add . && git commit -m 'Build for GitHub Pages' && git push",
+    "deploy:manual": "npm run build:gh-pages && gh-pages -d out -t",
+    
     "serve:prod": "npm run build:local && npx serve@latest out -p 3000",
     "serve:gh-pages": "npm run build:gh-pages && npx serve@latest out -p 3000"
   },

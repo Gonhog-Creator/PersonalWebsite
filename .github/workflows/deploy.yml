@@ -5,18 +5,33 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
 env:
   NODE_VERSION: '20.x'
   CACHE_NAME: 'node-modules'
 
 jobs:
   build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
@@ -24,34 +39,20 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name: Debug environment
-        run: |
-          echo "Node.js version:"
-          node -v
-          echo "npm version:"
-          npm -v
-          echo "Current directory:"
-          pwd
-
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm install -D @vercel/ncc
 
       - name: Build with Next.js
         env:
-          # Build configuration
           NODE_ENV: 'production'
-          
-          # GitHub Pages configuration
           GH_PAGES: 'true'
           USE_CUSTOM_DOMAIN: 'true'
           GITHUB_ACTIONS: 'true'
-          
-          # Next.js configuration
           NEXT_TELEMETRY_DISABLED: '1'
           NEXT_PUBLIC_BASE_URL: 'https://www.josebarbeito.com'
           NEXT_PUBLIC_SITE_URL: 'https://www.josebarbeito.com'
-          
-          # Build optimizations
           NODE_OPTIONS: '--max_old_space_size=4096'
         run: |
           echo "Running build..."
@@ -77,27 +78,22 @@ jobs:
           
           echo "Checking for JS files..."
           find out -name '*.js' | head -n 5 | xargs ls -la || echo "No JS files found"
-          
-          echo "Preparing deployment directory..."
-          
-          # The static export is already in the out directory
-          # We just need to ensure .nojekyll is there
-          touch out/.nojekyll
-          
-          echo "Build directory contents:"
-          ls -la
-          
-          echo "Out directory contents:"
-          ls -la out/
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
         with:
-          # GitHub token for authentication
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          static_site_generator: 'next'
           
-          # Deployment settings
-          branch: gh-pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'out'
+          
+      - name: Deploy to GitHub Pages (Auto)
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.deployment-method == 'auto')
+        id: deployment-auto
+        uses: actions/deploy-pages@v4
+        with:
           folder: out
           clean: true
           clean-exclude: |
@@ -105,9 +101,22 @@ jobs:
             .nojekyll
             .gitkeep
             **/*
-            
-          # Commit settings
-          commit-message: 'Deploy to GitHub Pages - $(date +"%Y-%m-%d %H:%M:%S")'
+          commit-message: 'Auto Deploy to GitHub Pages - $(date +"%Y-%m-%d %H:%M:%S")'
+          
+      - name: Deploy to GitHub Pages (Manual)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.deployment-method == 'manual'
+        id: deployment-manual
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: out
+          branch: gh-pages
+          clean: true
+          clean-exclude: |
+            CNAME
+            .nojekyll
+            .gitkeep
+            **/*
+          commit-message: 'Manual Deploy to GitHub Pages - $(date +"%Y-%m-%d %H:%M:%S")'
           tag: v1.0.0
           tag-message: 'Deployed v1.0.0 - $(date +"%Y-%m-%d %H:%M:%S")'
           
