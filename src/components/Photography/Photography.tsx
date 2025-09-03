@@ -160,7 +160,7 @@ const Photography = () => {
           <div className="flex justify-center mt-6 mb-12">
             <SilverBorderButton 
               as="a" 
-              href="/astro"
+              href="/astrophotography"
               width="180px"
               height="45px"
               className="text-sm mx-auto"
