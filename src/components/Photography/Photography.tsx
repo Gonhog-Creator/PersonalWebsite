@@ -96,7 +96,7 @@ const Photography = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* World Map Section */}
-        <div className="w-full flex flex-col items-center mb-16" data-aos="fade-up">
+        <div className="w-full flex flex-col items-center mb-32" data-aos="fade-up">
           <div className="w-full max-w-4xl px-4">
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">World Map</h3>
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
@@ -111,7 +111,7 @@ const Photography = () => {
                 />
               </div>
             </div>
-            <div className="mt-8 flex justify-center">
+            <div className="mt-8 mb-12 flex justify-center">
               <SilverBorderButton 
                 as="a" 
                 href="/gallery_map"
@@ -125,8 +125,11 @@ const Photography = () => {
           </div>
         </div>
 
+        {/* Spacing between sections */}
+        <div className="h-24"></div>
+
         {/* Astrophotography Section */}
-        <div className="mb-16" data-aos="fade-up">
+        <div className="mt-32 mb-32 text-center" data-aos="fade-up">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Astrophotography</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
@@ -154,7 +157,7 @@ const Photography = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 mb-12">
             <SilverBorderButton 
               as="a" 
               href="/astro"
@@ -167,8 +170,11 @@ const Photography = () => {
           </div>
         </div>
 
+        {/* Spacing between sections */}
+        <div className="h-24"></div>
+
         {/* All Galleries Section */}
-        <div data-aos="fade-up">
+        <div className="mt-20 text-center" data-aos="fade-up">
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">View All Galleries</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
