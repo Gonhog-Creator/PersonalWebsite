@@ -170,7 +170,7 @@ const panoramaLocations = [
 export default function FranceGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 213 }, (_, i) => {
+    return Array.from({ length: 122 }, (_, i) => {
       const id = i + 1;
       const details = imageDetails[id] || {};
       return {

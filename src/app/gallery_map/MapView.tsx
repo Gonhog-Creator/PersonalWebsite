@@ -26,10 +26,24 @@ type CountryData = GeoJSON.FeatureCollection<GeoJSON.Geometry, CountryProperties
 // Type for map style function
 type CountryStyleFunction = (feature?: CountryFeature) => L.PathOptions;
 
-// Countries with galleries
-const countriesWithGalleries = [
-    'US', 'AR', 'CH', 'DE', 'FR', 'GB', 'CR', 'SI', 'AT', 'AU', 'BE', 'GR'
-] as const;
+// Mapping of country codes to their gallery page paths
+const countryToGalleryMap: Record<string, string> = {
+  'US': 'united-states',
+  'AR': 'argentina',
+  'CH': 'switzerland',
+  'DE': 'germany',
+  'FR': 'france',
+  'GB': 'uk',
+  'CR': 'costa-rica',
+  'SI': 'slovenia',
+  'AT': 'austria',
+  'AU': 'australia',
+  'BE': 'belgium',
+  'GR': 'greece'
+} as const;
+
+// Countries with galleries (using the keys from the mapping above)
+const countriesWithGalleries = Object.keys(countryToGalleryMap) as Array<keyof typeof countryToGalleryMap>;
 
 type CountryCode = typeof countriesWithGalleries[number];
 
@@ -69,6 +83,7 @@ const MapWithNoSSR = dynamic(
       countriesData: CountryData | null;
       countryStyle: CountryStyleFunction;
       onEachFeature: (feature: CountryFeature, layer: Layer) => void;
+      mapRef: React.RefObject<LeafletMap | null>;
     }) {
       return (
         <MapContainer 
@@ -76,7 +91,7 @@ const MapWithNoSSR = dynamic(
           zoom={zoom}
           minZoom={minZoom}
           maxZoom={maxZoom}
-          zoomControl={false}
+          zoomControl={true}
           style={{
             width: '100%',
             height: '100vh',
@@ -87,6 +102,9 @@ const MapWithNoSSR = dynamic(
           zoomDelta={0.5}
           wheelPxPerZoomLevel={60}
           whenReady={() => {}}
+          zoomControlOptions={{
+            position: 'bottomright'
+          }}
         >
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
@@ -210,6 +228,7 @@ const getCountryStyle = (
 export default function MapView() {
   const router = useRouter();
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
   const [map, setMap] = useState<LeafletMap | null>(null);
   const [countriesData, setCountriesData] = useState<CountryData | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<CountryFeature | null>(null);
@@ -222,29 +241,28 @@ export default function MapView() {
 
   // Set client-side flag and load data
   useEffect(() => {
-    setIsClient(true);
-    
-    const loadData = async () => {
-      try {
-        const response = await fetch('https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson');
-        const data = await response.json() as CountryData;
-        setCountriesData(data);
-      } catch (error) {
-        console.error('Error loading map data:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    loadData();
+    if (!isClient) {
+      setIsClient(true);
+      
+      const loadData = async () => {
+        try {
+          const response = await fetch('https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson');
+          const data = await response.json() as CountryData;
+          setCountriesData(data);
+        } catch (error) {
+          console.error('Error loading map data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      loadData();
+    }
     
     return () => {
-      if (map) {
-        map.remove();
-        setMap(null);
-      }
+      // Cleanup is handled in the map instance effect
     };
-  }, [isClient, map]);
+  }, [isClient]);
 
   // Memoize the country style function
   const countryStyle = useCallback((feature?: CountryFeature) => {
@@ -256,12 +274,30 @@ export default function MapView() {
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     setCursorPos({ x: e.clientX, y: e.clientY });
   }, []);
+  
+  // Handle mouse over for UK to show Scotland/UK text
+  const handleUkMouseMove = useCallback((e: L.LeafletMouseEvent) => {
+    const { lat, lng } = e.latlng;
+    
+    // Check if we're over Scotland
+    const isScotland = (
+      lat >= 54.6 && lat <= 60.9 &&
+      lng >= -8.2 && lng <= -0.7
+    );
+    
+    const newHoverText = isScotland ? 'Scotland' : 'United Kingdom';
+    
+    // Only update if the hover text would change
+    if (newHoverText !== hoveredCountry) {
+      setHoveredCountry(newHoverText);
+    }
+  }, [hoveredCountry]);
 
   const onEachFeature = useCallback((feature: CountryFeature, layer: Layer) => {
     const countryCode = feature.properties.iso_a2 as CountryCode;
     const hasGallery = countriesWithGalleries.includes(countryCode);
 
-    const handleMouseOver = (e: L.LeafletEvent) => {
+    const handleMouseOver = (e: L.LeafletMouseEvent) => {
       const target = e.target as L.Path;
       const layerStyle: L.PathOptions = {
         weight: 2,
@@ -275,22 +311,63 @@ export default function MapView() {
         target.bringToFront();
       }
       
-      setHoveredCountry(feature.properties.name);
+      // Set initial hover text based on country
+      if (countryCode === 'GB') {
+        setHoveredCountry('United Kingdom');
+        // Add mousemove handler for UK to detect Scotland
+        target.on('mousemove', handleUkMouseMove);
+      } else {
+        setHoveredCountry(feature.properties.name);
+      }
     };
 
     const handleMouseOut = (e: L.LeafletEvent) => {
       const target = e.target as L.Path;
       target.setStyle(getCountryStyle(feature, countriesWithGalleries as readonly string[]));
+      
+      // Remove mousemove handler when leaving UK
+      if (countryCode === 'GB') {
+        target.off('mousemove', handleUkMouseMove);
+      }
+      
       setHoveredCountry('');
     };
 
-    const handleClick = () => {
-      if (hasGallery) {
-        router.push(`/galleries/${countryCode.toLowerCase()}`);
-      } else {
-        setSelectedCountry(feature);
-        setIsModalOpen(true);
+    const handleClick = (e: L.LeafletMouseEvent) => {
+      e.originalEvent.preventDefault();
+      e.originalEvent.stopPropagation();
+      
+      // Check if this is a click on the UK
+      if (countryCode === 'GB') {
+        const { lat, lng } = e.latlng;
+        
+        // Rough bounding box for Scotland
+        const isScotland = (
+          lat >= 54.6 && lat <= 60.9 &&  // North to South
+          lng >= -8.2 && lng <= -0.7     // West to East
+        );
+        
+        if (isScotland) {
+          // Navigate to Scotland gallery
+          router.push('/galleries/scotland');
+          return;
+        }
       }
+      
+      // For all other cases, use the normal gallery mapping
+      if (hasGallery) {
+        const gallerySlug = countryToGalleryMap[countryCode];
+        if (gallerySlug) {
+          const galleryPath = `/galleries/${gallerySlug}`;
+          console.log('Navigating to:', galleryPath);
+          router.push(galleryPath);
+          return;
+        }
+      }
+      
+      // If no gallery or not a recognized country, show the modal
+      setSelectedCountry(feature);
+      setIsModalOpen(true);
     };
 
     if (layer instanceof L.Path) {
@@ -304,36 +381,61 @@ export default function MapView() {
 
   // Handle map instance when it's created
   const setMapInstance = useCallback((mapInstance: LeafletMap) => {
-    setMap(mapInstance);
-    
-    // Set initial view and settings
-    mapInstance.setView([20, 0], 3);
-    mapInstance.setMinZoom(3);
-    mapInstance.setMaxZoom(18);
-    
-    // Add zoom control
-    const zoomControl = L.control.zoom({
-      position: 'bottomright'
-    });
-    zoomControl.addTo(mapInstance);
-    
-    // Handle window resize with debounce
-    let resizeTimeout: NodeJS.Timeout;
-    const handleResize = () => {
-      if (resizeTimeout) clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        mapInstance.invalidateSize();
-      }, 100);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    // Return cleanup function
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (resizeTimeout) clearTimeout(resizeTimeout);
-      zoomControl.remove();
-    };
+    // Only update if we don't already have a map instance
+    if (!map) {
+      setMap(mapInstance);
+      
+      // Set initial view and settings
+      mapInstance.setView([15, 0], 2.5);  // Lower zoom level (2) shows more of the world
+      mapInstance.setMinZoom(2);        // Allow zooming out further
+      mapInstance.setMaxZoom(22);
+      
+      // Remove any existing zoom controls
+      if (mapInstance.zoomControl) {
+        mapInstance.removeControl(mapInstance.zoomControl);
+      }
+      
+      // Add a single zoom control to bottom right
+      const zoomControl = L.control.zoom({
+        position: 'bottomright'
+      });
+      zoomControl.addTo(mapInstance);
+      
+      // Store the zoom control reference for cleanup
+      // @ts-ignore - zoomControl is a valid property
+      mapInstance.zoomControl = zoomControl;
+      
+      // Handle window resize with debounce
+      let resizeTimeout: NodeJS.Timeout;
+      const handleResize = () => {
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          if (mapInstance && !mapInstance.getContainer()?._leaflet_id) return;
+          mapInstance.invalidateSize();
+        }, 100);
+      };
+      
+      window.addEventListener('resize', handleResize);
+      
+      // Return cleanup function
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+        
+        // Clean up the map instance if it exists
+        if (mapInstance && mapInstance.remove) {
+          // Remove zoom control if it exists
+          // @ts-ignore - zoomControl is a valid property
+          if (mapInstance.zoomControl) {
+            // @ts-ignore - zoomControl is a valid property
+            mapInstance.removeControl(mapInstance.zoomControl);
+          }
+          mapInstance.off();
+          mapInstance.remove();
+          setMap(null);
+        }
+      };
+    }
   }, []);
 
   // Show loading state while data is being loaded
@@ -395,6 +497,37 @@ export default function MapView() {
           
           .leaflet-control-container {
             z-index: 1;
+          }
+          
+          .leaflet-control-zoom {
+            border: none;
+            background: none;
+          }
+          
+          .leaflet-control-zoom-in,
+          .leaflet-control-zoom-out {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-bottom: 1px solid #444;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            font: bold 18px 'Lucida Console', Monaco, monospace;
+            border-radius: 4px 4px 0 0;
+          }
+          
+          .leaflet-control-zoom-out {
+            border-top: 1px solid #444;
+            border-radius: 0 0 4px 4px;
+          }
+          
+          .leaflet-control-zoom-in:hover,
+          .leaflet-control-zoom-out:hover {
+            background-color: #4f46e5;
           }
           
           .leaflet-top, .leaflet-bottom {
