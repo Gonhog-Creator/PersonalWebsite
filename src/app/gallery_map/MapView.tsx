@@ -39,7 +39,11 @@ const countryToGalleryMap: Record<string, string> = {
   'AT': 'austria',
   'AU': 'australia',
   'BE': 'belgium',
-  'GR': 'greece'
+  'GR': 'greece',
+  'ES': 'spain',
+  'IT': 'italy',
+  'PT': 'portugal',
+  'GB-SCT': 'scotland'  // Special case for Scotland
 } as const;
 
 // Countries with galleries (using the keys from the mapping above)
@@ -348,18 +352,30 @@ export default function MapView() {
         );
         
         if (isScotland) {
-          // Navigate to Scotland gallery
-          router.push('/galleries/scotland');
-          return;
+          // Use the GB-SCT code for Scotland
+          const gallerySlug = countryToGalleryMap['GB-SCT'];
+          if (gallerySlug) {
+            const galleryPath = `/galleries/${gallerySlug}`;
+            console.log('Navigating to Scotland:', galleryPath);
+            router.push(galleryPath);
+            return;
+          }
+        } else {
+          // For rest of UK, use the GB code
+          const gallerySlug = countryToGalleryMap[countryCode];
+          if (gallerySlug) {
+            const galleryPath = `/galleries/${gallerySlug}`;
+            console.log('Navigating to UK:', galleryPath);
+            router.push(galleryPath);
+            return;
+          }
         }
-      }
-      
-      // For all other cases, use the normal gallery mapping
-      if (hasGallery) {
+      } else if (hasGallery) {
+        // For all other countries with galleries
         const gallerySlug = countryToGalleryMap[countryCode];
         if (gallerySlug) {
           const galleryPath = `/galleries/${gallerySlug}`;
-          console.log('Navigating to:', galleryPath);
+          console.log(`Navigating to ${feature.properties.name}:`, galleryPath);
           router.push(galleryPath);
           return;
         }
