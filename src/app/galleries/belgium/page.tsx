@@ -352,7 +352,7 @@ export default function BelgiumGallery() {
                   controls
                   loop
                   playsInline
-                  src="/vids/Belgium 2025 Recap 2k.mp4"
+                  src="/vids/Belgium 2025 Recap 2K.mp4"
                 >
                   Your browser does not support the video tag.
                 </video>
