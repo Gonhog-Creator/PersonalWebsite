@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
+import Image from 'next/image';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
@@ -130,6 +130,8 @@ const panoramaLocations = [
   { id: 9, location: 'Durbuy' }
 ];
 
+
+
 export default function BelgiumGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
@@ -247,7 +249,7 @@ export default function BelgiumGallery() {
 
       {/* Gallery Content */}
       <div className="w-full bg-gray-900 pb-12">
-        {currentView === 'photos' ? (
+        {currentView === 'photos' && (
           <div className="w-full px-4">
             <Masonry
               breakpointCols={{
@@ -287,6 +289,7 @@ export default function BelgiumGallery() {
                         className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
                         style={{ display: 'block' }}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                        loading="lazy"
                       />
                       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                         <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
@@ -299,7 +302,7 @@ export default function BelgiumGallery() {
               ))}
             </Masonry>
           </div>
-        ) : null}
+        )}
 
         {currentView === 'panoramas' && (
           <div className="w-full">
@@ -308,7 +311,7 @@ export default function BelgiumGallery() {
                 <div className="w-full max-w-4xl px-4">
                   <div className="w-full text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-white">
-                      WHave you ever seen this many old houses in one photo?
+                      Have you ever seen this many old houses in one photo?
                     </h2>
                   </div>
                 </div>
@@ -326,7 +329,6 @@ export default function BelgiumGallery() {
                   { id: 7, location: 'DescriptionComingSoon' },
                   { id: 8, location: 'DescriptionComingSoon' },
                   { id: 9, location: 'DescriptionComingSoon' },
-
                 ].map((item, index) => (
                   <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
@@ -352,12 +354,12 @@ export default function BelgiumGallery() {
                   controls
                   loop
                   playsInline
-                  src="/vids/Belgium 2025 Recap 2K.mp4"
+                  preload="none"
+                  src="/vids/Belgium 2025 Recap 2k.mp4"
                 >
                   Your browser does not support the video tag.
                 </video>
               </div>
-              {/* Add space below the video */}
               <div className="h-32 w-full"></div>
             </div>
           </div>
