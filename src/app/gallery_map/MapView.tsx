@@ -4,9 +4,12 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
-import L, { Map as LeafletMap, Layer, FeatureGroup } from 'leaflet';
-import type { GeoJSON as GeoJSONType, GeoJSONOptions } from 'leaflet';
+import L, { Map as LeafletMap, Layer } from 'leaflet';
 
+// Create a custom type that extends Leaflet's Map type
+type CustomMap = L.Map & {
+  zoomControl?: L.Control.Zoom;
+}
 
 // Type for country feature properties
 interface CountryProperties {
@@ -57,14 +60,43 @@ const MapWithNoSSR = dynamic(
     const { MapContainer, TileLayer, GeoJSON, useMap } = mod;
     
     // Create a controller component to handle map instance
-  const MapController = ({ onMapCreated }: { onMapCreated: (map: LeafletMap) => void }) => {
+  interface MapControllerProps {
+    onMapCreated: (map: LeafletMap) => void;
+    mapRef: React.RefObject<LeafletMap | null>;
+  }
+  
+  const MapController = ({ onMapCreated, mapRef }: MapControllerProps) => {
     const map = useMap();
     
     useEffect(() => {
-      if (map) {
-        onMapCreated(map);
+      if (!map) return;
+      
+      // Remove any existing zoom controls first
+      map.zoomControl?.remove();
+      
+      // Add our custom zoom control
+      const zoomControl = L.control.zoom({
+        position: 'bottomright'
+      });
+      zoomControl.addTo(map);
+      
+      // Store the zoom control reference for cleanup
+      const customMap = map as CustomMap;
+      customMap.zoomControl = zoomControl;
+      
+      // Update the ref and call the onMapCreated callback
+      if (mapRef) {
+        mapRef.current = customMap;
       }
-    }, [map, onMapCreated]);
+      onMapCreated(customMap);
+      
+      // Cleanup function
+      return () => {
+        if (customMap.zoomControl) {
+          customMap.removeControl(customMap.zoomControl);
+        }
+      };
+    }, [map, onMapCreated, mapRef]);
     
     return null;
   };
@@ -77,7 +109,8 @@ const MapWithNoSSR = dynamic(
       onMapCreated,
       countriesData,
       countryStyle,
-      onEachFeature
+      onEachFeature,
+      mapRef
     }: {
       center: [number, number];
       zoom: number;
@@ -95,7 +128,7 @@ const MapWithNoSSR = dynamic(
           zoom={zoom}
           minZoom={minZoom}
           maxZoom={maxZoom}
-          zoomControl={true}
+          zoomControl={false}
           style={{
             width: '100%',
             height: '100vh',
@@ -106,9 +139,6 @@ const MapWithNoSSR = dynamic(
           zoomDelta={0.5}
           wheelPxPerZoomLevel={60}
           whenReady={() => {}}
-          zoomControlOptions={{
-            position: 'bottomright'
-          }}
         >
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
@@ -116,7 +146,7 @@ const MapWithNoSSR = dynamic(
             opacity={0.3}
           />
           
-          <MapController onMapCreated={onMapCreated} />
+          <MapController onMapCreated={onMapCreated} mapRef={mapRef} />
           
           {countriesData && (
             <GeoJSON
@@ -169,45 +199,7 @@ const MapWithNoSSR = dynamic(
   }
 );
 
-const NoGalleryModal = ({
-  isOpen,
-  country,
-  onClose
-}: {
-  isOpen: boolean;
-  country: string;
-  onClose: () => void;
-}) => {
-  if (!isOpen) return null;
-  
-  return (
-    <div 
-      className="fixed inset-0 bg-black/70 flex items-center justify-center z-[1000]"
-      onClick={onClose}
-    >
-      <div 
-        className="bg-gray-800 p-6 rounded-lg max-w-[90%] w-[400px] text-white shadow-xl"
-        onClick={e => e.stopPropagation()}
-      >
-        <h3 className="text-xl font-bold mb-4 text-gray-100">
-          No Gallery Available
-        </h3>
-        <p className="mb-6 text-gray-200">
-          Sorry, there are no photo galleries available for 
-          <span className="font-semibold text-white"> {country}</span> yet.
-        </p>
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            className="px-5 py-2 rounded border border-gray-600 text-blue-400 font-medium transition-colors hover:bg-gray-700"
-          >
-            Dismiss
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+// NoGalleryModal component has been removed as it's not being used
 
 // Style function for country features
 const getCountryStyle = (
@@ -232,8 +224,11 @@ const getCountryStyle = (
 export default function MapView() {
   const router = useRouter();
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  // Map reference is used by the MapController component
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mapRef = useRef<LeafletMap | null>(null);
   const [map, setMap] = useState<LeafletMap | null>(null);
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [countriesData, setCountriesData] = useState<CountryData | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<CountryFeature | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -245,34 +240,33 @@ export default function MapView() {
 
   // Set client-side flag and load data
   useEffect(() => {
-    if (!isClient) {
-      setIsClient(true);
-      
-      const loadData = async () => {
-        try {
-          const response = await fetch('https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson');
-          const data = await response.json() as CountryData;
-          setCountriesData(data);
-        } catch (error) {
-          console.error('Error loading map data:', error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      
-      loadData();
-    }
+    if (isClient) return; // Skip if already client-side
     
-    return () => {
-      // Cleanup is handled in the map instance effect
+    setIsClient(true);
+    
+    const loadData = async () => {
+      try {
+        const response = await fetch('https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson');
+        const data = await response.json() as CountryData;
+        setCountriesData(data);
+      } catch (error) {
+        console.error('Error loading map data:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
+    
+    loadData();
+    
+    // No cleanup needed here as we want to keep the data loaded
   }, [isClient]);
 
   // Memoize the country style function
   const countryStyle = useCallback((feature?: CountryFeature) => {
     if (!feature) return {};
+    // countriesWithGalleries is a constant, no need to include it in dependencies
     return getCountryStyle(feature, countriesWithGalleries as readonly string[]);
-  }, []);
+  }, []); // No dependencies needed as we only use constants
 
   // Handle mouse move for tooltip positioning
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
@@ -292,10 +286,8 @@ export default function MapView() {
     const newHoverText = isScotland ? 'Scotland' : 'United Kingdom';
     
     // Only update if the hover text would change
-    if (newHoverText !== hoveredCountry) {
-      setHoveredCountry(newHoverText);
-    }
-  }, [hoveredCountry]);
+    setHoveredCountry(prevHovered => newHoverText !== prevHovered ? newHoverText : prevHovered);
+  }, [setHoveredCountry]);
 
   const onEachFeature = useCallback((feature: CountryFeature, layer: Layer) => {
     const countryCode = feature.properties.iso_a2 as CountryCode;
@@ -393,66 +385,63 @@ export default function MapView() {
         click: handleClick
       });
     }
-  }, [router]);
+  }, [router, handleUkMouseMove]); // Added handleUkMouseMove to dependencies
 
   // Handle map instance when it's created
   const setMapInstance = useCallback((mapInstance: LeafletMap) => {
-    // Only update if we don't already have a map instance
-    if (!map) {
-      setMap(mapInstance);
-      
-      // Set initial view and settings
-      mapInstance.setView([15, 0], 2.5);  // Lower zoom level (2) shows more of the world
-      mapInstance.setMinZoom(2);        // Allow zooming out further
-      mapInstance.setMaxZoom(22);
-      
-      // Remove any existing zoom controls
-      if (mapInstance.zoomControl) {
-        mapInstance.removeControl(mapInstance.zoomControl);
-      }
-      
-      // Add a single zoom control to bottom right
-      const zoomControl = L.control.zoom({
-        position: 'bottomright'
-      });
-      zoomControl.addTo(mapInstance);
-      
-      // Store the zoom control reference for cleanup
-      // @ts-ignore - zoomControl is a valid property
-      mapInstance.zoomControl = zoomControl;
-      
-      // Handle window resize with debounce
-      let resizeTimeout: NodeJS.Timeout;
-      const handleResize = () => {
-        if (resizeTimeout) clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(() => {
-          if (mapInstance && !mapInstance.getContainer()?._leaflet_id) return;
+    // Skip if we already have a map instance or if the new instance is invalid
+    if (map || !mapInstance) return;
+
+    // Set the map instance
+    setMap(mapInstance);
+    
+    // Set initial view and settings
+    mapInstance.setView([15, 0], 2.5);
+    mapInstance.setMinZoom(2);
+    mapInstance.setMaxZoom(22);
+    
+    // Remove any existing zoom controls
+    mapInstance.zoomControl?.remove();
+    
+    // Add a single zoom control to bottom right
+    const zoomControl = L.control.zoom({
+      position: 'bottomright'
+    });
+    zoomControl.addTo(mapInstance);
+    
+    // Store the zoom control reference for cleanup
+    const customMap = mapInstance as CustomMap;
+    customMap.zoomControl = zoomControl;
+    
+    // Handle window resize with debounce
+    const handleResize = () => {
+      if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
+      resizeTimeoutRef.current = setTimeout(() => {
+        if (mapInstance && !(mapInstance.getContainer() as { _leaflet_id?: number })._leaflet_id) {
           mapInstance.invalidateSize();
-        }, 100);
-      };
-      
-      window.addEventListener('resize', handleResize);
-      
-      // Return cleanup function
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        if (resizeTimeout) clearTimeout(resizeTimeout);
-        
-        // Clean up the map instance if it exists
-        if (mapInstance && mapInstance.remove) {
-          // Remove zoom control if it exists
-          // @ts-ignore - zoomControl is a valid property
-          if (mapInstance.zoomControl) {
-            // @ts-ignore - zoomControl is a valid property
-            mapInstance.removeControl(mapInstance.zoomControl);
-          }
-          mapInstance.off();
-          mapInstance.remove();
-          setMap(null);
         }
-      };
-    }
-  }, []);
+      }, 100);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup function to be called when the component unmounts or when the map instance changes
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
+      
+      // Clean up the map instance if it exists
+      if (mapInstance?.remove) {
+        // Remove zoom control if it exists
+        if (customMap.zoomControl) {
+          mapInstance.removeControl(customMap.zoomControl);
+        }
+        mapInstance.off();
+        mapInstance.remove();
+        setMap(null);
+      }
+    };
+  }, [map]); // Add map to dependency array to prevent stale closures
 
   // Show loading state while data is being loaded
   if (isLoading || !isClient || !countriesData) {
@@ -563,10 +552,14 @@ export default function MapView() {
             zoom={3}
             minZoom={3}
             maxZoom={18}
-            onMapCreated={setMapInstance}
+            onMapCreated={(map) => {
+              setMapInstance(map);
+              mapRef.current = map;
+            }}
             countriesData={countriesData}
             countryStyle={countryStyle}
             onEachFeature={onEachFeature}
+            mapRef={mapRef}
           />
         )}
         

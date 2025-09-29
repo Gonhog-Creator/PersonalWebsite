@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { FiSearch, FiX, FiPlay } from 'react-icons/fi';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { GradientButton } from '@/components/ui/gradient-button';
+import Masonry from 'react-masonry-css';
 
 type GalleryView = 'photos' | 'timelapses' | 'dso';
 
@@ -190,21 +191,40 @@ export default function AstrophotographyGallery() {
         return (
           <div className="w-full px-4 py-8">
             <h2 className="text-3xl font-bold text-white mb-8 text-center">Astro Photos</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {astroPhotos.map((photo) => (
-                <div key={photo.id} className="group">
-                  <div className="relative aspect-square bg-gray-800 rounded-lg overflow-hidden mb-4">
-                    <Image
-                      src={photo.imageUrl}
-                      alt={photo.title}
-                      fill
-                      className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                    />
+            <div className="px-4">
+              <Masonry
+                breakpointCols={{
+                  default: 3,
+                  1024: 2,
+                  640: 1
+                }}
+                className="my-masonry-grid"
+                columnClassName="my-masonry-grid_column"
+              >
+                {astroPhotos.map((photo) => (
+                  <div key={photo.id} className="group mb-8">
+                    <div className="relative aspect-square bg-gray-800 rounded-lg overflow-hidden">
+                      <Image
+                        src={photo.imageUrl}
+                        alt={photo.title}
+                        width={800}
+                        height={600}
+                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                        style={{ display: 'block' }}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <p className="text-white text-sm md:text-base font-semibold px-4 py-3 w-full text-center">
+                          {photo.title}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-400">{photo.date} • {photo.location}</p>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-semibold text-white">{photo.title}</h3>
-                  <p className="text-sm text-gray-400">{photo.date} • {photo.location}</p>
-                </div>
-              ))}
+                ))}
+              </Masonry>
             </div>
           </div>
         );
@@ -345,135 +365,18 @@ export default function AstrophotographyGallery() {
           </div>
         </div>
       )}
-                        margin-bottom: 16px;
-                        border-radius: 0.5rem;
-                        overflow: hidden;
-                      }
-                    `}</style>
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={image.src}
-                        alt={image.alt}
-                        width={800}
-                        height={600}
-                        className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                        style={{ display: 'block' }}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                        <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                          {image.alt}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Masonry>
-          </div>
-        ) : null}
-
-        {currentView === 'panoramas' && (
-          <div className="w-full">
-            <div className="w-full bg-gray-900 py-12">
-              <div className="w-full flex justify-center">
-                <div className="w-full max-w-4xl px-4">
-                  <div className="w-full text-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-white">
-                      Paris from above is a beautiful sight.
-                    </h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full max-w-full overflow-hidden">
-              <div className="w-full py-8">
-                {[
-                  { id: 1, location: 'DescriptionComingSoon' },
-                  { id: 2, location: 'DescriptionComingSoon' },
-                  { id: 3, location: 'DescriptionComingSoon' },
-                  { id: 4, location: 'DescriptionComingSoon' },
-                  { id: 5, location: 'DescriptionComingSoon' },
-                  { id: 6, location: 'DescriptionComingSoon' },
-                  { id: 7, location: 'DescriptionComingSoon' },
-                  { id: 8, location: 'DescriptionComingSoon' },
-                  { id: 9, location: 'DescriptionComingSoon' },
-                  { id: 10, location: 'DescriptionComingSoon' },
-                  { id: 11, location: 'DescriptionComingSoon' },
-                  { id: 12, location: 'DescriptionComingSoon' },
-                  { id: 13, location: 'DescriptionComingSoon' },
-                  { id: 14, location: 'DescriptionComingSoon' },
-                  { id: 15, location: 'DescriptionComingSoon' },
-                  { id: 16, location: 'DescriptionComingSoon' },
-                  { id: 17, location: 'DescriptionComingSoon' },
-                  { id: 18, location: 'DescriptionComingSoon' },
-                  { id: 19, location: 'DescriptionComingSoon' },
-                  { id: 20, location: 'DescriptionComingSoon' },
-                  { id: 21, location: 'DescriptionComingSoon' },
-                ].map((item, index) => (
-                  <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
-                    <PanoramaViewer
-                      src={`/img/France/france_panorama (${item.id}).jpg`}
-                      alt={`${item.location}`}
-                      location={item.location}
-                      priority={index <= 1}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {currentView === 'drone' && (
-          <div className="w-full flex justify-center items-center min-h-screen py-16">
-            <div className="w-full max-w-6xl px-4 flex flex-col items-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">France 2025 Recap</h2>
-              <div className="aspect-w-16 aspect-h-9 w-full max-w-6xl">
-                <video
-                  className="w-full h-auto rounded-lg shadow-xl"
-                  controls
-                  loop
-                  playsInline
-                  src="/vids/France 2025 Recap 2k.mp4"
-                >
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-              {/* Add space below the video */}
-              <div className="h-32 w-full"></div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Lightbox */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={handleBackdropClick}
-        >
-          <button
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
-            aria-label="Close lightbox"
-          >
-            <FaTimes size={24} />
-          </button>
-          <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
-            <ZoomableImage
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              fill
-              className="object-contain"
-              priority
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-4 text-white text-center">
-              <p className="font-medium">{selectedImage.alt}</p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Styles for the Masonry grid */}
+      <style jsx>{`
+        .my-masonry-grid {
+          display: flex;
+          margin-left: -16px;
+          width: auto;
+        }
+        .my-masonry-grid_column {
+          padding-left: 16px;
+          background-clip: padding-box;
+        }
+      `}</style>
     </div>
-  );
+  )
 }
