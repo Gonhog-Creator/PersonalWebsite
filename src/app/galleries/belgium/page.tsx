@@ -349,16 +349,19 @@ export default function BelgiumGallery() {
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Belgium 2025 Recap</h2>
               <div className="aspect-w-16 aspect-h-9 w-full max-w-6xl">
-                <video
-                  className="w-full h-auto rounded-lg shadow-xl"
-                  controls
-                  loop
-                  playsInline
-                  preload="none"
-                  src="/vids/Belgium 2025 Recap 2K.mp4"
-                >
-                  Your browser does not support the video tag.
-                </video>
+                <div className="relative w-full h-full bg-black rounded-lg overflow-hidden">
+                  <video
+                    className="w-full h-auto"
+                    controls
+                    preload="metadata"
+                  >
+                    <source 
+                      src="/vids/Belgium 2025 Recap 2K.mp4"
+                      type="video/mp4"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
               <div className="h-32 w-full"></div>
             </div>
