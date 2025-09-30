@@ -133,9 +133,15 @@ const panoramaLocations = [
 
 
 export default function BelgiumGallery() {
-  // Generate gallery images, excluding missing photos
+  // State declarations
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
   const [loadedTabs, setLoadedTabs] = useState<Set<GalleryView>>(new Set());
+
+  const handleTabChange = (view: GalleryView) => {
+    setCurrentView(view);
+  };
 
   // Load images only when the photos tab is active
   useEffect(() => {
@@ -156,9 +162,6 @@ export default function BelgiumGallery() {
       setLoadedTabs(prev => new Set([...prev, 'photos']));
     }
   }, [currentView, loadedTabs]);
-
-  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [currentView, setCurrentView] = useState<GalleryView>('photos');
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -209,68 +212,108 @@ export default function BelgiumGallery() {
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
-            src="/img/Belgium/belgium_panorama (5).jpg"
-            alt="Belgium Panorama"
+            src="/img/Belgium/cover.jpg"
+            alt="Belgium Gallery Cover"
             fill
-            className="object-cover object-center"
+            className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/5"></div>
-        </div>
-
-        <div className="relative h-full flex items-center justify-center text-center px-4">
-          <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Belgium</h1>
-            <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
-              The medieval charm of Ghent’s historic streets and the picturesque canals of Bruges reveal Belgium’s rich past, where centuries-old architecture and vibrant culture come alive.
-              Along the way, indulging in world-famous Belgian chocolate and crispy waffles makes the experience even sweeter.
-            </p>
+          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white text-center px-4">
+              Belgium
+            </h1>
           </div>
         </div>
       </div>
 
-      {/* Navigation Section */}
-      <section className="w-full bg-gray-900 py-12">
-        <div className="w-full flex justify-center px-4">
-          <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
-            <GradientButton
-              variant={currentView === 'panoramas' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('panoramas')}
-              onMouseEnter={() => {
-                // Preload panoramas when hovering over the tab
-                if (!loadedTabs.has('panoramas')) {
-                  setLoadedTabs(prev => new Set([...prev, 'panoramas']));
-                }
+      <div className="w-full">
+        {/* Navigation Section */}
+        <section className="w-full bg-gray-900 py-12">
+          <div className="w-full flex justify-center px-4">
+            <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
+              <GradientButton
+                variant={currentView === 'panoramas' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => handleTabChange('panoramas')}
+                onMouseEnter={() => {
+                  if (!loadedTabs.has('panoramas')) {
+                    setLoadedTabs(prev => new Set([...prev, 'panoramas']));
+                  }
+                }}
+              >
+                Panoramas
+              </GradientButton>
+              <GradientButton
+                variant={currentView === 'photos' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => handleTabChange('photos')}
+                onMouseEnter={() => {
+                  if (!loadedTabs.has('photos')) {
+                    setLoadedTabs(prev => new Set([...prev, 'photos']));
+                  }
+                }}
+              >
+                Photos
+              </GradientButton>
+              <GradientButton
+                variant={currentView === 'drone' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => handleTabChange('drone')}
+                onMouseEnter={() => {
+                  if (!loadedTabs.has('drone')) {
+                    setLoadedTabs(prev => new Set([...prev, 'drone']));
+                  }
+                }}
+              >
+                Drone Videos
+              </GradientButton>
+            </div>
+          </div>
+        </section>
+
+      {/* Content Sections */}
+      {currentView === 'photos' && (
+        <div className="container mx-auto px-4 py-8">
+          {galleryImages.length === 0 ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : (
+            <Masonry
+              breakpointCols={{
+                default: 4,
+                1100: 3,
+                700: 2,
+                500: 1
               }}
+              className="flex -ml-4 w-auto"
+              columnClassName="pl-4 bg-clip-padding"
             >
-              Panoramas
-            </GradientButton>
-                      }
-                    `}</style>
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={image.src}
-                        alt={image.alt}
-                        width={800}
-                        height={600}
-                        className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                        style={{ display: 'block' }}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                        <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                          {image.alt}
-                        </p>
-                      </div>
+              {galleryImages.map((image) => (
+                <div key={image.id} className="group mb-4">
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={600}
+                      height={400}
+                      className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                      <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
+                        {image.alt}
+                      </p>
                     </div>
                   </div>
                 </div>
               ))}
             </Masonry>
-          </div>
-        )}
+          )}
+        </div>
+      )}
 
         {currentView === 'panoramas' && (
           <div className="w-full">
