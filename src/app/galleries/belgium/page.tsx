@@ -351,15 +351,20 @@ export default function BelgiumGallery() {
               <div className="aspect-w-16 aspect-h-9 w-full max-w-6xl">
                 <div className="relative w-full" style={{ paddingBottom: '56.25%' /* 16:9 Aspect Ratio */ }}>
                   <video
+                    ref={(el) => {
+                      if (el && currentView === 'drone' && !el.src) {
+                        const source = document.createElement('source');
+                        source.src = "/vids/Belgium 2025 Recap 2K.mp4";
+                        source.type = "video/mp4";
+                        el.appendChild(source);
+                        el.load();
+                      }
+                    }}
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
                     controls
-                    preload="metadata"
+                    preload="none"
                     poster="/img/placeholder.jpg"
                   >
-                    <source 
-                      src="/vids/Belgium 2025 Recap 2K.mp4"
-                      type="video/mp4"
-                    />
                     Your browser does not support the video tag.
                   </video>
                 </div>
