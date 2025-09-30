@@ -133,20 +133,29 @@ const panoramaLocations = [
 
 
 export default function BelgiumGallery() {
-  // Generate gallery images with useMemo, excluding missing photos
-  const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 89 }, (_, i) => {
-      const id = i + 1;
-      const details = imageDetails[id] || {};
-      return {
-        id,
-        src: getImagePath(id),
-        location: 'Belgium',
-        ...details,
-        alt: details.alt || `Photo ${id}`
-      };
-    }).filter(image => !missingPhotos.includes(image.id));
-  }, []);
+  // Generate gallery images, excluding missing photos
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [loadedTabs, setLoadedTabs] = useState<Set<GalleryView>>(new Set());
+
+  // Load images only when the photos tab is active
+  useEffect(() => {
+    if (currentView === 'photos' && !loadedTabs.has('photos')) {
+      const images = Array.from({ length: 89 }, (_, i) => {
+        const id = i + 1;
+        const details = imageDetails[id] || {};
+        return {
+          id,
+          src: getImagePath(id),
+          location: 'Belgium',
+          ...details,
+          alt: details.alt || `Photo ${id}`
+        };
+      }).filter(image => !missingPhotos.includes(image.id));
+      
+      setGalleryImages(images);
+      setLoadedTabs(prev => new Set([...prev, 'photos']));
+    }
+  }, [currentView, loadedTabs]);
 
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
@@ -178,16 +187,18 @@ export default function BelgiumGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Verify image paths
+  // Verify image paths when photos tab is active
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (currentView === 'photos' && galleryImages.length > 0) {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [currentView, galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -226,58 +237,15 @@ export default function BelgiumGallery() {
               variant={currentView === 'panoramas' ? 'variant' : 'default'}
               className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
               onClick={() => setCurrentView('panoramas')}
+              onMouseEnter={() => {
+                // Preload panoramas when hovering over the tab
+                if (!loadedTabs.has('panoramas')) {
+                  setLoadedTabs(prev => new Set([...prev, 'panoramas']));
+                }
+              }}
             >
               Panoramas
             </GradientButton>
-            <GradientButton
-              variant={currentView === 'photos' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('photos')}
-            >
-              Photos
-            </GradientButton>
-            <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery Content */}
-      <div className="w-full bg-gray-900 pb-12">
-        {currentView === 'photos' && (
-          <div className="w-full px-4">
-            <Masonry
-              breakpointCols={{
-                default: 5,
-                1600: 4,
-                1200: 3,
-                800: 2,
-                500: 1
-              }}
-              className="flex w-auto"
-              columnClassName="masonry-column"
-            >
-              {galleryImages.map((image) => (
-                <div
-                  key={image.id}
-                  className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
-                  onClick={() => openLightbox(image)}
-                >
-                  <div className="relative w-full overflow-hidden rounded-lg">
-                    <style jsx global>{`
-                      .masonry-column {
-                        padding-left: 8px;
-                        padding-right: 8px;
-                      }
-                      .masonry-column > div {
-                        margin-bottom: 16px;
-                        border-radius: 0.5rem;
-                        overflow: hidden;
                       }
                     `}</style>
                     <div className="relative w-full h-full">
@@ -358,12 +326,24 @@ export default function BelgiumGallery() {
                         source.type = "video/mp4";
                         el.appendChild(source);
                         el.load();
+                        // Auto-play with sound muted to comply with browser autoplay policies
+                        const playPromise = el.play();
+                        if (playPromise !== undefined) {
+                          playPromise.catch(() => {
+                            // Autoplay was prevented, mute and try again
+                            el.muted = true;
+                            el.play();
+                          });
+                        }
                       }
                     }}
                     className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
                     controls
                     preload="none"
                     poster="/img/placeholder.jpg"
+                    playsInline
+                    muted
+                    loop
                   >
                     Your browser does not support the video tag.
                   </video>
