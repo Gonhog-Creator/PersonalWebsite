@@ -22,5 +22,5 @@ def list_photos(directory):
 
 if __name__ == "__main__":
     # Example usage - replace with your target directory
-    gallery_path = ("public/img/USA")  # Change this to your target directory
+    gallery_path = ("public/img/Argentina")  # Change this to your target directory
     list_photos(gallery_path)
