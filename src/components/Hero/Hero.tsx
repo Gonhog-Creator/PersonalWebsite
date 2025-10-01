@@ -61,7 +61,7 @@ export function Hero() {
             <h2 className="text-2xl md:text-3xl font-semibold text-[var(--text-primary)] mb-6">
               <div>
                 <DecryptedText 
-                  text="Chemical Engineer &"
+                  text="Chemical Engineer"
                   speed={50}
                   maxIterations={1}
                   animateOn="inView"
@@ -85,37 +85,24 @@ export function Hero() {
                   encryptedClassName="opacity-30 text-[var(--text-secondary)]"
                 />
               </div>
+              <div className="mt-2">
+                <DecryptedText
+                  text="Photographer"
+                  speed={50}
+                  maxIterations={1}
+                  animateOn="inView"
+                  revealDirection="start"
+                  sequential={true}
+                  useOriginalCharsOnly={true}
+                  className="text-[var(--text-primary)]"
+                  encryptedClassName="opacity-30 text-[var(--text-secondary)]"
+                />
+              </div>
             </h2>
             <div className="text-lg md:text-xl text-[var(--text-secondary)] mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed space-y-4 mt-6">
               <div>
                 <DecryptedText 
-                  text="I'm currently studying Chemical Engineering and Material Science"
-                  speed={50}
-                  maxIterations={1}
-                  animateOn="inView"
-                  revealDirection="start"
-                  sequential={true}
-                  useOriginalCharsOnly={true}
-                  className="text-[var(--text-secondary)]"
-                  encryptedClassName="opacity-30 text-[var(--text-secondary)]"
-                />
-              </div>
-              <div>
-                <DecryptedText 
-                  text="at North Carolina State University. In August 2025, I will be"
-                  speed={50}
-                  maxIterations={1}
-                  animateOn="inView"
-                  revealDirection="start"
-                  sequential={true}
-                  useOriginalCharsOnly={true}
-                  className="text-[var(--text-secondary)]"
-                  encryptedClassName="opacity-30 text-[var(--text-secondary)]"
-                />
-              </div>
-              <div>
-                <DecryptedText 
-                  text="starting my Masters in Material Science Engineering at NC State!"
+                  text="I'm currently studying Material Science Engineering at the University of Padua, in northern Italy. Follow me through my journey as a scientist and photographer."
                   speed={50}
                   maxIterations={1}
                   animateOn="inView"

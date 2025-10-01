@@ -73,7 +73,7 @@ export default function Home() {
                 <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-200">Who am I?</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
                   I&apos;m a passionate Chemical Engineer and Material Scientist with a strong interest in materials innovation and sustainable technologies.
-                  I&apos;m currently pursuing my education at North Carolina State University and will be starting my Master&apos;s degree in October 2025 In Italy.
+                  In May 2025 I completed my bachelors in Chemical Engineering and Material Science at North Carolina State University and am now pursing my Master&apos;s degree at the University of Padua, in northern Italy.
                 </p>
                 <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
                   My journey in engineering has equipped me with skills in materials characterization, process optimization, and data analysis, along with a problem-solving mindset that I apply to both my academic and personal projects.
@@ -82,20 +82,21 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div>
                     <h4 className="font-semibold text-gray-800 dark:text-gray-300 transition-colors duration-200">Name:</h4>
-                    <p className="text-gray-600 dark:text-gray-300 transition-colors duration-200">Jose Barbeito</p>
+                    <p className="text-gray-600 dark:text-gray-300 transition-colors duration-200">Jose Maria Barbeito</p>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 dark:text-gray-300">Email:</h4>
-                    <p className="text-gray-600 dark:text-gray-300">jbarbei@ncsu.edu</p>
+                    <p className="text-gray-600 dark:text-gray-300">josemaria.barbeito@icloud.com</p>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 dark:text-gray-300">Education:</h4>
                     <p className="text-gray-600 dark:text-gray-300">NC State University</p>
+                    <p className="text-gray-600 dark:text-gray-300">Padua University</p>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-800 dark:text-gray-300">Degrees:</h4>
-                    <p className="text-gray-600 dark:text-gray-300">M.S. Material Science Engineering</p>
                     <p className="text-gray-600 dark:text-gray-300">B.S. Chemical Engineering</p>
+                    <p className="text-gray-600 dark:text-gray-300">M.S. Material Science Engineering</p>
                   </div>
                 </div>
               </div>
