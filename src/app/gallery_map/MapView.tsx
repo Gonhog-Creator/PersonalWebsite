@@ -43,9 +43,7 @@ const countryToGalleryMap: Record<string, string> = {
   'AU': 'australia',
   'BE': 'belgium',
   'GR': 'greece',
-  'ES': 'spain',
   'IT': 'italy',
-  'PT': 'portugal',
   'GB-SCT': 'scotland'  // Special case for Scotland
 } as const;
 

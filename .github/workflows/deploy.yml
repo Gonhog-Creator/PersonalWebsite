@@ -27,10 +27,11 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout repository
+      - name: Checkout repository with LFS
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
           submodules: recursive
 
       - name: Set up Node.js ${{ env.NODE_VERSION }}

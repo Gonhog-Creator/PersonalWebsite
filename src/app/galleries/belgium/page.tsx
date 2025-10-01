@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Masonry from 'react-masonry-css';
-import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
+import { VideoPlayer } from '@/components/gallery/VideoPlayer';
+
 
 interface GalleryImage {
   id: number;
@@ -133,23 +135,35 @@ const panoramaLocations = [
 
 
 export default function BelgiumGallery() {
-  // Generate gallery images with useMemo, excluding missing photos
-  const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 89 }, (_, i) => {
-      const id = i + 1;
-      const details = imageDetails[id] || {};
-      return {
-        id,
-        src: getImagePath(id),
-        location: 'Belgium',
-        ...details,
-        alt: details.alt || `Photo ${id}`
-      };
-    }).filter(image => !missingPhotos.includes(image.id));
-  }, []);
-
-  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  // State declarations
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [loadedTabs, setLoadedTabs] = useState<Set<GalleryView>>(new Set());
+
+  const handleTabChange = (view: GalleryView) => {
+    setCurrentView(view);
+  };
+
+  // Load images only when the photos tab is active
+  useEffect(() => {
+    if (currentView === 'photos' && !loadedTabs.has('photos')) {
+      const images = Array.from({ length: 89 }, (_, i) => {
+        const id = i + 1;
+        const details = imageDetails[id] || {};
+        return {
+          id,
+          src: getImagePath(id),
+          location: 'Belgium',
+          ...details,
+          alt: details.alt || `Photo ${id}`
+        };
+      }).filter(image => !missingPhotos.includes(image.id));
+      
+      setGalleryImages(images);
+      setLoadedTabs(prev => new Set([...prev, 'photos']));
+    }
+  }, [currentView, loadedTabs]);
 
   const openLightbox = (image: GalleryImage) => {
     setSelectedImage(image);
@@ -178,16 +192,18 @@ export default function BelgiumGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Verify image paths
+  // Verify image paths when photos tab is active
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (currentView === 'photos' && galleryImages.length > 0) {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [currentView, galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -198,111 +214,108 @@ export default function BelgiumGallery() {
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
-            src="/img/Belgium/belgium_panorama (5).jpg"
-            alt="Belgium Panorama"
+            src="/img/Belgium/cover.jpg"
+            alt="Belgium Gallery Cover"
             fill
-            className="object-cover object-center"
+            className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/5"></div>
-        </div>
-
-        <div className="relative h-full flex items-center justify-center text-center px-4">
-          <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Belgium</h1>
-            <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
-              The medieval charm of Ghent’s historic streets and the picturesque canals of Bruges reveal Belgium’s rich past, where centuries-old architecture and vibrant culture come alive.
-              Along the way, indulging in world-famous Belgian chocolate and crispy waffles makes the experience even sweeter.
-            </p>
+          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-white text-center px-4">
+              Belgium
+            </h1>
           </div>
         </div>
       </div>
 
-      {/* Navigation Section */}
-      <section className="w-full bg-gray-900 py-12">
-        <div className="w-full flex justify-center px-4">
-          <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
-            <GradientButton
-              variant={currentView === 'panoramas' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('panoramas')}
-            >
-              Panoramas
-            </GradientButton>
-            <GradientButton
-              variant={currentView === 'photos' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('photos')}
-            >
-              Photos
-            </GradientButton>
-            <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
+      <div className="w-full">
+        {/* Navigation Section */}
+        <section className="w-full bg-gray-900 py-12">
+          <div className="w-full flex justify-center px-4">
+            <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
+              <GradientButton
+                variant={currentView === 'panoramas' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => handleTabChange('panoramas')}
+                onMouseEnter={() => {
+                  if (!loadedTabs.has('panoramas')) {
+                    setLoadedTabs(prev => new Set([...prev, 'panoramas']));
+                  }
+                }}
+              >
+                Panoramas
+              </GradientButton>
+              <GradientButton
+                variant={currentView === 'photos' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => handleTabChange('photos')}
+                onMouseEnter={() => {
+                  if (!loadedTabs.has('photos')) {
+                    setLoadedTabs(prev => new Set([...prev, 'photos']));
+                  }
+                }}
+              >
+                Photos
+              </GradientButton>
+              <GradientButton
+                variant={currentView === 'drone' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => handleTabChange('drone')}
+                onMouseEnter={() => {
+                  if (!loadedTabs.has('drone')) {
+                    setLoadedTabs(prev => new Set([...prev, 'drone']));
+                  }
+                }}
+              >
+                Drone Videos
+              </GradientButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Gallery Content */}
-      <div className="w-full bg-gray-900 pb-12">
-        {currentView === 'photos' && (
-          <div className="w-full px-4">
+      {/* Content Sections */}
+      {currentView === 'photos' && (
+        <div className="container mx-auto px-4 py-8">
+          {galleryImages.length === 0 ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          ) : (
             <Masonry
               breakpointCols={{
-                default: 5,
-                1600: 4,
-                1200: 3,
-                800: 2,
+                default: 4,
+                1100: 3,
+                700: 2,
                 500: 1
               }}
-              className="flex w-auto"
-              columnClassName="masonry-column"
+              className="flex -ml-4 w-auto"
+              columnClassName="pl-4 bg-clip-padding"
             >
               {galleryImages.map((image) => (
-                <div
-                  key={image.id}
-                  className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
-                  onClick={() => openLightbox(image)}
-                >
-                  <div className="relative w-full overflow-hidden rounded-lg">
-                    <style jsx global>{`
-                      .masonry-column {
-                        padding-left: 8px;
-                        padding-right: 8px;
-                      }
-                      .masonry-column > div {
-                        margin-bottom: 16px;
-                        border-radius: 0.5rem;
-                        overflow: hidden;
-                      }
-                    `}</style>
-                    <div className="relative w-full h-full">
-                      <Image
-                        src={image.src}
-                        alt={image.alt}
-                        width={800}
-                        height={600}
-                        className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                        style={{ display: 'block' }}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                        <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                          {image.alt}
-                        </p>
-                      </div>
+                <div key={image.id} className="group mb-4">
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={600}
+                      height={400}
+                      className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                      <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
+                        {image.alt}
+                      </p>
                     </div>
                   </div>
                 </div>
               ))}
             </Masonry>
-          </div>
-        )}
+          )}
+        </div>
+      )}
 
         {currentView === 'panoramas' && (
           <div className="w-full">
@@ -348,17 +361,12 @@ export default function BelgiumGallery() {
           <div className="w-full flex justify-center items-center min-h-screen py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Belgium 2025 Recap</h2>
-              <div className="aspect-w-16 aspect-h-9 w-full max-w-6xl">
-                <video
-                  className="w-full h-auto rounded-lg shadow-xl"
-                  controls
-                  loop
-                  playsInline
-                  preload="none"
-                  src="/vids/Belgium 2025 Recap 2k.mp4"
-                >
-                  Your browser does not support the video tag.
-                </video>
+              <div className="w-full max-w-6xl">
+                <VideoPlayer 
+                  src="/vids/Belgium 2025 Recap 2K.mp4"
+                  title="Belgium 2025 Drone Footage"
+                  className="aspect-video"
+                />
               </div>
               <div className="h-32 w-full"></div>
             </div>
