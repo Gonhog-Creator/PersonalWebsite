@@ -8,6 +8,7 @@ import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
+import { VideoPlayer } from '@/components/gallery/VideoPlayer';
 
 interface GalleryImage {
   id: number;
@@ -373,10 +374,19 @@ export default function AustraliaGallery() {
         )}
 
         {currentView === 'drone' && (
-          <div className="w-full min-h-[50vh] flex items-center justify-center">
-            <div className="text-center px-4 py-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Drone Videos Coming Soon</h2>
-              <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto">Check back later for amazing aerial footage!</p>
+          <div className="w-full flex justify-center items-center min-h-screen py-16">
+            <div className="w-full max-w-6xl px-4 flex flex-col items-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Australia Drone Footage</h2>
+              <div className="w-full max-w-6xl text-center">
+                <p className="text-gray-300 text-lg md:text-xl mb-8">
+                  Drone footage coming soon. Check back later for amazing aerial views of Australia!
+                </p>
+                {/* Placeholder for future video */}
+                <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center text-gray-500">
+                  <p>Video Coming Soon</p>
+                </div>
+              </div>
+              <div className="h-32 w-full"></div>
             </div>
           </div>
         )}

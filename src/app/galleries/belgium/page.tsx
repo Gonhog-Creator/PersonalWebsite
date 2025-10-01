@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Masonry from 'react-masonry-css';
-import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
+import { GradientButton } from '@/components/ui/gradient-button';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
+import { VideoPlayer } from '@/components/gallery/VideoPlayer';
+
 
 interface GalleryImage {
   id: number;
@@ -359,38 +361,12 @@ export default function BelgiumGallery() {
           <div className="w-full flex justify-center items-center min-h-screen py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Belgium 2025 Recap</h2>
-              <div className="aspect-w-16 aspect-h-9 w-full max-w-6xl">
-                <div className="relative w-full" style={{ paddingBottom: '56.25%' /* 16:9 Aspect Ratio */ }}>
-                  <video
-                    ref={(el) => {
-                      if (el && currentView === 'drone' && !el.src) {
-                        const source = document.createElement('source');
-                        source.src = "/vids/Belgium 2025 Recap 2K.mp4";
-                        source.type = "video/mp4";
-                        el.appendChild(source);
-                        el.load();
-                        // Auto-play with sound muted to comply with browser autoplay policies
-                        const playPromise = el.play();
-                        if (playPromise !== undefined) {
-                          playPromise.catch(() => {
-                            // Autoplay was prevented, mute and try again
-                            el.muted = true;
-                            el.play();
-                          });
-                        }
-                      }
-                    }}
-                    className="absolute top-0 left-0 w-full h-full object-cover rounded-lg"
-                    controls
-                    preload="none"
-                    poster="/img/placeholder.jpg"
-                    playsInline
-                    muted
-                    loop
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
+              <div className="w-full max-w-6xl">
+                <VideoPlayer 
+                  src="/vids/Belgium 2025 Recap 2K.mp4"
+                  title="Belgium 2025 Drone Footage"
+                  className="aspect-video"
+                />
               </div>
               <div className="h-32 w-full"></div>
             </div>

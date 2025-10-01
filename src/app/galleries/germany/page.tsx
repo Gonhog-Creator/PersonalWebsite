@@ -8,6 +8,7 @@ import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
+import { VideoPlayer } from '@/components/gallery/VideoPlayer';
 
 interface GalleryImage {
   id: number;
@@ -194,7 +195,7 @@ const panoramaLocations = [
 export default function GermanyGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 213 }, (_, i) => {
+    return Array.from({ length: 202 }, (_, i) => {
       const id = i + 1;
       const details = imageDetails[id] || {};
       return {
@@ -409,16 +410,12 @@ export default function GermanyGallery() {
           <div className="w-full flex justify-center items-center min-h-screen py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Germany 2025 Recap</h2>
-              <div className="aspect-w-16 aspect-h-9 w-full max-w-6xl">
-                <video
-                  className="w-full h-auto rounded-lg shadow-xl"
-                  controls
-                  loop
-                  playsInline
+              <div className="w-full max-w-6xl">
+                <VideoPlayer 
                   src="/vids/Germany 2025 Recap 2k.mp4"
-                >
-                  Your browser does not support the video tag.
-                </video>
+                  title="Germany 2025 Drone Footage"
+                  className="rounded-lg shadow-xl"
+                />
               </div>
               {/* Add space below the video */}
               <div className="h-32 w-full"></div>
