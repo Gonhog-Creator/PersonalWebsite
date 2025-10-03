@@ -1,82 +1,181 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
-import { FiSearch, FiX, FiPlay } from 'react-icons/fi';
-import { ProjectHeader } from '@/components/gallery/ProjectHeader';
-import { GradientButton } from '@/components/ui/gradient-button';
+import Link from 'next/link';
 import Masonry from 'react-masonry-css';
+import { FaSearch, FaTimes, FaArrowLeft, FaArrowRight, FaExternalLinkAlt, FaChevronDown, FaChevronUp, FaFilter, FaSortAlphaDown, FaSortNumericDown } from 'react-icons/fa';
+import { FiPlay } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ProjectHeader } from '@/components/gallery/ProjectHeader';
+import { dsoImages } from '@/data/dsoData';
+import { astroPhotos } from '@/data/astroPhotos';
+import { DSOImage, AstroPhoto, DSOType, CatalogueType } from '@/types/astro';
+import { ZoomableImage } from '@/components/gallery/ZoomableImage';
+import { GradientButton } from '@/components/ui/gradient-button';
 
-type GalleryView = 'photos' | 'timelapses' | 'dso';
-
-interface DSOImage {
-  id: string;
-  title: string;
-  date: string;
-  description: string;
-  type: 'galaxy' | 'nebula' | 'star-cluster' | 'supernova' | 'other';
-  imageUrl: string;
-  telescope: string;
-  exposure: string;
-  location: string;
-}
-
-// Sample DSO data - replace with your actual data
-const dsoImages: DSOImage[] = [
-  {
-    id: 'andromeda',
-    title: 'Andromeda Galaxy (M31)',
-    date: '2023-10-15',
-    description: 'The Andromeda Galaxy, our nearest spiral galaxy neighbor, captured with a 200mm lens.',
-    type: 'galaxy',
-    imageUrl: '/img/astro/dso/andromeda.jpg',
-    telescope: 'Canon EOS Ra',
-    exposure: '30x120s',
-    location: 'Dark Sky Site, CA'
-  },
-  {
-    id: 'orion',
-    title: 'Orion Nebula (M42)',
-    date: '2023-12-20',
-    description: 'The Great Orion Nebula, a stellar nursery where new stars are being born.',
-    type: 'nebula',
-    imageUrl: '/img/astro/dso/orion.jpg',
-    telescope: 'William Optics RedCat 51',
-    exposure: '40x60s',
-    location: 'Joshua Tree, CA'
-  },
-  // Add more DSO objects as needed
-];
-
-// Sample timelapse data
+// Timelapse videos data
 const timelapseVideos = [
-  { id: 1, title: 'Milky Way Over Mountains', date: '2023-07-15', duration: '0:45', thumbnail: '/img/astro/timelapses/milky-way.jpg' },
-  { id: 2, title: 'Aurora Borealis', date: '2023-09-22', duration: '1:20', thumbnail: '/img/astro/timelapses/aurora.jpg' },
-  // Add more timelapses as needed
+  {
+    id: 1,
+    title: 'Milky Way Timelapse',
+    description: 'Stunning timelapse of the Milky Way over the mountains',
+    videoUrl: 'https://www.youtube.com/embed/example1',
+    thumbnail: '/img/astro/timelapse1.jpg',
+    location: 'Atacama Desert, Chile',
+    date: '2024-06-15',
+    duration: '2:30'
+  },
+  {
+    id: 2,
+    title: 'Aurora Borealis',
+    description: 'Northern lights dancing across the Arctic sky',
+    videoUrl: 'https://www.youtube.com/embed/example2',
+    thumbnail: '/img/astro/timelapse2.jpg',
+    location: 'Tromsø, Norway',
+    date: '2024-03-22',
+    duration: '3:15'
+  },
+  {
+    id: 3,
+    title: 'Star Trails',
+    description: 'Long exposure of star trails over the desert',
+    videoUrl: 'https://www.youtube.com/embed/example3',
+    thumbnail: '/img/astro/timelapse3.jpg',
+    location: 'Death Valley, USA',
+    date: '2024-05-10',
+    duration: '4:20'
+  }
 ];
 
-// Sample astro photos
-const astroPhotos = [
-  { id: 1, title: 'Milky Way Arch', date: '2023-08-10', location: 'Yosemite, CA', imageUrl: '/img/astro/photos/milky-way-arch.jpg' },
-  { id: 2, title: 'Lunar Eclipse', date: '2023-11-08', location: 'Los Angeles, CA', imageUrl: '/img/astro/photos/lunar-eclipse.jpg' },
-  // Add more photos as needed
-];
+type SortOption = 'title-asc' | 'title-desc' | 'year-asc' | 'year-desc';
+
+const typeOptions: DSOType[] = ['galaxy', 'nebula', 'star-cluster', 'supernova', 'other'];
+
+// Extract unique constellations and sort them
+const allConstellations = Array.from(new Set(dsoImages.map(dso => dso.constellation))).sort();
+
+// Extract unique telescopes and sort them
+const allTelescopes = Array.from(new Set(dsoImages.map(dso => dso.telescope))).sort();
+
+// Extract unique years and sort them in descending order
+const allYears = Array.from(new Set(dsoImages.map(dso => dso.year))).sort((a, b) => b - a);
 
 export default function AstrophotographyGallery() {
-  const [currentView, setCurrentView] = useState<GalleryView>('dso');
+  const [currentView, setCurrentView] = useState<'dso' | 'timelapses' | 'normal'>('dso');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedImage, setSelectedImage] = useState<DSOImage | AstroPhoto | null>(null);
   const [selectedDSO, setSelectedDSO] = useState<DSOImage | null>(null);
+  const [isDSOModalOpen, setIsDSOModalOpen] = useState(false);
+  
+  // Advanced filters state
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState<DSOType[]>([]);
+  const [selectedConstellations, setSelectedConstellations] = useState<string[]>([]);
+  const [selectedTelescopes, setSelectedTelescopes] = useState<string[]>([]);
+  const [selectedYears, setSelectedYears] = useState<number[]>([]);
+  const [selectedCatalogues, setSelectedCatalogues] = useState<CatalogueType[]>([]);
+  const [sortBy, setSortBy] = useState<SortOption>('title-asc');
+  const [imageLoadState, setImageLoadState] = useState<{ [key: string]: boolean }>({});
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentPhoto, setCurrentPhoto] = useState<AstroPhoto | null>(null);
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.dropdown-container')) {
+        setOpenDropdown(null);
+      }
+    };
 
-  // Filter DSO images based on search query
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+  
+  const toggleDropdown = (dropdown: string) => {
+    setOpenDropdown(openDropdown === dropdown ? null : dropdown);
+  };
+
+  const handleImageLoad = (id: number) => {
+    setImageLoadState(prev => ({
+      ...prev,
+      [id]: true
+    }));
+  };
+
+  const toggleDescription = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  // Filter and sort DSO images based on search query and filters
   const filteredDSO = useMemo(() => {
-    if (!searchQuery.trim()) return dsoImages;
-    const query = searchQuery.toLowerCase();
-    return dsoImages.filter(dso => 
-      dso.title.toLowerCase().includes(query) || 
-      dso.description.toLowerCase().includes(query) ||
-      dso.type.toLowerCase().includes(query)
-    );
-  }, [searchQuery]);
+    let result = [...dsoImages];
+    
+    // Apply search query filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(dso => 
+        dso.title.toLowerCase().includes(query) ||
+        dso.description.toLowerCase().includes(query) ||
+        dso.type.toLowerCase().includes(query) ||
+        dso.constellation.toLowerCase().includes(query)
+      );
+    }
+    
+    // Apply type filter
+    if (selectedTypes.length > 0) {
+      result = result.filter(dso => selectedTypes.includes(dso.type));
+    }
+    
+    // Apply constellation filter
+    if (selectedConstellations.length > 0) {
+      result = result.filter(dso => selectedConstellations.includes(dso.constellation));
+    }
+    
+    // Apply telescope filter
+    if (selectedTelescopes.length > 0) {
+      result = result.filter(dso => selectedTelescopes.includes(dso.telescope));
+    }
+    
+    // Apply catalogue filter
+    if (selectedCatalogues.length > 0) {
+      result = result.filter(dso => 
+        dso.catalogues?.some(cat => selectedCatalogues.includes(cat.type))
+      );
+    }
+    
+    // Apply year filter
+    if (selectedYears.length > 0) {
+      result = result.filter(dso => selectedYears.includes(dso.year));
+    }
+    
+    // Apply sorting
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case 'title-asc':
+          return a.title.localeCompare(b.title);
+        case 'title-desc':
+          return b.title.localeCompare(a.title);
+        case 'year-asc':
+          return a.year - b.year;
+        case 'year-desc':
+          return b.year - a.year;
+        default:
+          return 0;
+      }
+    });
+    
+    return result;
+  }, [searchQuery, selectedTypes, selectedConstellations, selectedTelescopes, selectedYears, selectedCatalogues, sortBy]);
 
   const openDSODetail = (dso: DSOImage) => {
     setSelectedDSO(dso);
@@ -93,37 +192,372 @@ export default function AstrophotographyGallery() {
     switch (currentView) {
       case 'dso':
         return (
-          <div className="w-full px-4 py-8">
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-12 relative">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiSearch className="h-5 w-5 text-gray-400" />
+          <div className="w-full px-4 py-16">
+            {/* Enhanced Search Bar */}
+            <div className="w-full max-w-[1800px] mx-auto px-4 mb-16">
+              <div className="flex flex-col items-center">
+                <div className="relative w-full max-w-lg group">
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-2xl blur-md group-hover:blur-lg transition-all duration-300 -z-10" />
+                  <div className="relative bg-gray-800/60 backdrop-blur-md border border-white/5 rounded-xl shadow-2xl overflow-hidden transition-all duration-300 hover:bg-gray-800/70">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        className="block w-full bg-transparent pl-8 pr-12 py-4 text-white placeholder-gray-400 focus:outline-none text-lg"
+                        placeholder="Search galaxies, nebulae, and more..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      <div className="absolute inset-y-0 right-0 pr-4 flex items-center">
+                        {searchQuery ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSearchQuery('');
+                            }}
+                            className="p-1 rounded-full hover:bg-white/10 transition-colors duration-200"
+                            aria-label="Clear search"
+                          >
+                            <FaTimes className="h-5 w-5 text-gray-400 hover:text-white" />
+                          </button>
+                        ) : (
+                          <FaSearch className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors duration-200" />
+                        )}
+                      </div>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-blue-500 transform origin-left scale-x-0 group-focus-within:scale-x-100 transition-transform duration-300" />
+                  </div>
+                  <div className="mt-2 text-sm text-gray-400 transition-opacity duration-200 opacity-0 group-focus-within:opacity-100">
+                    {searchQuery && <span>{filteredDSO.length} results found</span>}
+                  </div>
                 </div>
-                <input
-                  type="text"
-                  className="block w-full pl-10 pr-3 py-4 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Search deep space objects..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  >
-                    <FiX className="h-5 w-5 text-gray-400 hover:text-white" />
-                  </button>
-                )}
               </div>
+              
+              {/* Advanced Filters Button */}
+              <div className="flex justify-center w-full py-4 !my-6">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors shadow-lg"
+                >
+                  <FaFilter />
+                  {showFilters ? 'Hide Filters' : 'Advanced Filters'}
+                  {showFilters ? <FaChevronUp className="ml-1" /> : <FaChevronDown className="ml-1" />}
+                </button>
+              </div>
+              
+              {/* Advanced Filters Panel */}
+              <AnimatePresence>
+                {showFilters && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="w-full"
+                  >
+                    <div className="mt-6 p-8 bg-gray-800/80 backdrop-blur-md rounded-xl border border-white/10 relative z-50">
+                      {/* Active Filters */}
+                      <div className="flex flex-wrap justify-center gap-2 mb-6 min-h-8">
+                        {selectedTypes.map(type => (
+                          <span key={`type-${type}`} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-900/50 text-blue-100 border border-blue-700">
+                            {type.replace('-', ' ')}
+                            <button 
+                              onClick={() => setSelectedTypes(selectedTypes.filter(t => t !== type))}
+                              className="ml-1.5 inline-flex items-center justify-center h-4 w-4 rounded-full bg-blue-800/50 hover:bg-blue-700/70"
+                            >
+                              <span className="sr-only">Remove {type} filter</span>
+                              <FaTimes className="h-2.5 w-2.5" />
+                            </button>
+                          </span>
+                        ))}
+                        {selectedConstellations.map(constellation => (
+                          <span key={`constellation-${constellation}`} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-900/50 text-purple-100 border border-purple-700">
+                            {constellation}
+                            <button 
+                              onClick={() => setSelectedConstellations(selectedConstellations.filter(c => c !== constellation))}
+                              className="ml-1.5 inline-flex items-center justify-center h-4 w-4 rounded-full bg-purple-800/50 hover:bg-purple-700/70"
+                            >
+                              <span className="sr-only">Remove {constellation} filter</span>
+                              <FaTimes className="h-2.5 w-2.5" />
+                            </button>
+                          </span>
+                        ))}
+                        {selectedTelescopes.map(telescope => (
+                          <span key={`telescope-${telescope}`} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-900/50 text-green-100 border border-green-700">
+                            {telescope}
+                            <button 
+                              onClick={() => setSelectedTelescopes(selectedTelescopes.filter(t => t !== telescope))}
+                              className="ml-1.5 inline-flex items-center justify-center h-4 w-4 rounded-full bg-green-800/50 hover:bg-green-700/70"
+                            >
+                              <span className="sr-only">Remove {telescope} filter</span>
+                              <FaTimes className="h-2.5 w-2.5" />
+                            </button>
+                          </span>
+                        ))}
+                        {selectedYears.map(year => (
+                          <span key={`year-${year}`} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-900/50 text-yellow-100 border border-yellow-700">
+                            {year}
+                            <button 
+                              onClick={() => setSelectedYears(selectedYears.filter(y => y !== year))}
+                              className="ml-1.5 inline-flex items-center justify-center h-4 w-4 rounded-full bg-yellow-800/50 hover:bg-yellow-700/70"
+                            >
+                              <span className="sr-only">Remove year {year} filter</span>
+                              <FaTimes className="h-2.5 w-2.5" />
+                            </button>
+                          </span>
+                        ))}
+                        {selectedCatalogues.map(catalogue => (
+                          <span key={`catalogue-${catalogue}`} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-pink-900/50 text-pink-100 border border-pink-700">
+                            {catalogue.toUpperCase()}
+                            <button 
+                              onClick={() => setSelectedCatalogues(selectedCatalogues.filter(c => c !== catalogue))}
+                              className="ml-1.5 inline-flex items-center justify-center h-4 w-4 rounded-full bg-pink-800/50 hover:bg-pink-700/70"
+                            >
+                              <span className="sr-only">Remove {catalogue} filter</span>
+                              <FaTimes className="h-2.5 w-2.5" />
+                            </button>
+                          </span>
+                        ))}
+                        {(selectedTypes.length > 0 || selectedConstellations.length > 0 || selectedTelescopes.length > 0 || selectedYears.length > 0 || selectedCatalogues.length > 0) && (
+                          <button 
+                            onClick={() => {
+                              setSelectedTypes([]);
+                              setSelectedConstellations([]);
+                              setSelectedTelescopes([]);
+                              setSelectedYears([]);
+                              setSelectedCatalogues([]);
+                            }}
+                            className="ml-2 text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                          >
+                            Clear all
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="flex flex-wrap items-center justify-center gap-5">
+                        {/* Type Filter Dropdown */}
+                        <div className="relative z-50 dropdown-container">
+                          <button 
+                            onClick={() => toggleDropdown('type')}
+                            className="flex items-center gap-2 px-5 py-3 bg-gray-700/90 hover:bg-gray-600/90 rounded-xl text-base font-medium text-white transition-all whitespace-nowrap shadow-md hover:shadow-lg"
+                          >
+                            Type
+                            <FaChevronDown className={`text-xs transition-transform ${openDropdown === 'type' ? 'transform rotate-180' : ''}`} />
+                          </button>
+                          {openDropdown === 'type' && (
+                            <div className="absolute z-[9999] mt-1 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700">
+                              {typeOptions.map((type) => (
+                                <label key={type} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedTypes.includes(type)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedTypes([...selectedTypes, type]);
+                                      } else {
+                                        setSelectedTypes(selectedTypes.filter(t => t !== type));
+                                      }
+                                    }}
+                                    className="rounded border-gray-600 text-blue-500 focus:ring-blue-500"
+                                  />
+                                  <span className="ml-2 text-sm text-gray-300 capitalize">{type.replace('-', ' ')}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Constellation Dropdown */}
+                        <div className="relative z-50 dropdown-container">
+                          <button 
+                            onClick={() => toggleDropdown('constellation')}
+                            className="flex items-center gap-2 px-5 py-3 bg-gray-700/90 hover:bg-gray-600/90 rounded-xl text-base font-medium text-white transition-all whitespace-nowrap shadow-md hover:shadow-lg"
+                          >
+                            Constellation
+                            <FaChevronDown className={`text-xs transition-transform ${openDropdown === 'constellation' ? 'transform rotate-180' : ''}`} />
+                          </button>
+                          {openDropdown === 'constellation' && (
+                            <div className="absolute z-[9999] mt-1 w-48 max-h-60 overflow-y-auto bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700">
+                              {allConstellations.map((constellation) => (
+                                <label key={constellation} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedConstellations.includes(constellation)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedConstellations([...selectedConstellations, constellation]);
+                                      } else {
+                                        setSelectedConstellations(selectedConstellations.filter(c => c !== constellation));
+                                      }
+                                    }}
+                                    className="rounded border-gray-600 text-blue-500 focus:ring-blue-500"
+                                  />
+                                  <span className="ml-2 text-sm text-gray-300">{constellation}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Telescope Dropdown */}
+                        <div className="relative z-50 dropdown-container">
+                          <button 
+                            onClick={() => toggleDropdown('telescope')}
+                            className="flex items-center gap-2 px-5 py-3 bg-gray-700/90 hover:bg-gray-600/90 rounded-xl text-base font-medium text-white transition-all whitespace-nowrap shadow-md hover:shadow-lg"
+                          >
+                            Telescope
+                            <FaChevronDown className={`text-xs transition-transform ${openDropdown === 'telescope' ? 'transform rotate-180' : ''}`} />
+                          </button>
+                          {openDropdown === 'telescope' && (
+                            <div className="absolute z-[9999] mt-1 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700">
+                              {allTelescopes.map((telescope) => (
+                                <label key={telescope} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedTelescopes.includes(telescope)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedTelescopes([...selectedTelescopes, telescope]);
+                                      } else {
+                                        setSelectedTelescopes(selectedTelescopes.filter(t => t !== telescope));
+                                      }
+                                    }}
+                                    className="rounded border-gray-600 text-blue-500 focus:ring-blue-500"
+                                  />
+                                  <span className="ml-2 text-sm text-gray-300">{telescope}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Year Dropdown */}
+                        <div className="relative z-50 dropdown-container">
+                          <button 
+                            onClick={() => toggleDropdown('year')}
+                            className="flex items-center gap-2 px-5 py-3 bg-gray-700/90 hover:bg-gray-600/90 rounded-xl text-base font-medium text-white transition-all whitespace-nowrap shadow-md hover:shadow-lg"
+                          >
+                            Year
+                            <FaChevronDown className={`text-xs transition-transform ${openDropdown === 'year' ? 'transform rotate-180' : ''}`} />
+                          </button>
+                          {openDropdown === 'year' && (
+                            <div className="absolute z-[9999] mt-1 w-32 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700">
+                              {allYears.map((year) => (
+                                <label key={year} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedYears.includes(year)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedYears([...selectedYears, year]);
+                                      } else {
+                                        setSelectedYears(selectedYears.filter(y => y !== year));
+                                      }
+                                    }}
+                                    className="rounded border-gray-600 text-blue-500 focus:ring-blue-500"
+                                  />
+                                  <span className="ml-2 text-sm text-gray-300">{year}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Catalogue Dropdown */}
+                        <div className="relative z-50 dropdown-container">
+                          <button 
+                            onClick={() => toggleDropdown('catalogue')}
+                            className="flex items-center gap-2 px-5 py-3 bg-gray-700/90 hover:bg-gray-600/90 rounded-xl text-base font-medium text-white transition-all whitespace-nowrap shadow-md hover:shadow-lg"
+                          >
+                            Catalogue
+                            <FaChevronDown className={`text-xs transition-transform ${openDropdown === 'catalogue' ? 'transform rotate-180' : ''}`} />
+                          </button>
+                          {openDropdown === 'catalogue' && (
+                            <div className="absolute z-[9999] mt-1 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700">
+                              {['messier', 'ngc', 'ic', 'barnard', 'sharpless'].map((catalogue) => (
+                                <label key={catalogue} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                                  <input
+                                    type="checkbox"
+                                    checked={selectedCatalogues.includes(catalogue as CatalogueType)}
+                                    onChange={(e) => {
+                                      if (e.target.checked) {
+                                        setSelectedCatalogues([...selectedCatalogues, catalogue as CatalogueType]);
+                                      } else {
+                                        setSelectedCatalogues(selectedCatalogues.filter(c => c !== catalogue));
+                                      }
+                                    }}
+                                    className="rounded border-gray-600 text-blue-500 focus:ring-blue-500"
+                                  />
+                                  <span className="ml-2 text-sm text-gray-300 capitalize">{catalogue}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Sort Dropdown */}
+                        <div className="relative z-50 dropdown-container">
+                          <button 
+                            onClick={() => toggleDropdown('sort')}
+                            className="flex items-center gap-2 px-5 py-3 bg-gray-700/90 hover:bg-gray-600/90 rounded-xl text-base font-medium text-white transition-all whitespace-nowrap shadow-md hover:shadow-lg"
+                          >
+                            Sort
+                            <FaChevronDown className={`text-xs transition-transform ${openDropdown === 'sort' ? 'transform rotate-180' : ''}`} />
+                          </button>
+                          {openDropdown === 'sort' && (
+                            <div className="absolute z-[9999] mt-1 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700 right-0">
+                              <button
+                                onClick={() => {
+                                  setSortBy('title-asc');
+                                  setOpenDropdown(null);
+                                }}
+                                className={`w-full text-left px-4 py-2 text-sm ${sortBy === 'title-asc' ? 'text-blue-400' : 'text-gray-300'} hover:bg-gray-700`}
+                              >
+                                Title (A-Z)
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSortBy('title-desc');
+                                  setOpenDropdown(null);
+                                }}
+                                className={`w-full text-left px-4 py-2 text-sm ${sortBy === 'title-desc' ? 'text-blue-400' : 'text-gray-300'} hover:bg-gray-700`}
+                              >
+                                Title (Z-A)
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSortBy('year-desc');
+                                  setOpenDropdown(null);
+                                }}
+                                className={`w-full text-left px-4 py-2 text-sm ${sortBy === 'year-desc' ? 'text-blue-400' : 'text-gray-300'} hover:bg-gray-700`}
+                              >
+                                Year (Newest First)
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setSortBy('year-asc');
+                                  setOpenDropdown(null);
+                                }}
+                                className={`w-full text-left px-4 py-2 text-sm ${sortBy === 'year-asc' ? 'text-blue-400' : 'text-gray-300'} hover:bg-gray-700`}
+                              >
+                                Year (Oldest First)
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* DSO Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="flex justify-center w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-7xl px-4 relative z-10">
               {filteredDSO.map((dso) => (
                 <div 
                   key={dso.id}
-                  className="group relative bg-gray-800 rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 cursor-pointer"
+                  className="relative bg-gray-800 rounded-xl overflow-hidden shadow-lg cursor-pointer"
                   onClick={() => openDSODetail(dso)}
                 >
                   <div className="relative h-64 bg-gray-900">
@@ -131,27 +565,23 @@ export default function AstrophotographyGallery() {
                       src={dso.imageUrl}
                       alt={dso.title}
                       fill
-                      className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                      className="object-cover opacity-90"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute bottom-0 left-0 p-6 w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <h3 className="text-xl font-bold text-white mb-1">{dso.title}</h3>
-                      <p className="text-sm text-gray-300">{dso.date}</p>
-                    </div>
-                    <div className="absolute top-4 right-4 px-3 py-1 bg-black/70 rounded-full text-xs font-medium text-white">
-                      {dso.type}
-                    </div>
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-white mb-2">{dso.title}</h3>
-                    <p className="text-gray-400 text-sm mb-4">{dso.description}</p>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{dso.telescope}</span>
-                      <span>{dso.exposure}</span>
+                    <p className="text-gray-400 text-sm mb-4">
+                      {dso.shortDescription}
+                    </p>
+                    <div className="flex flex-wrap justify-between gap-2 text-xs text-gray-500">
+                      <span className="bg-gray-700/50 px-2 py-1 rounded">{dso.telescope}</span>
+                      <span className="bg-gray-700/50 px-2 py-1 rounded">{dso.constellation}</span>
+                      <span className="bg-gray-700/50 px-2 py-1 rounded">{dso.year}</span>
                     </div>
                   </div>
                 </div>
               ))}
+              </div>
             </div>
           </div>
         );
@@ -189,42 +619,77 @@ export default function AstrophotographyGallery() {
       case 'photos':
       default:
         return (
-          <div className="w-full px-4 py-8">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">Astro Photos</h2>
-            <div className="px-4">
+          <div className="w-full px-4 py-12">
+            <div className="w-full max-w-[1800px] mx-auto px-4">
+              
               <Masonry
                 breakpointCols={{
-                  default: 3,
-                  1024: 2,
-                  640: 1
+                  default: 5,
+                  1600: 4,
+                  1200: 3,
+                  800: 2,
+                  500: 1
                 }}
-                className="my-masonry-grid"
-                columnClassName="my-masonry-grid_column"
+                className="flex w-auto"
+                columnClassName="masonry-column"
               >
                 {astroPhotos.map((photo) => (
-                  <div key={photo.id} className="group mb-8">
-                    <div className="relative aspect-square bg-gray-800 rounded-lg overflow-hidden">
-                      <Image
-                        src={photo.imageUrl}
-                        alt={photo.title}
-                        width={800}
-                        height={600}
-                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                        style={{ display: 'block' }}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 30vw"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                        <p className="text-white text-sm md:text-base font-semibold px-4 py-3 w-full text-center">
-                          {photo.title}
-                        </p>
+                  <div
+                    key={photo.id}
+                    className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
+                    onClick={() => openLightbox(photo)}
+                  >
+                    <div className="relative w-full overflow-hidden rounded-lg">
+                      <div 
+                        className={`relative aspect-[4/3] bg-gray-800 transition-opacity duration-300 ${
+                          imageLoadState[photo.id] ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      >
+                        <Image
+                          src={photo.src}
+                          alt={photo.alt}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          onLoad={() => handleImageLoad(photo.id)}
+                          priority={photo.id <= 10} // Only preload first 10 images
+                        />
+                        {!imageLoadState[photo.id] && (
+                          <div className="absolute inset-0 bg-gray-800 animate-pulse"></div>
+                        )}
                       </div>
-                    </div>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-400">{photo.date} • {photo.location}</p>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                        <div className="w-full">
+                          <h3 className="text-white font-semibold text-lg mb-1">{photo.title}</h3>
+                          <p className="text-gray-200 text-sm">{photo.location}</p>
+                          <p className="text-gray-300 text-xs">{photo.date}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
               </Masonry>
+              
+              <div className="mt-12 text-center">
+                <p className="text-gray-400 text-sm">
+                  {astroPhotos.length} photos • {new Set(astroPhotos.map(p => p.location)).size} locations
+                </p>
+              </div>
+
+              <style jsx global>{`
+                .masonry-column {
+                  padding-left: 8px;
+                  padding-right: 8px;
+                  background-clip: padding-box;
+                  margin: 0 auto;
+                }
+                .masonry-column > div {
+                  margin-bottom: 16px;
+                  border-radius: 0.5rem;
+                  overflow: hidden;
+                  width: 100%;
+                }
+              `}</style>
             </div>
           </div>
         );
@@ -233,101 +698,134 @@ export default function AstrophotographyGallery() {
 
   return (
     <div className="min-h-screen bg-gray-900">
+      <style jsx global>{`
+        /* Hide navbar when modal is open */
+        html.modal-open header {
+          display: none !important;
+        }
+      `}</style>
+      {/* Lightbox Modal */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          onClick={handleBackdropClick}
+        >
+          <button
+            onClick={closeLightbox}
+            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
+            aria-label="Close lightbox"
+          >
+            <FaTimes size={24} />
+          </button>
+          <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
+            <ZoomableImage
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+        </div>
+      )}
       {/* Project Header */}
       <ProjectHeader />
 
       {/* Hero Section */}
-      <div className="relative w-full h-screen max-h-[90vh] min-h-[600px]">
-        <div className="absolute inset-0 w-full h-full">
+      <div className="relative h-[60vh] min-h-[500px] bg-gradient-to-b from-gray-900 to-gray-800">
+        <div className="absolute inset-0">
           <Image
-            src="/img/Astro/astro_pano.jpg"
-            alt="Night Sky Panorama"
+            src="/img/astro/header-bg.jpg"
+            alt="Astrophotography Background"
             fill
-            className="object-cover w-full h-full"
+            className="object-cover"
             priority
-            sizes="100vw"
-            style={{
-              objectFit: 'cover',
-              objectPosition: 'center',
-              width: '100%',
-              height: '100%',
-              margin: 0,
-              padding: 0
-            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70"></div>
+          <div className="absolute inset-0 bg-black/40"></div>
         </div>
-
-        <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
-          <div className="max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Astrophotography</h1>
-            <p className="text-lg md:text-xl text-gray-200 mt-4 mb-8 max-w-3xl mx-auto">
-              Exploring the cosmos through long exposure photography and deep space imaging.
-              Capturing the beauty of distant galaxies, nebulae, and celestial events that are invisible to the naked eye.
-            </p>
-            
-            {/* Navigation Buttons */}
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <GradientButton
-                variant={currentView === 'photos' ? 'variant' : 'default'}
-                className="px-6 py-3 text-sm md:text-base font-medium"
-                onClick={() => setCurrentView('photos')}
-              >
-                Photos
-              </GradientButton>
-              <GradientButton
-                variant={currentView === 'timelapses' ? 'variant' : 'default'}
-                className="px-6 py-3 text-sm md:text-base font-medium"
-                onClick={() => setCurrentView('timelapses')}
-              >
-                Timelapses
-              </GradientButton>
-              <GradientButton
-                variant={currentView === 'dso' ? 'variant' : 'default'}
-                className="px-6 py-3 text-sm md:text-base font-medium"
-                onClick={() => setCurrentView('dso')}
-              >
-                Deep Space Objects
-              </GradientButton>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="bg-black/50 p-8 rounded-lg max-w-4xl mx-auto">
+              <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Astrophotography</h1>
+              <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
+                Exploring the cosmos through long exposure photography and deep space imaging
+              </p>
             </div>
           </div>
         </div>
       </div>
 
+      {/* Navigation Tabs */}
+      <section className="w-full bg-gray-900 py-8">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <div className="flex flex-wrap justify-center gap-4">
+            <GradientButton
+              variant={currentView === 'photos' ? 'variant' : 'default'}
+              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3"
+              onClick={() => setCurrentView('photos')}
+            >
+              Photos
+            </GradientButton>
+            <GradientButton
+              variant={currentView === 'dso' ? 'variant' : 'default'}
+              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3"
+              onClick={() => setCurrentView('dso')}
+            >
+              Deep Space Objects
+            </GradientButton>
+            <GradientButton
+              variant={currentView === 'timelapses' ? 'variant' : 'default'}
+              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3"
+              onClick={() => setCurrentView('timelapses')}
+            >
+              Timelapses
+            </GradientButton>
+          </div>
+        </div>
+      </section>
+
       {/* Main Content */}
-      <main className="relative z-10 -mt-20">
-        {renderContent()}
+
+      <main className="relative z-10">
+        <div className="max-w-[1800px] mx-auto px-4">
+          {renderContent()}
+        </div>
       </main>
 
       {/* DSO Detail Modal */}
       {selectedDSO && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-black/95 backdrop-blur-sm"
           onClick={closeDSODetail}
         >
           <div 
-            className="relative bg-gray-900 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"
+            className="relative bg-gray-900/95 border border-gray-700 rounded-2xl w-full max-w-7xl h-[95vh] flex flex-col overflow-hidden shadow-2xl"
             onClick={e => e.stopPropagation()}
           >
             <button 
               onClick={closeDSODetail}
-              className="absolute top-4 right-4 p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors z-10"
+              className="absolute top-4 right-4 p-2 rounded-full bg-gray-800/90 hover:bg-gray-700/90 transition-colors z-10"
               aria-label="Close"
             >
-              <FiX className="h-6 w-6 text-white" />
+              <FaTimes className="h-6 w-6 text-white" />
             </button>
             
-            <div className="grid md:grid-cols-2 gap-8 p-8">
-              <div className="relative h-96 md:h-full min-h-[400px] rounded-lg overflow-hidden">
-                <Image
-                  src={selectedDSO.imageUrl}
-                  alt={selectedDSO.title}
-                  fill
-                  className="object-cover"
-                />
+            <div className="grid md:grid-cols-2 gap-8 p-8 h-full overflow-y-auto">
+              <div className="flex items-center justify-center h-full">
+                <div className="relative w-full h-full max-h-[80vh] rounded-lg overflow-hidden">
+                  <Image
+                    src={selectedDSO.imageUrl}
+                    alt={selectedDSO.title}
+                    width={1200}
+                    height={800}
+                    className="w-full h-auto max-h-[80vh] object-contain"
+                    style={{ objectFit: 'contain' }}
+                    priority
+                  />
+                </div>
               </div>
               
-              <div>
+              <div className="pt-4">
                 <h2 className="text-3xl font-bold text-white mb-2">{selectedDSO.title}</h2>
                 <div className="flex items-center gap-2 mb-6">
                   <span className="px-3 py-1 bg-purple-900/50 text-purple-300 text-sm rounded-full">
@@ -337,7 +835,7 @@ export default function AstrophotographyGallery() {
                   <span className="text-gray-400">{selectedDSO.date}</span>
                 </div>
                 
-                <p className="text-gray-300 mb-6">{selectedDSO.description}</p>
+                <p className="text-gray-300 mb-4">{selectedDSO.fullDescription}</p>
                 
                 <div className="space-y-4">
                   <div className="flex items-center">
