@@ -8,7 +8,7 @@ import { GradientButton } from '@/components/ui/gradient-button';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-import { VideoPlayer } from '@/components/gallery/VideoPlayer';
+import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
 
 interface GalleryImage {
@@ -214,16 +214,22 @@ export default function BelgiumGallery() {
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
-            src="/img/Belgium/cover.jpg"
+            src="/img/Belgium/belgium_panorama (8).jpg"
             alt="Belgium Gallery Cover"
             fill
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-white text-center px-4">
-              Belgium
-            </h1>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div className="bg-black/50 p-8 rounded-lg max-w-4xl mx-auto">
+                <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Belgium</h1>
+                <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
+                  From the medieval charm of Bruges' canals to the modern European Union headquarters in Brussels,
+                  Belgium offers a fascinating blend of history, culture, and world-renowned cuisine.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -275,44 +281,63 @@ export default function BelgiumGallery() {
 
       {/* Content Sections */}
       {currentView === 'photos' && (
-        <div className="container mx-auto px-4 py-8">
+        <div className="w-full py-8">
           {galleryImages.length === 0 ? (
             <div className="flex justify-center items-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
             </div>
           ) : (
-            <Masonry
-              breakpointCols={{
-                default: 4,
-                1100: 3,
-                700: 2,
-                500: 1
-              }}
-              className="flex -ml-4 w-auto"
-              columnClassName="pl-4 bg-clip-padding"
-            >
-              {galleryImages.map((image) => (
-                <div key={image.id} className="group mb-4">
-                  <div className="relative w-full h-full">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      width={600}
-                      height={400}
-                      className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                      decoding="async"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                      <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                        {image.alt}
-                      </p>
+            <div className="w-full px-4">
+              <Masonry
+                breakpointCols={{
+                  default: 5,
+                  1600: 4,
+                  1200: 3,
+                  800: 2,
+                  500: 1
+                }}
+                className="flex w-auto"
+                columnClassName="masonry-column"
+              >
+                <style jsx global>{`
+                  .masonry-column {
+                    padding-left: 8px;
+                    padding-right: 8px;
+                  }
+                  .masonry-column > div {
+                    margin-bottom: 16px;
+                    border-radius: 0.5rem;
+                    overflow: hidden;
+                  }
+                `}</style>
+                {galleryImages.map((image) => (
+                  <div
+                    key={image.id}
+                    className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
+                    onClick={() => openLightbox(image)}
+                  >
+                    <div className="relative w-full overflow-hidden rounded-lg bg-white dark:bg-gray-800">
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        width={800}
+                        height={600}
+                        className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
+                        style={{ display: 'block' }}
+                        loading="lazy"
+                        decoding="async"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                        <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
+                          {image.alt}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </Masonry>
+                ))}
+              </Masonry>
+            </div>
           )}
         </div>
       )}
@@ -362,10 +387,10 @@ export default function BelgiumGallery() {
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Belgium 2025 Recap</h2>
               <div className="w-full max-w-6xl">
-                <VideoPlayer 
-                  src="/vids/Belgium 2025 Recap 2K.mp4"
+                <YouTubePlayer 
+                  videoId="4JV1n0iVC0c"
                   title="Belgium 2025 Drone Footage"
-                  className="aspect-video"
+                  className="rounded-lg shadow-xl"
                 />
               </div>
               <div className="h-32 w-full"></div>

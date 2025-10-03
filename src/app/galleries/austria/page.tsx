@@ -8,7 +8,7 @@ import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-import { VideoPlayer } from '@/components/gallery/VideoPlayer';
+import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
 interface GalleryImage {
   id: number;
@@ -450,8 +450,8 @@ export default function AustriaGallery() {
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Austria 2025 Recap</h2>
               <div className="w-full max-w-6xl">
-                <VideoPlayer 
-                  src="/vids/Austria 2025 Recap 2k.mp4"
+                <YouTubePlayer 
+                  videoId="YOUR_AUSTRIA_VIDEO_ID"
                   title="Austria 2025 Drone Footage"
                   className="rounded-lg shadow-xl"
                 />
