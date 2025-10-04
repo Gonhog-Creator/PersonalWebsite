@@ -5,7 +5,7 @@ import Image, { ImageProps } from 'next/image';
 import { FaTimes, FaExpand } from 'react-icons/fa';
 
 interface PanoramaViewerProps extends Omit<ImageProps, 'onClick' | 'className'> {
-  location: string;
+  location?: string;
 }
 
 export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps) {

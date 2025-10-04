@@ -12,14 +12,12 @@ import { VideoPlayer } from '@/components/gallery/VideoPlayer';
 
 interface ImageDetails {
   alt: string;
-  location?: string;
 }
 
 interface GalleryImage {
   id: number;
   src: string;
   alt: string;
-  location?: string;
 }
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
@@ -31,114 +29,60 @@ const getImagePath = (id: number) => {
 };
 
 // Image details for alt text and location
-const imageDetails: Record<number, { alt: string }> = {
-  1: { alt: 'DescriptionComingSoon' },
+const imageDetails: Record<number, ImageDetails> = {
   1: { alt: 'DescriptionComingSoon' },
   2: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
-  3: { alt: 'DescriptionComingSoon' },
   3: { alt: 'DescriptionComingSoon' },
   4: { alt: 'DescriptionComingSoon' },
-  4: { alt: 'DescriptionComingSoon' },
-  5: { alt: 'DescriptionComingSoon' },
   5: { alt: 'DescriptionComingSoon' },
   6: { alt: 'DescriptionComingSoon' },
-  6: { alt: 'DescriptionComingSoon' },
-  7: { alt: 'DescriptionComingSoon' },
   7: { alt: 'DescriptionComingSoon' },
   8: { alt: 'DescriptionComingSoon' },
-  8: { alt: 'DescriptionComingSoon' },
-  9: { alt: 'DescriptionComingSoon' },
   9: { alt: 'DescriptionComingSoon' },
   10: { alt: 'DescriptionComingSoon' },
-  10: { alt: 'DescriptionComingSoon' },
-  11: { alt: 'DescriptionComingSoon' },
   11: { alt: 'DescriptionComingSoon' },
   12: { alt: 'DescriptionComingSoon' },
-  12: { alt: 'DescriptionComingSoon' },
-  13: { alt: 'DescriptionComingSoon' },
   13: { alt: 'DescriptionComingSoon' },
   14: { alt: 'DescriptionComingSoon' },
-  14: { alt: 'DescriptionComingSoon' },
-  15: { alt: 'DescriptionComingSoon' },
   15: { alt: 'DescriptionComingSoon' },
   16: { alt: 'DescriptionComingSoon' },
-  16: { alt: 'DescriptionComingSoon' },
-  17: { alt: 'DescriptionComingSoon' },
   17: { alt: 'DescriptionComingSoon' },
   18: { alt: 'DescriptionComingSoon' },
-  18: { alt: 'DescriptionComingSoon' },
-  19: { alt: 'DescriptionComingSoon' },
   19: { alt: 'DescriptionComingSoon' },
   20: { alt: 'DescriptionComingSoon' },
-  20: { alt: 'DescriptionComingSoon' },
-  21: { alt: 'DescriptionComingSoon' },
   21: { alt: 'DescriptionComingSoon' },
   22: { alt: 'DescriptionComingSoon' },
-  22: { alt: 'DescriptionComingSoon' },
-  23: { alt: 'DescriptionComingSoon' },
   23: { alt: 'DescriptionComingSoon' },
   24: { alt: 'DescriptionComingSoon' },
-  24: { alt: 'DescriptionComingSoon' },
-  25: { alt: 'DescriptionComingSoon' },
   25: { alt: 'DescriptionComingSoon' },
   26: { alt: 'DescriptionComingSoon' },
-  26: { alt: 'DescriptionComingSoon' },
-  27: { alt: 'DescriptionComingSoon' },
   27: { alt: 'DescriptionComingSoon' },
   28: { alt: 'DescriptionComingSoon' },
-  28: { alt: 'DescriptionComingSoon' },
-  29: { alt: 'DescriptionComingSoon' },
   29: { alt: 'DescriptionComingSoon' },
   30: { alt: 'DescriptionComingSoon' },
-  30: { alt: 'DescriptionComingSoon' },
-  31: { alt: 'DescriptionComingSoon' },
   31: { alt: 'DescriptionComingSoon' },
   32: { alt: 'DescriptionComingSoon' },
-  32: { alt: 'DescriptionComingSoon' },
-  33: { alt: 'DescriptionComingSoon' },
   33: { alt: 'DescriptionComingSoon' },
   34: { alt: 'DescriptionComingSoon' },
-  34: { alt: 'DescriptionComingSoon' },
-  35: { alt: 'DescriptionComingSoon' },
   35: { alt: 'DescriptionComingSoon' },
   36: { alt: 'DescriptionComingSoon' },
-  36: { alt: 'DescriptionComingSoon' },
-  37: { alt: 'DescriptionComingSoon' },
   37: { alt: 'DescriptionComingSoon' },
   38: { alt: 'DescriptionComingSoon' },
-  38: { alt: 'DescriptionComingSoon' },
-  39: { alt: 'DescriptionComingSoon' },
   39: { alt: 'DescriptionComingSoon' },
   40: { alt: 'DescriptionComingSoon' },
-  40: { alt: 'DescriptionComingSoon' },
-  41: { alt: 'DescriptionComingSoon' },
   41: { alt: 'DescriptionComingSoon' },
   42: { alt: 'DescriptionComingSoon' },
-  42: { alt: 'DescriptionComingSoon' },
-  43: { alt: 'DescriptionComingSoon' },
   43: { alt: 'DescriptionComingSoon' },
   44: { alt: 'DescriptionComingSoon' },
-  44: { alt: 'DescriptionComingSoon' },
-  45: { alt: 'DescriptionComingSoon' },
   45: { alt: 'DescriptionComingSoon' },
   46: { alt: 'DescriptionComingSoon' },
-  46: { alt: 'DescriptionComingSoon' },
-  47: { alt: 'DescriptionComingSoon' },
   47: { alt: 'DescriptionComingSoon' },
   48: { alt: 'DescriptionComingSoon' },
-  48: { alt: 'DescriptionComingSoon' },
-  49: { alt: 'DescriptionComingSoon' },
   49: { alt: 'DescriptionComingSoon' },
   50: { alt: 'DescriptionComingSoon' },
-  50: { alt: 'DescriptionComingSoon' },
-  51: { alt: 'DescriptionComingSoon' },
   51: { alt: 'DescriptionComingSoon' },
   52: { alt: 'DescriptionComingSoon' },
-  52: { alt: 'DescriptionComingSoon' },
   53: { alt: 'DescriptionComingSoon' },
-  53: { alt: 'DescriptionComingSoon' },
-  54: { alt: 'DescriptionComingSoon' },
   54: { alt: 'DescriptionComingSoon' },
   55: { alt: 'DescriptionComingSoon' },
   56: { alt: 'DescriptionComingSoon' },
@@ -449,14 +393,10 @@ export default function ArgentinaGallery() {
       const image: GalleryImage = {
         id: i + 1,
         src: getImagePath(i + 1),
-        alt: details.alt,
-        location: undefined
+        alt: details.alt
       };
       
-      // Add location if it exists in the details
-      if (details.location) {
-        image.location = details.location;
-      }
+      // Location property has been removed
       
       return image;
     });
@@ -507,62 +447,61 @@ export default function ArgentinaGallery() {
     }
   }, [galleryImages]);
 
-  // Panorama locations data
-  const panoramaLocations = [
-    { id: 1, location: 'Patagonia' },
-    { id: 2, location: 'El Chalten' },
-    { id: 3, location: 'Perito Moreno Glacier' },
-    { id: 4, location: 'Buenos Aires' },
-    { id: 5, location: 'Mendoza' },
-    { id: 6, location: 'Bariloche' },
-    { id: 7, location: 'Salta' },
-    { id: 8, location: 'Iguazu Falls' },
-    { id: 9, location: 'Ushuaia' },
-    { id: 10, location: 'El Calafate' },
-    { id: 11, location: 'Los Glaciares National Park' },
-    { id: 12, location: 'Mount Fitz Roy' },
-    { id: 13, location: 'Cerro Torre' },
-    { id: 14, location: 'Cueva de las Manos' },
-    { id: 15, location: 'Quebrada de Humahuaca' },
-    { id: 16, location: 'Cafayate' },
-    { id: 17, location: 'Tilcara' },
-    { id: 18, location: 'Purmamarca' },
-    { id: 19, location: 'Salinas Grandes' },
-    { id: 20, location: 'Tucumán' },
-    { id: 21, location: 'Córdoba' },
-    { id: 22, location: 'Villa La Angostura' },
-    { id: 23, location: 'San Martín de los Andes' },
-    { id: 24, location: 'Lanín National Park' },
-    { id: 25, location: 'El Bolsón' },
-    { id: 26, location: 'Lago Puelo' },
-    { id: 27, location: 'El Chaltén' },
-    { id: 28, location: 'Los Alerces National Park' },
-    { id: 29, location: 'Península Valdés' },
-    { id: 30, location: 'Puerto Madryn' },
-    { id: 31, location: 'Ushuaia - End of the World' },
-    { id: 32, location: 'Tierra del Fuego National Park' },
-    { id: 33, location: 'Beagle Channel' },
-    { id: 34, location: 'Mar del Plata' },
-    { id: 35, location: 'Puerto Iguazú' },
-    { id: 36, location: 'Mendoza Wine Country' },
-    { id: 37, location: 'Aconcagua' },
-    { id: 38, location: 'San Rafael' },
-    { id: 39, location: 'La Rioja' },
-    { id: 40, location: 'Talampaya National Park' },
-    { id: 41, location: 'Ischigualasto Provincial Park' },
-    { id: 42, location: 'San Juan' },
-    { id: 43, location: 'San Luis' },
-    { id: 44, location: 'Mendoza City' },
-    { id: 45, location: 'Bariloche - Circuito Chico' },
-    { id: 46, location: 'San Carlos de Bariloche' },
-    { id: 47, location: 'Villa Traful' },
-    { id: 48, location: 'El Chocón' },
-    { id: 49, location: 'Neuquén' },
-    { id: 50, location: 'La Plata' },
-    { id: 51, location: 'Tigre Delta' },
-    { id: 52, location: 'Colonia del Sacramento' },
-    { id: 53, location: 'Montevideo' },
-    { id: 54, location: 'Punta del Este' }
+  // Panorama images data
+  const panoramaImages = [
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
+    { id: 4 },
+    { id: 5 },
+    { id: 6 },
+    { id: 7 },
+    { id: 8 },
+    { id: 9 },
+    { id: 10 },
+    { id: 11 },
+    { id: 12 },
+    { id: 14 },
+    { id: 15 },
+    { id: 16 },
+    { id: 17 },
+    { id: 18 },
+    { id: 19 },
+    { id: 20 },
+    { id: 21 },
+    { id: 22 },
+    { id: 23 },
+    { id: 24 },
+    { id: 25 },
+    { id: 26 },
+    { id: 27 },
+    { id: 28 },
+    { id: 29 },
+    { id: 30 },
+    { id: 31 },
+    { id: 32 },
+    { id: 33 },
+    { id: 34 },
+    { id: 35 },
+    { id: 36 },
+    { id: 37 },
+    { id: 38 },
+    { id: 39 },
+    { id: 40 },
+    { id: 41 },
+    { id: 42 },
+    { id: 43 },
+    { id: 44 },
+    { id: 45 },
+    { id: 46 },
+    { id: 47 },
+    { id: 48 },
+    { id: 49 },
+    { id: 50 },
+    { id: 51 },
+    { id: 52 },
+    { id: 53 },
+    { id: 54 }
   ];
 
   return (
@@ -668,7 +607,7 @@ export default function ArgentinaGallery() {
                       />
                       <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
                         <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                          {image.alt} - {image.location}
+                          {image.alt}
                         </p>
                       </div>
                     </div>
@@ -694,12 +633,11 @@ export default function ArgentinaGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {panoramaLocations.map((item, index) => (
+                {panoramaImages.map((item, index) => (
                   <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
                       src={`/img/Argentina/argentina_panorama (${item.id}).jpg`}
-                      alt={`${item.location}`}
-                      location={item.location}
+                      alt={`Panorama ${item.id}`}
                       priority={index <= 1}
                     />
                   </div>
@@ -750,7 +688,7 @@ export default function ArgentinaGallery() {
               priority
             />
             <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-4 text-white text-center">
-              <p className="font-medium">{selectedImage.alt} - {selectedImage.location}</p>
+              <p className="font-medium">{selectedImage.alt}</p>
             </div>
           </div>
         </div>

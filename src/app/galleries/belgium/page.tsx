@@ -116,21 +116,21 @@ const imageDetails: Record<number, { alt: string }> = {
   85: { alt: 'Arafed view of a full moon in a blue sky.' },
   87: { alt: 'Nighttime view of a city with a bridge and a clock tower.' },
   88: { alt: 'There are two people sitting on the steps of a building.' },
-  89: { alt: 'There is a statue of jesus on a wall in a window.' },
+  89: { alt: 'There is a statue of Jesus on a wall in a window.' },
 };
 
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Brussels' },
-  { id: 2, location: 'Bruges' },
-  { id: 3, location: 'Ghent' },
-  { id: 4, location: 'Antwerp' },
-  { id: 5, location: 'Leuven' },
-  { id: 6, location: 'Mechelen' },
-  { id: 7, location: 'Ypres' },
-  { id: 8, location: 'Dinant' },
-  { id: 9, location: 'Durbuy' }
-];
+// Panorama locations data - currently not used in the component
+// const panoramaLocations = [
+//   { id: 1, location: 'Brussels' },
+//   { id: 2, location: 'Bruges' },
+//   { id: 3, location: 'Ghent' },
+//   { id: 4, location: 'Antwerp' },
+//   { id: 5, location: 'Leuven' },
+//   { id: 6, location: 'Mechelen' },
+//   { id: 7, location: 'Ypres' },
+//   { id: 8, location: 'Dinant' },
+//   { id: 9, location: 'Durbuy' }
+// ];
 
 
 
@@ -225,7 +225,7 @@ export default function BelgiumGallery() {
               <div className="bg-black/50 p-8 rounded-lg max-w-4xl mx-auto">
                 <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Belgium</h1>
                 <p className="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
-                  From the medieval charm of Bruges' canals to the modern European Union headquarters in Brussels,
+                  From the medieval charm of Bruges&apos; canals to the modern European Union headquarters in Brussels,
                   Belgium offers a fascinating blend of history, culture, and world-renowned cuisine.
                 </p>
               </div>

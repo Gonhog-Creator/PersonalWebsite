@@ -2,17 +2,49 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import Masonry from 'react-masonry-css';
-import { FaSearch, FaTimes, FaArrowLeft, FaArrowRight, FaExternalLinkAlt, FaChevronDown, FaChevronUp, FaFilter, FaSortAlphaDown, FaSortNumericDown } from 'react-icons/fa';
-import { FiPlay } from 'react-icons/fi';
-import { motion, AnimatePresence } from 'framer-motion';
+import { FaSearch, FaTimes, FaChevronDown, FaChevronUp, FaFilter } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion'; // Keep AnimatePresence if used elsewhere
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { dsoImages } from '@/data/dsoData';
 import { astroPhotos } from '@/data/astroPhotos';
 import { DSOImage, AstroPhoto, DSOType, CatalogueType } from '@/types/astro';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { GradientButton } from '@/components/ui/gradient-button';
+
+// Type for the YouTube player event
+interface YouTubePlayerEvent {
+  data: number;
+}
+
+// Type for the YouTube player
+type YouTubePlayer = {
+  playVideo: () => void;
+  pauseVideo: () => void;
+  // Add other methods as needed
+};
+
+// Type for the YouTube Player constructor
+type YouTubePlayerConstructor = {
+  new (element: Element, config: { 
+    events: { 
+      onStateChange: (event: YouTubePlayerEvent) => void 
+    } 
+  }): YouTubePlayer;
+};
+
+// Extend Window interface to include YouTube types
+declare global {
+  interface Window {
+    YT: {
+      Player: YouTubePlayerConstructor;
+      PlayerState: {
+        ENDED: number;
+      };
+    };
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
 
 // Timelapse videos data - YouTube embed URLs
 const timelapseVideos = [
@@ -76,15 +108,13 @@ const timelapseVideos = [
 type SortOption = 'title-asc' | 'title-desc' | 'year-asc' | 'year-desc';
 
 // Type options with display names
-const typeOptions = [
+const typeOptions: { value: DSOType; label: string }[] = [
   { value: 'galaxy', label: 'Galaxy' },
   { value: 'nebula', label: 'Nebula' },
   { value: 'star-cluster', label: 'Star Cluster' },
   { value: 'supernova', label: 'Supernova' },
   { value: 'other', label: 'Other' }
 ];
-
-type DSOType = 'galaxy' | 'nebula' | 'star-cluster' | 'supernova' | 'other';
 
 // Extract unique constellations and sort them
 const allConstellations = Array.from(new Set(dsoImages.map(dso => dso.constellation))).sort();
@@ -100,8 +130,6 @@ export default function AstrophotographyGallery() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedImage, setSelectedImage] = useState<DSOImage | AstroPhoto | null>(null);
   const [selectedDSO, setSelectedDSO] = useState<DSOImage | null>(null);
-  const [isDSOModalOpen, setIsDSOModalOpen] = useState(false);
-  
   // Advanced filters state
   const [showFilters, setShowFilters] = useState(false);
   const [selectedTypes, setSelectedTypes] = useState<DSOType[]>([]);
@@ -111,12 +139,7 @@ export default function AstrophotographyGallery() {
   const [selectedCatalogues, setSelectedCatalogues] = useState<CatalogueType[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('title-asc');
   const [imageLoadState, setImageLoadState] = useState<{ [key: string]: boolean }>({});
-  const [expandedDescriptions, setExpandedDescriptions] = useState<Record<string, boolean>>({});
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState<number>(0);
-  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [currentPhoto, setCurrentPhoto] = useState<AstroPhoto | null>(null);
   const [dsoImageOrientation, setDsoImageOrientation] = useState<'horizontal' | 'vertical' | null>(null);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   
@@ -130,20 +153,24 @@ export default function AstrophotographyGallery() {
       firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
 
       // Setup player when API is ready
-      (window as any).onYouTubeIframeAPIReady = () => {
+      window.onYouTubeIframeAPIReady = () => {
         const iframe = document.querySelector('iframe[src*="youtube"]');
         if (iframe) {
-          new (window as any).YT.Player(iframe, {
+          new window.YT.Player(iframe, {
             events: {
-              onStateChange: (event: any) => {
-                // YT.PlayerState.ENDED = 0
-                if (event.data === 0) {
+              onStateChange: (event: YouTubePlayerEvent) => {
+                if (event.data === window.YT.PlayerState.ENDED) {
                   setCurrentVideoIndex((prev) => (prev + 1) % timelapseVideos.length);
                 }
               }
             }
           });
         }
+      };
+
+      // Cleanup function
+      return () => {
+        window.onYouTubeIframeAPIReady = () => {}; // Clear the callback
       };
     }
   }, [currentView, currentVideoIndex]);
@@ -172,24 +199,18 @@ export default function AstrophotographyGallery() {
     }));
   };
 
-  const toggleDescription = (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedDescriptions(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
-  };
+  // Remove unused toggleDescription function
 
-  // Map the UI filter types to the actual data types
-  const typeMap: Record<string, string[]> = {
+  // Filter and sort DSO images based on search query and filters
+  // typeMap is now defined with useMemo for better performance
+  const typeMap = useMemo(() => ({
     'galaxy': ['Galaxy'],
     'nebula': ['Emission Nebula', 'Reflection Nebula'],
     'star-cluster': ['Open Cluster', 'Globular Cluster'],
     'supernova': ['Supernova Remnant'],
     'other': ['Other']
-  };
+  }), []);
 
-  // Filter and sort DSO images based on search query and filters
   const filteredDSO = useMemo(() => {
     let result = [...dsoImages];
     
@@ -211,7 +232,8 @@ export default function AstrophotographyGallery() {
         const typeLabel = typeOptions.find(t => t.value === dso.type)?.label || dso.type;
         return (
           dso.title.toLowerCase().includes(query) ||
-          dso.description.toLowerCase().includes(query) ||
+          (dso.shortDescription && dso.shortDescription.toLowerCase().includes(query)) ||
+          (dso.fullDescription && dso.fullDescription.toLowerCase().includes(query)) ||
           dso.constellation.toLowerCase().includes(query) ||
           typeLabel.toLowerCase().includes(query)
         );
@@ -275,7 +297,7 @@ export default function AstrophotographyGallery() {
     });
     
     return result;
-  }, [searchQuery, selectedTypes, selectedConstellations, selectedTelescopes, selectedYears, selectedCatalogues, sortBy]);
+  }, [searchQuery, selectedTypes, selectedConstellations, selectedTelescopes, selectedYears, selectedCatalogues, sortBy, typeMap]);
 
   const openDSODetail = (dso: DSOImage) => {
     setSelectedDSO(dso);
@@ -471,23 +493,26 @@ export default function AstrophotographyGallery() {
                           </button>
                           {openDropdown === 'type' && (
                             <div className="absolute z-[9999] mt-1 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700">
-                              {typeOptions.map(({ value, label }) => (
-                                <label key={value} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
-                                  <input
-                                    type="checkbox"
-                                    checked={selectedTypes.includes(value)}
-                                    onChange={(e) => {
-                                      if (e.target.checked) {
-                                        setSelectedTypes([...selectedTypes, value]);
-                                      } else {
-                                        setSelectedTypes(selectedTypes.filter(t => t !== value));
-                                      }
-                                    }}
-                                    className="rounded border-gray-600 text-blue-500 focus:ring-blue-500"
-                                  />
-                                  <span className="ml-2 text-sm text-gray-300">{label}</span>
-                                </label>
-                              ))}
+                              {typeOptions.map(({ value, label }) => {
+                                const dsoValue = value as DSOType;
+                                return (
+                                  <label key={value} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={selectedTypes.includes(dsoValue)}
+                                      onChange={(e) => {
+                                        if (e.target.checked) {
+                                          setSelectedTypes([...selectedTypes, dsoValue]);
+                                        } else {
+                                          setSelectedTypes(selectedTypes.filter(t => t !== dsoValue));
+                                        }
+                                      }}
+                                      className="rounded border-gray-600 text-blue-500 focus:ring-blue-500"
+                                    />
+                                    <span className="ml-2 text-sm text-gray-300">{label}</span>
+                                  </label>
+                                );
+                              })}
                             </div>
                           )}
                         </div>
@@ -790,7 +815,7 @@ export default function AstrophotographyGallery() {
           </div>
         );
       
-      case 'photos':
+      case 'normal':
       default:
         return (
           <div className="w-full py-12">
@@ -891,8 +916,8 @@ export default function AstrophotographyGallery() {
           </button>
           <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
             <ZoomableImage
-              src={selectedImage.src}
-              alt={selectedImage.alt}
+              src={'src' in selectedImage ? selectedImage.src : selectedImage.imageUrl}
+              alt={'alt' in selectedImage ? selectedImage.alt : selectedImage.title}
               fill
               className="object-contain"
               priority
@@ -932,9 +957,9 @@ export default function AstrophotographyGallery() {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-4">
             <GradientButton
-              variant={currentView === 'photos' ? 'variant' : 'default'}
+              variant={currentView === 'normal' ? 'variant' : 'default'}
               className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3 mx-auto"
-              onClick={() => setCurrentView('photos')}
+              onClick={() => setCurrentView('normal')}
             >
               Photos
             </GradientButton>
@@ -959,7 +984,7 @@ export default function AstrophotographyGallery() {
       {/* Main Content */}
 
       <main className="relative z-10">
-        <div className={currentView === 'photos' ? 'w-full' : 'container mx-auto px-4'}>
+        <div className={currentView === 'normal' ? 'w-full' : 'container mx-auto px-4'}>
           {renderContent()}
         </div>
       </main>
