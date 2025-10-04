@@ -75,7 +75,16 @@ const timelapseVideos = [
 
 type SortOption = 'title-asc' | 'title-desc' | 'year-asc' | 'year-desc';
 
-const typeOptions: DSOType[] = ['galaxy', 'nebula', 'star-cluster', 'supernova', 'other'];
+// Type options with display names
+const typeOptions = [
+  { value: 'galaxy', label: 'Galaxy' },
+  { value: 'nebula', label: 'Nebula' },
+  { value: 'star-cluster', label: 'Star Cluster' },
+  { value: 'supernova', label: 'Supernova' },
+  { value: 'other', label: 'Other' }
+];
+
+type DSOType = 'galaxy' | 'nebula' | 'star-cluster' | 'supernova' | 'other';
 
 // Extract unique constellations and sort them
 const allConstellations = Array.from(new Set(dsoImages.map(dso => dso.constellation))).sort();
@@ -171,24 +180,60 @@ export default function AstrophotographyGallery() {
     }));
   };
 
+  // Map the UI filter types to the actual data types
+  const typeMap: Record<string, string[]> = {
+    'galaxy': ['Galaxy'],
+    'nebula': ['Emission Nebula', 'Reflection Nebula'],
+    'star-cluster': ['Open Cluster', 'Globular Cluster'],
+    'supernova': ['Supernova Remnant'],
+    'other': ['Other']
+  };
+
   // Filter and sort DSO images based on search query and filters
   const filteredDSO = useMemo(() => {
     let result = [...dsoImages];
     
-    // Apply search query filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+    // Apply type filter first
+    if (selectedTypes.length > 0) {
       result = result.filter(dso => 
-        dso.title.toLowerCase().includes(query) ||
-        dso.description.toLowerCase().includes(query) ||
-        dso.type.toLowerCase().includes(query) ||
-        dso.constellation.toLowerCase().includes(query)
+        selectedTypes.some(selectedType => {
+          const matchingTypes = typeMap[selectedType] || [];
+          return matchingTypes.includes(dso.type);
+        })
       );
     }
     
+    // Then apply search query filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase().trim();
+      
+      result = result.filter(dso => {
+        const typeLabel = typeOptions.find(t => t.value === dso.type)?.label || dso.type;
+        return (
+          dso.title.toLowerCase().includes(query) ||
+          dso.description.toLowerCase().includes(query) ||
+          dso.constellation.toLowerCase().includes(query) ||
+          typeLabel.toLowerCase().includes(query)
+        );
+      });
+    }
     // Apply type filter
     if (selectedTypes.length > 0) {
-      result = result.filter(dso => selectedTypes.includes(dso.type));
+      result = result.filter(dso => {
+        // Map the UI filter types to the actual data types
+        const typeMap: Record<string, string[]> = {
+          'galaxy': ['Galaxy'],
+          'nebula': ['Emission Nebula', 'Reflection Nebula'],
+          'star-cluster': ['Open Cluster', 'Globular Cluster'],
+          'supernova': ['Supernova Remnant'],
+          'other': ['Other']
+        };
+
+        return selectedTypes.some(selectedType => {
+          const matchingTypes = typeMap[selectedType] || [];
+          return matchingTypes.includes(dso.type);
+        });
+      });
     }
     
     // Apply constellation filter
@@ -340,7 +385,7 @@ export default function AstrophotographyGallery() {
                       <div className="flex flex-wrap justify-center gap-2 mb-6 min-h-8">
                         {selectedTypes.map(type => (
                           <span key={`type-${type}`} className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-900/50 text-blue-100 border border-blue-700">
-                            {type.replace('-', ' ')}
+                            {typeOptions.find(t => t.value === type)?.label || type.replace('-', ' ')}
                             <button 
                               onClick={() => setSelectedTypes(selectedTypes.filter(t => t !== type))}
                               className="ml-1.5 inline-flex items-center justify-center h-4 w-4 rounded-full bg-blue-800/50 hover:bg-blue-700/70"
@@ -426,21 +471,21 @@ export default function AstrophotographyGallery() {
                           </button>
                           {openDropdown === 'type' && (
                             <div className="absolute z-[9999] mt-1 w-48 bg-gray-800 rounded-lg shadow-lg py-1 border border-gray-700">
-                              {typeOptions.map((type) => (
-                                <label key={type} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
+                              {typeOptions.map(({ value, label }) => (
+                                <label key={value} className="flex items-center px-4 py-2 hover:bg-gray-700 cursor-pointer">
                                   <input
                                     type="checkbox"
-                                    checked={selectedTypes.includes(type)}
+                                    checked={selectedTypes.includes(value)}
                                     onChange={(e) => {
                                       if (e.target.checked) {
-                                        setSelectedTypes([...selectedTypes, type]);
+                                        setSelectedTypes([...selectedTypes, value]);
                                       } else {
-                                        setSelectedTypes(selectedTypes.filter(t => t !== type));
+                                        setSelectedTypes(selectedTypes.filter(t => t !== value));
                                       }
                                     }}
                                     className="rounded border-gray-600 text-blue-500 focus:ring-blue-500"
                                   />
-                                  <span className="ml-2 text-sm text-gray-300 capitalize">{type.replace('-', ' ')}</span>
+                                  <span className="ml-2 text-sm text-gray-300">{label}</span>
                                 </label>
                               ))}
                             </div>
