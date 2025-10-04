@@ -187,6 +187,23 @@ export default function AstrophotographyGallery() {
     document.body.style.overflow = 'unset';
   };
 
+  // Lightbox functions for photo gallery
+  const openLightbox = (photo: AstroPhoto) => {
+    setSelectedImage(photo);
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeLightbox = () => {
+    setSelectedImage(null);
+    document.body.style.overflow = 'unset';
+  };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      closeLightbox();
+    }
+  };
+
   // Render the appropriate content based on the current view
   const renderContent = () => {
     switch (currentView) {
@@ -588,9 +605,9 @@ export default function AstrophotographyGallery() {
       
       case 'timelapses':
         return (
-          <div className="w-full px-4 py-8">
+          <div className="w-full py-8">
             <h2 className="text-3xl font-bold text-white mb-8 text-center">Astro Timelapses</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
               {timelapseVideos.map((video) => (
                 <div key={video.id} className="relative group">
                   <div className="relative aspect-video bg-gray-800 rounded-lg overflow-hidden">
@@ -619,9 +636,8 @@ export default function AstrophotographyGallery() {
       case 'photos':
       default:
         return (
-          <div className="w-full px-4 py-12">
-            <div className="w-full max-w-[1800px] mx-auto px-4">
-              
+          <div className="w-full py-12">
+            <div className="w-full">
               <Masonry
                 breakpointCols={{
                   default: 5,
@@ -630,7 +646,7 @@ export default function AstrophotographyGallery() {
                   800: 2,
                   500: 1
                 }}
-                className="flex w-auto"
+                className="flex w-full"
                 columnClassName="masonry-column"
               >
                 {astroPhotos.map((photo) => (
@@ -670,7 +686,7 @@ export default function AstrophotographyGallery() {
                 ))}
               </Masonry>
               
-              <div className="mt-12 text-center">
+              <div className="mt-12 text-center px-4">
                 <p className="text-gray-400 text-sm">
                   {astroPhotos.length} photos • {new Set(astroPhotos.map(p => p.location)).size} locations
                 </p>
@@ -681,7 +697,6 @@ export default function AstrophotographyGallery() {
                   padding-left: 8px;
                   padding-right: 8px;
                   background-clip: padding-box;
-                  margin: 0 auto;
                 }
                 .masonry-column > div {
                   margin-bottom: 16px;
@@ -735,7 +750,7 @@ export default function AstrophotographyGallery() {
       <div className="relative h-[60vh] min-h-[500px] bg-gradient-to-b from-gray-900 to-gray-800">
         <div className="absolute inset-0">
           <Image
-            src="/img/astro/header-bg.jpg"
+            src="/img/astro/astro_pano.jpg"
             alt="Astrophotography Background"
             fill
             className="object-cover"
@@ -757,25 +772,25 @@ export default function AstrophotographyGallery() {
 
       {/* Navigation Tabs */}
       <section className="w-full bg-gray-900 py-8">
-        <div className="w-full max-w-6xl mx-auto px-4">
+        <div className="container mx-auto px-4">
           <div className="flex flex-wrap justify-center gap-4">
             <GradientButton
               variant={currentView === 'photos' ? 'variant' : 'default'}
-              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3"
+              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3 mx-auto"
               onClick={() => setCurrentView('photos')}
             >
               Photos
             </GradientButton>
             <GradientButton
               variant={currentView === 'dso' ? 'variant' : 'default'}
-              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3"
+              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3 mx-auto"
               onClick={() => setCurrentView('dso')}
             >
               Deep Space Objects
             </GradientButton>
             <GradientButton
               variant={currentView === 'timelapses' ? 'variant' : 'default'}
-              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3"
+              className="w-full sm:w-auto min-w-[180px] text-md md:text-lg font-semibold px-6 py-3 mx-auto"
               onClick={() => setCurrentView('timelapses')}
             >
               Timelapses
@@ -787,7 +802,7 @@ export default function AstrophotographyGallery() {
       {/* Main Content */}
 
       <main className="relative z-10">
-        <div className="max-w-[1800px] mx-auto px-4">
+        <div className={currentView === 'photos' ? 'w-full' : 'container mx-auto px-4'}>
           {renderContent()}
         </div>
       </main>
