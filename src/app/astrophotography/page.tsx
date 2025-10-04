@@ -14,37 +14,62 @@ import { DSOImage, AstroPhoto, DSOType, CatalogueType } from '@/types/astro';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { GradientButton } from '@/components/ui/gradient-button';
 
-// Timelapse videos data
+// Timelapse videos data - YouTube embed URLs
 const timelapseVideos = [
   {
     id: 1,
-    title: 'Milky Way Timelapse',
-    description: 'Stunning timelapse of the Milky Way over the mountains',
-    videoUrl: 'https://www.youtube.com/embed/example1',
-    thumbnail: '/img/astro/timelapse1.jpg',
-    location: 'Atacama Desert, Chile',
-    date: '2024-06-15',
-    duration: '2:30'
+    title: 'ARSA 1',
+    videoUrl: 'https://www.youtube.com/embed/4VhxYci-OL4',
   },
   {
     id: 2,
-    title: 'Aurora Borealis',
-    description: 'Northern lights dancing across the Arctic sky',
-    videoUrl: 'https://www.youtube.com/embed/example2',
-    thumbnail: '/img/astro/timelapse2.jpg',
-    location: 'Tromsø, Norway',
-    date: '2024-03-22',
-    duration: '3:15'
+    title: 'BHI 2',
+    videoUrl: 'https://www.youtube.com/embed/d57AOn_xmKk',
   },
   {
     id: 3,
-    title: 'Star Trails',
-    description: 'Long exposure of star trails over the desert',
-    videoUrl: 'https://www.youtube.com/embed/example3',
-    thumbnail: '/img/astro/timelapse3.jpg',
-    location: 'Death Valley, USA',
-    date: '2024-05-10',
-    duration: '4:20'
+    title: 'BHI 3',
+    videoUrl: 'https://www.youtube.com/embed/6PL4C1qxzLw',
+  },
+  {
+    id: 4,
+    title: 'Fraser Island (1)',
+    videoUrl: 'https://www.youtube.com/embed/U64d3EKE1Ww',
+  },
+  {
+    id: 5,
+    title: 'BHI (1)',
+    videoUrl: 'https://www.youtube.com/embed/U1l8mnQj_WA',
+  },
+  {
+    id: 6,
+    title: 'Timelapse 6',
+    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_6',
+  },
+  {
+    id: 7,
+    title: 'Timelapse 7',
+    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_7',
+  },
+  {
+    id: 8,
+    title: 'Timelapse 8',
+    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_8',
+  },
+  {
+    id: 9,
+    title: 'Timelapse 9',
+    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_9',
+  },
+  {
+    id: 10,
+    title: 'Timelapse 10',
+    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_10',
+  },
+  {
+    id: 11,
+    title: 'Timelapse 11',
+    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_11',
   }
 ];
 
@@ -83,6 +108,36 @@ export default function AstrophotographyGallery() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentPhoto, setCurrentPhoto] = useState<AstroPhoto | null>(null);
+  const [dsoImageOrientation, setDsoImageOrientation] = useState<'horizontal' | 'vertical' | null>(null);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  
+  // YouTube IFrame API to handle video end
+  useEffect(() => {
+    if (currentView === 'timelapses') {
+      // Load YouTube IFrame API
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+
+      // Setup player when API is ready
+      (window as any).onYouTubeIframeAPIReady = () => {
+        const iframe = document.querySelector('iframe[src*="youtube"]');
+        if (iframe) {
+          new (window as any).YT.Player(iframe, {
+            events: {
+              onStateChange: (event: any) => {
+                // YT.PlayerState.ENDED = 0
+                if (event.data === 0) {
+                  setCurrentVideoIndex((prev) => (prev + 1) % timelapseVideos.length);
+                }
+              }
+            }
+          });
+        }
+      };
+    }
+  }, [currentView, currentVideoIndex]);
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -179,12 +234,21 @@ export default function AstrophotographyGallery() {
 
   const openDSODetail = (dso: DSOImage) => {
     setSelectedDSO(dso);
+    setDsoImageOrientation(null); // Reset orientation
     document.body.style.overflow = 'hidden';
   };
 
   const closeDSODetail = () => {
     setSelectedDSO(null);
+    setDsoImageOrientation(null);
     document.body.style.overflow = 'unset';
+  };
+
+  // Handle DSO image load to detect orientation
+  const handleDSOImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const orientation = img.naturalWidth > img.naturalHeight ? 'horizontal' : 'vertical';
+    setDsoImageOrientation(orientation);
   };
 
   // Lightbox functions for photo gallery
@@ -606,26 +670,74 @@ export default function AstrophotographyGallery() {
       case 'timelapses':
         return (
           <div className="w-full py-8">
-            <h2 className="text-3xl font-bold text-white mb-8 text-center">Astro Timelapses</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-              {timelapseVideos.map((video) => (
-                <div key={video.id} className="relative group">
-                  <div className="relative aspect-video bg-gray-800 rounded-lg overflow-hidden">
-                    <Image
-                      src={video.thumbnail}
-                      alt={video.title}
-                      fill
-                      className="object-cover opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+            {/* Featured Video Carousel */}
+            <div className="max-w-6xl mx-auto px-4 mb-12">
+              <div className="relative aspect-video bg-gray-800 rounded-xl overflow-hidden shadow-2xl">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentVideoIndex}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="absolute inset-0"
+                  >
+                    <iframe
+                      src={`${timelapseVideos[currentVideoIndex].videoUrl}?autoplay=1&mute=1&enablejsapi=1`}
+                      title={timelapseVideos[currentVideoIndex].title}
+                      className="absolute inset-0 w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
                     />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                        <FiPlay className="h-6 w-6 text-white ml-1" />
-                      </div>
-                    </div>
+                  </motion.div>
+                </AnimatePresence>
+                
+                {/* Carousel Controls */}
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+                  {timelapseVideos.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentVideoIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        index === currentVideoIndex 
+                          ? 'bg-white w-8' 
+                          : 'bg-white/50 hover:bg-white/75'
+                      }`}
+                      aria-label={`Go to video ${index + 1}`}
+                    />
+                  ))}
+                </div>
+                
+                {/* Video Title Overlay */}
+                <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <h3 className="text-white font-semibold">{timelapseVideos[currentVideoIndex].title}</h3>
+                </div>
+              </div>
+            </div>
+            
+            {/* Full Gallery Title */}
+            <h2 className="text-3xl font-bold text-white mb-8 mt-12 text-center">Full Gallery</h2>
+            
+            {/* All Videos Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4">
+              {timelapseVideos.map((video, index) => (
+                <div 
+                  key={video.id} 
+                  className="relative group cursor-pointer"
+                  onClick={() => setCurrentVideoIndex(index)}
+                >
+                  <div className={`relative aspect-video bg-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 ${
+                    index === currentVideoIndex ? 'ring-2 ring-blue-500' : 'hover:ring-2 hover:ring-white/50'
+                  }`}>
+                    <iframe
+                      src={video.videoUrl}
+                      title={video.title}
+                      className="absolute inset-0 w-full h-full pointer-events-none"
+                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    />
                   </div>
-                  <div className="mt-4">
-                    <h3 className="text-lg font-semibold text-white">{video.title}</h3>
-                    <p className="text-sm text-gray-400">{video.date} • {video.duration}</p>
+                  <div className="mt-3">
+                    <h3 className="text-base font-medium text-white text-center">{video.title}</h3>
                   </div>
                 </div>
               ))}
@@ -810,11 +922,15 @@ export default function AstrophotographyGallery() {
       {/* DSO Detail Modal */}
       {selectedDSO && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-2 bg-black/95 backdrop-blur-sm"
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm ${
+            dsoImageOrientation === 'horizontal' ? 'p-12' : 'p-2'
+          }`}
           onClick={closeDSODetail}
         >
           <div 
-            className="relative bg-gray-900/95 border border-gray-700 rounded-2xl w-full max-w-7xl h-[95vh] flex flex-col overflow-hidden shadow-2xl"
+            className={`relative bg-gray-900/95 border border-gray-700 rounded-2xl w-full max-w-7xl h-[95vh] flex flex-col overflow-hidden shadow-2xl ${
+              dsoImageOrientation === 'horizontal' ? 'm-8' : ''
+            }`}
             onClick={e => e.stopPropagation()}
           >
             <button 
@@ -825,22 +941,37 @@ export default function AstrophotographyGallery() {
               <FaTimes className="h-6 w-6 text-white" />
             </button>
             
-            <div className="grid md:grid-cols-2 gap-8 p-8 h-full overflow-y-auto">
-              <div className="flex items-center justify-center h-full">
-                <div className="relative w-full h-full max-h-[80vh] rounded-lg overflow-hidden">
+            <div className={`${
+              dsoImageOrientation === 'horizontal' 
+                ? 'flex flex-col flex-1' 
+                : 'grid md:grid-cols-2'
+            } gap-8 p-8 h-full overflow-y-auto`}>
+              {/* Image Section */}
+              <div className={`flex items-center justify-center ${
+                dsoImageOrientation === 'horizontal' ? 'w-full min-h-[50vh]' : 'h-full'
+              }`}>
+                <div className={`relative w-full ${
+                  dsoImageOrientation === 'horizontal' ? 'h-[50vh]' : 'h-full max-h-[75vh]'
+                }`}>
                   <Image
                     src={selectedDSO.imageUrl}
                     alt={selectedDSO.title}
-                    width={1200}
-                    height={800}
-                    className="w-full h-auto max-h-[80vh] object-contain"
-                    style={{ objectFit: 'contain' }}
+                    fill
+                    className="object-contain"
+                    style={{ 
+                      objectFit: 'contain',
+                      maxWidth: '100%',
+                      maxHeight: '100%'
+                    }}
+                    onLoad={handleDSOImageLoad}
                     priority
+                    sizes="(max-width: 1200px) 100vw, 1200px"
                   />
                 </div>
               </div>
               
-              <div className="pt-4">
+              {/* Description Section */}
+              <div className={`${dsoImageOrientation === 'vertical' ? 'flex flex-col justify-center' : 'pt-4 px-12'}`}>
                 <h2 className="text-3xl font-bold text-white mb-2">{selectedDSO.title}</h2>
                 <div className="flex items-center gap-2 mb-6">
                   <span className="px-3 py-1 bg-purple-900/50 text-purple-300 text-sm rounded-full">
