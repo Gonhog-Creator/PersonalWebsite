@@ -135,7 +135,7 @@ const Photography = () => {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               <div className="relative w-full h-64">
                 <Image 
-                  src="/img/Astro/astro (12).jpg" 
+                  src="/img/Astro/DSO-7.jpg"
                   alt="Astrophotography 1" 
                   fill
                   className="object-cover"
@@ -147,7 +147,7 @@ const Photography = () => {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               <div className="relative w-full h-64">
                 <Image 
-                  src="/img/Astro/astro (22).jpg" 
+                  src="/img/Astro/astro-15.jpg"
                   alt="Astrophotography 2" 
                   fill
                   className="object-cover"

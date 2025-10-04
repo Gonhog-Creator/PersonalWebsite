@@ -721,14 +721,9 @@ export default function AstrophotographyGallery() {
                   </div>
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-white mb-2">{dso.title}</h3>
-                    <p className="text-gray-400 text-sm mb-4">
+                    <p className="text-gray-400 text-sm">
                       {dso.shortDescription}
                     </p>
-                    <div className="flex flex-wrap justify-between gap-2 text-xs text-gray-500">
-                      <span className="bg-gray-700/50 px-2 py-1 rounded">{dso.telescope}</span>
-                      <span className="bg-gray-700/50 px-2 py-1 rounded">{dso.constellation}</span>
-                      <span className="bg-gray-700/50 px-2 py-1 rounded">{dso.year}</span>
-                    </div>
                   </div>
                 </div>
               ))}

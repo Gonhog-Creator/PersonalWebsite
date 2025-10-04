@@ -1,6 +1,6 @@
 export type DSOType = 'galaxy' | 'nebula' | 'star-cluster' | 'supernova' | 'other';
 
-export type CatalogueType = 'messier' | 'ngc' | 'ic' | 'barnard' | 'sharpless' | 'catalog' | 'other';
+export type CatalogueType = 'messier' | 'ngc' | 'ic' | 'barnard' | 'sharpless' | 'other';
 
 export interface DSOImage {
   id: string;

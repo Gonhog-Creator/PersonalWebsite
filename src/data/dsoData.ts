@@ -16,7 +16,7 @@ export const dsoImages: DSOImage[] = [
     id: 'dso-1',
     title: 'Casper Ghost Nebula (M78)',
     date: '2024-02-15',
-    shortDescription: 'The Casper Ghost Nebula is a reflection nebula in the constellation Orion.',
+    shortDescription: 'A striking reflection nebula in Orion, M78 is the brightest in its group, illuminated by young, hot stars. Known for its ghostly appearance, it lies 1,350 light-years away and is part of the Orion B molecular cloud complex.',
     fullDescription: 'Messier 78 (also known as M78 or NGC 2068) is a reflection nebula in the constellation Orion. It is the brightest diffuse reflection nebula in a group that includes NGC 2064, NGC 2067, and NGC 2071, all part of the Orion B molecular cloud complex. Located approximately 1,350 light-years from Earth, M78 is visible in small telescopes as a hazy patch illuminated by two B-type stars, HD 38563 A and HD 38563 B, of 10th and 11th magnitude.',
     type: 'nebula',
     constellation: 'Orion',
@@ -45,27 +45,27 @@ export const dsoImages: DSOImage[] = [
     location: 'Madrid, Spain',
     year: 2024,
     catalogues: [
-      { type: 'catalog', number: 'AE Aur' },
+      { type: 'other', number: 'AE Aur' },
       { type: 'ic', number: 405 },
-      { type: 'catalog', number: 'Sh2-229' },
-      { type: 'catalog', number: 'Caldwell 31' },
-      { type: 'catalog', number: 'LBN 795' },
-      { type: 'catalog', number: 'LBN 160.28+01.12' },
-      { type: 'catalog', number: 'LBN 795.00+01.10' },
-      { type: 'catalog', number: 'LDN 1553' },
-      { type: 'catalog', number: 'Magakian 126' },
-      { type: 'catalog', number: 'RAFGL 5165' },
-      { type: 'catalog', number: 'VDB 31' },
-      { type: 'catalog', number: 'W 1' },
-      { type: 'catalog', number: 'H IV 29' },
-      { type: 'catalog', number: 'H 5.28' },
-      { type: 'catalog', number: 'Ced 55' },
-      { type: 'catalog', number: 'LBN 160.28+01.12' },
-      { type: 'catalog', number: 'LBN 795.00+01.10' },
-      { type: 'catalog', number: 'LBN 160.28+01.12' },
-      { type: 'catalog', number: 'LBN 795.00+01.10' },
-      { type: 'catalog', number: 'LBN 160.28+01.12' },
-      { type: 'catalog', number: 'LBN 795.00+01.10' }
+      { type: 'sharpless', number: 'Sh2-229' },
+      { type: 'other', number: 'Caldwell 31' },
+      { type: 'other', number: 'LBN 795' },
+      { type: 'other', number: 'LBN 160.28+01.12' },
+      { type: 'other', number: 'LBN 795.00+01.10' },
+      { type: 'other', number: 'LDN 1553' },
+      { type: 'other', number: 'Magakian 126' },
+      { type: 'other', number: 'RAFGL 5165' },
+      { type: 'other', number: 'VDB 31' },
+      { type: 'other', number: 'W 1' },
+      { type: 'other', number: 'H IV 29' },
+      { type: 'other', number: 'H 5.28' },
+      { type: 'other', number: 'Ced 55' },
+      { type: 'other', number: 'LBN 160.28+01.12' },
+      { type: 'other', number: 'LBN 795.00+01.10' },
+      { type: 'other', number: 'LBN 160.28+01.12' },
+      { type: 'other', number: 'LBN 795.00+01.10' },
+      { type: 'other', number: 'LBN 160.28+01.12' },
+      { type: 'other', number: 'LBN 795.00+01.10' },
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -84,13 +84,13 @@ export const dsoImages: DSOImage[] = [
     year: 2024,
     catalogues: [
       { type: 'messier', number: 45 },
-      { type: 'catalog', number: 'Melotte 22' },
-      { type: 'catalog', number: 'Collinder 42' },
-      { type: 'catalog', number: 'C 0342+239' },
-      { type: 'catalog', number: 'OCl 421.0' },
-      { type: 'catalog', number: 'LBN 189.97-17.92' },
-      { type: 'catalog', number: 'LDN 1495' },
-      { type: 'catalog', number: 'LBN 190.10-18.00' }
+      { type: 'other', number: 'Melotte 22' },
+      { type: 'other', number: 'Collinder 42' },
+      { type: 'other', number: 'C 0342+239' },
+      { type: 'other', number: 'OCl 421.0' },
+      { type: 'other', number: 'LBN 189.97-17.92' },
+      { type: 'other', number: 'LDN 1495' },
+      { type: 'other', number: 'LBN 190.10-18.00' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -112,11 +112,11 @@ export const dsoImages: DSOImage[] = [
       { type: 'ngc', number: 2238 },
       { type: 'ngc', number: 2239 },
       { type: 'ngc', number: 2246 },
-      { type: 'catalog', number: 'Caldwell 49' },
-      { type: 'catalog', number: 'Sh2-275' },
-      { type: 'catalog', number: 'LBN 948' },
-      { type: 'catalog', number: 'RCW 40' },
-      { type: 'catalog', number: 'C 0634+047' }
+      { type: 'other', number: 'Caldwell 49' },
+      { type: 'sharpless', number: 'Sh2-275' },
+      { type: 'other', number: 'LBN 948' },
+      { type: 'other', number: 'RCW 40' },
+      { type: 'other', number: 'C 0634+047' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -136,11 +136,11 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       { type: 'messier', number: 104 },
       { type: 'ngc', number: 4594 },
-      { type: 'catalog', number: 'UGC 293' },
-      { type: 'catalog', number: 'PGC 042407' },
-      { type: 'catalog', number: 'MCG -02-32-020' },
-      { type: 'catalog', number: '1ES 1236-11.4' },
-      { type: 'catalog', number: 'IRAS 12345-1121' }
+      { type: 'other', number: 'UGC 293' },
+      { type: 'other', number: 'PGC 042407' },
+      { type: 'other', number: 'MCG -02-32-020' },
+      { type: 'other', number: '1ES 1236-11.4' },
+      { type: 'other', number: 'IRAS 12345-1121' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -159,11 +159,11 @@ export const dsoImages: DSOImage[] = [
     year: 2024,
     catalogues: [
       { type: 'ngc', number: 2359 },
-      { type: 'catalog', number: 'Gum 4' },
-      { type: 'catalog', number: 'RCW 5' },
-      { type: 'catalog', number: 'Sh2-298' },
-      { type: 'catalog', number: 'LBN 1048' },
-      { type: 'catalog', number: 'C 0711-136' }
+      { type: 'other', number: 'Gum 4' },
+      { type: 'other', number: 'RCW 5' },
+      { type: 'sharpless', number: 'Sh2-298' },
+      { type: 'other', number: 'LBN 1048' },
+      { type: 'other', number: 'C 0711-136' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -183,7 +183,7 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       { type: 'messier', number: 33 },
       { type: 'ngc', number: 598 },
-      { type: 'catalog', number: 'PGC 5818' }
+      { type: 'other', number: 'PGC 5818' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -205,63 +205,63 @@ export const dsoImages: DSOImage[] = [
       { type: 'ngc', number: 6992 },  // Eastern Veil
       { type: 'ngc', number: 6995 },  // Part of the complex
       { type: 'ic', number: 1340 },   // Part of the complex
-      { type: 'catalog', number: 'LBN 191' },   // LBN 191
-      { type: 'catalog', number: 'Sh2-103' },   // Sharpless 103
-      { type: 'catalog', number: 'LBN 191.00-11.40' },
-      { type: 'catalog', number: 'LBN 191.00-11.50' },
-      { type: 'catalog', number: 'LBN 191.00-11.60' },
-      { type: 'catalog', number: 'LBN 191.10-11.40' },
-      { type: 'catalog', number: 'LBN 191.10-11.50' },
-      { type: 'catalog', number: 'LBN 191.10-11.60' },
-      { type: 'catalog', number: 'LBN 191.20-11.40' },
-      { type: 'catalog', number: 'LBN 191.20-11.50' },
-      { type: 'catalog', number: 'LBN 191.20-11.60' },
-      { type: 'catalog', number: 'LBN 191.30-11.40' },
-      { type: 'catalog', number: 'LBN 191.30-11.50' },
-      { type: 'catalog', number: 'LBN 191.30-11.60' },
-      { type: 'catalog', number: 'LBN 191.40-11.40' },
-      { type: 'catalog', number: 'LBN 191.40-11.50' },
-      { type: 'catalog', number: 'LBN 191.40-11.60' },
-      { type: 'catalog', number: 'LBN 191.50-11.40' },
-      { type: 'catalog', number: 'LBN 191.50-11.50' },
-      { type: 'catalog', number: 'LBN 191.50-11.60' },
-      { type: 'catalog', number: 'LBN 191.60-11.40' },
-      { type: 'catalog', number: 'LBN 191.60-11.50' },
-      { type: 'catalog', number: 'LBN 191.60-11.60' },
-      { type: 'catalog', number: 'LBN 191.70-11.40' },
-      { type: 'catalog', number: 'LBN 191.70-11.50' },
-      { type: 'catalog', number: 'LBN 191.70-11.60' },
-      { type: 'catalog', number: 'LBN 191.80-11.40' },
-      { type: 'catalog', number: 'LBN 191.80-11.50' },
-      { type: 'catalog', number: 'LBN 191.80-11.60' },
-      { type: 'catalog', number: 'LBN 191.90-11.40' },
-      { type: 'catalog', number: 'LBN 191.90-11.50' },
-      { type: 'catalog', number: 'LBN 191.90-11.60' },
-      { type: 'catalog', number: 'LBN 192.00-11.40' },
-      { type: 'catalog', number: 'LBN 192.00-11.50' },
-      { type: 'catalog', number: 'LBN 192.00-11.60' },
-      { type: 'catalog', number: 'LBN 191.00-11.30' },
-      { type: 'catalog', number: 'LBN 191.10-11.30' },
-      { type: 'catalog', number: 'LBN 191.20-11.30' },
-      { type: 'catalog', number: 'LBN 191.30-11.30' },
-      { type: 'catalog', number: 'LBN 191.40-11.30' },
-      { type: 'catalog', number: 'LBN 191.50-11.30' },
-      { type: 'catalog', number: 'LBN 191.60-11.30' },
-      { type: 'catalog', number: 'LBN 191.70-11.30' },
-      { type: 'catalog', number: 'LBN 191.80-11.30' },
-      { type: 'catalog', number: 'LBN 191.90-11.30' },
-      { type: 'catalog', number: 'LBN 192.00-11.30' },
-      { type: 'catalog', number: 'LBN 191.00-11.70' },
-      { type: 'catalog', number: 'LBN 191.10-11.70' },
-      { type: 'catalog', number: 'LBN 191.20-11.70' },
-      { type: 'catalog', number: 'LBN 191.30-11.70' },
-      { type: 'catalog', number: 'LBN 191.40-11.70' },
-      { type: 'catalog', number: 'LBN 191.50-11.70' },
-      { type: 'catalog', number: 'LBN 191.60-11.70' },
-      { type: 'catalog', number: 'LBN 191.70-11.70' },
-      { type: 'catalog', number: 'LBN 191.80-11.70' },
-      { type: 'catalog', number: 'LBN 191.90-11.70' },
-      { type: 'catalog', number: 'LBN 192.00-11.70' }
+      { type: 'other', number: 'LBN 191' },   // LBN 191
+      { type: 'sharpless', number: 'Sh2-103' },   // Sharpless 103
+      { type: 'other', number: 'LBN 191.00-11.40' },
+      { type: 'other', number: 'LBN 191.00-11.50' },
+      { type: 'other', number: 'LBN 191.00-11.60' },
+      { type: 'other', number: 'LBN 191.10-11.40' },
+      { type: 'other', number: 'LBN 191.10-11.50' },
+      { type: 'other', number: 'LBN 191.10-11.60' },
+      { type: 'other', number: 'LBN 191.20-11.40' },
+      { type: 'other', number: 'LBN 191.20-11.50' },
+      { type: 'other', number: 'LBN 191.20-11.60' },
+      { type: 'other', number: 'LBN 191.30-11.40' },
+      { type: 'other', number: 'LBN 191.30-11.50' },
+      { type: 'other', number: 'LBN 191.30-11.60' },
+      { type: 'other', number: 'LBN 191.40-11.40' },
+      { type: 'other', number: 'LBN 191.40-11.50' },
+      { type: 'other', number: 'LBN 191.40-11.60' },
+      { type: 'other', number: 'LBN 191.50-11.40' },
+      { type: 'other', number: 'LBN 191.50-11.50' },
+      { type: 'other', number: 'LBN 191.50-11.60' },
+      { type: 'other', number: 'LBN 191.60-11.40' },
+      { type: 'other', number: 'LBN 191.60-11.50' },
+      { type: 'other', number: 'LBN 191.60-11.60' },
+      { type: 'other', number: 'LBN 191.70-11.40' },
+      { type: 'other', number: 'LBN 191.70-11.50' },
+      { type: 'other', number: 'LBN 191.70-11.60' },
+      { type: 'other', number: 'LBN 191.80-11.40' },
+      { type: 'other', number: 'LBN 191.80-11.50' },
+      { type: 'other', number: 'LBN 191.80-11.60' },
+      { type: 'other', number: 'LBN 191.90-11.40' },
+      { type: 'other', number: 'LBN 191.90-11.50' },
+      { type: 'other', number: 'LBN 191.90-11.60' },
+      { type: 'other', number: 'LBN 192.00-11.40' },
+      { type: 'other', number: 'LBN 192.00-11.50' },
+      { type: 'other', number: 'LBN 192.00-11.60' },
+      { type: 'other', number: 'LBN 191.00-11.30' },
+      { type: 'other', number: 'LBN 191.10-11.30' },
+      { type: 'other', number: 'LBN 191.20-11.30' },
+      { type: 'other', number: 'LBN 191.30-11.30' },
+      { type: 'other', number: 'LBN 191.40-11.30' },
+      { type: 'other', number: 'LBN 191.50-11.30' },
+      { type: 'other', number: 'LBN 191.60-11.30' },
+      { type: 'other', number: 'LBN 191.70-11.30' },
+      { type: 'other', number: 'LBN 191.80-11.30' },
+      { type: 'other', number: 'LBN 191.90-11.30' },
+      { type: 'other', number: 'LBN 192.00-11.30' },
+      { type: 'other', number: 'LBN 191.00-11.70' },
+      { type: 'other', number: 'LBN 191.10-11.70' },
+      { type: 'other', number: 'LBN 191.20-11.70' },
+      { type: 'other', number: 'LBN 191.30-11.70' },
+      { type: 'other', number: 'LBN 191.40-11.70' },
+      { type: 'other', number: 'LBN 191.50-11.70' },
+      { type: 'other', number: 'LBN 191.60-11.70' },
+      { type: 'other', number: 'LBN 191.70-11.70' },
+      { type: 'other', number: 'LBN 191.80-11.70' },
+      { type: 'other', number: 'LBN 191.90-11.70' },
+      { type: 'other', number: 'LBN 192.00-11.70' },
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -281,94 +281,94 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       { type: 'ic', number: 1590 },
       { type: 'ngc', number: 281 },  // Associated Pacman Nebula
-      { type: 'catalog', number: 'Sh2-184' },
-      { type: 'catalog', number: 'LBN 616' },
-      { type: 'catalog', number: 'LBN 123.08-06.29' },
-      { type: 'catalog', number: 'LBN 123.08-06.30' },
-      { type: 'catalog', number: 'LBN 123.09-06.29' },
-      { type: 'catalog', number: 'LBN 123.09-06.30' },
-      { type: 'catalog', number: 'LBN 123.10-06.29' },
-      { type: 'catalog', number: 'LBN 123.10-06.30' },
-      { type: 'catalog', number: 'LBN 123.11-06.29' },
-      { type: 'catalog', number: 'LBN 123.11-06.30' },
-      { type: 'catalog', number: 'LBN 123.12-06.29' },
-      { type: 'catalog', number: 'LBN 123.12-06.30' },
-      { type: 'catalog', number: 'LBN 123.13-06.29' },
-      { type: 'catalog', number: 'LBN 123.13-06.30' },
-      { type: 'catalog', number: 'LBN 123.14-06.29' },
-      { type: 'catalog', number: 'LBN 123.14-06.30' },
-      { type: 'catalog', number: 'LBN 123.15-06.29' },
-      { type: 'catalog', number: 'LBN 123.15-06.30' },
-      { type: 'catalog', number: 'LBN 123.16-06.29' },
-      { type: 'catalog', number: 'LBN 123.16-06.30' },
-      { type: 'catalog', number: 'LBN 123.17-06.29' },
-      { type: 'catalog', number: 'LBN 123.17-06.30' },
-      { type: 'catalog', number: 'LBN 123.18-06.29' },
-      { type: 'catalog', number: 'LBN 123.18-06.30' },
-      { type: 'catalog', number: 'LBN 123.19-06.29' },
-      { type: 'catalog', number: 'LBN 123.19-06.30' },
-      { type: 'catalog', number: 'LBN 123.20-06.29' },
-      { type: 'catalog', number: 'LBN 123.20-06.30' },
-      { type: 'catalog', number: 'LBN 123.21-06.29' },
-      { type: 'catalog', number: 'LBN 123.21-06.30' },
-      { type: 'catalog', number: 'LBN 123.22-06.29' },
-      { type: 'catalog', number: 'LBN 123.22-06.30' },
-      { type: 'catalog', number: 'LBN 123.23-06.29' },
-      { type: 'catalog', number: 'LBN 123.23-06.30' },
-      { type: 'catalog', number: 'LBN 123.24-06.29' },
-      { type: 'catalog', number: 'LBN 123.24-06.30' },
-      { type: 'catalog', number: 'LBN 123.25-06.29' },
-      { type: 'catalog', number: 'LBN 123.25-06.30' },
-      { type: 'catalog', number: 'LBN 123.26-06.29' },
-      { type: 'catalog', number: 'LBN 123.26-06.30' },
-      { type: 'catalog', number: 'LBN 123.27-06.29' },
-      { type: 'catalog', number: 'LBN 123.27-06.30' },
-      { type: 'catalog', number: 'LBN 123.28-06.29' },
-      { type: 'catalog', number: 'LBN 123.28-06.30' },
-      { type: 'catalog', number: 'LBN 123.29-06.29' },
-      { type: 'catalog', number: 'LBN 123.29-06.30' },
-      { type: 'catalog', number: 'LBN 123.30-06.29' },
-      { type: 'catalog', number: 'LBN 123.30-06.30' },
-      { type: 'catalog', number: 'LBN 123.31-06.29' },
-      { type: 'catalog', number: 'LBN 123.31-06.30' },
-      { type: 'catalog', number: 'LBN 123.32-06.29' },
-      { type: 'catalog', number: 'LBN 123.32-06.30' },
-      { type: 'catalog', number: 'LBN 123.33-06.29' },
-      { type: 'catalog', number: 'LBN 123.33-06.30' },
-      { type: 'catalog', number: 'LBN 123.34-06.29' },
-      { type: 'catalog', number: 'LBN 123.34-06.30' },
-      { type: 'catalog', number: 'LBN 123.35-06.29' },
-      { type: 'catalog', number: 'LBN 123.35-06.30' },
-      { type: 'catalog', number: 'LBN 123.36-06.29' },
-      { type: 'catalog', number: 'LBN 123.36-06.30' },
-      { type: 'catalog', number: 'LBN 123.37-06.29' },
-      { type: 'catalog', number: 'LBN 123.37-06.30' },
-      { type: 'catalog', number: 'LBN 123.38-06.29' },
-      { type: 'catalog', number: 'LBN 123.38-06.30' },
-      { type: 'catalog', number: 'LBN 123.39-06.29' },
-      { type: 'catalog', number: 'LBN 123.39-06.30' },
-      { type: 'catalog', number: 'LBN 123.40-06.29' },
-      { type: 'catalog', number: 'LBN 123.40-06.30' },
-      { type: 'catalog', number: 'LBN 123.41-06.29' },
-      { type: 'catalog', number: 'LBN 123.41-06.30' },
-      { type: 'catalog', number: 'LBN 123.42-06.29' },
-      { type: 'catalog', number: 'LBN 123.42-06.30' },
-      { type: 'catalog', number: 'LBN 123.43-06.29' },
-      { type: 'catalog', number: 'LBN 123.43-06.30' },
-      { type: 'catalog', number: 'LBN 123.44-06.29' },
-      { type: 'catalog', number: 'LBN 123.44-06.30' },
-      { type: 'catalog', number: 'LBN 123.45-06.29' },
-      { type: 'catalog', number: 'LBN 123.45-06.30' },
-      { type: 'catalog', number: 'LBN 123.46-06.29' },
-      { type: 'catalog', number: 'LBN 123.46-06.30' },
-      { type: 'catalog', number: 'LBN 123.47-06.29' },
-      { type: 'catalog', number: 'LBN 123.47-06.30' },
-      { type: 'catalog', number: 'LBN 123.48-06.29' },
-      { type: 'catalog', number: 'LBN 123.48-06.30' },
-      { type: 'catalog', number: 'LBN 123.49-06.29' },
-      { type: 'catalog', number: 'LBN 123.49-06.30' },
-      { type: 'catalog', number: 'LBN 123.50-06.29' },
-      { type: 'catalog', number: 'LBN 123.50-06.30' }
+      { type: 'sharpless', number: 'Sh2-184' },
+      { type: 'other', number: 'LBN 616' },
+      { type: 'other', number: 'LBN 123.08-06.29' },
+      { type: 'other', number: 'LBN 123.08-06.30' },
+      { type: 'other', number: 'LBN 123.09-06.29' },
+      { type: 'other', number: 'LBN 123.09-06.30' },
+      { type: 'other', number: 'LBN 123.10-06.29' },
+      { type: 'other', number: 'LBN 123.10-06.30' },
+      { type: 'other', number: 'LBN 123.11-06.29' },
+      { type: 'other', number: 'LBN 123.11-06.30' },
+      { type: 'other', number: 'LBN 123.12-06.29' },
+      { type: 'other', number: 'LBN 123.12-06.30' },
+      { type: 'other', number: 'LBN 123.13-06.29' },
+      { type: 'other', number: 'LBN 123.13-06.30' },
+      { type: 'other', number: 'LBN 123.14-06.29' },
+      { type: 'other', number: 'LBN 123.14-06.30' },
+      { type: 'other', number: 'LBN 123.15-06.29' },
+      { type: 'other', number: 'LBN 123.15-06.30' },
+      { type: 'other', number: 'LBN 123.16-06.29' },
+      { type: 'other', number: 'LBN 123.16-06.30' },
+      { type: 'other', number: 'LBN 123.17-06.29' },
+      { type: 'other', number: 'LBN 123.17-06.30' },
+      { type: 'other', number: 'LBN 123.18-06.29' },
+      { type: 'other', number: 'LBN 123.18-06.30' },
+      { type: 'other', number: 'LBN 123.19-06.29' },
+      { type: 'other', number: 'LBN 123.19-06.30' },
+      { type: 'other', number: 'LBN 123.20-06.29' },
+      { type: 'other', number: 'LBN 123.20-06.30' },
+      { type: 'other', number: 'LBN 123.21-06.29' },
+      { type: 'other', number: 'LBN 123.21-06.30' },
+      { type: 'other', number: 'LBN 123.22-06.29' },
+      { type: 'other', number: 'LBN 123.22-06.30' },
+      { type: 'other', number: 'LBN 123.23-06.29' },
+      { type: 'other', number: 'LBN 123.23-06.30' },
+      { type: 'other', number: 'LBN 123.24-06.29' },
+      { type: 'other', number: 'LBN 123.24-06.30' },
+      { type: 'other', number: 'LBN 123.25-06.29' },
+      { type: 'other', number: 'LBN 123.25-06.30' },
+      { type: 'other', number: 'LBN 123.26-06.29' },
+      { type: 'other', number: 'LBN 123.26-06.30' },
+      { type: 'other', number: 'LBN 123.27-06.29' },
+      { type: 'other', number: 'LBN 123.27-06.30' },
+      { type: 'other', number: 'LBN 123.28-06.29' },
+      { type: 'other', number: 'LBN 123.28-06.30' },
+      { type: 'other', number: 'LBN 123.29-06.29' },
+      { type: 'other', number: 'LBN 123.29-06.30' },
+      { type: 'other', number: 'LBN 123.30-06.29' },
+      { type: 'other', number: 'LBN 123.30-06.30' },
+      { type: 'other', number: 'LBN 123.31-06.29' },
+      { type: 'other', number: 'LBN 123.31-06.30' },
+      { type: 'other', number: 'LBN 123.32-06.29' },
+      { type: 'other', number: 'LBN 123.32-06.30' },
+      { type: 'other', number: 'LBN 123.33-06.29' },
+      { type: 'other', number: 'LBN 123.33-06.30' },
+      { type: 'other', number: 'LBN 123.34-06.29' },
+      { type: 'other', number: 'LBN 123.34-06.30' },
+      { type: 'other', number: 'LBN 123.35-06.29' },
+      { type: 'other', number: 'LBN 123.35-06.30' },
+      { type: 'other', number: 'LBN 123.36-06.29' },
+      { type: 'other', number: 'LBN 123.36-06.30' },
+      { type: 'other', number: 'LBN 123.37-06.29' },
+      { type: 'other', number: 'LBN 123.37-06.30' },
+      { type: 'other', number: 'LBN 123.38-06.29' },
+      { type: 'other', number: 'LBN 123.38-06.30' },
+      { type: 'other', number: 'LBN 123.39-06.29' },
+      { type: 'other', number: 'LBN 123.39-06.30' },
+      { type: 'other', number: 'LBN 123.40-06.29' },
+      { type: 'other', number: 'LBN 123.40-06.30' },
+      { type: 'other', number: 'LBN 123.41-06.29' },
+      { type: 'other', number: 'LBN 123.41-06.30' },
+      { type: 'other', number: 'LBN 123.42-06.29' },
+      { type: 'other', number: 'LBN 123.42-06.30' },
+      { type: 'other', number: 'LBN 123.43-06.29' },
+      { type: 'other', number: 'LBN 123.43-06.30' },
+      { type: 'other', number: 'LBN 123.44-06.29' },
+      { type: 'other', number: 'LBN 123.44-06.30' },
+      { type: 'other', number: 'LBN 123.45-06.29' },
+      { type: 'other', number: 'LBN 123.45-06.30' },
+      { type: 'other', number: 'LBN 123.46-06.29' },
+      { type: 'other', number: 'LBN 123.46-06.30' },
+      { type: 'other', number: 'LBN 123.47-06.29' },
+      { type: 'other', number: 'LBN 123.47-06.30' },
+      { type: 'other', number: 'LBN 123.48-06.29' },
+      { type: 'other', number: 'LBN 123.48-06.30' },
+      { type: 'other', number: 'LBN 123.49-06.29' },
+      { type: 'other', number: 'LBN 123.49-06.30' },
+      { type: 'other', number: 'LBN 123.50-06.29' },
+      { type: 'other', number: 'LBN 123.50-06.30' },
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -388,37 +388,37 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       // Flame Nebula (NGC 2024)
       { type: 'ngc', number: 2024 },
-      { type: 'catalog', number: 'LBN 944' },
-      { type: 'catalog', number: 'Sh2-277' },
+      { type: 'other', number: 'LBN 944' },
+      { type: 'sharpless', number: 'Sh2-277' },
       // Horsehead Nebula (Barnard 33) and IC 434
       { type: 'barnard', number: 33 },
       { type: 'ic', number: 434 },
-      { type: 'catalog', number: 'LBN 945' },
-      { type: 'catalog', number: 'LBN 206.45-16.46' },
+      { type: 'other', number: 'LBN 945' },
+      { type: 'other', number: 'LBN 206.45-16.46' },
       // Additional designations
-      { type: 'catalog', number: 'LBN 081.11+00.14' },  // For NGC 2024
-      { type: 'catalog', number: 'LBN 081.12+00.14' },  // For NGC 2024
-      { type: 'catalog', number: 'LBN 206.46-16.46' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.45-16.46' },  // For IC 434
-      { type: 'catalog', number: 'LDN 1630' },  // Part of the dark cloud complex
-      { type: 'catalog', number: 'LBN 081.12+00.14' },  // For NGC 2024
-      { type: 'catalog', number: 'LBN 081.11+00.14' },  // For NGC 2024
-      { type: 'catalog', number: 'LBN 206.45-16.46' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.46-16.46' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.45-16.45' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.46-16.45' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.45-16.47' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.46-16.47' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.45-16.44' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.46-16.44' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.45-16.48' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.46-16.48' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.44-16.46' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.47-16.46' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.44-16.45' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.47-16.45' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.44-16.47' },  // For IC 434
-      { type: 'catalog', number: 'LBN 206.47-16.47' }   // For IC 434
+      { type: 'other', number: 'LBN 081.11+00.14' },  // For NGC 2024
+      { type: 'other', number: 'LBN 081.12+00.14' },  // For NGC 2024
+      { type: 'other', number: 'LBN 206.46-16.46' },  // For IC 434
+      { type: 'other', number: 'LBN 206.45-16.46' },  // For IC 434
+      { type: 'other', number: 'LDN 1630' },  // Part of the dark cloud complex
+      { type: 'other', number: 'LBN 081.12+00.14' },  // For NGC 2024
+      { type: 'other', number: 'LBN 081.11+00.14' },  // For NGC 2024
+      { type: 'other', number: 'LBN 206.45-16.46' },  // For IC 434
+      { type: 'other', number: 'LBN 206.46-16.46' },  // For IC 434
+      { type: 'other', number: 'LBN 206.45-16.45' },  // For IC 434
+      { type: 'other', number: 'LBN 206.46-16.45' },  // For IC 434
+      { type: 'other', number: 'LBN 206.45-16.47' },  // For IC 434
+      { type: 'other', number: 'LBN 206.46-16.47' },  // For IC 434
+      { type: 'other', number: 'LBN 206.45-16.44' },  // For IC 434
+      { type: 'other', number: 'LBN 206.46-16.44' },  // For IC 434
+      { type: 'other', number: 'LBN 206.45-16.48' },  // For IC 434
+      { type: 'other', number: 'LBN 206.46-16.48' },  // For IC 434
+      { type: 'other', number: 'LBN 206.44-16.46' },  // For IC 434
+      { type: 'other', number: 'LBN 206.47-16.46' },  // For IC 434
+      { type: 'other', number: 'LBN 206.44-16.45' },  // For IC 434
+      { type: 'other', number: 'LBN 206.47-16.45' },  // For IC 434
+      { type: 'other', number: 'LBN 206.44-16.47' },  // For IC 434
+      { type: 'other', number: 'LBN 206.47-16.47' }   // For IC 434
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -437,40 +437,40 @@ export const dsoImages: DSOImage[] = [
     year: 2024,
     catalogues: [
       { type: 'ic', number: 443 },
-      { type: 'catalog', number: 'Sh2-248' },
-      { type: 'catalog', number: 'LBN 844' },
-      { type: 'catalog', number: 'LBN II 224.0-03.0' },
-      { type: 'catalog', number: 'CTB 20' },
-      { type: 'catalog', number: '3C 157' },
-      { type: 'catalog', number: '4C 22.08' },
-      { type: 'catalog', number: 'G 189.1+03.0' },
-      { type: 'catalog', number: 'PKS 0614+22' },
-      { type: 'catalog', number: 'PKS 0614+223' },
-      { type: 'catalog', number: 'PKS 0615+22' },
-      { type: 'catalog', number: 'PKS 0615+225' },
-      { type: 'catalog', number: 'PKS 0615+22.0' },
-      { type: 'catalog', number: 'SNR G189.1+03.0' },
-      { type: 'catalog', number: 'SNR G189.0+03.1' },
-      { type: 'catalog', number: 'SNR 0617+22' },
-      { type: 'catalog', number: 'SNR 0617+225' },
-      { type: 'catalog', number: '2E 0614.2+2230' },
-      { type: 'catalog', number: '2E 1592' },
-      { type: 'catalog', number: '3A 0614+220' },
-      { type: 'catalog', number: '3U 0614+22' },
-      { type: 'catalog', number: '4U 0614+22' },
-      { type: 'catalog', number: '1H 0614+225' },
-      { type: 'catalog', number: '2U 0614+22' },
-      { type: 'catalog', number: 'XSS J06170+2221' },
-      { type: 'catalog', number: '1RXS J061705.3+222127' },
-      { type: 'catalog', number: '2FGL J0617.1+2221' },
-      { type: 'catalog', number: '3FGL J0617.1+2221' },
-      { type: 'catalog', number: '2FHL J0617.1+2221' },
-      { type: 'catalog', number: '3FHL J0617.1+2221' },
-      { type: 'catalog', number: '1FHL J0617.0+2221' },
-      { type: 'catalog', number: '2FGL J0617.1+2221e' },
-      { type: 'catalog', number: '3FGL J0617.1+2221e' },
-      { type: 'catalog', number: '2FHL J0617.1+2221e' },
-      { type: 'catalog', number: '3FHL J0617.1+2221e' }
+      { type: 'sharpless', number: 'Sh2-248' },
+      { type: 'other', number: 'LBN 844' },
+      { type: 'other', number: 'LBN II 224.0-03.0' },
+      { type: 'other', number: 'CTB 20' },
+      { type: 'other', number: '3C 157' },
+      { type: 'other', number: '4C 22.08' },
+      { type: 'other', number: 'G 189.1+03.0' },
+      { type: 'other', number: 'PKS 0614+22' },
+      { type: 'other', number: 'PKS 0614+223' },
+      { type: 'other', number: 'PKS 0615+22' },
+      { type: 'other', number: 'PKS 0615+225' },
+      { type: 'other', number: 'PKS 0615+22.0' },
+      { type: 'other', number: 'SNR G189.1+03.0' },
+      { type: 'other', number: 'SNR G189.0+03.1' },
+      { type: 'other', number: 'SNR 0617+22' },
+      { type: 'other', number: 'SNR 0617+225' },
+      { type: 'other', number: '2E 0614.2+2230' },
+      { type: 'other', number: '2E 1592' },
+      { type: 'other', number: '3A 0614+220' },
+      { type: 'other', number: '3U 0614+22' },
+      { type: 'other', number: '4U 0614+22' },
+      { type: 'other', number: '1H 0614+225' },
+      { type: 'other', number: '2U 0614+22' },
+      { type: 'other', number: 'XSS J06170+2221' },
+      { type: 'other', number: '1RXS J061705.3+222127' },
+      { type: 'other', number: '2FGL J0617.1+2221' },
+      { type: 'other', number: '3FGL J0617.1+2221' },
+      { type: 'other', number: '2FHL J0617.1+2221' },
+      { type: 'other', number: '3FHL J0617.1+2221' },
+      { type: 'other', number: '1FHL J0617.0+2221' },
+      { type: 'other', number: '2FGL J0617.1+2221e' },
+      { type: 'other', number: '3FGL J0617.1+2221e' },
+      { type: 'other', number: '2FHL J0617.1+2221e' },
+      { type: 'other', number: '3FHL J0617.1+2221e' },
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -491,32 +491,32 @@ export const dsoImages: DSOImage[] = [
       // M65 (NGC 3623)
       { type: 'messier', number: 65 },
       { type: 'ngc', number: 3623 },
-      { type: 'catalog', number: 'UGC 6328' },
-      { type: 'catalog', number: 'PGC 34612' },
-      { type: 'catalog', number: 'ARP 317' },
+      { type: 'other', number: 'UGC 6328' },
+      { type: 'other', number: 'PGC 34612' },
+      { type: 'other', number: 'ARP 317' },
       // M66 (NGC 3627)
       { type: 'messier', number: 66 },
       { type: 'ngc', number: 3627 },
-      { type: 'catalog', number: 'UGC 6346' },
-      { type: 'catalog', number: 'PGC 34695' },
-      { type: 'catalog', number: 'ARP 16' },
-      { type: 'catalog', number: 'ARP 317' },
+      { type: 'other', number: 'UGC 6346' },
+      { type: 'other', number: 'PGC 34695' },
+      { type: 'other', number: 'ARP 16' },
+      { type: 'other', number: 'ARP 317' },
       // NGC 3628 (Hamburger Galaxy)
       { type: 'ngc', number: 3628 },
-      { type: 'catalog', number: 'UGC 6350' },
-      { type: 'catalog', number: 'PGC 34697' },
-      { type: 'catalog', number: 'ARP 317' },
+      { type: 'other', number: 'UGC 6350' },
+      { type: 'other', number: 'PGC 34697' },
+      { type: 'other', number: 'ARP 317' },
       // Group designations
-      { type: 'catalog', number: 'LGG 231' }, // Lyon Group of Galaxies
-      { type: 'catalog', number: 'USGC U376' }, // UZC Catalog of Groups
-      { type: 'catalog', number: 'HICK 56' }, // Hickson Compact Group
+      { type: 'other', number: 'LGG 231' }, // Lyon Group of Galaxies
+      { type: 'other', number: 'USGC U376' }, // UZC Catalog of Groups
+      { type: 'other', number: 'HICK 56' }, // Hickson Compact Group
       // Additional catalog numbers for individual galaxies
-      { type: 'catalog', number: 'IRAS 11176+1313' }, // M65
-      { type: 'catalog', number: '2MASX J11181894+1303299' }, // M65
-      { type: 'catalog', number: 'IRAS 11185+1302' }, // M66
-      { type: 'catalog', number: '2MASX J11201522+1259029' }, // M66
-      { type: 'catalog', number: 'IRAS 11184+1350' }, // NGC 3628
-      { type: 'catalog', number: '2MASX J11201942+1334120' }  // NGC 3628
+      { type: 'other', number: 'IRAS 11176+1313' }, // M65
+      { type: 'other', number: '2MASX J11181894+1303299' }, // M65
+      { type: 'other', number: 'IRAS 11185+1302' }, // M66
+      { type: 'other', number: '2MASX J11201522+1259029' }, // M66
+      { type: 'other', number: 'IRAS 11184+1350' }, // NGC 3628
+      { type: 'other', number: '2MASX J11201942+1334120' }  // NGC 3628
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -536,23 +536,23 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       { type: 'messier', number: 31 },
       { type: 'ngc', number: 224 },
-      { type: 'catalog', number: 'UGC 454' },
-      { type: 'catalog', number: 'PGC 2557' },
-      { type: 'catalog', number: 'MCG+07-02-016' },
-      { type: 'catalog', number: 'IRAS00400+4059' },
-      { type: 'catalog', number: '2MASS J00424433+4116074' },
-      { type: 'catalog', number: 'LEDA 2557' },
-      { type: 'catalog', number: 'Z 535-17' },
-      { type: 'catalog', number: '1ES 0040+40.9' },
-      { type: 'catalog', number: '2FGL J0042.2+4114' },
-      { type: 'catalog', number: '3FGL J0042.5+4114' },
-      { type: 'catalog', number: '3FHL J0042.7+4115' },
-      { type: 'catalog', number: '3C 28.0' },
-      { type: 'catalog', number: '4C +41.02' },
-      { type: 'catalog', number: '2U 0038+40' },
-      { type: 'catalog', number: '3U 0038+40' },
-      { type: 'catalog', number: '4U 0038+40' },
-      { type: 'catalog', number: 'PBC J0042.7+4114' }
+      { type: 'other', number: 'UGC 454' },
+      { type: 'other', number: 'PGC 2557' },
+      { type: 'other', number: 'MCG+07-02-016' },
+      { type: 'other', number: 'IRAS00400+4059' },
+      { type: 'other', number: '2MASS J00424433+4116074' },
+      { type: 'other', number: 'LEDA 2557' },
+      { type: 'other', number: 'Z 535-17' },
+      { type: 'other', number: '1ES 0040+40.9' },
+      { type: 'other', number: '2FGL J0042.2+4114' },
+      { type: 'other', number: '3FGL J0042.5+4114' },
+      { type: 'other', number: '3FHL J0042.7+4115' },
+      { type: 'other', number: '3C 28.0' },
+      { type: 'other', number: '4C +41.02' },
+      { type: 'other', number: '2U 0038+40' },
+      { type: 'other', number: '3U 0038+40' },
+      { type: 'other', number: '4U 0038+40' },
+      { type: 'other', number: 'PBC J0042.7+4114' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -578,11 +578,11 @@ export const dsoImages: DSOImage[] = [
       { type: 'ngc', number: 4458 },
       { type: 'ngc', number: 4473 },
       { type: 'ngc', number: 4477 },
-      { type: 'catalog', number: 'VV 488' },  // Interacting pair of NGC 4435/4438
-      { type: 'catalog', number: 'Arp 120' }, // M84 and NGC 4388
-      { type: 'catalog', number: 'UGC 7584' }, // NGC 4438
-      { type: 'catalog', number: 'PGC 40898' }, // M86
-      { type: 'catalog', number: 'PGC 41202' }  // M84
+      { type: 'other', number: 'VV 488' },  // Interacting pair of NGC 4435/4438
+      { type: 'other', number: 'Arp 120' }, // M84 and NGC 4388
+      { type: 'other', number: 'UGC 7584' }, // NGC 4438
+      { type: 'other', number: 'PGC 40898' }, // M86
+      { type: 'other', number: 'PGC 41202' }  // M84
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -602,18 +602,18 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       { type: 'messier', number: 51 },
       { type: 'ngc', number: 5194 },
-      { type: 'catalog', number: 'UGC 8493' },
-      { type: 'catalog', number: 'PGC 47404' },
-      { type: 'catalog', number: 'ARP 85' },
-      { type: 'catalog', number: 'MCG+08-25-012' },
-      { type: 'catalog', number: 'IRAS13277+4727' },
-      { type: 'catalog', number: 'KCPG 379A' },
-      { type: 'catalog', number: 'VV 001' },
-      { type: 'catalog', number: 'VV 403' },
-      { type: 'catalog', number: 'Arp 85' },
-      { type: 'catalog', number: 'V V 001' },
-      { type: 'catalog', number: 'V V 403' },
-      { type: 'catalog', number: '2MASS J13300190+4710534' }
+      { type: 'other', number: 'UGC 8493' },
+      { type: 'other', number: 'PGC 47404' },
+      { type: 'other', number: 'ARP 85' },
+      { type: 'other', number: 'MCG+08-25-012' },
+      { type: 'other', number: 'IRAS13277+4727' },
+      { type: 'other', number: 'KCPG 379A' },
+      { type: 'other', number: 'VV 001' },
+      { type: 'other', number: 'VV 403' },
+      { type: 'other', number: 'Arp 85' },
+      { type: 'other', number: 'V V 001' },
+      { type: 'other', number: 'V V 403' },
+      { type: 'other', number: '2MASS J13300190+4710534' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -633,23 +633,23 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       { type: 'messier', number: 1 },
       { type: 'ngc', number: 1952 },
-      { type: 'catalog', number: 'Taurus A' },
-      { type: 'catalog', number: '3C 144' },
-      { type: 'catalog', number: 'SN 1054' },
-      { type: 'catalog', number: '3FGL J0534.5+2201' },
-      { type: 'catalog', number: '2U 0518+17' },
-      { type: 'catalog', number: '3A 0531+219' },
-      { type: 'catalog', number: '1ES 0532+21.5' },
-      { type: 'catalog', number: 'PKS 0531+219' },
-      { type: 'catalog', number: 'PSR B0531+21' },
-      { type: 'catalog', number: 'PSR J0534+2200' },
-      { type: 'catalog', number: 'SN 1054A' },
-      { type: 'catalog', number: '4U 0531+21' },
-      { type: 'catalog', number: 'PBC J0534.5+2201' },
-      { type: 'catalog', number: '2FGL J0534.5+2201i' },
-      { type: 'catalog', number: '3FGL J0534.5+2201i' },
-      { type: 'catalog', number: '2FHL J0534.5+2201' },
-      { type: 'catalog', number: '3FHL J0534.5+2201' }
+      { type: 'other', number: 'Taurus A' },
+      { type: 'other', number: '3C 144' },
+      { type: 'other', number: 'SN 1054' },
+      { type: 'other', number: '3FGL J0534.5+2201' },
+      { type: 'other', number: '2U 0518+17' },
+      { type: 'other', number: '3A 0531+219' },
+      { type: 'other', number: '1ES 0532+21.5' },
+      { type: 'other', number: 'PKS 0531+219' },
+      { type: 'other', number: 'PSR B0531+21' },
+      { type: 'other', number: 'PSR J0534+2200' },
+      { type: 'other', number: 'SN 1054A' },
+      { type: 'other', number: '4U 0531+21' },
+      { type: 'other', number: 'PBC J0534.5+2201' },
+      { type: 'other', number: '2FGL J0534.5+2201i' },
+      { type: 'other', number: '3FGL J0534.5+2201i' },
+      { type: 'other', number: '2FHL J0534.5+2201' },
+      { type: 'other', number: '3FHL J0534.5+2201' },
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -669,11 +669,11 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       { type: 'messier', number: 42 },
       { type: 'ngc', number: 1976 },
-      { type: 'catalog', number: 'LBN 974' },
-      { type: 'catalog', number: 'Sh2-281' },
-      { type: 'catalog', number: 'W 12' },
-      { type: 'catalog', number: 'OCl 528.0' },
-      { type: 'catalog', number: 'C 0532-048' }
+      { type: 'other', number: 'LBN 974' },
+      { type: 'sharpless', number: 'Sh2-281' },
+      { type: 'other', number: 'W 12' },
+      { type: 'other', number: 'OCl 528.0' },
+      { type: 'other', number: 'C 0532-048' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -693,9 +693,9 @@ export const dsoImages: DSOImage[] = [
     catalogues: [
       { type: 'messier', number: 13 },
       { type: 'ngc', number: 6205 },
-      { type: 'catalog', number: 'GCL 45' },
-      { type: 'catalog', number: 'C 1639+365' },
-      { type: 'catalog', number: 'GCl 45' }
+      { type: 'other', number: 'GCL 45' },
+      { type: 'other', number: 'C 1639+365' },
+      { type: 'other', number: 'GCl 45'}
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   },
@@ -714,11 +714,11 @@ export const dsoImages: DSOImage[] = [
     year: 2024,
     catalogues: [
       { type: 'ic', number: 1805 },
-      { type: 'catalog', number: 'Sh2-190' },
-      { type: 'catalog', number: 'LBN 654' },
-      { type: 'catalog', number: 'C 0236+611' },
-      { type: 'catalog', number: 'W 8' },
-      { type: 'catalog', number: 'CTB 2' }
+      { type: 'sharpless', number: 'Sh2-190' },
+      { type: 'other', number: 'LBN 654' },
+      { type: 'other', number: 'C 0236+611' },
+      { type: 'other', number: 'W 8' },
+      { type: 'other', number: 'CTB 2' }
     ],
     processing: 'Re-stacked and processed using Siril, Astrosharp, GraXpert, and Adobe Lightroom.'
   }
