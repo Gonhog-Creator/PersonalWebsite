@@ -3,45 +3,30 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useTheme as useNextTheme } from 'next-themes';
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = 'dark'; // Only dark theme is supported now
 
 type ThemeContextType = {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
   isDark: boolean;
-  toggleTheme: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { theme: nextTheme, setTheme: setNextTheme } = useNextTheme();
+  const { setTheme: setNextTheme } = useNextTheme();
   const [mounted, setMounted] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const isDark = true; // Always dark theme
 
-  // Set the mounted state to true once the component is mounted
+  // Set the mounted state and force dark theme on mount
   useEffect(() => {
     setMounted(true);
-  }, []);
+    setNextTheme('dark');
+    
+    // Ensure dark theme is applied to the root element
+    document.documentElement.classList.add('dark');
+  }, [setNextTheme]);
 
-  // Update isDark when the theme changes
-  useEffect(() => {
-    const root = window.document.documentElement;
-    const isDarkMode = root.classList.contains('dark');
-    setIsDark(isDarkMode);
-  }, [nextTheme]);
-
-  // Set the theme and persist it in localStorage
-  const setTheme = (theme: Theme) => {
-    setNextTheme(theme);
-  };
-
-  // Toggle between light and dark theme
-  const toggleTheme = () => {
-    setTheme(isDark ? 'light' : 'dark');
-  };
-
-  // Don't render the provider until we've determined the theme
+  // Don't render the provider until we've mounted
   if (!mounted) {
     return null;
   }
@@ -49,10 +34,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
     <ThemeContext.Provider
       value={{
-        theme: (nextTheme as Theme) || 'system',
-        setTheme,
-        isDark,
-        toggleTheme,
+        theme: 'dark',
+        isDark: true
       }}
     >
       {children}

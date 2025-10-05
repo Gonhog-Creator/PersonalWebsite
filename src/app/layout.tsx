@@ -119,12 +119,11 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Jose Barbeito | Engineer & Photographer',
     description: 'Chemical Engineering and Material Science student at NC State University with a passion for photography and technology.',
-    creator: '@josebarbeito',
     images: ['/img/og-image.jpg'],
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },
+      { url: '/img/favicon.ico' },
       { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
     ],
@@ -132,7 +131,6 @@ export const metadata: Metadata = {
       { url: '/apple-touch-icon.png' },
     ],
   },
-  manifest: '/site.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -140,7 +138,6 @@ export const metadata: Metadata = {
   },
   formatDetection: {
     telephone: false,
-    email: true,
     address: false,
   },
   verification: {
@@ -148,7 +145,6 @@ export const metadata: Metadata = {
     yandex: 'your-yandex-verification-code',
   },
 };
-
 export default function RootLayout({
   children,
 }: {
@@ -172,14 +168,7 @@ export default function RootLayout({
         />
         
         {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
-        />
+        <link rel="icon" href="/img/favicon.ico" />
       </head>
       <body className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 transition-colors duration-300">
         <ClientLayout>

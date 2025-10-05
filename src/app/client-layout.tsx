@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { ThemeProvider } from '@/components/ThemeProvider/ThemeProvider';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 interface ClientLayoutProps {
   children: React.ReactNode;
