@@ -11,7 +11,7 @@ const formatDate = (dateString: string) => {
 };
 
 // Helper function to get image path
-const getImagePath = (id: number) => `/img/astro/astro-${id}.jpg`;
+const getImagePath = (id: number) => `/img/Astro/astro-${id}.jpg`;
 
 export const astroPhotos: AstroPhoto[] = [
   {

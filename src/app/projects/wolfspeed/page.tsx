@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { FaIndustry, FaFlask, FaChartLine, FaMicrochip } from 'react-icons/fa6';
 import { Icon } from '@iconify/react';
-import { useTheme } from '@/components/ThemeProvider/ThemeProvider';
+import { useTheme } from '@/contexts/ThemeContext';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 

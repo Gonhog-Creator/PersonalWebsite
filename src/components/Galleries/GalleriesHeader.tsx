@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTheme } from '@/components/ThemeProvider/ThemeProvider';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Icon } from '@iconify/react';
 
 // Navigation links for the header
@@ -18,7 +18,7 @@ const navLinks = [
 export function GalleriesHeader() {
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
@@ -31,10 +31,7 @@ export function GalleriesHeader() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-  };
+  // Theme is always dark, so no toggle functionality needed
 
   if (!mounted) {
     return null;
@@ -75,17 +72,7 @@ export function GalleriesHeader() {
             ))}
             
             {/* Theme Toggle Button */}
-            <button 
-              onClick={toggleTheme}
-              className="p-2 rounded-full text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200"
-              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-            >
-              {theme === 'light' ? (
-                <Icon icon="mdi:lightbulb" className="w-6 h-6 text-yellow-300" />
-              ) : (
-                <Icon icon="mdi:lightbulb-outline" className="w-6 h-6" />
-              )}
-            </button>
+            {/* Theme toggle removed - using dark theme only */}
           </nav>
         </div>
       </div>

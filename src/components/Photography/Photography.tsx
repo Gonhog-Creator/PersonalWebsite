@@ -135,7 +135,7 @@ const Photography = () => {
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               <div className="relative w-full h-64">
                 <Image 
-                  src="/img/astro/dso-7.jpg"
+                  src="/img/Astro/dso-7.jpg"
                   alt="Astrophotography 1" 
                   fill
                   className="object-cover"

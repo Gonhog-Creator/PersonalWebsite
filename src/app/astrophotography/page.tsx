@@ -927,7 +927,7 @@ export default function AstrophotographyGallery() {
       <div className="relative h-[60vh] min-h-[500px] bg-gradient-to-b from-gray-900 to-gray-800">
         <div className="absolute inset-0">
           <Image
-            src="/img/astro/astro_pano.jpg"
+            src="/img/Astro/astro_pano.jpg"
             alt="Astrophotography Background"
             fill
             className="object-cover"
