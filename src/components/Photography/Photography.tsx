@@ -202,16 +202,28 @@ const Photography = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center mt-6">
+          <div className="flex flex-col items-center space-y-4 mt-6">
             <SilverBorderButton 
               as="a" 
               href="/galleries"
-              width="180px"
+              width="220px"
               height="45px"
-              className="text-sm mx-auto"
+              className="text-sm"
             >
               View All Galleries
             </SilverBorderButton>
+            <div className="pt-4">
+              <SilverBorderButton 
+                as="a" 
+                href="/carousel_gallery"
+                width="220px"
+                height="45px"
+                className="text-sm"
+                variant="outline"
+              >
+                Screensaver Gallery
+              </SilverBorderButton>
+            </div>
           </div>
         </div>
         
