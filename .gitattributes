@@ -1,1 +1,9 @@
-# Git LFS has been disabled. Video files are now tracked by Git directly.
+# Video files will be stored directly in Git (not using LFS)
+*.webm binary
+*.wmv binary
+*.flv binary
+*.m4v binary
+*.mp4 binary
+*.mov binary
+*.avi binary
+*.mkv binary

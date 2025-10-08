@@ -7,10 +7,31 @@ from typing import List, Dict, Any
 def scan_images(directory: str) -> List[Dict[str, Any]]:
     """Scan a directory recursively for image files and return their metadata."""
     image_extensions = {'.jpg', '.jpeg', '.png', '.webp'}
+    excluded_paths = {
+        'img/icons',
+        'img/RDE',
+        'img/skills',
+        'imgWolfspeed',
+        'favicon.ico',
+        'logo.png',
+        'profile.png',
+        'wooden_cart.kpg',
+        'WorldMapImage.png'
+    }
     images = []
     
     for root, _, files in os.walk(directory):
+        # Skip excluded directories
+        rel_path = os.path.relpath(root, os.path.dirname(directory))
+        if any(excluded in rel_path for excluded in excluded_paths):
+            continue
+            
         for file in files:
+            # Skip excluded files
+            file_rel_path = os.path.join(rel_path, file).replace('\\', '/')
+            if any(excluded in file_rel_path for excluded in excluded_paths) or file in excluded_paths:
+                continue
+                
             if Path(file).suffix.lower() in image_extensions:
                 file_path = Path(root) / file
                 web_path = str(file_path).replace(str(Path(directory).parent), '').replace('\\', '/')
