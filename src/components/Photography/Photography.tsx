@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import AOS from 'aos';
+import { RainbowBorderButton } from '../ui/rainbow-borders-button';
 import 'aos/dist/aos.css';
 import dynamic from 'next/dynamic';
 import { SilverBorderButton } from "@/components/ui/SilverBorderButton";
@@ -202,7 +203,7 @@ const Photography = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col items-center space-y-4 mt-6">
+          <div className="flex flex-col items-center gap-20 mt-6">
             <SilverBorderButton 
               as="a" 
               href="/galleries"
@@ -212,17 +213,16 @@ const Photography = () => {
             >
               View All Galleries
             </SilverBorderButton>
-            <div className="pt-4">
-              <SilverBorderButton 
-                as="a" 
+            <div>
+              <RainbowBorderButton
+                as="a"
                 href="/carousel_gallery"
-                width="220px"
-                height="45px"
-                className="text-sm"
-                variant="outline"
+                width="260px"
+                height="55px"
+                className="text-base hover:scale-105 transition-transform"
               >
                 Screensaver Gallery
-              </SilverBorderButton>
+              </RainbowBorderButton>
             </div>
           </div>
         </div>
