@@ -11,12 +11,14 @@ def scan_images(directory: str) -> List[Dict[str, Any]]:
         'img/icons',
         'img/RDE',
         'img/skills',
-        'imgWolfspeed',
+        'img/Wolfspeed',
         'favicon.ico',
         'logo.png',
         'profile.png',
-        'wooden_cart.kpg',
-        'WorldMapImage.png'
+        'wooden_cart.jpg',
+        'WorldMapImage.png',
+        'img/stars/Heart Nebula 1.6.25 Lightroom + Siril.jpg',
+        'img/USA/usa (2).JPG'
     }
     images = []
     
