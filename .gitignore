@@ -3,9 +3,17 @@ node_modules/
 
 # Build output
 .next/
+.next/
+!.next/cache/
+!.next/cache/**
+.next/cache/**
+
 out/
 dist/
 build/
+
+# Build info
+tsconfig.tsbuildinfo
 
 # Debug logs
 npm-debug.log*
