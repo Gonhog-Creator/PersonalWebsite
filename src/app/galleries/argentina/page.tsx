@@ -8,7 +8,7 @@ import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-import { VideoPlayer } from '@/components/gallery/VideoPlayer';
+import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
 interface ImageDetails {
   alt: string;
@@ -650,17 +650,15 @@ export default function ArgentinaGallery() {
         {currentView === 'drone' && (
           <div className="w-full flex justify-center items-center min-h-screen py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Argentina Drone Footage</h2>
-              <div className="w-full max-w-6xl text-center">
-                <p className="text-gray-300 text-lg md:text-xl mb-8">
-                  Drone footage coming soon. Check back later for amazing aerial views of Argentina!
-                </p>
-                {/* Placeholder for future video */}
-                <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center text-gray-500">
-                  <p>Video Coming Soon</p>
-                </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Argentina 2025 Recap</h2>
+              <div className="w-full max-w-6xl">
+                <YouTubePlayer 
+                  videoId="UBHQtwZpIk0"
+                  title="Argentina 2025 Travel Recap"
+                  className="rounded-lg shadow-xl"
+                />
               </div>
-              <div className="h-32 w-full"></div>
+              <div className="h-16 w-full"></div>
             </div>
           </div>
         )}
