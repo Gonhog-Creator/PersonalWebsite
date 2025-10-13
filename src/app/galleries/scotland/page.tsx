@@ -8,7 +8,7 @@ import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-import { VideoPlayer } from '@/components/gallery/VideoPlayer';
+import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
 interface GalleryImage {
   id: number;
@@ -312,8 +312,8 @@ export default function ScotlandGallery() {
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Scotland 2025 Recap</h2>
               <div className="w-full max-w-6xl">
-                <VideoPlayer 
-                  src="/vids/Scotland 2025 Recap 2k.mp4"
+                <YouTubePlayer 
+                  videoId="WeV3YlxsnYk"
                   title="Scotland 2025 Drone Footage"
                   className="rounded-lg shadow-xl"
                 />
