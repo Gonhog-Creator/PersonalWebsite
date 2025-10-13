@@ -9,8 +9,8 @@ import type {
   ImageGalleryScreensaverProps 
 } from "./types";
 
-// Cache for panorama detection results
-const panoramaCache = new Map<string, boolean>();
+// Cache for panorama detection results - currently not used but kept for future reference
+// const panoramaCache = new Map<string, boolean>();
 
 // Import image paths
 let imagePaths: string[] = [];
@@ -42,8 +42,9 @@ if (typeof window !== 'undefined') {
 
 // Debounce helper
 const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number) => {
-  let timeout: NodeJS.Timeout;
+  let timeout: NodeJS.Timeout | null = null;
   return (...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
   };
 };
@@ -128,28 +129,34 @@ const findPanoramaImages = async (): Promise<GalleryImage[]> => {
 //   return images.filter(Boolean) as GalleryImage[];
 // };
 
-// Custom hook to load images with retry logic
+// Configuration for batch loading
+const BATCH_SIZE = 30; // Number of images to load in the first batch
+const BATCH_INTERVAL = 100; // Time between loading subsequent batches (ms)
+
+// Custom hook to load images with batch loading and retry logic
 const useImageLoader = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [loadedCount, setLoadedCount] = useState(0);
   const [totalImages, setTotalImages] = useState(0);
   const retryCount = useRef<Record<string, number>>({});
   const MAX_RETRIES = 3;
+  const loadingQueue = useRef<{src: string; index: number}[]>([]);
+  const isProcessing = useRef(false);
+  const processedImages = useRef<Set<string>>(new Set());
 
   const loadImage = useCallback((src: string, index: number): Promise<GalleryImage> => {
     return new Promise((resolve) => {
       const img = new Image();
       const retryKey = `${src}-${index}`;
       const currentRetry = retryCount.current[retryKey] || 0;
-      let hasResolved = false; // Track if this image has already been resolved
+      let hasResolved = false;
       
       img.onload = () => {
-        // Prevent multiple resolutions of the same image
         if (hasResolved) return;
         hasResolved = true;
         
-        // We'll determine panorama status based on the pre-defined list
         const isPanorama = panoramaPaths.includes(src);
         
         resolve({
@@ -166,22 +173,19 @@ const useImageLoader = () => {
       };
       
       img.onerror = () => {
-        // Prevent multiple error resolutions of the same image
         if (hasResolved) return;
         
-        const retryDelay = Math.min(1000 * Math.pow(2, currentRetry), 15000); // Exponential backoff, max 15s
+        const retryDelay = Math.min(1000 * Math.pow(2, currentRetry), 15000);
         
         if (currentRetry < MAX_RETRIES) {
           retryCount.current[retryKey] = currentRetry + 1;
           
-          // Stagger retries with exponential backoff
           setTimeout(() => {
             loadImage(src, index).then(resolve);
           }, retryDelay);
         } else {
-          hasResolved = true; // Mark as resolved to prevent multiple error callbacks
+          hasResolved = true;
           
-          // Only log to console in development for non-panorama images
           if (process.env.NODE_ENV === 'development' && !panoramaPaths.some(p => p === src)) {
             console.warn(`Failed to load image after ${MAX_RETRIES} attempts:`, src);
           }
@@ -200,63 +204,209 @@ const useImageLoader = () => {
         }
       };
       
-      // Add a small delay before starting the load to prevent overwhelming the server
+      // Stagger the start of image loading to prevent overwhelming the server
       setTimeout(() => {
         try {
           img.src = src;
         } catch (error) {
           console.error('Error setting image source:', error, src);
-          // Retry with a delay if there's an error setting the source
           setTimeout(() => loadImage(src, index).then(resolve), 1000);
         }
-      }, 50 * (index % 10)); // Stagger the start of image loading
+      }, 10 * (index % 20)); // Reduced stagger time for faster initial load
     });
   }, []);
 
-  useEffect(() => {
-    const loadImages = async () => {
+  // Type definition for IdleDeadline
+  interface IdleDeadline {
+    readonly didTimeout: boolean;
+    timeRemaining: () => number;
+  }
+
+  // Check if requestIdleCallback is available
+  const canUseIdleCallback = typeof window !== 'undefined' && 'requestIdleCallback' in window;
+  
+  // Process the next batch of images with requestIdleCallback for better performance
+  const processNextBatch = useCallback(async () => {
+    if (isProcessing.current || loadingQueue.current.length === 0) return;
+    
+    isProcessing.current = true;
+    setIsLoadingMore(true);
+    
+    const processWithIdleCallback = async (deadline: IdleDeadline) => {
+      const batch: {src: string; index: number}[] = [];
+      
+      // Process as many images as we can in the current idle period
+      while ((deadline.timeRemaining() > 0 || deadline.didTimeout) && loadingQueue.current.length > 0) {
+        const item = loadingQueue.current.shift();
+        if (item) {
+          batch.push(item);
+        }
+      }
+      
+      if (batch.length === 0) {
+        isProcessing.current = false;
+        setIsLoadingMore(false);
+        return;
+      }
+      
       try {
-        setIsLoading(true);
-        // Filter out invalid image paths
-        const validImagePaths = imagePaths.filter(
-          url => url && !url.includes('favicon') && !url.includes('apple-touch-icon')
-        );
-        
-        setTotalImages(validImagePaths.length);
-        setLoadedCount(0);
-        
-        // Track completed images to prevent duplicates
-        const completedImages = new Set<string>();
-        
-        // Load all images in parallel with retry logic
-        const loadPromises = validImagePaths.map((src, index) => 
+        // Load the batch of images with lower priority
+        const batchPromises = batch.map(({src, index}) => 
           loadImage(src, index).then(img => {
-            // Only count unique image loads
-            if (!completedImages.has(src)) {
-              completedImages.add(src);
-              setLoadedCount(completedImages.size);
+            if (!processedImages.current.has(src)) {
+              processedImages.current.add(src);
+              return img;
             }
-            return img;
+            return null;
           })
         );
         
-        const loadedImages = await Promise.all(loadPromises);
-        setImages(loadedImages.filter(Boolean) as GalleryImage[]);
+        const loadedImages = (await Promise.all(batchPromises)).filter(Boolean) as GalleryImage[];
+        
+        // Update the images state with the new batch
+        setImages(prevImages => {
+          const existingIds = new Set(prevImages.map(img => img.originalSrc));
+          const newImages = loadedImages.filter(img => !existingIds.has(img.originalSrc));
+          return [...prevImages, ...newImages];
+        });
+        
+        // Update the loaded count
+        setLoadedCount(prevCount => prevCount + loadedImages.length);
+        
+        // If there are more images to load, schedule the next batch
+        if (loadingQueue.current.length > 0) {
+          if (canUseIdleCallback) {
+            if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+              window.requestIdleCallback(processWithIdleCallback, { timeout: 500 });
+            } else {
+              setTimeout(processNextBatch, 100);
+            }
+          } else {
+            setTimeout(() => processNextBatch(), 100);
+          }
+        } else {
+          isProcessing.current = false;
+          setIsLoadingMore(false);
+        }
       } catch (error) {
-        console.error('Error loading images:', error);
-      } finally {
-        setIsLoading(false);
+        console.error('Error processing image batch:', error);
+        isProcessing.current = false;
+        setIsLoadingMore(false);
       }
     };
+    
+    // Start processing with requestIdleCallback if available
+    if (canUseIdleCallback && typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      window.requestIdleCallback(
+        processWithIdleCallback,
+        { timeout: 500 }
+      );
+    } else {
+      // Fallback for browsers that don't support requestIdleCallback
+      processWithIdleCallback({
+        timeRemaining: () => 50, // 50ms time slice
+        didTimeout: false
+      } as IdleDeadline);
+    }
+  }, [loadImage]);
+  
+  // Function to load the first batch of images with higher priority
+  const loadFirstBatch = useCallback(async (validImagePaths: string[]) => {
+    try {
+      setIsLoading(true);
+      
+      // Reset state
+      setImages([]);
+      setLoadedCount(0);
+      processedImages.current = new Set();
+      loadingQueue.current = [];
+      isProcessing.current = false;
+      
+      // Shuffle the array to get random images
+      const shuffledImages = [...validImagePaths].sort(() => Math.random() - 0.5);
+      
+      // Take a larger first batch for better initial display
+      const initialBatchSize = Math.min(BATCH_SIZE * 2, Math.ceil(validImagePaths.length * 0.3));
+      const firstBatch = shuffledImages.slice(0, initialBatchSize);
+      const remainingImages = shuffledImages.slice(initialBatchSize);
+      
+      // Queue remaining images for background loading
+      loadingQueue.current = remainingImages.map((src, i) => ({
+        src,
+        index: initialBatchSize + i
+      }));
+      
+      // Load first batch with higher priority
+      const firstBatchPromises = firstBatch.map((src, index) => 
+        loadImage(src, index).then(img => {
+          if (!processedImages.current.has(src)) {
+            processedImages.current.add(src);
+            return img;
+          }
+          return null;
+        })
+      );
+      
+      const firstBatchImages = (await Promise.all(firstBatchPromises)).filter(Boolean) as GalleryImage[];
+      
+      setImages(firstBatchImages);
+      setLoadedCount(firstBatchImages.length);
+      
+      // Queue the remaining images for background loading
+      if (remainingImages.length > 0) {
+        loadingQueue.current = remainingImages.map((src, index) => ({
+          src,
+          index: index + firstBatch.length
+        }));
+        
+        // Start processing the queue
+        setTimeout(processNextBatch, BATCH_INTERVAL);
+      }
+    } catch (error) {
+      console.error('Error loading images:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [loadImage, processNextBatch]);
+  
+  // Function to refresh the current batch of images
+  const refreshBatch = useCallback(() => {
+    if (isLoading) return;
+    
+    // Filter out invalid image paths
+    const validImagePaths = imagePaths.filter(
+      url => url && !url.includes('favicon') && !url.includes('apple-touch-icon')
+    );
+    
+    // Reload with a new random batch
+    loadFirstBatch(validImagePaths);
+  }, [isLoading, loadFirstBatch]);
 
-    loadImages();
-  }, [loadImage]); // Removed imagePaths from dependencies as it's a module-level constant
+  useEffect(() => {
+    // Filter out invalid image paths
+    const validImagePaths = imagePaths.filter(
+      url => url && !url.includes('favicon') && !url.includes('apple-touch-icon')
+    );
+    
+    setTotalImages(validImagePaths.length);
+    
+    // Load the first batch of images
+    loadFirstBatch(validImagePaths);
+    
+    // Cleanup function to cancel any pending operations
+    return () => {
+      loadingQueue.current = [];
+      isProcessing.current = false;
+    };
+  }, [loadFirstBatch]);
 
   return { 
     images, 
     isLoading, 
+    isLoadingMore,
     loadedCount, 
-    totalImages 
+    totalImages,
+    refreshBatch
   };
 };
 // Helper function to create a grid item
@@ -719,16 +869,59 @@ const useCalculateLayout = (images: GalleryImage[], containerWidth: number,
 
 const ImageGalleryScreensaver = ({
   images = [],
-  refreshInterval = 15000 // 15 seconds auto-advance interval
-}: ImageGalleryScreensaverProps) => {
+  refreshInterval = 15000, // 15 seconds auto-advance interval
+  isLoading = false,
+  isLoadingMore = false,
+  loadedCount = 0,
+  totalImages = 0,
+  initialLayoutType = 'masonry'
+}: ImageGalleryScreensaverProps & {
+  isLoading?: boolean;
+  isLoadingMore?: boolean;
+  loadedCount?: number;
+  totalImages?: number;
+  initialLayoutType?: LayoutType;
+}) => {
   const [containerWidth, setContainerWidth] = useState(0);
-  const [layoutType, setLayoutType] = useState<LayoutType>('masonry');
+  const [layoutType, setLayoutType] = useState<LayoutType>(initialLayoutType);
   const [showDebugMenu, setShowDebugMenu] = useState(false);
+  
+  // Update layout type when initialLayoutType changes
+  useEffect(() => {
+    setLayoutType(initialLayoutType);
+  }, [initialLayoutType]);
+  const [showLoadingMore, setShowLoadingMore] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Show loading more indicator with a delay to prevent flickering
+  useEffect(() => {
+    if (isLoadingMore) {
+      loadingTimeoutRef.current = setTimeout(() => {
+        setShowLoadingMore(true);
+      }, 300);
+    } else {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+      setShowLoadingMore(false);
+    }
+    
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, [isLoadingMore]);
   
   // Use COLUMN_COUNT as the default
   const [columns, setColumns] = useState(COLUMN_COUNT);
   const [currentImages, setCurrentImages] = useState<GalleryImage[]>(images || []);
+  
+  // Update current images when images prop changes
+  useEffect(() => {
+    setCurrentImages(images);
+  }, [images]);
   
   // Update current images when images prop changes - limit to 20 images
   useEffect(() => {
@@ -1332,44 +1525,78 @@ const ImageGalleryScreensaver = ({
 
 // Main export component
 const Screensaver = () => {
-  const { images, isLoading, loadedCount, totalImages } = useImageLoader();
+  const { 
+    images, 
+    isLoading, 
+    isLoadingMore, 
+    loadedCount, 
+    totalImages, 
+    refreshBatch 
+  } = useImageLoader();
+  
   const [progress, setProgress] = useState(0);
+  const [showInitialLoading, setShowInitialLoading] = useState(true);
+  const [layoutType, setLayoutType] = useState<LayoutType>('masonry');
+  const prevLayoutType = useRef<LayoutType>('masonry');
 
   // Update progress when loadedCount changes
   useEffect(() => {
     if (totalImages > 0) {
       const calculatedProgress = Math.min(Math.round((loadedCount / totalImages) * 100), 100);
       setProgress(calculatedProgress);
+      
+      // Hide initial loading after first batch is loaded
+      if (loadedCount > 0 && showInitialLoading) {
+        setShowInitialLoading(false);
+      }
     }
-  }, [loadedCount, totalImages]);
+  }, [loadedCount, totalImages, showInitialLoading]);
   
-  // Show loading state
-  if (isLoading) {
+  // Refresh batch when layout changes (except for full-panorama)
+  useEffect(() => {
+    if (layoutType !== 'full-panorama' && layoutType !== prevLayoutType.current) {
+      refreshBatch();
+    }
+    prevLayoutType.current = layoutType;
+  }, [layoutType, refreshBatch]);
+  
+  // Show initial loading state
+  if (isLoading && showInitialLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gray-900 p-4">
-        <div className="w-full max-w-md">
-          <div className="text-center text-gray-300 text-lg mb-4">
-            Loading gallery... {progress}%
-          </div>
-          <div className="w-full bg-gray-700 rounded-full h-2.5">
-            <div 
-              className="bg-blue-500 h-2.5 rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-          <div className="mt-2 text-sm text-gray-400 text-center">
-            {totalImages > 0 ? (
-              `Loading ${loadedCount} of ${totalImages} images`
-            ) : (
-              'Preparing to load images...'
-            )}
-          </div>
+      <div className="w-full h-screen flex items-center justify-center bg-black">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white text-lg">Loading gallery... {progress}%</p>
+          <p className="text-gray-400 text-sm mt-2">
+            {loadedCount} of {totalImages} images loaded
+          </p>
         </div>
       </div>
     );
   }
   
-  return <ImageGalleryScreensaver images={images} />;
+  // Main gallery with loading indicator for background loading
+  return (
+    <div className="relative w-full h-screen bg-black">
+      {/* Loading indicator for background loading */}
+      {isLoadingMore && (
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm flex items-center space-x-2 z-50">
+          <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
+          <span>Loading more images... {loadedCount}/{totalImages}</span>
+        </div>
+      )}
+      
+      {/* Main gallery */}
+      <ImageGalleryScreensaver 
+        images={images} 
+        isLoading={isLoading}
+        isLoadingMore={isLoadingMore}
+        loadedCount={loadedCount}
+        totalImages={totalImages}
+        initialLayoutType={layoutType}
+      />
+    </div>
+  );
 };
 
 export default Screensaver;
