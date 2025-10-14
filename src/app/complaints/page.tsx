@@ -2,7 +2,6 @@
 
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import { incrementComplaintCounter, getComplaintCounter } from './actions';
 
 export default function ComplaintsPage() {
   const [complaint, setComplaint] = useState('');
@@ -10,11 +9,14 @@ export default function ComplaintsPage() {
   const [complaintCount, setComplaintCount] = useState(0);
 
   useEffect(() => {
-    const loadCounter = async () => {
-      const { count } = await getComplaintCounter();
-      setComplaintCount(count);
-    };
-    loadCounter();
+    // Initialize counter from localStorage
+    const count = localStorage.getItem('complaintCount');
+    if (count) {
+      setComplaintCount(parseInt(count, 10));
+    } else {
+      // Initialize if not exists
+      localStorage.setItem('complaintCount', '0');
+    }
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -22,11 +24,10 @@ export default function ComplaintsPage() {
     setSubmitted(true);
     setComplaint('');
     
-    // Increment the counter in Vercel KV
-    const { count } = await incrementComplaintCounter();
-    if (count !== null) {
-      setComplaintCount(count);
-    }
+    // Increment and update the counter
+    const newCount = complaintCount + 1;
+    setComplaintCount(newCount);
+    localStorage.setItem('complaintCount', newCount.toString());
   };
 
   return (
