@@ -331,6 +331,13 @@ export default function MapView() {
       e.originalEvent.preventDefault();
       e.originalEvent.stopPropagation();
       
+      // Special handling for Italy - navigate to Italy map page
+      if (countryCode === 'IT') {
+        console.log('Navigating to Italy map');
+        router.push('/italy');
+        return;
+      }
+      
       // Check if this is a click on the UK
       if (countryCode === 'GB') {
         const { lat, lng } = e.latlng;
