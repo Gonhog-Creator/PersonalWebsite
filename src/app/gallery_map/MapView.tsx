@@ -50,8 +50,6 @@ const countryToGalleryMap: Record<string, string> = {
 // Countries with galleries (using the keys from the mapping above)
 const countriesWithGalleries = Object.keys(countryToGalleryMap) as Array<keyof typeof countryToGalleryMap>;
 
-type CountryCode = typeof countriesWithGalleries[number];
-
 // Helper component to handle dynamic map loading
 const MapWithNoSSR = dynamic(
   () => import('react-leaflet').then((mod) => {
@@ -223,8 +221,7 @@ export default function MapView() {
   const router = useRouter();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   // Map reference is used by the MapController component
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const mapRef = useRef<LeafletMap | null>(null);
+    const mapRef = useRef<LeafletMap | null>(null);
   const [map, setMap] = useState<LeafletMap | null>(null);
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [countriesData, setCountriesData] = useState<CountryData | null>(null);
@@ -259,40 +256,146 @@ export default function MapView() {
     // No cleanup needed here as we want to keep the data loaded
   }, [isClient]);
 
+  // Track if we're currently over the UK
+  const [isOverUk, setIsOverUk] = useState(false);
+  const lastUkHoverCheck = useRef<{ lat: number; lng: number } | null>(null);
+
   // Memoize the country style function
   const countryStyle = useCallback((feature?: CountryFeature) => {
     if (!feature) return {};
-    // countriesWithGalleries is a constant, no need to include it in dependencies
     return getCountryStyle(feature, countriesWithGalleries as readonly string[]);
-  }, []); // No dependencies needed as we only use constants
+  }, []);
 
   // Handle mouse move for tooltip positioning
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     setCursorPos({ x: e.clientX, y: e.clientY });
-  }, []);
-  
-  // Handle mouse over for UK to show Scotland/UK text
+  }, [setCursorPos]);
+
+  // Handle mouse move over the UK to detect Scotland vs rest of UK
   const handleUkMouseMove = useCallback((e: L.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng;
     
-    // Check if we're over Scotland
+    // Throttle the checks to improve performance
+    if (lastUkHoverCheck.current && 
+        Math.abs(lastUkHoverCheck.current.lat - lat) < 0.1 && 
+        Math.abs(lastUkHoverCheck.current.lng - lng) < 0.1) {
+      return;
+    }
+    
+    lastUkHoverCheck.current = { lat, lng };
+    
     const isScotland = (
-      lat >= 54.6 && lat <= 60.9 &&
-      lng >= -8.2 && lng <= -0.7
+      lat >= 54.6 && lat <= 60.9 &&  // North to South
+      lng >= -8.2 && lng <= -0.7     // West to East
     );
     
-    const newHoverText = isScotland ? 'Scotland' : 'United Kingdom';
-    
-    // Only update if the hover text would change
-    setHoveredCountry(prevHovered => newHoverText !== prevHovered ? newHoverText : prevHovered);
+    setHoveredCountry(isScotland ? 'Scotland' : 'United Kingdom');
   }, [setHoveredCountry]);
 
-  const onEachFeature = useCallback((feature: CountryFeature, layer: Layer) => {
-    const countryCode = feature.properties.iso_a2 as CountryCode;
-    const hasGallery = countriesWithGalleries.includes(countryCode);
+  // Handle country mouse over
+  const handleCountryMouseOver = useCallback((e: L.LeafletMouseEvent | CountryFeature) => {
+    // Check if we received an event or a feature directly
+    let feature: CountryFeature;
+    let lat: number, lng: number;
+    
+    if ('target' in e) {
+      // It's a LeafletMouseEvent
+      const target = e.target as L.Path & { feature?: CountryFeature };
+      if (!target.feature) {
+        console.error('No feature found on event target');
+        return;
+      }
+      feature = target.feature;
+      lat = e.latlng.lat;
+      lng = e.latlng.lng;
+    } else {
+      // It's a CountryFeature
+      feature = e;
+      lat = 0;
+      lng = 0;
+    }
+    
+    const countryCode = feature.properties.iso_a2 as keyof typeof countryToGalleryMap;
+    
+    // For UK, set up mousemove tracking for Scotland detection
+    if (countryCode === 'GB') {
+      setIsOverUk(true);
+      // Initial check
+      if ('latlng' in e) {
+        const isScotland = (
+          lat >= 54.6 && lat <= 60.9 &&  // North to South
+          lng >= -8.2 && lng <= -0.7     // West to East
+        );
+        setHoveredCountry(isScotland ? 'Scotland' : 'United Kingdom');
+      }
+    } else {
+      setIsOverUk(false);
+      setHoveredCountry(feature.properties.name);
+    }
+  }, [setHoveredCountry, setIsOverUk]);
 
+  const handleCountryMouseOut = useCallback(() => {
+    setHoveredCountry('');
+  }, [setHoveredCountry]);
+
+  const handleClick = useCallback((e: L.LeafletMouseEvent) => {
+    e.originalEvent.preventDefault();
+    e.originalEvent.stopPropagation();
+    
+    const target = e.target as L.Path & { feature?: CountryFeature };
+    if (!target.feature) {
+      console.error('No feature found on click target');
+      return;
+    }
+    const feature = target.feature;
+    const countryCode = feature.properties.iso_a2 as keyof typeof countryToGalleryMap;
+    
+    // Check if this is a click on the UK
+    if (countryCode === 'GB') {
+      // Check if click is within Scotland's bounds
+      const { lat, lng } = e.latlng;
+      const isScotland = (
+        lat >= 54.6 && lat <= 60.9 &&  // North to South
+        lng >= -8.2 && lng <= -0.7     // West to East
+      );
+      
+      if (isScotland) {
+        const galleryPath = '/galleries/scotland';
+        console.log('Navigating to Scotland (from click coordinates):', galleryPath);
+        router.push(galleryPath);
+        return;
+      } else {
+        // For rest of UK, use the GB code
+        const gallerySlug = countryToGalleryMap[countryCode];
+        if (gallerySlug) {
+          const galleryPath = `/galleries/${gallerySlug}`;
+          console.log('Navigating to UK:', galleryPath);
+          router.push(galleryPath);
+          return;
+        }
+      }
+    }
+    
+    // For all other countries with galleries
+    const gallerySlug = countryToGalleryMap[countryCode];
+    if (gallerySlug) {
+      const galleryPath = `/galleries/${gallerySlug}`;
+      console.log(`Navigating to ${feature.properties.name}:`, galleryPath);
+      router.push(galleryPath);
+      return;
+    }
+    
+    // If no gallery or not a recognized country, show the modal
+    setSelectedCountry(feature);
+    setIsModalOpen(true);
+  }, [router]);
+
+  const onEachFeature = useCallback((feature: CountryFeature, layer: Layer) => {
     const handleMouseOver = (e: L.LeafletMouseEvent) => {
-      const target = e.target as L.Path;
+      const target = e.target as L.Path & { feature?: CountryFeature };
+      // Store the feature on the target for use in the event handler
+      target.feature = feature;
+      
       const layerStyle: L.PathOptions = {
         weight: 2,
         color: '#666',
@@ -305,92 +408,44 @@ export default function MapView() {
         target.bringToFront();
       }
       
-      // Set initial hover text based on country
-      if (countryCode === 'GB') {
-        setHoveredCountry('United Kingdom');
-        // Add mousemove handler for UK to detect Scotland
+      // For UK, set up mousemove tracking for Scotland detection
+      if (feature.properties.iso_a2 === 'GB') {
+        // Add mousemove handler for UK
         target.on('mousemove', handleUkMouseMove);
-      } else {
-        setHoveredCountry(feature.properties.name);
       }
+      
+      // Update hover state
+      handleCountryMouseOver(e);
     };
 
-    const handleMouseOut = (e: L.LeafletEvent) => {
-      const target = e.target as L.Path;
+      const handleMouseOut = (e: L.LeafletEvent) => {
+      const target = e.target as L.Path & { feature?: CountryFeature };
+      
+      // Remove mousemove handler if it was added
+      if (target.feature?.properties.iso_a2 === 'GB') {
+        target.off('mousemove', handleUkMouseMove);
+        setIsOverUk(false);
+      }
+      
       target.setStyle(getCountryStyle(feature, countriesWithGalleries as readonly string[]));
       
-      // Remove mousemove handler when leaving UK
-      if (countryCode === 'GB') {
-        target.off('mousemove', handleUkMouseMove);
-      }
-      
-      setHoveredCountry('');
+      // Clear hover state
+      handleCountryMouseOut();
     };
 
-    const handleClick = (e: L.LeafletMouseEvent) => {
-      e.originalEvent.preventDefault();
-      e.originalEvent.stopPropagation();
-      
-      // Special handling for Italy - navigate to Italy map page
-      if (countryCode === 'IT') {
-        console.log('Navigating to Italy map');
-        router.push('/italy');
-        return;
-      }
-      
-      // Check if this is a click on the UK
-      if (countryCode === 'GB') {
-        const { lat, lng } = e.latlng;
-        
-        // Rough bounding box for Scotland
-        const isScotland = (
-          lat >= 54.6 && lat <= 60.9 &&  // North to South
-          lng >= -8.2 && lng <= -0.7     // West to East
-        );
-        
-        if (isScotland) {
-          // Use the GB-SCT code for Scotland
-          const gallerySlug = countryToGalleryMap['GB-SCT'];
-          if (gallerySlug) {
-            const galleryPath = `/galleries/${gallerySlug}`;
-            console.log('Navigating to Scotland:', galleryPath);
-            router.push(galleryPath);
-            return;
-          }
-        } else {
-          // For rest of UK, use the GB code
-          const gallerySlug = countryToGalleryMap[countryCode];
-          if (gallerySlug) {
-            const galleryPath = `/galleries/${gallerySlug}`;
-            console.log('Navigating to UK:', galleryPath);
-            router.push(galleryPath);
-            return;
-          }
-        }
-      } else if (hasGallery) {
-        // For all other countries with galleries
-        const gallerySlug = countryToGalleryMap[countryCode];
-        if (gallerySlug) {
-          const galleryPath = `/galleries/${gallerySlug}`;
-          console.log(`Navigating to ${feature.properties.name}:`, galleryPath);
-          router.push(galleryPath);
-          return;
-        }
-      }
-      
-      // If no gallery or not a recognized country, show the modal
-      setSelectedCountry(feature);
-      setIsModalOpen(true);
+    const handleFeatureClick = (e: L.LeafletMouseEvent) => {
+      // Forward the click event to the main handleClick function
+      handleClick(e);
     };
 
     if (layer instanceof L.Path) {
       layer.on({
         mouseover: handleMouseOver,
         mouseout: handleMouseOut,
-        click: handleClick
+        click: handleFeatureClick
       });
     }
-  }, [router, handleUkMouseMove]); // Added handleUkMouseMove to dependencies
+  }, [handleCountryMouseOut, handleCountryMouseOver, handleClick]);
 
   // Handle map instance when it's created
   const setMapInstance = useCallback((mapInstance: LeafletMap) => {

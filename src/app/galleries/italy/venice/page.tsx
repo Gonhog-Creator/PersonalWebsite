@@ -10,382 +10,57 @@ import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
-interface ImageDetails {
-  alt: string;
-}
+/*
+For updating this gallery, update all things in steps 1-4
+1 - Image path for gallery
+2 - Page content
+3 - Image details for alt text
+4 - Export Name
+*/
 
-interface GalleryImage {
-  id: number;
-  src: string;
-  alt: string;
-}
 
-type GalleryView = 'photos' | 'panoramas' | 'drone';
-
-// Helper function to generate image paths
+//STEP ONE
 const getImagePath = (id: number) => {
   const basePath = '/img/Argentina/argentina';
   return `${basePath} (${id}).jpg`;
 };
 
-// Image details for alt text and location
+//STEP TWO
+const PAGE_CONTENT = {
+  title: 'Argentina',
+  description: 'From the Perito Moreno Glacier to El Chalten in Calafate to the vast plains and volcanoes of Patagonia, Argentina is a country of immense beauty, rich culture, and breathtaking landscapes.',
+  header: {
+    backgroundImage: '/img/Argentina/argentina_panorama (8).jpg',
+    altText: 'Argentina Panorama'
+  },
+  panoramas: {
+    description: 'From glaciers to dusty deserts, I think I photographed plenty of Argentina.',
+    imagePath: '/img/Argentina/argentina_panorama'
+  },
+  video: {
+    id: 'UBHQtwZpIk0',
+    title: 'Argentina 2025 Travel Recap'
+  }
+};
+
+//STEP ThREE
+// Image details for alt text
 const imageDetails: Record<number, ImageDetails> = {
   1: { alt: 'DescriptionComingSoon' },
   2: { alt: 'DescriptionComingSoon' },
-  3: { alt: 'DescriptionComingSoon' },
-  4: { alt: 'DescriptionComingSoon' },
-  5: { alt: 'DescriptionComingSoon' },
-  6: { alt: 'DescriptionComingSoon' },
-  7: { alt: 'DescriptionComingSoon' },
-  8: { alt: 'DescriptionComingSoon' },
-  9: { alt: 'DescriptionComingSoon' },
-  10: { alt: 'DescriptionComingSoon' },
-  11: { alt: 'DescriptionComingSoon' },
-  12: { alt: 'DescriptionComingSoon' },
-  13: { alt: 'DescriptionComingSoon' },
-  14: { alt: 'DescriptionComingSoon' },
-  15: { alt: 'DescriptionComingSoon' },
-  16: { alt: 'DescriptionComingSoon' },
-  17: { alt: 'DescriptionComingSoon' },
-  18: { alt: 'DescriptionComingSoon' },
-  19: { alt: 'DescriptionComingSoon' },
-  20: { alt: 'DescriptionComingSoon' },
-  21: { alt: 'DescriptionComingSoon' },
-  22: { alt: 'DescriptionComingSoon' },
-  23: { alt: 'DescriptionComingSoon' },
-  24: { alt: 'DescriptionComingSoon' },
-  25: { alt: 'DescriptionComingSoon' },
-  26: { alt: 'DescriptionComingSoon' },
-  27: { alt: 'DescriptionComingSoon' },
-  28: { alt: 'DescriptionComingSoon' },
-  29: { alt: 'DescriptionComingSoon' },
-  30: { alt: 'DescriptionComingSoon' },
-  31: { alt: 'DescriptionComingSoon' },
-  32: { alt: 'DescriptionComingSoon' },
-  33: { alt: 'DescriptionComingSoon' },
-  34: { alt: 'DescriptionComingSoon' },
-  35: { alt: 'DescriptionComingSoon' },
-  36: { alt: 'DescriptionComingSoon' },
-  37: { alt: 'DescriptionComingSoon' },
-  38: { alt: 'DescriptionComingSoon' },
-  39: { alt: 'DescriptionComingSoon' },
-  40: { alt: 'DescriptionComingSoon' },
-  41: { alt: 'DescriptionComingSoon' },
-  42: { alt: 'DescriptionComingSoon' },
-  43: { alt: 'DescriptionComingSoon' },
-  44: { alt: 'DescriptionComingSoon' },
-  45: { alt: 'DescriptionComingSoon' },
-  46: { alt: 'DescriptionComingSoon' },
-  47: { alt: 'DescriptionComingSoon' },
-  48: { alt: 'DescriptionComingSoon' },
-  49: { alt: 'DescriptionComingSoon' },
-  50: { alt: 'DescriptionComingSoon' },
-  51: { alt: 'DescriptionComingSoon' },
-  52: { alt: 'DescriptionComingSoon' },
-  53: { alt: 'DescriptionComingSoon' },
-  54: { alt: 'DescriptionComingSoon' },
-  55: { alt: 'DescriptionComingSoon' },
-  56: { alt: 'DescriptionComingSoon' },
-  57: { alt: 'DescriptionComingSoon' },
-  58: { alt: 'DescriptionComingSoon' },
-  59: { alt: 'DescriptionComingSoon' },
-  60: { alt: 'DescriptionComingSoon' },
-  61: { alt: 'DescriptionComingSoon' },
-  62: { alt: 'DescriptionComingSoon' },
-  63: { alt: 'DescriptionComingSoon' },
-  64: { alt: 'DescriptionComingSoon' },
-  65: { alt: 'DescriptionComingSoon' },
-  66: { alt: 'DescriptionComingSoon' },
-  67: { alt: 'DescriptionComingSoon' },
-  68: { alt: 'DescriptionComingSoon' },
-  69: { alt: 'DescriptionComingSoon' },
-  70: { alt: 'DescriptionComingSoon' },
-  71: { alt: 'DescriptionComingSoon' },
-  72: { alt: 'DescriptionComingSoon' },
-  73: { alt: 'DescriptionComingSoon' },
-  74: { alt: 'DescriptionComingSoon' },
-  75: { alt: 'DescriptionComingSoon' },
-  76: { alt: 'DescriptionComingSoon' },
-  77: { alt: 'DescriptionComingSoon' },
-  78: { alt: 'DescriptionComingSoon' },
-  79: { alt: 'DescriptionComingSoon' },
-  80: { alt: 'DescriptionComingSoon' },
-  81: { alt: 'DescriptionComingSoon' },
-  82: { alt: 'DescriptionComingSoon' },
-  83: { alt: 'DescriptionComingSoon' },
-  84: { alt: 'DescriptionComingSoon' },
-  85: { alt: 'DescriptionComingSoon' },
-  86: { alt: 'DescriptionComingSoon' },
-  87: { alt: 'DescriptionComingSoon' },
-  88: { alt: 'DescriptionComingSoon' },
-  89: { alt: 'DescriptionComingSoon' },
-  90: { alt: 'DescriptionComingSoon' },
-  91: { alt: 'DescriptionComingSoon' },
-  92: { alt: 'DescriptionComingSoon' },
-  93: { alt: 'DescriptionComingSoon' },
-  94: { alt: 'DescriptionComingSoon' },
-  95: { alt: 'DescriptionComingSoon' },
-  96: { alt: 'DescriptionComingSoon' },
-  97: { alt: 'DescriptionComingSoon' },
-  98: { alt: 'DescriptionComingSoon' },
-  99: { alt: 'DescriptionComingSoon' },
-  100: { alt: 'DescriptionComingSoon' },
-  101: { alt: 'DescriptionComingSoon' },
-  102: { alt: 'DescriptionComingSoon' },
-  103: { alt: 'DescriptionComingSoon' },
-  104: { alt: 'DescriptionComingSoon' },
-  105: { alt: 'DescriptionComingSoon' },
-  106: { alt: 'DescriptionComingSoon' },
-  107: { alt: 'DescriptionComingSoon' },
-  108: { alt: 'DescriptionComingSoon' },
-  109: { alt: 'DescriptionComingSoon' },
-  110: { alt: 'DescriptionComingSoon' },
-  111: { alt: 'DescriptionComingSoon' },
-  112: { alt: 'DescriptionComingSoon' },
-  113: { alt: 'DescriptionComingSoon' },
-  114: { alt: 'DescriptionComingSoon' },
-  115: { alt: 'DescriptionComingSoon' },
-  116: { alt: 'DescriptionComingSoon' },
-  117: { alt: 'DescriptionComingSoon' },
-  118: { alt: 'DescriptionComingSoon' },
-  119: { alt: 'DescriptionComingSoon' },
-  120: { alt: 'DescriptionComingSoon' },
-  121: { alt: 'DescriptionComingSoon' },
-  122: { alt: 'DescriptionComingSoon' },
-  123: { alt: 'DescriptionComingSoon' },
-  124: { alt: 'DescriptionComingSoon' },
-  125: { alt: 'DescriptionComingSoon' },
-  126: { alt: 'DescriptionComingSoon' },
-  127: { alt: 'DescriptionComingSoon' },
-  128: { alt: 'DescriptionComingSoon' },
-  129: { alt: 'DescriptionComingSoon' },
-  130: { alt: 'DescriptionComingSoon' },
-  131: { alt: 'DescriptionComingSoon' },
-  132: { alt: 'DescriptionComingSoon' },
-  133: { alt: 'DescriptionComingSoon' },
-  134: { alt: 'DescriptionComingSoon' },
-  135: { alt: 'DescriptionComingSoon' },
-  136: { alt: 'DescriptionComingSoon' },
-  137: { alt: 'DescriptionComingSoon' },
-  138: { alt: 'DescriptionComingSoon' },
-  139: { alt: 'DescriptionComingSoon' },
-  140: { alt: 'DescriptionComingSoon' },
-  141: { alt: 'DescriptionComingSoon' },
-  142: { alt: 'DescriptionComingSoon' },
-  143: { alt: 'DescriptionComingSoon' },
-  144: { alt: 'DescriptionComingSoon' },
-  145: { alt: 'DescriptionComingSoon' },
-  146: { alt: 'DescriptionComingSoon' },
-  147: { alt: 'DescriptionComingSoon' },
-  148: { alt: 'DescriptionComingSoon' },
-  149: { alt: 'DescriptionComingSoon' },
-  150: { alt: 'DescriptionComingSoon' },
-  151: { alt: 'DescriptionComingSoon' },
-  152: { alt: 'DescriptionComingSoon' },
-  153: { alt: 'DescriptionComingSoon' },
-  154: { alt: 'DescriptionComingSoon' },
-  155: { alt: 'DescriptionComingSoon' },
-  156: { alt: 'DescriptionComingSoon' },
-  157: { alt: 'DescriptionComingSoon' },
-  158: { alt: 'DescriptionComingSoon' },
-  159: { alt: 'DescriptionComingSoon' },
-  160: { alt: 'DescriptionComingSoon' },
-  161: { alt: 'DescriptionComingSoon' },
-  162: { alt: 'DescriptionComingSoon' },
-  163: { alt: 'DescriptionComingSoon' },
-  164: { alt: 'DescriptionComingSoon' },
-  165: { alt: 'DescriptionComingSoon' },
-  166: { alt: 'DescriptionComingSoon' },
-  167: { alt: 'DescriptionComingSoon' },
-  168: { alt: 'DescriptionComingSoon' },
-  169: { alt: 'DescriptionComingSoon' },
-  170: { alt: 'DescriptionComingSoon' },
-  171: { alt: 'DescriptionComingSoon' },
-  172: { alt: 'DescriptionComingSoon' },
-  173: { alt: 'DescriptionComingSoon' },
-  174: { alt: 'DescriptionComingSoon' },
-  175: { alt: 'DescriptionComingSoon' },
-  176: { alt: 'DescriptionComingSoon' },
-  177: { alt: 'DescriptionComingSoon' },
-  178: { alt: 'DescriptionComingSoon' },
-  179: { alt: 'DescriptionComingSoon' },
-  180: { alt: 'DescriptionComingSoon' },
-  181: { alt: 'DescriptionComingSoon' },
-  182: { alt: 'DescriptionComingSoon' },
-  183: { alt: 'DescriptionComingSoon' },
-  184: { alt: 'DescriptionComingSoon' },
-  185: { alt: 'DescriptionComingSoon' },
-  186: { alt: 'DescriptionComingSoon' },
-  187: { alt: 'DescriptionComingSoon' },
-  188: { alt: 'DescriptionComingSoon' },
-  189: { alt: 'DescriptionComingSoon' },
-  190: { alt: 'DescriptionComingSoon' },
-  191: { alt: 'DescriptionComingSoon' },
-  192: { alt: 'DescriptionComingSoon' },
-  193: { alt: 'DescriptionComingSoon' },
-  194: { alt: 'DescriptionComingSoon' },
-  195: { alt: 'DescriptionComingSoon' },
-  196: { alt: 'DescriptionComingSoon' },
-  197: { alt: 'DescriptionComingSoon' },
-  198: { alt: 'DescriptionComingSoon' },
-  199: { alt: 'DescriptionComingSoon' },
-  200: { alt: 'DescriptionComingSoon' },
-  201: { alt: 'DescriptionComingSoon' },
-  202: { alt: 'DescriptionComingSoon' },
-  203: { alt: 'DescriptionComingSoon' },
-  204: { alt: 'DescriptionComingSoon' },
-  205: { alt: 'DescriptionComingSoon' },
-  206: { alt: 'DescriptionComingSoon' },
-  207: { alt: 'DescriptionComingSoon' },
-  208: { alt: 'DescriptionComingSoon' },
-  209: { alt: 'DescriptionComingSoon' },
-  210: { alt: 'DescriptionComingSoon' },
-  211: { alt: 'DescriptionComingSoon' },
-  212: { alt: 'DescriptionComingSoon' },
-  213: { alt: 'DescriptionComingSoon' },
-  214: { alt: 'DescriptionComingSoon' },
-  215: { alt: 'DescriptionComingSoon' },
-  216: { alt: 'DescriptionComingSoon' },
-  217: { alt: 'DescriptionComingSoon' },
-  218: { alt: 'DescriptionComingSoon' },
-  219: { alt: 'DescriptionComingSoon' },
-  220: { alt: 'DescriptionComingSoon' },
-  221: { alt: 'DescriptionComingSoon' },
-  222: { alt: 'DescriptionComingSoon' },
-  223: { alt: 'DescriptionComingSoon' },
-  224: { alt: 'DescriptionComingSoon' },
-  225: { alt: 'DescriptionComingSoon' },
-  226: { alt: 'DescriptionComingSoon' },
-  227: { alt: 'DescriptionComingSoon' },
-  228: { alt: 'DescriptionComingSoon' },
-  229: { alt: 'DescriptionComingSoon' },
-  230: { alt: 'DescriptionComingSoon' },
-  231: { alt: 'DescriptionComingSoon' },
-  232: { alt: 'DescriptionComingSoon' },
-  233: { alt: 'DescriptionComingSoon' },
-  234: { alt: 'DescriptionComingSoon' },
-  235: { alt: 'DescriptionComingSoon' },
-  236: { alt: 'DescriptionComingSoon' },
-  237: { alt: 'DescriptionComingSoon' },
-  238: { alt: 'DescriptionComingSoon' },
-  239: { alt: 'DescriptionComingSoon' },
-  240: { alt: 'DescriptionComingSoon' },
-  241: { alt: 'DescriptionComingSoon' },
-  242: { alt: 'DescriptionComingSoon' },
-  243: { alt: 'DescriptionComingSoon' },
-  244: { alt: 'DescriptionComingSoon' },
-  245: { alt: 'DescriptionComingSoon' },
-  246: { alt: 'DescriptionComingSoon' },
-  247: { alt: 'DescriptionComingSoon' },
-  248: { alt: 'DescriptionComingSoon' },
-  249: { alt: 'DescriptionComingSoon' },
-  250: { alt: 'DescriptionComingSoon' },
-  251: { alt: 'DescriptionComingSoon' },
-  252: { alt: 'DescriptionComingSoon' },
-  253: { alt: 'DescriptionComingSoon' },
-  254: { alt: 'DescriptionComingSoon' },
-  255: { alt: 'DescriptionComingSoon' },
-  256: { alt: 'DescriptionComingSoon' },
-  257: { alt: 'DescriptionComingSoon' },
-  258: { alt: 'DescriptionComingSoon' },
-  259: { alt: 'DescriptionComingSoon' },
-  260: { alt: 'DescriptionComingSoon' },
-  261: { alt: 'DescriptionComingSoon' },
-  262: { alt: 'DescriptionComingSoon' },
-  263: { alt: 'DescriptionComingSoon' },
-  264: { alt: 'DescriptionComingSoon' },
-  265: { alt: 'DescriptionComingSoon' },
-  266: { alt: 'DescriptionComingSoon' },
-  267: { alt: 'DescriptionComingSoon' },
-  268: { alt: 'DescriptionComingSoon' },
-  269: { alt: 'DescriptionComingSoon' },
-  270: { alt: 'DescriptionComingSoon' },
-  271: { alt: 'DescriptionComingSoon' },
-  272: { alt: 'DescriptionComingSoon' },
-  273: { alt: 'DescriptionComingSoon' },
-  274: { alt: 'DescriptionComingSoon' },
-  275: { alt: 'DescriptionComingSoon' },
-  276: { alt: 'DescriptionComingSoon' },
-  277: { alt: 'DescriptionComingSoon' },
-  278: { alt: 'DescriptionComingSoon' },
-  279: { alt: 'DescriptionComingSoon' },
-  280: { alt: 'DescriptionComingSoon' },
-  281: { alt: 'DescriptionComingSoon' },
-  282: { alt: 'DescriptionComingSoon' },
-  283: { alt: 'DescriptionComingSoon' },
-  284: { alt: 'DescriptionComingSoon' },
-  285: { alt: 'DescriptionComingSoon' },
-  286: { alt: 'DescriptionComingSoon' },
-  287: { alt: 'DescriptionComingSoon' },
-  288: { alt: 'DescriptionComingSoon' },
-  289: { alt: 'DescriptionComingSoon' },
-  290: { alt: 'DescriptionComingSoon' },
-  291: { alt: 'DescriptionComingSoon' },
-  292: { alt: 'DescriptionComingSoon' },
-  293: { alt: 'DescriptionComingSoon' },
-  294: { alt: 'DescriptionComingSoon' },
-  295: { alt: 'DescriptionComingSoon' },
-  296: { alt: 'DescriptionComingSoon' },
-  297: { alt: 'DescriptionComingSoon' },
-  298: { alt: 'DescriptionComingSoon' },
-  299: { alt: 'DescriptionComingSoon' },
-  300: { alt: 'DescriptionComingSoon' },
-  301: { alt: 'DescriptionComingSoon' },
-  302: { alt: 'DescriptionComingSoon' },
-  303: { alt: 'DescriptionComingSoon' },
-  304: { alt: 'DescriptionComingSoon' },
-  305: { alt: 'DescriptionComingSoon' },
-  306: { alt: 'DescriptionComingSoon' },
-  307: { alt: 'DescriptionComingSoon' },
-  308: { alt: 'DescriptionComingSoon' },
-  309: { alt: 'DescriptionComingSoon' },
-  310: { alt: 'DescriptionComingSoon' },
-  311: { alt: 'DescriptionComingSoon' },
-  312: { alt: 'DescriptionComingSoon' },
-  313: { alt: 'DescriptionComingSoon' },
-  314: { alt: 'DescriptionComingSoon' },
-  315: { alt: 'DescriptionComingSoon' },
-  316: { alt: 'DescriptionComingSoon' },
-  317: { alt: 'DescriptionComingSoon' },
-  318: { alt: 'DescriptionComingSoon' },
-  319: { alt: 'DescriptionComingSoon' },
-  320: { alt: 'DescriptionComingSoon' },
-  321: { alt: 'DescriptionComingSoon' },
-  322: { alt: 'DescriptionComingSoon' },
-  323: { alt: 'DescriptionComingSoon' },
-  324: { alt: 'DescriptionComingSoon' },
-  325: { alt: 'DescriptionComingSoon' },
-  326: { alt: 'DescriptionComingSoon' },
-  327: { alt: 'DescriptionComingSoon' },
-  328: { alt: 'DescriptionComingSoon' },
-  329: { alt: 'DescriptionComingSoon' },
-  330: { alt: 'DescriptionComingSoon' },
-  331: { alt: 'DescriptionComingSoon' },
-  332: { alt: 'DescriptionComingSoon' },
-  333: { alt: 'DescriptionComingSoon' },
-  334: { alt: 'DescriptionComingSoon' },
-  335: { alt: 'DescriptionComingSoon' },
-  336: { alt: 'DescriptionComingSoon' },
-  337: { alt: 'DescriptionComingSoon' },
-  338: { alt: 'DescriptionComingSoon' },
-  339: { alt: 'DescriptionComingSoon' },
-  340: { alt: 'DescriptionComingSoon' },
-  341: { alt: 'DescriptionComingSoon' },
-  342: { alt: 'DescriptionComingSoon' },
-  343: { alt: 'DescriptionComingSoon' },
-  344: { alt: 'DescriptionComingSoon' },
-  345: { alt: 'DescriptionComingSoon' },
-  346: { alt: 'DescriptionComingSoon' },
-  347: { alt: 'DescriptionComingSoon' },
-  348: { alt: 'DescriptionComingSoon' },
-  349: { alt: 'DescriptionComingSoon' },
-  350: { alt: 'DescriptionComingSoon' },
-  351: { alt: 'DescriptionComingSoon' },
-  352: { alt: 'DescriptionComingSoon' },
-  353: { alt: 'DescriptionComingSoon' },
+};
+const panoramaDetails: Record<number, { location: string }> = {
+  1: { location: 'DescriptionComingSoon' },
+  2: { location: 'DescriptionComingSoon' },
+  3: { location: 'DescriptionComingSoon' },
+  4: { location: 'DescriptionComingSoon' },
+  5: { location: 'DescriptionComingSoon' },
+  6: { location: 'DescriptionComingSoon' },
+  7: { location: 'DescriptionComingSoon' }
 };
 
-export default function ArgentinaGallery() {
+//STEP FOUR
+export default function VeniceGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 353 }, (_, i) => {
@@ -395,32 +70,19 @@ export default function ArgentinaGallery() {
         src: getImagePath(i + 1),
         alt: details.alt
       };
-      
-      // Location property has been removed
-      
       return image;
     });
   }, []);
 
+
+
+
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  const openLightbox = (image: GalleryImage) => {setSelectedImage(image); document.body.style.overflow = 'hidden';};
+  const closeLightbox = () => {setSelectedImage(null); document.body.style.overflow = 'unset';};
 
-
-  const openLightbox = (image: GalleryImage) => {
-    setSelectedImage(image);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
-    setSelectedImage(null);
-    document.body.style.overflow = 'unset';
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeLightbox();
-    }
-  };
+  const handleBackdropClick = (e: React.MouseEvent) => {if (e.target === e.currentTarget) {closeLightbox();}};
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -447,62 +109,13 @@ export default function ArgentinaGallery() {
     }
   }, [galleryImages]);
 
-  // Panorama images data
-  const panoramaImages = [
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-    { id: 5 },
-    { id: 6 },
-    { id: 7 },
-    { id: 8 },
-    { id: 9 },
-    { id: 10 },
-    { id: 11 },
-    { id: 12 },
-    { id: 14 },
-    { id: 15 },
-    { id: 16 },
-    { id: 17 },
-    { id: 18 },
-    { id: 19 },
-    { id: 20 },
-    { id: 21 },
-    { id: 22 },
-    { id: 23 },
-    { id: 24 },
-    { id: 25 },
-    { id: 26 },
-    { id: 27 },
-    { id: 28 },
-    { id: 29 },
-    { id: 30 },
-    { id: 31 },
-    { id: 32 },
-    { id: 33 },
-    { id: 34 },
-    { id: 35 },
-    { id: 36 },
-    { id: 37 },
-    { id: 38 },
-    { id: 39 },
-    { id: 40 },
-    { id: 41 },
-    { id: 42 },
-    { id: 43 },
-    { id: 44 },
-    { id: 45 },
-    { id: 46 },
-    { id: 47 },
-    { id: 48 },
-    { id: 49 },
-    { id: 50 },
-    { id: 51 },
-    { id: 52 },
-    { id: 53 },
-    { id: 54 }
-  ];
+  // Generate panorama images with useMemo, using the panoramaDetails for locations
+  const panoramaImages = useMemo(() => {
+    return Object.entries(panoramaDetails).map(([id, details]) => ({
+      id: parseInt(id),
+      location: details.location || 'DescriptionComingSoon'
+    }));
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -513,27 +126,23 @@ export default function ArgentinaGallery() {
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
-            src="/img/Argentina/argentina_panorama (8).jpg"
-            alt="Argentina Panorama"
+            src={PAGE_CONTENT.header.backgroundImage}
+            alt={PAGE_CONTENT.header.altText}
             fill
-            className="object-cover object-center"
             priority
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-black/5"></div>
         </div>
-
         <div className="relative h-full flex items-center justify-center text-center px-4">
           <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Argentina</h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">{PAGE_CONTENT.title}</h1>
             <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
-              From the Perito Moreno Glacier to El Chalten in Calafate to the vast plains and volcanoes of Patagonia,
-              Argentina is a country of immense beauty, rich culture, and breathtaking landscapes.
+              {PAGE_CONTENT.description}
             </p>
           </div>
         </div>
       </div>
-
-      {/* Navigation Section */}
       <section className="w-full bg-gray-900 py-12">
         <div className="w-full flex justify-center px-4">
           <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
@@ -625,7 +234,7 @@ export default function ArgentinaGallery() {
                 <div className="w-full max-w-4xl px-4">
                   <div className="w-full text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-white">
-                      From glaciers to dusty deserts, I think I photographed plenty of Argentina.
+                      {PAGE_CONTENT.panoramas.description}
                     </h2>
                   </div>
                 </div>
@@ -636,8 +245,9 @@ export default function ArgentinaGallery() {
                 {panoramaImages.map((item, index) => (
                   <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`/img/Argentina/argentina_panorama (${item.id}).jpg`}
+                      src={`${PAGE_CONTENT.panoramas.imagePath} (${item.id}).jpg`}
                       alt={`Panorama ${item.id}`}
+                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>
@@ -650,11 +260,11 @@ export default function ArgentinaGallery() {
         {currentView === 'drone' && (
           <div className="w-full flex justify-center items-center min-h-screen py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Argentina 2025 Recap</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">{PAGE_CONTENT.video.title}</h2>
               <div className="w-full max-w-6xl">
-                <YouTubePlayer 
-                  videoId="UBHQtwZpIk0"
-                  title="Argentina 2025 Travel Recap"
+                <YouTubePlayer
+                  videoId={PAGE_CONTENT.video.id}
+                  title={PAGE_CONTENT.video.title}
                   className="rounded-lg shadow-xl"
                 />
               </div>
@@ -694,3 +304,15 @@ export default function ArgentinaGallery() {
     </div>
   );
 }
+
+interface ImageDetails {
+  alt: string;
+}
+
+interface GalleryImage {
+  id: number;
+  src: string;
+  alt: string;
+}
+
+type GalleryView = 'photos' | 'panoramas' | 'drone';

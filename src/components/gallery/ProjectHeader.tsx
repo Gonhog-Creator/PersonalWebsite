@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
-import { useTheme } from 'next-themes';
 
 interface NavLink {
   name: string;
@@ -22,15 +21,11 @@ const navLinks: NavLink[] = [
 ];
 
 export function ProjectHeader() {
-  const [mounted, setMounted] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // Ensure UI is mounted before showing theme toggle to avoid hydration mismatch
+  // Handle scroll effect
   useEffect(() => {
-    setMounted(true);
-    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -38,15 +33,6 @@ export function ProjectHeader() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-  };
-  
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <div className="fixed w-full z-50">
@@ -84,19 +70,6 @@ export function ProjectHeader() {
                     <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 transition-all duration-300 transform scale-x-0 group-hover:scale-x-100"></span>
                   </Link>
                 ))}
-                
-                {/* Theme Toggle Button */}
-                <button 
-                  onClick={toggleTheme}
-                  className="p-2 rounded-full text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors duration-200"
-                  aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-                >
-                  {theme === 'light' ? (
-                    <Icon icon="mdi:lightbulb" className="w-6 h-6 text-yellow-300" />
-                  ) : (
-                    <Icon icon="mdi:lightbulb-outline" className="w-6 h-6" />
-                  )}
-                </button>
               </nav>
 
               {/* Mobile menu button */}
@@ -124,20 +97,6 @@ export function ProjectHeader() {
                   transition={{ duration: 0.3 }}
                 >
                   <div className="pt-4 pb-6 space-y-1">
-                    {/* Theme Toggle for Mobile */}
-                    <button 
-                      onClick={toggleTheme}
-                      className="w-full px-4 py-3 text-left flex items-center text-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors duration-200"
-                    >
-                      <div className="w-5 h-5 mr-3 flex items-center justify-center">
-                        {theme === 'light' ? (
-                          <Icon icon="mdi:lightbulb" className="w-5 h-5 text-yellow-300" />
-                        ) : (
-                          <Icon icon="mdi:lightbulb-outline" className="w-5 h-5" />
-                        )}
-                      </div>
-                      {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
-                    </button>
                     {navLinks.map((link) => (
                       <Link
                         key={link.href}

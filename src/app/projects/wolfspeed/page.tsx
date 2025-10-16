@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { FaIndustry, FaFlask, FaChartLine, FaMicrochip } from 'react-icons/fa6';
 import { Icon } from '@iconify/react';
-import { useTheme } from '@/contexts/ThemeContext';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
@@ -22,7 +21,7 @@ export default function WolfspeedPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-900">
       {/* Custom Header */}
       <ProjectHeader />
       

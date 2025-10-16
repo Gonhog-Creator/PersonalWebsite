@@ -65,7 +65,7 @@ export const italyRegions: GeoJSON.FeatureCollection<GeoJSON.Geometry, RegionPro
       properties: {
         name: 'Padua',
         id: 'padua',
-        galleryPath: '/galleries/italy/padua'
+        galleryPath: '/galleries/italy/padova/'
       },
       geometry: createPolygon([
         [11.8304974, 45.4732626],
@@ -96,7 +96,7 @@ export const italyRegions: GeoJSON.FeatureCollection<GeoJSON.Geometry, RegionPro
       properties: {
         name: 'Trieste',
         id: 'trieste',
-        galleryPath: '/galleries/italy/trieste'
+        galleryPath: '/galleries/italy/trieste/'
       },
       geometry: createPolygon([
         [13.7130925, 45.7116185],

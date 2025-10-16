@@ -263,20 +263,12 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
               />
             </div>
             
-            {scale > 1 && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
-                {Math.round(scale * 100)}%
+            {/* Location indicator at the top right */}
+            {location && (
+              <div className="absolute top-4 left-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
+                {location}
               </div>
             )}
-            
-            <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-center py-3">
-              <p className="text-sm md:text-base">
-                {location}
-              </p>
-              <p className="text-xs text-gray-300 mt-1">
-                {scale > 1 ? 'Drag to pan • Double-click to reset' : 'Double-click to zoom'}
-              </p>
-            </div>
           </div>
         </div>
       )}

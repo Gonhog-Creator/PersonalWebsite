@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { ThemeProvider } from '@/contexts/ThemeContext';
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -21,23 +20,22 @@ function NavigationHandler({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-export default function ClientLayout({ children }: ClientLayoutProps) {
-  const [mounted, setMounted] = useState(false);
-
-  // Ensure we're in the browser before rendering navigation-dependent components
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return <ThemeProvider>{children}</ThemeProvider>;
-  }
-
+// Wrap the component that uses useSearchParams in Suspense
+function ClientLayoutContent({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider>
+    <Suspense fallback={<div className="min-h-screen bg-gray-900"></div>}>
       <NavigationHandler>
         {children}
       </NavigationHandler>
-    </ThemeProvider>
+    </Suspense>
   );
+}
+
+export default function ClientLayout({ children }: ClientLayoutProps) {
+  // Set dark theme on the root element
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
+
+  return <ClientLayoutContent>{children}</ClientLayoutContent>;
 }

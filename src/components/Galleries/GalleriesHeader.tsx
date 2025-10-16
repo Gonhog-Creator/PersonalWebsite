@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useTheme } from '@/contexts/ThemeContext';
 import { Icon } from '@iconify/react';
 
 // Navigation links for the header
@@ -16,13 +15,9 @@ const navLinks = [
 ];
 
 export function GalleriesHeader() {
-  const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { theme } = useTheme();
 
   useEffect(() => {
-    setMounted(true);
-    
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
@@ -30,12 +25,6 @@ export function GalleriesHeader() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Theme is always dark, so no toggle functionality needed
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <header 
@@ -48,7 +37,7 @@ export function GalleriesHeader() {
       <div className="container mx-auto px-8">
         <div className="flex justify-between items-center">
           <Link href="/" className="relative w-[22.4rem] h-28 -ml-2">
-            <Image 
+            <Image
               src="/img/logo.png" 
               alt="JB Logo" 
               fill 
@@ -70,9 +59,6 @@ export function GalleriesHeader() {
                 <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 transition-all duration-300 transform scale-x-0 group-hover:scale-x-100"></span>
               </Link>
             ))}
-            
-            {/* Theme Toggle Button */}
-            {/* Theme toggle removed - using dark theme only */}
           </nav>
         </div>
       </div>
