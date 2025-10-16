@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from "@/lib/utils"
+import Image from 'next/image';
 
 interface TextItem {
     text: string;
@@ -51,7 +52,7 @@ const usePreloadImages = (images: string[]) => {
     useEffect(() => {
         const loadImage = (url: string): Promise<void> =>
             new Promise((resolve, reject) => {
-                const img = new Image();
+                const img = new window.Image();
                 img.src = url;
                 img.onload = () => resolve();
                 img.onerror = reject;
@@ -72,7 +73,15 @@ const usePreloadImages = (images: string[]) => {
 const ImagePreloader = ({ images }: { images: string[] }) => (
     <div className="hidden" aria-hidden="true">
         {images.map((src, index) => (
-            <img key={index} src={src} alt="" />
+            <Image 
+                key={index} 
+                src={src} 
+                alt="" 
+                width={1}
+                height={1}
+                style={{ width: '1px', height: '1px' }}
+                priority
+            />
         ))}
     </div>
 );
@@ -85,15 +94,22 @@ const ImageOverlay = ({ image, size = 'md' }: { image: string, size?: 'sm' | 'md
         transition={{ duration: 0.3 }}
         className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
     >
-        <motion.img
-            src={image}
-            alt=""
+        <motion.div 
             className={cn(
                 sizeConfig[size].imageSize,
-                "object-cover rounded-full"
+                "relative rounded-full overflow-hidden"
             )}
             style={{ filter: 'brightness(0.9)' }}
-        />
+        >
+            <Image
+                src={image}
+                alt=""
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover"
+                priority
+            />
+        </motion.div>
     </motion.div>
 );
 export const CircularRevealHeading = ({

@@ -67,7 +67,8 @@ export const RainbowBorderButton = ({
   );
 
   if (Component === 'a' && props.href) {
-    const { className: _, ...linkProps } = props as AnchorHTMLAttributes<HTMLAnchorElement>;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { className: _unusedClass1, ...linkProps } = props as AnchorHTMLAttributes<HTMLAnchorElement>;
     return (
       <Link href={props.href} className={buttonClasses} style={buttonStyle} {...linkProps}>
         {buttonContent}
@@ -75,7 +76,8 @@ export const RainbowBorderButton = ({
     );
   }
 
-  const { className: __, ...buttonProps } = props as ButtonHTMLAttributes<HTMLButtonElement>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { className: _unusedClass2, ...buttonProps } = props as ButtonHTMLAttributes<HTMLButtonElement>;
   return (
     <button className={buttonClasses} style={buttonStyle} {...buttonProps as ButtonHTMLAttributes<HTMLButtonElement>}>
       {buttonContent}

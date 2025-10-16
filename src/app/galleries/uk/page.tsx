@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
@@ -129,20 +129,9 @@ const imageDetails: Record<number, { alt: string }> = {
   97: { alt: 'DescriptionComingSoon' },
 };
 
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'London' },
-  { id: 2, location: 'Edinburgh' },
-  { id: 3, location: 'Bath' },
-  { id: 4, location: 'York' },
-  { id: 5, location: 'Cambridge' },
-  { id: 6, location: 'Oxford' },
-  { id: 7, location: 'Bath' },
-  { id: 8, location: 'Stratford-upon-Avon' },
-  { id: 9, location: 'Canterbury' }
-];
-
 export default function UnitedKingdomGallery() {
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 97 }, (_, i) => {
@@ -151,7 +140,7 @@ export default function UnitedKingdomGallery() {
       return {
         id,
         src: getImagePath(id),
-        location: 'France',
+        location: 'United Kingdom',
         ...details,
         alt: details.alt || `Photo ${id}`
       };
@@ -159,23 +148,22 @@ export default function UnitedKingdomGallery() {
   }, []);
 
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [currentView, setCurrentView] = useState<GalleryView>('photos');
 
-  const openLightbox = (image: GalleryImage) => {
-    setSelectedImage(image);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
+  const closeLightbox = useCallback(() => {
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  }, []);
+  
+  const openLightbox = useCallback((image: GalleryImage) => {
+    setSelectedImage(image);
+    document.body.style.overflow = 'hidden';
+  }, []);
+  
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       closeLightbox();
     }
-  };
+  }, [closeLightbox]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -186,18 +174,20 @@ export default function UnitedKingdomGallery() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [closeLightbox]);
 
   // Verify image paths
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">

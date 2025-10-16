@@ -2,11 +2,10 @@
 
 import { useEffect } from 'react';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
-import { FaUniversity, FaRocket, FaCog, FaChartLine, FaTools, FaArrowLeft, FaWind, FaFlask } from 'react-icons/fa';
+import { FaUniversity, FaRocket, FaCog, FaTools, FaWind, FaFlask } from 'react-icons/fa';
 import { ParticlesBackground } from '@/components/ParticlesBackground/ParticlesBackground';
 
 export default function NCSURocketryPage() {

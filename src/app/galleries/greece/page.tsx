@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
@@ -141,20 +141,9 @@ const imageDetails: Record<number, { alt: string }> = {
 };
 
 
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Santorini' },
-  { id: 2, location: 'Athens' },
-  { id: 3, location: 'Mykonos' },
-  { id: 4, location: 'Delphi' },
-  { id: 5, location: 'Meteora' },
-  { id: 6, location: 'Rhodes' },
-  { id: 7, location: 'Corfu' },
-  { id: 8, location: 'Crete' },
-  { id: 9, location: 'Zakynthos' }
-];
-
 export default function GreeceGallery() {
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 111 }, (_, i) => {
@@ -170,24 +159,22 @@ export default function GreeceGallery() {
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [currentView, setCurrentView] = useState<GalleryView>('photos');
-
-
-  const openLightbox = (image: GalleryImage) => {
-    setSelectedImage(image);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
+  
+  const closeLightbox = useCallback(() => {
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  }, []);
+  
+  const openLightbox = useCallback((image: GalleryImage) => {
+    setSelectedImage(image);
+    document.body.style.overflow = 'hidden';
+  }, []);
+  
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       closeLightbox();
     }
-  };
+  }, [closeLightbox]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -198,18 +185,26 @@ export default function GreeceGallery() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [closeLightbox]);
 
-  // Verify image paths
+  // Verify image paths in development only
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      const verifyImages = async () => {
+        for (const img of galleryImages) {
+          try {
+            const response = await fetch(img.src, { method: 'HEAD' });
+            if (!response.ok) {
+              console.error(`❌ Error loading image: ${img.src}`);
+            }
+          } catch (error) {
+            console.error(`❌ Error checking image: ${img.src}`, error);
+          }
+        }
+      };
+      verifyImages();
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">

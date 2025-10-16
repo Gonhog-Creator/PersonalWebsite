@@ -1,15 +1,4 @@
-import { DSOImage, DSOType } from "@/types/astro";
-
-const constellations = [
-  'Orion', 'Andromeda', 'Ursa Major', 'Sagittarius', 'Lyra', 
-  'Cygnus', 'Pegasus', 'Perseus', 'Cassiopeia', 'Hercules',
-  'Scorpius', 'Taurus', 'Gemini', 'Canis Major', 'Virgo',
-  'Leo', 'Libra', 'Aquila', 'Ophiuchus', 'Draco', 'Cepheus'
-];
-
-const telescopes = [
-  'Seestar S50'
-];
+import { DSOImage } from "@/types/astro";
 
 export const dsoImages: DSOImage[] = [
   {
@@ -785,9 +774,9 @@ export const dsoImages: DSOImage[] = [
     fullDescription: 'The Pinwheel Galaxy (Messier 101 or M101) is a face-on spiral galaxy in the constellation Ursa Major. It is one of the most prominent examples of a grand design spiral galaxy, with well-defined spiral arms that can be traced continuously to its center. The galaxy is about 21 million light-years away from Earth and has a diameter of about 170,000 light-years, making it about 70% larger than our Milky Way. M101 is notable for its high number of H II regions, many of which are very large and bright, indicating active star formation. The galaxy has a relatively low surface brightness, making it a challenging but rewarding target for amateur astronomers. It is estimated to contain about one trillion stars, and its spiral arms are dotted with star-forming regions and young, hot, blue stars that give the galaxy its bluish tint.',
     type: 'galaxy',
     constellation: 'Ursa Major',
-    imageUrl: '/img/Astro/M101-10.9.25-45x20sec.jpg',
+    imageUrl: '/img/Astro/M101-10.9.25-1123x10sec.jpg',
     telescope: 'Seestar S50',
-    exposure: '15 minutes (45x20sec)',
+    exposure: '3.1 hours (1123x10sec)',
     location: 'Durham, NC',
     year: 2025,
     catalogues: [

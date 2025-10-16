@@ -1,8 +1,6 @@
 import NextImage from 'next/image';
-import { useRouter } from 'next/router';
 
 export default function Image({ src, alt, width, height, ...props }) {
-  const router = useRouter();
   const isGHPages = process.env.NEXT_PUBLIC_GH_PAGES === 'true';
   const basePath = isGHPages ? '/PersonalWebsite' : '';
   

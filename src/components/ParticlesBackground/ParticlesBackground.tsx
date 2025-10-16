@@ -2,13 +2,6 @@
 
 import { useEffect, useCallback } from 'react';
 
-// Type for the particles.js function
-type ParticlesJS = {
-  (tagId: string, params: unknown, callback?: () => void): void;
-  load: (tagId: string, path: string | unknown, callback?: () => void) => void;
-};
-
-// Type definitions for particles.js
 interface ParticlesConfig {
   particles: {
     number: {
@@ -23,13 +16,6 @@ interface ParticlesConfig {
     };
     shape: {
       type: string;
-      stroke?: {
-        width: number;
-        color: string;
-      };
-      polygon?: {
-        nb_sides: number;
-      };
     };
     opacity: {
       value: number;
@@ -93,49 +79,35 @@ interface ParticlesConfig {
           opacity: number;
         };
       };
-      bubble: {
-        distance: number;
-        size: number;
-        duration: number;
-        opacity: number;
-        speed: number;
+      push: {
+        particles_nb: number;
       };
       repulse: {
         distance: number;
         duration: number;
       };
-      push: {
-        particles_nb: number;
-      };
-      remove: {
-        particles_nb: number;
-      };
     };
   };
   retina_detect: boolean;
-};
+}
 
-// Import the Window type from particles.d.ts
+declare global {
+  interface Window {
+    particlesJS: (id: string, config: ParticlesConfig) => void;
+  }
+}
 
 interface ParticlesBackgroundProps {
   className?: string;
   particleCount?: number;
 }
 
-export function ParticlesBackground({ 
-  className = '', 
-  particleCount = 60 
-}: ParticlesBackgroundProps) {
+export function ParticlesBackground({ className = '' }: ParticlesBackgroundProps) {
   const initParticles = useCallback(() => {
-    if (typeof window === 'undefined') return;
-
-    const particlesJS = (window as unknown as { particlesJS?: ParticlesJS }).particlesJS;
-    if (!particlesJS) return;
-
-    const config: ParticlesConfig = {
+    window.particlesJS('particles-js', {
       particles: {
         number: { 
-          value: particleCount,
+          value: 60,
           density: { 
             enable: true, 
             value_area: 800 
@@ -144,15 +116,8 @@ export function ParticlesBackground({
         color: { 
           value: '#ffffff' 
         },
-        shape: {
-          type: 'circle',
-          stroke: {
-            width: 0,
-            color: '#000000'
-          },
-          polygon: {
-            nb_sides: 5
-          }
+        shape: { 
+          type: 'circle' 
         },
         opacity: {
           value: 0.5,
@@ -216,68 +181,73 @@ export function ParticlesBackground({
               opacity: 1
             }
           },
-          bubble: {
-            distance: 400,
-            size: 40,
-            duration: 2,
-            opacity: 8,
-            speed: 3
+          push: {
+            particles_nb: 4
           },
           repulse: {
             distance: 100,
             duration: 0.4
-          },
-          push: {
-            particles_nb: 4
-          },
-          remove: {
-            particles_nb: 2
           }
         }
       },
       retina_detect: true
-    };
-
-    (window as unknown as { particlesJS: ParticlesJS }).particlesJS('particles-js', config, function() {
-      console.log('callback - particles.js config loaded');
     });
-  }, [particleCount]);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Check if particlesJS is already loaded
-    const particlesJS = (window as unknown as { particlesJS?: ParticlesJS }).particlesJS;
-    if (particlesJS) {
-      initParticles();
-      return;
-    }
-
-    // Load particles.js if not already loaded
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
-    script.async = true;
-    script.onload = () => {
-      const particlesJS = (window as unknown as { particlesJS?: ParticlesJS }).particlesJS;
-      if (particlesJS) {
+    let script: HTMLScriptElement | null = null;
+    const containerId = 'particles-js';
+    
+    const initialize = () => {
+      if (!window.particlesJS) {
+        script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js';
+        script.async = true;
+        script.onload = initParticles;
+        document.body.appendChild(script);
+      } else {
         initParticles();
       }
     };
-    document.body.appendChild(script);
+
+    initialize();
 
     return () => {
-      const particlesContainer = document.getElementById('particles-js');
+      if (script && document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+      
+      const particlesContainer = document.getElementById(containerId);
       if (particlesContainer) {
         particlesContainer.innerHTML = '';
+      }
+      
+      // Clean up any global event listeners or resources
+      if ('particlesJS' in window) {
+        // @ts-expect-error - particlesJS has no proper types, but we need to reset pJSDom to avoid memory leaks
+        window.pJSDom = [];
       }
     };
   }, [initParticles]);
 
   return (
-    <div 
+    <div
       id="particles-js" 
-      className={`absolute inset-0 w-full h-full ${className}`}
-      aria-hidden="true"
+      className={`fixed top-0 left-0 w-full h-full ${className}`}
+      style={{ 
+        background: 'transparent',
+        pointerEvents: 'none',
+        zIndex: 0,
+        position: 'fixed',
+        width: '100%',
+        height: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      }}
     />
   );
 }

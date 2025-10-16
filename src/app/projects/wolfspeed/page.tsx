@@ -1,11 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { FaIndustry, FaFlask, FaChartLine, FaMicrochip } from 'react-icons/fa6';
-import { Icon } from '@iconify/react';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 

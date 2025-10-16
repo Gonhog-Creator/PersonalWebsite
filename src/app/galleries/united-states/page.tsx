@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
@@ -18,6 +18,7 @@ interface GalleryImage {
 }
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
+
 
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
@@ -102,20 +103,9 @@ const imageDetails: Record<number, { alt: string; location: string }> = {
   64: { alt: 'Mountain Zen', location: 'Oregon' },
 };
 
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Grand Canyon' },
-  { id: 2, location: 'Yosemite' },
-  { id: 3, location: 'Yellowstone' },
-  { id: 4, location: 'Zion' },
-  { id: 5, location: 'Glacier' },
-  { id: 6, location: 'Arches' },
-  { id: 7, location: 'Bryce Canyon' },
-  { id: 8, location: 'Mount Rainier' },
-  { id: 9, location: 'Olympic' }
-];
-
 export default function USAGallery() {
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
     // Start with images from imageDetails
@@ -143,23 +133,22 @@ export default function USAGallery() {
   }, []);
 
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [currentView, setCurrentView] = useState<GalleryView>('photos');
-
-  const openLightbox = (image: GalleryImage) => {
-    setSelectedImage(image);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
+  
+  const closeLightbox = useCallback(() => {
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  }, []);
+  
+  const openLightbox = useCallback((image: GalleryImage) => {
+    setSelectedImage(image);
+    document.body.style.overflow = 'hidden';
+  }, []);
+  
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       closeLightbox();
     }
-  };
+  }, [closeLightbox]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -170,18 +159,20 @@ export default function USAGallery() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [closeLightbox]);
 
-  // Verify image paths
+  // Verify image paths in development
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">

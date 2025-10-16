@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
@@ -18,6 +18,7 @@ interface GalleryImage {
 }
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
+
 
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
@@ -179,20 +180,9 @@ const imageDetails: Record<number, { alt: string }> = {
   112: { alt: 'Arafed picture of a woman in a white dress in a blue room.' },
 };
 
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Berlin' },
-  { id: 2, location: 'Munich' },
-  { id: 3, location: 'Neuschwanstein Castle' },
-  { id: 4, location: 'Cologne Cathedral' },
-  { id: 5, location: 'Black Forest' },
-  { id: 6, location: 'Heidelberg' },
-  { id: 7, location: 'Rothenburg ob der Tauber' },
-  { id: 8, location: 'Bavarian Alps' },
-  { id: 9, location: 'Rhine Valley' }
-];
-
 export default function GermanyGallery() {
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 202 }, (_, i) => {
@@ -201,31 +191,29 @@ export default function GermanyGallery() {
       return {
         id,
         src: getImagePath(id),
-        location: 'France',
+        location: 'Germany',
         ...details,
         alt: details.alt || `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [currentView, setCurrentView] = useState<GalleryView>('photos');
-
-
-  const openLightbox = (image: GalleryImage) => {
-    setSelectedImage(image);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
+  
+  const closeLightbox = useCallback(() => {
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  }, []);
+  
+  const openLightbox = useCallback((image: GalleryImage) => {
+    setSelectedImage(image);
+    document.body.style.overflow = 'hidden';
+  }, []);
+  
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       closeLightbox();
     }
-  };
+  }, [closeLightbox]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -236,18 +224,20 @@ export default function GermanyGallery() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [closeLightbox]);
 
-  // Verify image paths
+  // Verify image paths in development only
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">

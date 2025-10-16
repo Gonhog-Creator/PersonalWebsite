@@ -35,20 +35,6 @@ const firaCode = Fira_Code({
   adjustFontFallback: false,
 });
 
-// Base path for static exports
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
-
-// Helper function to get asset path with base path
-function getAssetPath(path: string): string {
-  if (path.startsWith('http') || path.startsWith('//') || path.startsWith('data:')) {
-    return path;
-  }
-  // Ensure the path starts with a slash and doesn't have duplicate slashes
-  const cleanBasePath = basePath.replace(/\/+$/, ''); // Remove trailing slashes
-  const cleanPath = path.replace(/^\/+/, ''); // Remove leading slashes
-  return `${cleanBasePath}/${cleanPath}`.replace(/([^:]\/)\/+/g, '$1');
-}
-
 // Viewport settings
 export const viewport: Viewport = {
   width: 'device-width',

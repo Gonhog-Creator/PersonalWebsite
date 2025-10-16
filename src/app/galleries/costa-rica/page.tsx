@@ -17,8 +17,6 @@ interface GalleryImage {
   location: string;
 }
 
-type GalleryView = 'photos' | 'panoramas' | 'drone';
-
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
   const basePath = '/img/Costa Rica/costarica';
@@ -238,18 +236,6 @@ const imageDetails: Record<number, { alt: string }> = {
   212: { alt: 'Resplendent Quetzal' },
   213: { alt: 'Resplendent Quetzal' }
 };
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Manuel Antonio' },
-  { id: 2, location: 'Monteverde' },
-  { id: 3, location: 'Arenal' },
-  { id: 4, location: 'Tortuguero' },
-  { id: 5, location: 'Cahuita' },
-  { id: 6, location: 'Puerto Viejo' },
-  { id: 7, location: 'Corcovado' },
-  { id: 8, location: 'Rincon de la Vieja' },
-  { id: 9, location: 'Santa Teresa' }
-];
 
 export default function CostaRicaGallery() {
   // Generate gallery images with useMemo, excluding missing photos
@@ -297,16 +283,18 @@ export default function CostaRicaGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Verify image paths
+  // Verify image paths in development only
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">

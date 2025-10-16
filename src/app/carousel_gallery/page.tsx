@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
+import Image from 'next/image';
 import { useTransition, a } from "@react-spring/web";
 import type { 
   LayoutType, 
@@ -12,32 +13,40 @@ import type {
 // Cache for panorama detection results - currently not used but kept for future reference
 // const panoramaCache = new Map<string, boolean>();
 
-// Import image paths
-let imagePaths: string[] = [];
+// Default image paths - will be populated asynchronously
+let imagePaths: string[] = [
+  // Simple SVG placeholder as a data URL
+  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjY2NyIgdmlld0JveD0iMCAwIDEwMDAgNjY3Ij48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1JSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb2FkaW5nIGltYWdlcy4uLjwvdGV4dDwvc3ZnPg==',
+  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjY2NyIgdmlld0JveD0iMCAwIDEwMDAgNjY3Ij48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1JSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb2FkaW5nIGltYWdlcy4uLjwvdGV4dD48L3N2Zz4=',
+  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjY2NyIgdmlld0JveD0iMCAwIDEwMDAgNjY3Ij48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1JSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb2FkaW5nIGltYWdlcy4uLjwvdGV4dD48L3N2Zz4='
+];
+
 let panoramaPaths: string[] = [];
 
-// Load image paths from JSON files
-if (typeof window !== 'undefined') {
+// Load image paths from JSON files in the browser
+const loadImagePaths = async () => {
+  if (typeof window === 'undefined') return;
+  
   try {
-    // Using dynamic imports to avoid SSR issues
-    import('@/data/galleryImages.json').then(module => {
-      if (Array.isArray(module.default)) {
-        imagePaths = module.default;
-      }
-    }).catch(error => {
-      console.error('Failed to load gallery images:', error);
-    });
-
-    import('@/data/galleryPanos.json').then(module => {
-      if (Array.isArray(module.default)) {
-        panoramaPaths = module.default;
-      }
-    }).catch(error => {
-      console.error('Failed to load panorama images:', error);
-    });
+    // Load regular gallery images
+    const galleryModule = await import('@/data/galleryImages.json');
+    if (Array.isArray(galleryModule.default) && galleryModule.default.length > 0) {
+      imagePaths = galleryModule.default;
+    }
+    
+    // Load panorama images
+    const panoModule = await import('@/data/galleryPanos.json');
+    if (Array.isArray(panoModule.default)) {
+      panoramaPaths = panoModule.default;
+    }
   } catch (error) {
     console.error('Error loading image paths:', error);
   }
+};
+
+// Start loading the image paths when the module loads
+if (typeof window !== 'undefined') {
+  loadImagePaths().catch(console.error);
 }
 
 // Debounce helper
@@ -148,7 +157,9 @@ const useImageLoader = () => {
 
   const loadImage = useCallback((src: string, index: number): Promise<GalleryImage> => {
     return new Promise((resolve) => {
-      const img = new Image();
+      // Use window.Image to ensure we're using the browser's Image constructor
+      const img = new window.Image();
+      img.crossOrigin = 'anonymous'; // Add this for CORS support if needed
       const retryKey = `${src}-${index}`;
       const currentRetry = retryCount.current[retryKey] || 0;
       let hasResolved = false;
@@ -308,7 +319,7 @@ const useImageLoader = () => {
         didTimeout: false
       } as IdleDeadline);
     }
-  }, [loadImage]);
+  }, [loadImage, canUseIdleCallback]);
   
   // Function to load the first batch of images with higher priority
   const loadFirstBatch = useCallback(async (validImagePaths: string[]) => {
@@ -339,7 +350,7 @@ const useImageLoader = () => {
       // Load first batch with higher priority
       const firstBatchPromises = firstBatch.map((src, index) => 
         loadImage(src, index).then(img => {
-          if (!processedImages.current.has(src)) {
+          if (img && !processedImages.current.has(src)) {
             processedImages.current.add(src);
             return img;
           }
@@ -367,7 +378,7 @@ const useImageLoader = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [loadImage, processNextBatch]);
+  }, [loadImage, processNextBatch]); // Removed BATCH_SIZE and BATCH_INTERVAL as they're constants
   
   // Function to refresh the current batch of images
   const refreshBatch = useCallback(() => {
@@ -380,7 +391,7 @@ const useImageLoader = () => {
     
     // Reload with a new random batch
     loadFirstBatch(validImagePaths);
-  }, [isLoading, loadFirstBatch]);
+  }, [isLoading, loadFirstBatch]); // Removed imagePaths as it's a module-level variable
 
   useEffect(() => {
     // Filter out invalid image paths
@@ -417,6 +428,7 @@ const createGridItem = (
   width: number, 
   height: number, 
   column: number,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _isPanorama: boolean // Prefix with underscore to indicate it's intentionally unused
 ): GridItem => {
   // Calculate scale to fill the container while maintaining aspect ratio
@@ -462,7 +474,8 @@ const createGridItem = (
 const createFullPanoramaLayout = (
   panoramaImages: GalleryImage[],
   containerWidth: number,
-  gap: number
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _gap: number
 ): [number, GridItem[]] => {
   const items: GridItem[] = [];
   // Get the viewport height, fallback to 100vh if window is not available
@@ -734,7 +747,8 @@ const createMasonryLayout = (
   return [containerHeight, items];
 };
 
-// Main layout calculation function
+// Main layout calculation function (kept for future use)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const calculateLayout = (
   images: GalleryImage[], 
   containerWidth: number, 
@@ -869,10 +883,14 @@ const useCalculateLayout = (images: GalleryImage[], containerWidth: number,
 
 const ImageGalleryScreensaver = ({
   images = [],
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   refreshInterval = 15000, // 15 seconds auto-advance interval
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isLoading = false,
   isLoadingMore = false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadedCount = 0,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   totalImages = 0,
   initialLayoutType = 'masonry'
 }: ImageGalleryScreensaverProps & {
@@ -883,6 +901,7 @@ const ImageGalleryScreensaver = ({
   initialLayoutType?: LayoutType;
 }) => {
   const [containerWidth, setContainerWidth] = useState(0);
+  // layoutType state is kept for future use
   const [layoutType, setLayoutType] = useState<LayoutType>(initialLayoutType);
   const [showDebugMenu, setShowDebugMenu] = useState(false);
   
@@ -890,6 +909,8 @@ const ImageGalleryScreensaver = ({
   useEffect(() => {
     setLayoutType(initialLayoutType);
   }, [initialLayoutType]);
+  // showLoadingMore state is kept for future use
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showLoadingMore, setShowLoadingMore] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -1332,12 +1353,7 @@ const ImageGalleryScreensaver = ({
   );
   
   // Memoize the grid items to prevent unnecessary re-renders
-  const gridItemsKey = useMemo(() => 
-    gridItems.map(item => item.id).join(','),
-    [gridItems]
-  );
-  
-  const memoizedGridItems = useMemo(() => gridItems, [gridItemsKey, layoutType, containerWidth]);
+  const memoizedGridItems = useMemo(() => gridItems, [gridItems]);
 
   // Set up transitions with optimized performance
   const isPanoramaLayout = useMemo(() => 
@@ -1387,26 +1403,30 @@ const ImageGalleryScreensaver = ({
   }, []);
   
   // Set up ref callback for images with proper TypeScript types and null src handling
-  const setImageRef = useCallback((id: string | number, element: HTMLImageElement | null) => {
+  const setImageRef = useCallback((id: string | number, element: HTMLElement | null) => {
     if (!observer.current) return;
     
     const idStr = String(id);
     
+    // If the element is an img, we can observe it directly
+    const targetElement = (element?.tagName === 'IMG' 
+      ? element as HTMLImageElement 
+      : element?.querySelector('img')) as HTMLImageElement | null;
+      
+    if (!targetElement) return;
+    
     // Clean up any existing element with this id
     const existingElement = imageRefs.current.get(idStr);
-    if (existingElement && existingElement !== element) {
+    if (existingElement) {
       observer.current.unobserve(existingElement);
       imageRefs.current.delete(idStr);
     }
     
-    // If element is null, we're done (cleanup was handled above)
-    if (!element) return;
-    
     // Only set up observer if we have a data-src attribute and no src
-    if (element.dataset.src && !element.src) {
+    if (targetElement.dataset.src && !targetElement.src) {
       // Add to our refs and observe
-      imageRefs.current.set(idStr, element);
-      observer.current.observe(element);
+      imageRefs.current.set(idStr, targetElement);
+      observer.current.observe(targetElement);
     }
   }, []);
 
@@ -1439,8 +1459,7 @@ const ImageGalleryScreensaver = ({
     prevLayoutType.current = layoutType;
   }, [layoutType]);
 
-  // Calculate viewport height for full-panorama layout
-  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 1080;
+  // isFullPanorama is used to determine layout and styling
   const isFullPanorama = layoutType === 'full-panorama';
   
   return (
@@ -1457,7 +1476,6 @@ const ImageGalleryScreensaver = ({
         }}
       >
         {transitions((style, item, _, index) => {
-          const isPanorama = item.isPanorama || isFullPanorama;
           const uniqueKey = isFullPanorama ? `${item.id}-${index}` : item.id;
           
           return (
@@ -1486,16 +1504,13 @@ const ImageGalleryScreensaver = ({
                   position: 'relative'
                 }}
               >
-                <img
+                <div 
                   ref={(el) => setImageRef(item.id.toString(), el)}
-                  data-src={item.src}
-                  alt=""
+                  id={`image-${item.id}`}
                   style={{
-                    width: item.style?.width || '100%',
-                    height: item.style?.height || '100%',
-                    objectFit: item.style?.objectFit as React.CSSProperties['objectFit'] || 'cover',
-                    objectPosition: item.style?.objectPosition || 'center',
-                    display: 'block',
+                    width: '100%',
+                    height: '100%',
+                    position: 'relative',
                     transform: item.style?.transform,
                     transformOrigin: item.style?.transformOrigin,
                     willChange: item.style?.willChange as React.CSSProperties['willChange'],
@@ -1503,17 +1518,40 @@ const ImageGalleryScreensaver = ({
                     transition: 'opacity 0.3s ease-in-out',
                     backgroundColor: '#f0f0f0' // Placeholder color
                   }}
-                  onLoad={(e) => {
-                    const img = e.target as HTMLImageElement;
-                    img.style.opacity = '1';
-                  }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    // Set error placeholder
-                    target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNlZWVlZWUiLz48bGluZSB4MT0iMCIgeTE9IjAiIHgyPSIxMDAiIHkyPSIxMDAiIHN0cm9rZT0iI2RkZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjEwMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMTAwIiBzdHJva2U9IiNkZGQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=';
-                  }}
-                />
+                >
+                  <Image
+                    src={item.src}
+                    alt=""
+                    fill
+                    priority={index < 3} // Load first 3 images with high priority
+                    loading={index < 3 ? 'eager' : 'lazy'}
+                    quality={85}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    style={{
+                      objectFit: item.style?.objectFit as React.CSSProperties['objectFit'] || 'cover',
+                      objectPosition: item.style?.objectPosition || 'center',
+                      display: 'block',
+                      transition: 'opacity 0.3s ease-in-out'
+                    }}
+                    placeholder="blur"
+                    blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCgkJCSAgICBCb3g9IjAgMCAxMDAgMTAwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0iZmlsbDojZjBmMGYwOyIvPgogIDxwYXRoIGQ9Ik0wIDBoNTB2NTBoLTUweiIgb3BhY2l0eT0iLjIiLz4KICA8cGF0aCBkPSJNMzAgMGg0MHY0MGgtNDB6IiBvcGFjaXR5PSIuMiIvPgo8L3N2Zz4="
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.onerror = null;
+                      // Set error placeholder
+                      target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNlZWVlZWUiLz48bGluZSB4MT0iMCIgeTE9IjAiIHgyPSIxMDAiIHkyPSIxMDAiIHN0cm9rZT0iI2RkZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjEwMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMTAwIiBzdHJva2U9IiNkZGQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=';
+                    }}
+                    onLoad={(e) => {
+                      const img = e.target as HTMLImageElement;
+                      const container = img.closest(`#image-${item.id}`) as HTMLElement;
+                      if (container) {
+                        container.style.opacity = '1';
+                        // Remove the placeholder background once loaded
+                        container.style.backgroundColor = 'transparent';
+                      }
+                    }}
+                  />
+                </div>
               </div>
             </a.div>
           );
@@ -1536,7 +1574,7 @@ const Screensaver = () => {
   
   const [progress, setProgress] = useState(0);
   const [showInitialLoading, setShowInitialLoading] = useState(true);
-  const [layoutType, setLayoutType] = useState<LayoutType>('masonry');
+  const [layoutType] = useState<LayoutType>('masonry');
   const prevLayoutType = useRef<LayoutType>('masonry');
 
   // Update progress when loadedCount changes

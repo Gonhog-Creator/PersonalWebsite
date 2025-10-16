@@ -79,21 +79,6 @@ const imageDetails: Record<number, { alt: string }> = {
   47: { alt: 'DescriptionComingSoon' },
 };
 
-
-// Update gallery images with details
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Edinburgh' },
-  { id: 2, location: 'Glasgow' },
-  { id: 3, location: 'Loch Ness' },
-  { id: 4, location: 'Isle of Skye' },
-  { id: 5, location: 'Inverness' },
-  { id: 6, location: 'Stirling' },
-  { id: 7, location: 'Aberdeen' },
-  { id: 8, location: 'Fort William' },
-  { id: 9, location: 'Dundee' }
-];
-
 export default function ScotlandGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
@@ -140,16 +125,18 @@ export default function ScotlandGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Verify image paths
+  // Verify image paths in development only
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">

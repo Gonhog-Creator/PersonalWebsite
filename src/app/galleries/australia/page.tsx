@@ -131,19 +131,6 @@ const imageDetails: Record<number, { alt: string }> = {
 // Masonry breakpoints
 
 
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Sydney' },
-  { id: 2, location: 'Melbourne' },
-  { id: 3, location: 'Great Barrier Reef' },
-  { id: 4, location: 'Uluru' },
-  { id: 5, location: 'Great Ocean Road' },
-  { id: 6, location: 'Kakadu National Park' },
-  { id: 7, location: 'Perth' },
-  { id: 8, location: 'Tasmania' },
-  { id: 9, location: 'The Pinnacles' }
-];
-
 export default function AustraliaGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
@@ -189,16 +176,18 @@ export default function AustraliaGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Verify image paths
+  // Verify image paths in development only
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -377,14 +366,12 @@ export default function AustraliaGallery() {
           <div className="w-full flex justify-center items-center min-h-screen py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Australia Drone Footage</h2>
-              <div className="w-full max-w-6xl text-center">
-                <p className="text-gray-300 text-lg md:text-xl mb-8">
-                  Drone footage coming soon. Check back later for amazing aerial views of Australia!
-                </p>
-                {/* Placeholder for future video */}
-                <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center text-gray-500">
-                  <p>Video Coming Soon</p>
-                </div>
+              <div className="w-full max-w-6xl">
+                <VideoPlayer 
+                  src="/vids/Australia 2025 Recap 2k.mp4"
+                  title="Australia 2025 Drone Footage"
+                  className="rounded-lg shadow-xl"
+                />
               </div>
               <div className="h-32 w-full"></div>
             </div>

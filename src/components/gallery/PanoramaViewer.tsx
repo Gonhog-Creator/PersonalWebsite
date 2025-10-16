@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Image, { ImageProps } from 'next/image';
-import { FaTimes, FaExpand } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 
 interface PanoramaViewerProps extends Omit<ImageProps, 'onClick' | 'className'> {
   location?: string;
@@ -14,7 +14,7 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-  const [isOverImage, setIsOverImage] = useState(false);
+  const [, setIsOverImage] = useState(false);
   const [dimensions, setDimensions] = useState({ width: '100%', height: 'auto' });
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -23,7 +23,7 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
   // Handle image load to get natural dimensions
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.target as HTMLImageElement;
-    const aspectRatio = img.naturalWidth / img.naturalHeight;
+    // Aspect ratio calculation removed as it's not currently used
     const containerWidth = containerRef.current?.offsetWidth || window.innerWidth;
     const maxWidth = Math.min(containerWidth, img.naturalWidth);
     
@@ -35,6 +35,15 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
     setScale(1);
     setPosition({ x: 0, y: 0 });
   };
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    // Reset zoom and position when closing
+    setTimeout(() => {
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
+    }, 300);
+  }, []);
 
   // Handle ESC key to close modal
   useEffect(() => {
@@ -55,16 +64,7 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'auto';
     };
-  }, [isModalOpen]);
-
-  const closeModal = useCallback(() => {
-    setIsModalOpen(false);
-    // Reset zoom and position when closing
-    setTimeout(() => {
-      setScale(1);
-      setPosition({ x: 0, y: 0 });
-    }, 300);
-  }, []);
+  }, [isModalOpen, closeModal]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (scale <= 1) return;

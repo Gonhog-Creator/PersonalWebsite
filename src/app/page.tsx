@@ -11,11 +11,6 @@ import { Hero } from '@/components/Hero/Hero';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { Icon } from '@/components/ui/Icon'; // Importing our custom Icon component
 
-const ParticlesBackground = dynamic(
-  () => import('@/components/ParticlesBackground/ParticlesBackground').then(mod => mod.ParticlesBackground || mod.default || mod),
-  { ssr: false }
-);
-
 const WavyBackground = dynamic(
   () => import('@/components/ui/wavy-background').then(mod => mod.WavyBackground),
   { ssr: false }
@@ -237,9 +232,6 @@ export default function Home() {
       </main>
 
       <footer className="relative h-[6vh] w-full">
-        <div className="absolute inset-0 w-full h-full">
-          <ParticlesBackground />
-        </div>
         <div className="absolute bottom-0 left-0 right-0 py-2 bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-sm">
           <div className="container mx-auto px-4 text-center">
             <p className="text-gray-300 text-sm md:text-base">© 2025 Jose Maria Barbeito. All rights reserved.</p>

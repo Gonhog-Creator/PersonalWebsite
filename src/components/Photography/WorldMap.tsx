@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
-import Image from 'next/image';
+import { useState, useCallback } from 'react';
 
 // List of countries with galleries and their coordinates [x, y] in the SVG
 const COUNTRIES = [

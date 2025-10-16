@@ -81,24 +81,10 @@ const imageDetails: Record<number, { alt: string }> = {
   49: { alt: 'DescriptionComingSoon' },
 };
 
-
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Zermatt' },
-  { id: 2, location: 'Zurich' },
-  { id: 3, location: 'Interlaken' },
-  { id: 4, location: 'Lucerne' },
-  { id: 5, location: 'Jungfraujoch' },
-  { id: 6, location: 'Geneva' },
-  { id: 7, location: 'Lauterbrunnen' },
-  { id: 8, location: 'Grindelwald' },
-  { id: 9, location: 'Montreux' }
-];
-
 export default function SwitzerlandGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 213 }, (_, i) => {
+    return Array.from({ length: 49 }, (_, i) => {
       const id = i + 1;
       const details = imageDetails[id] || {};
       return {
@@ -141,16 +127,18 @@ export default function SwitzerlandGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Verify image paths
+  // Verify image paths in development only
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">

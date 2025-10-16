@@ -221,7 +221,7 @@ export default function MapView() {
   const router = useRouter();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   // Map reference is used by the MapController component
-    const mapRef = useRef<LeafletMap | null>(null);
+  const mapRef = useRef<LeafletMap | null>(null);
   const [map, setMap] = useState<LeafletMap | null>(null);
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [countriesData, setCountriesData] = useState<CountryData | null>(null);
@@ -256,8 +256,7 @@ export default function MapView() {
     // No cleanup needed here as we want to keep the data loaded
   }, [isClient]);
 
-  // Track if we're currently over the UK
-  const [isOverUk, setIsOverUk] = useState(false);
+  // Keep track of last hover check for UK
   const lastUkHoverCheck = useRef<{ lat: number; lng: number } | null>(null);
 
   // Memoize the country style function
@@ -293,49 +292,25 @@ export default function MapView() {
   }, [setHoveredCountry]);
 
   // Handle country mouse over
-  const handleCountryMouseOver = useCallback((e: L.LeafletMouseEvent | CountryFeature) => {
-    // Check if we received an event or a feature directly
-    let feature: CountryFeature;
-    let lat: number, lng: number;
+  const handleCountryMouseOver = useCallback((e: L.LeafletMouseEvent) => {
+    const target = e.target as L.Path & { feature?: CountryFeature };
+    if (!target.feature?.properties) return;
     
-    if ('target' in e) {
-      // It's a LeafletMouseEvent
-      const target = e.target as L.Path & { feature?: CountryFeature };
-      if (!target.feature) {
-        console.error('No feature found on event target');
-        return;
-      }
-      feature = target.feature;
-      lat = e.latlng.lat;
-      lng = e.latlng.lng;
-    } else {
-      // It's a CountryFeature
-      feature = e;
-      lat = 0;
-      lng = 0;
-    }
+    const { feature } = target;
+    const countryCode = feature.properties.iso_a2;
     
-    const countryCode = feature.properties.iso_a2 as keyof typeof countryToGalleryMap;
-    
-    // For UK, set up mousemove tracking for Scotland detection
     if (countryCode === 'GB') {
-      setIsOverUk(true);
-      // Initial check
-      if ('latlng' in e) {
-        const isScotland = (
-          lat >= 54.6 && lat <= 60.9 &&  // North to South
-          lng >= -8.2 && lng <= -0.7     // West to East
-        );
-        setHoveredCountry(isScotland ? 'Scotland' : 'United Kingdom');
-      }
+      const { lat, lng } = e.latlng;
+
+      // Check if we're over Scotland
+      const isScotland = (
+        lat >= 54.6 && lat <= 60.9 &&  // North to South
+        lng >= -8.2 && lng <= -0.7     // West to East
+      );
+      setHoveredCountry(isScotland ? 'Scotland' : 'United Kingdom');
     } else {
-      setIsOverUk(false);
       setHoveredCountry(feature.properties.name);
     }
-  }, [setHoveredCountry, setIsOverUk]);
-
-  const handleCountryMouseOut = useCallback(() => {
-    setHoveredCountry('');
   }, [setHoveredCountry]);
 
   const handleClick = useCallback((e: L.LeafletMouseEvent) => {
@@ -390,7 +365,9 @@ export default function MapView() {
     setIsModalOpen(true);
   }, [router]);
 
+  // Memoize the onEachFeature function with all required dependencies
   const onEachFeature = useCallback((feature: CountryFeature, layer: Layer) => {
+    // Define handleMouseOver inside the callback to capture the latest dependencies
     const handleMouseOver = (e: L.LeafletMouseEvent) => {
       const target = e.target as L.Path & { feature?: CountryFeature };
       // Store the feature on the target for use in the event handler
@@ -418,19 +395,18 @@ export default function MapView() {
       handleCountryMouseOver(e);
     };
 
-      const handleMouseOut = (e: L.LeafletEvent) => {
+    const handleMouseOut = (e: L.LeafletEvent) => {
       const target = e.target as L.Path & { feature?: CountryFeature };
       
       // Remove mousemove handler if it was added
       if (target.feature?.properties.iso_a2 === 'GB') {
         target.off('mousemove', handleUkMouseMove);
-        setIsOverUk(false);
       }
       
       target.setStyle(getCountryStyle(feature, countriesWithGalleries as readonly string[]));
       
       // Clear hover state
-      handleCountryMouseOut();
+      setHoveredCountry('');
     };
 
     const handleFeatureClick = (e: L.LeafletMouseEvent) => {
@@ -445,7 +421,7 @@ export default function MapView() {
         click: handleFeatureClick
       });
     }
-  }, [handleCountryMouseOut, handleCountryMouseOver, handleClick]);
+  }, [handleUkMouseMove, handleCountryMouseOver, handleClick]);
 
   // Handle map instance when it's created
   const setMapInstance = useCallback((mapInstance: LeafletMap) => {
@@ -477,8 +453,14 @@ export default function MapView() {
     const handleResize = () => {
       if (resizeTimeoutRef.current) clearTimeout(resizeTimeoutRef.current);
       resizeTimeoutRef.current = setTimeout(() => {
-        if (mapInstance && !(mapInstance.getContainer() as { _leaflet_id?: number })._leaflet_id) {
-          mapInstance.invalidateSize();
+        try {
+          // Check if map instance is still valid and attached to the DOM
+          if (mapInstance && mapInstance.getContainer()?.parentElement) {
+            // Use a try-catch to handle any potential errors during size invalidation
+            mapInstance.invalidateSize();
+          }
+        } catch (error) {
+          console.warn('Error during map resize:', error);
         }
       }, 100);
     };

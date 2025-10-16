@@ -1,7 +1,18 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
+
+interface UseActiveSectionOptions {
+  rootMargin?: string;
+  threshold?: number | number[];
+  offset?: number;
+}
+
+interface ElementSize {
+  width: number;
+  height: number;
+}
 
 /**
  * Custom hook to track which section is currently in view
@@ -11,63 +22,65 @@ import { usePathname } from 'next/navigation';
  */
 export function useActiveSection(
   sectionIds: string[],
-  options: {
-    rootMargin?: string;
-    threshold?: number | number[];
-    offset?: number;
-  } = {}
+  options: UseActiveSectionOptions = {}
 ): string | null {
   const [activeId, setActiveId] = useState<string | null>(null);
   const observer = useRef<IntersectionObserver | null>(null);
   const pathname = usePathname();
-  const { rootMargin = '0px 0px -80% 0px', threshold = 0.1, offset = 0 } = options;
+  const { rootMargin = '0px 0px -80% 0px', threshold = 0.1 } = options;
 
   // Reset active section when route changes
   useEffect(() => {
     setActiveId(null);
   }, [pathname]);
 
-  // Create intersection observer callback
-  const handleObserver = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveId(entry.target.id);
-        }
-      });
-    },
-    []
-  );
+  // Memoize the section IDs to prevent unnecessary effect re-runs
+  const memoizedSectionIds = useMemo(() => sectionIds, [sectionIds]);
 
-  // Set up intersection observer
+  // Create intersection observer callback with proper cleanup
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    let activeId: string | null = null;
+    let maxRatio = -1;
+
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > maxRatio) {
+        const target = entry.target as HTMLElement;
+        if (target.id) {
+          activeId = target.id;
+          maxRatio = entry.intersectionRatio;
+        }
+      }
+    });
+
+    if (activeId) {
+      setActiveId(activeId);
+    }
+  }, []);
+
+  // Set up intersection observer with proper cleanup
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const elements = sectionIds
+    const elements = memoizedSectionIds
       .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
+      .filter(Boolean) as HTMLElement[];
 
     if (elements.length === 0) return;
 
-    observer.current = new IntersectionObserver(handleObserver, {
+    const currentObserver = new IntersectionObserver(handleObserver, {
       root: null,
       rootMargin,
       threshold,
     });
 
-    elements.forEach((el) => {
-      observer.current?.observe(el);
-    });
+    elements.forEach((el) => currentObserver.observe(el));
+    observer.current = currentObserver;
 
     return () => {
-      if (observer.current) {
-        elements.forEach((el) => {
-          observer.current?.unobserve(el);
-        });
-        observer.current.disconnect();
-      }
+      elements.forEach((el) => currentObserver.unobserve(el));
+      currentObserver.disconnect();
     };
-  }, [sectionIds, handleObserver, rootMargin, threshold]);
+  }, [memoizedSectionIds, handleObserver, rootMargin, threshold]);
 
   return activeId;
 }
@@ -78,14 +91,29 @@ export function useActiveSection(
  */
 export function useScrollPosition(): number {
   const [scrollPosition, setScrollPosition] = useState(0);
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setScrollPosition(window.scrollY);
+      if (!ticking) {
+        rafId.current = requestAnimationFrame(() => {
+          setScrollPosition(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
+      }
+    };
   }, []);
 
   return scrollPosition;
@@ -103,22 +131,31 @@ export function useInViewport(
 ): boolean {
   const [isInViewport, setIsInViewport] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const elementRef = useRef<HTMLElement | null>(null);
+
+  // Store the current ref value to use in cleanup
+  const currentRef = useRef(ref.current);
+  
+  useEffect(() => {
+    currentRef.current = ref.current;
+  }, [ref]);
 
   useEffect(() => {
-    if (!ref.current) return;
+    const element = elementRef.current;
+    if (!element) return;
 
-    observerRef.current = new IntersectionObserver(([entry]) => {
+    const observer = new IntersectionObserver(([entry]) => {
       setIsInViewport(entry.isIntersecting);
     }, options);
 
-    observerRef.current.observe(ref.current);
+    observer.observe(element);
+    observerRef.current = observer;
 
     return () => {
-      if (observerRef.current && ref.current) {
-        observerRef.current.unobserve(ref.current);
-      }
+      observer.unobserve(element);
+      observer.disconnect();
     };
-  }, [ref, options]);
+  }, [options]);
 
   return isInViewport;
 }
@@ -130,38 +167,52 @@ export function useInViewport(
  */
 export function useElementSize<T extends HTMLElement>(): [
   React.RefObject<T | null>,
-  { width: number; height: number }
+  ElementSize
 ] {
   const ref = useRef<T | null>(null);
-  const [size, setSize] = useState({ width: 0, height: 0 });
+  const [size, setSize] = useState<ElementSize>({ width: 0, height: 0 });
+  const rafId = useRef<number | null>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
   useEffect(() => {
     if (!ref.current) return;
 
     const updateSize = () => {
-      if (ref.current) {
-        const { width, height } = ref.current.getBoundingClientRect();
-        setSize({ width, height });
-      }
+      if (!ref.current) return;
+      
+      rafId.current = requestAnimationFrame(() => {
+        if (ref.current) {
+          const { width, height } = ref.current.getBoundingClientRect();
+          setSize({ width, height });
+        }
+      });
     };
 
     // Initial measurement
     updateSize();
 
-    // Set up ResizeObserver to track size changes
+    // Set up ResizeObserver
     const resizeObserver = new ResizeObserver(updateSize);
-    resizeObserver.observe(ref.current);
-
-    // Also listen to window resize for cases where the element size changes due to viewport changes
-    window.addEventListener('resize', updateSize);
-
+    resizeObserverRef.current = resizeObserver;
+    
+    // Observe the current ref
+    const currentElement = ref.current;
+    if (currentElement) {
+      resizeObserver.observe(currentElement);
+    }
+    
+    // Cleanup function
     return () => {
-      if (ref.current) {
-        resizeObserver.unobserve(ref.current);
+      if (currentElement) {
+        resizeObserver.unobserve(currentElement);
       }
-      window.removeEventListener('resize', updateSize);
+      resizeObserver.disconnect();
+      
+      if (rafId.current) {
+        cancelAnimationFrame(rafId.current);
+      }
     };
-  }, []);
+  }, [ref, resizeObserverRef, rafId]);
 
   return [ref, size];
 }

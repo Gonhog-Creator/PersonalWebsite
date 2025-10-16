@@ -11,9 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const GradientBorderButton = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, className, asChild = false, href, ...props }, ref) => {
-    const Comp = asChild ? 'a' : 'button';
-    
+  ({ children, className, ...props }, ref) => {
     return (
       <button
         ref={ref}

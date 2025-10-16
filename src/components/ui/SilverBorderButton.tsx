@@ -107,7 +107,8 @@ const SilverBorderButton = ({
   };
 
   if (isLink) {
-    const { as: _unusedAs, ...linkProps } = props as LinkButtonProps;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { as: _as, ...linkProps } = props as LinkButtonProps;
     return (
       <a
         {...commonProps}
@@ -127,7 +128,8 @@ const SilverBorderButton = ({
     );
   }
 
-  const { as: _unusedAs, ...buttonProps } = props as ButtonProps;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { as: _as, ...buttonProps } = props as ButtonProps;
   return (
     <button
       {...commonProps}

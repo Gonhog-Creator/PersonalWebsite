@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
@@ -18,6 +18,7 @@ interface GalleryImage {
 }
 
 type GalleryView = 'photos' | 'panoramas' | 'drone';
+
 
 // Helper function to generate image paths
 const getImagePath = (id: number) => {
@@ -155,20 +156,9 @@ const imageDetails: Record<number, { alt: string }> = {
   122: { alt: 'There is a small church in the middle of a vineyard.' },
 };
 
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Paris' },
-  { id: 2, location: 'Versailles' },
-  { id: 3, location: 'Mont Saint-Michel' },
-  { id: 4, location: 'Loire Valley' },
-  { id: 5, location: 'Provence' },
-  { id: 6, location: 'French Riviera' },
-  { id: 7, location: 'Bordeaux' },
-  { id: 8, location: 'Normandy' },
-  { id: 9, location: 'Alsace' }
-];
-
 export default function FranceGallery() {
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 122 }, (_, i) => {
@@ -184,24 +174,22 @@ export default function FranceGallery() {
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [currentView, setCurrentView] = useState<GalleryView>('photos');
-
-
-  const openLightbox = (image: GalleryImage) => {
-    setSelectedImage(image);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
+  
+  const closeLightbox = useCallback(() => {
     setSelectedImage(null);
     document.body.style.overflow = 'unset';
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  }, []);
+  
+  const openLightbox = useCallback((image: GalleryImage) => {
+    setSelectedImage(image);
+    document.body.style.overflow = 'hidden';
+  }, []);
+  
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       closeLightbox();
     }
-  };
+  }, [closeLightbox]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -212,18 +200,20 @@ export default function FranceGallery() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [closeLightbox]);
 
-  // Verify image paths
+  // Verify image paths in development only
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">

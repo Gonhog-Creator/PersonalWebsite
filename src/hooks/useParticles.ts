@@ -1,156 +1,42 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-// Define types for particles.js
-interface ParticlesConfig {
-  particles: {
-    number: {
-      value: number;
-      density: {
-        enable: boolean;
-        value_area: number;
-      };
-    };
-    color: {
-      value: string;
-    };
-    shape: {
-      type: string;
-      stroke: {
-        width: number;
-        color: string;
-      };
-      polygon: {
-        nb_sides: number;
-      };
-    };
-    opacity: {
-      value: number;
-      random: boolean;
-      anim: {
-        enable: boolean;
-        speed: number;
-        opacity_min: number;
-        sync: boolean;
-      };
-    };
-    size: {
-      value: number;
-      random: boolean;
-      anim: {
-        enable: boolean;
-        speed: number;
-        size_min: number;
-        sync: boolean;
-      };
-    };
-    line_linked: {
-      enable: boolean;
-      distance: number;
-      color: string;
-      opacity: number;
-      width: number;
-    };
-    move: {
-      enable: boolean;
-      speed: number;
-      direction: string;
-      random: boolean;
-      straight: boolean;
-      out_mode: string;
-      bounce: boolean;
-      attract: {
-        enable: boolean;
-        rotateX: number;
-        rotateY: number;
-      };
-    };
-  };
-  interactivity: {
-    detect_on: string;
-    events: {
-      onhover: {
-        enable: boolean;
-        mode: string;
-      };
-      onclick: {
-        enable: boolean;
-        mode: string;
-      };
-      resize: boolean;
-    };
-    modes: {
-      grab: {
-        distance: number;
-        line_linked: {
-          opacity: number;
-        };
-      };
-      bubble: {
-        distance: number;
-        size: number;
-        duration: number;
-        opacity: number;
-        speed: number;
-      };
-      repulse: {
-        distance: number;
-        duration: number;
-      };
-      push: {
-        particles_nb: number;
-      };
-      remove: {
-        particles_nb: number;
-      };
-    };
-  };
-  retina_detect: boolean;
-}
-
-declare global {
-  interface Window {
-    particlesJS: {
-      load: (
-        id: string,
-        path: string | ParticlesConfig,
-        callback?: () => void
-      ) => void;
-    };
-  }
-}
-
+// The particlesJS types are imported from src/types/particles.d.ts
 export const useParticles = (): void => {
   useEffect(() => {
     // Only run on client-side
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     // Check if particles.js is loaded
     if (!window.particlesJS) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('particlesJS is not loaded');
+      if (process.env.NODE_ENV === "development") {
+        console.warn("particlesJS is not loaded");
       }
       return;
     }
 
-    // Initialize particles.js
-    const configPath = '/particles.json';
-    const callback = (): void => {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Particles.js config loaded');
+    // Immediately-invoked async function to handle async/await
+    (async () => {
+      try {
+        // Load particles configuration
+        const response = await fetch("/particles.json");
+        const config = await response.json();
+        
+        // Initialize particles with the loaded config
+        window.particlesJS("particles-js", config);
+        
+        if (process.env.NODE_ENV === "development") {
+          console.log("Particles.js initialized");
+        }
+      } catch (error) {
+        console.error("Error initializing particles:", error);
       }
-    };
-
-    try {
-      window.particlesJS.load('particles-js', configPath, callback);
-    } catch (error) {
-      console.error('Error initializing particles:', error);
-    }
+    })();
 
     // Cleanup function
     return (): void => {
-      const particlesContainer = document.getElementById('particles-js');
+      const particlesContainer = document.getElementById("particles-js");
       if (particlesContainer) {
-        particlesContainer.innerHTML = '';
+        particlesContainer.innerHTML = "";
       }
     };
   }, []);

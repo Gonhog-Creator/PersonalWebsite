@@ -86,27 +86,12 @@ const imageDetails: Record<number, { alt: string }> = {
   54: { alt: 'DescriptionComingSoon' },
   55: { alt: 'DescriptionComingSoon' },
   56: { alt: 'DescriptionComingSoon' },
-  57: { alt: 'DescriptionComingSoon' },
 };
-
-
-// Panorama locations data
-const panoramaLocations = [
-  { id: 1, location: 'Lake Bled' },
-  { id: 2, location: 'Ljubljana' },
-  { id: 3, location: 'Postojna Cave' },
-  { id: 4, location: 'Piran' },
-  { id: 5, location: 'Triglav National Park' },
-  { id: 6, location: 'Maribor' },
-  { id: 7, location: 'Vintgar Gorge' },
-  { id: 8, location: 'Soca Valley' },
-  { id: 9, location: 'Skocjan Caves' }
-];
 
 export default function SloveniaGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 213 }, (_, i) => {
+    return Array.from({ length: 57 }, (_, i) => {
       const id = i + 1;
       const details = imageDetails[id] || {};
       return {
@@ -149,16 +134,18 @@ export default function SloveniaGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Verify image paths
+  // Verify image paths in development only
   useEffect(() => {
-    console.log('Verifying image paths...');
-    galleryImages.forEach(img => {
-      const imgEl = new window.Image();
-      imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-      imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-      imgEl.src = img.src;
-    });
-  }, []);
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Verifying image paths...');
+      galleryImages.forEach(img => {
+        const imgEl = new window.Image();
+        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
+        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.src = img.src;
+      });
+    }
+  }, [galleryImages]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -301,17 +288,6 @@ export default function SloveniaGallery() {
                   { id: 10, location: 'DescriptionComingSoon' },
                   { id: 11, location: 'DescriptionComingSoon' },
                   { id: 12, location: 'DescriptionComingSoon' },
-                  { id: 13, location: 'DescriptionComingSoon' },
-                  { id: 14, location: 'DescriptionComingSoon' },
-                  { id: 15, location: 'DescriptionComingSoon' },
-                  { id: 16, location: 'DescriptionComingSoon' },
-                  { id: 17, location: 'DescriptionComingSoon' },
-                  { id: 18, location: 'DescriptionComingSoon' },
-                  { id: 19, location: 'DescriptionComingSoon' },
-                  { id: 20, location: 'DescriptionComingSoon' },
-                  { id: 21, location: 'DescriptionComingSoon' },
-                  { id: 22, location: 'DescriptionComingSoon' },
-                  { id: 23, location: 'DescriptionComingSoon' },
                 ].map((item, index) => (
                   <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
                     <PanoramaViewer

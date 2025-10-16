@@ -2,36 +2,44 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import TextTrail from '../ui/TextTrail';
-import DecryptedText from '../ui/DecryptedText';
-import ScrambledText from '../ui/ScrambledText';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { ParticlesBackground } from '../ParticlesBackground/ParticlesBackground';
+import DecryptedText from '../ui/DecryptedText';
+
+// Dynamically import ParticlesBackground with SSR disabled
+const ParticlesBackground = dynamic(
+  () => import('../ParticlesBackground/ParticlesBackground').then(mod => mod.ParticlesBackground || mod.default || mod),
+  { 
+    ssr: false,
+    loading: () => <div className="fixed inset-0 w-full h-full bg-gray-900" />
+  }
+);
 
 export function Hero() {
-  const [fontSize, setFontSize] = useState(72);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Set initial font size based on window width
-    const handleResize = () => {
-      setFontSize(window.innerWidth < 768 ? 48 : 72);
-    };
-    
-    // Set initial value
-    handleResize();
-    
-    // Add event listener
-    window.addEventListener('resize', handleResize);
+    // Set mounted state for client-side rendering
+    setMounted(true);
     
     // Clean up
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {};
   }, []);
+  
+  if (!mounted) {
+    return (
+      <section id="home" className="relative min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="fixed inset-0 w-full h-full bg-gray-900" />
+      </section>
+    );
+  }
   
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900 text-white transition-colors duration-300">
       {/* Particles Background */}
-      <ParticlesBackground />
+      <div className="fixed inset-0 w-full h-full">
+        <ParticlesBackground />
+      </div>
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">

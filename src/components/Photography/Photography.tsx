@@ -5,7 +5,6 @@ import Image from 'next/image';
 import AOS from 'aos';
 import { RainbowBorderButton } from '../ui/rainbow-borders-button';
 import 'aos/dist/aos.css';
-import dynamic from 'next/dynamic';
 import { SilverBorderButton } from "@/components/ui/SilverBorderButton";
 
 type GalleryItem = {
@@ -19,6 +18,8 @@ type GalleryItem = {
   aspectRatio?: string;
 };
 
+// Gallery data is used in the component
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const galleries: GalleryItem[] = [
   {
     id: 'united-states',

@@ -1,6 +1,6 @@
 'use client';
 
-import { forwardRef, useRef, useEffect, MouseEvent as ReactMouseEvent } from 'react';
+import { forwardRef, useRef, useEffect } from 'react';
 import Link, { LinkProps as NextLinkProps } from 'next/link';
 import { cn } from '@/lib/utils';
 
