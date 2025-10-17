@@ -44,7 +44,6 @@ const nextConfig = {
   
   // Production optimizations
   productionBrowserSourceMaps: false,
-  swcMinify: true,
   compress: true,
   
   // Experimental features
