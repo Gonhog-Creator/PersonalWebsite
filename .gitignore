@@ -5,15 +5,9 @@ node_modules/
 
 # Build output
 next/
-out/
-dist/
-build/
 
 # Cache
 .cache/
-.vercel
-.vercel_build_output/
-
 # Next.js build cache
 next/cache/
 !.next/cache/package-manager
