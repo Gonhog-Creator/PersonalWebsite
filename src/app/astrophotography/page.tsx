@@ -75,33 +75,33 @@ const timelapseVideos = [
   },
   {
     id: 6,
-    title: 'Timelapse 6',
-    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_6',
+    title: 'Fraser Island (2)',
+    videoUrl: 'https://www.youtube.com/embed/xsapqb72kdY',
   },
   {
     id: 7,
-    title: 'Timelapse 7',
-    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_7',
+    title: 'Fraser Island (3)',
+    videoUrl: 'https://www.youtube.com/embed/ztRyJjZjT2U',
   },
   {
     id: 8,
-    title: 'Timelapse 8',
-    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_8',
+    title: 'Grindelwald, Switzerland',
+    videoUrl: 'https://www.youtube.com/embed/mmbNqM2BS0Y',
   },
   {
     id: 9,
-    title: 'Timelapse 9',
-    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_9',
+    title: 'Iruya, Argentina',
+    videoUrl: 'https://www.youtube.com/embed/VZaoIrDDmi4',
   },
   {
     id: 10,
-    title: 'Timelapse 10',
-    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_10',
+    title: 'Lost Lake, Oregon',
+    videoUrl: 'https://www.youtube.com/embed/UsKO_U1A33Y',
   },
   {
     id: 11,
-    title: 'Timelapse 11',
-    videoUrl: 'https://www.youtube.com/embed/VIDEO_ID_11',
+    title: 'Northern California',
+    videoUrl: 'https://www.youtube.com/embed/GRzPwDJ9268',
   }
 ];
 
