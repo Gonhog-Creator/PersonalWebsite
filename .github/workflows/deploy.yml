@@ -40,9 +40,28 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
+      - name: Cache node modules
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: |
+            ~/.npm
+            node_modules
+            .next/cache
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          npm ci
+          npm ci --prefer-offline
+          npm install -D @vercel/ncc
+      
+      - name: Install dependencies (cached)
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: |
+          npm ci --prefer-offline --cache .npm --prefer-offline
           npm install -D @vercel/ncc
 
       - name: Build with Next.js
