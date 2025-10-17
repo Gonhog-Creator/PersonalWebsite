@@ -835,5 +835,30 @@ export const dsoImages: DSOImage[] = [
       { type: 'other', number: 'KPG 218A' }
     ],
     processing: 'Re-stacked and reprocessed using Siril, Nazstronomy, CosmicClarity, and HDR-Multiscale.'
+  },
+  {
+    id: 'dso-34',
+    title: 'Pleiades (M45) - Reprocessed',
+    date: '2025-10-16',
+    shortDescription: 'An open star cluster containing middle-aged, hot B-type stars located in the constellation of Taurus, among the nearest star clusters to Earth.,
+    fullDescription: 'A reprocessing of older data to utilize new techniques. I think it came out much better, the whisps are much more visible',
+    type: 'star cluster',
+    constellation: 'Taurus',
+    imageUrl: '/img/Astro/M45-12.25.24-857x10sec.jpg',
+    telescope: 'Seestar S50',
+    exposure: '2.4 hours (857x10sec)',
+    location: 'Durham, NC',
+    year: 2025,
+    catalogues: [
+      { type: 'messier', number: 45 },
+      { type: 'other', number: 'Melotte 22' },
+      { type: 'other', number: 'Collinder 42' },
+      { type: 'other', number: 'C 0342+239' },
+      { type: 'other', number: 'OCl 421.0' },
+      { type: 'other', number: 'LBN 189.97-17.92' },
+      { type: 'other', number: 'LDN 1495' },
+      { type: 'other', number: 'LBN 190.10-18.00' }
+    ],
+    processing: 'Re-stacked and reprocessed using Siril, Nazstronomy, CosmicClarity, and HDR-Multiscale.'
   }
 ];
