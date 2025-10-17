@@ -42,18 +42,11 @@ const nextConfig = {
   assetPrefix: assetPrefix,
   trailingSlash: true,
   
-  // Production optimizations
-  productionBrowserSourceMaps: false,
-  compress: true,
-  
   // Experimental features
   experimental: {
     appDir: true,
     optimizeCss: true,
     esmExternals: true,
-    // Enable incremental static regeneration (ISR) for static exports
-    isrMemoryCacheSize: 50,
-    workerThreads: true,
   },
   
   // Image optimization for static export
