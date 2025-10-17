@@ -840,7 +840,7 @@ export const dsoImages: DSOImage[] = [
     id: 'dso-34',
     title: 'Pleiades (M45) - Reprocessed',
     date: '2025-10-16',
-    shortDescription: 'An open star cluster containing middle-aged, hot B-type stars located in the constellation of Taurus, among the nearest star clusters to Earth.,
+    shortDescription: 'An open star cluster containing middle-aged, hot B-type stars located in the constellation of Taurus, among the nearest star clusters to Earth.',
     fullDescription: 'A reprocessing of older data to utilize new techniques. I think it came out much better, the whisps are much more visible',
     type: 'star cluster',
     constellation: 'Taurus',
