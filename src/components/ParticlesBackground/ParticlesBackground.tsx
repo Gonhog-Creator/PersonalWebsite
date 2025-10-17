@@ -91,9 +91,70 @@ interface ParticlesConfig {
   retina_detect: boolean;
 }
 
+interface ParticlesJSInstance {
+  canvas: {
+    el: HTMLCanvasElement;
+    ctx: CanvasRenderingContext2D;
+    w: number;
+    h: number;
+  };
+  particles: {
+    array: unknown[];
+    checkOverlap: (p1: unknown, p2: unknown) => boolean;
+    create: (p: unknown, id: number) => void;
+    empty: () => void;
+    move: () => void;
+    push: (n: number, pos?: { x: number; y: number }) => void;
+    set: (tag: string, value: unknown) => void;
+  };
+  fn: {
+    vendors: {
+      check: () => void;
+      listeners: () => void;
+    };
+  };
+  interactivity: {
+    el: HTMLElement | string;
+    detect_on: string;
+    events: {
+      onhover: {
+        enable: boolean;
+        mode: string | string[];
+      };
+      onclick: {
+        enable: boolean;
+        mode: string | string[];
+      };
+      resize: boolean;
+    };
+  };
+  retina: boolean;
+  update: () => void;
+  start: () => void;
+  pause: () => void;
+  resume: () => void;
+  destroy: () => void;
+}
+
 declare global {
   interface Window {
     particlesJS: (id: string, config: ParticlesConfig) => void;
+    pJSDom: Array<{
+      pJS: ParticlesJSInstance;
+      pJS_id: string;
+      pJS_interactivity: {
+        status: string;
+        mode: string;
+        mouse: {
+          pos_x: number | null;
+          pos_y: number | null;
+          click_pos_x: number | null;
+          click_pos_y: number | null;
+          click_time: number | null;
+        };
+      };
+      pJS_retina: boolean;
+    }>;
   }
 }
 
@@ -226,7 +287,6 @@ export function ParticlesBackground({ className = '' }: ParticlesBackgroundProps
       
       // Clean up any global event listeners or resources
       if ('particlesJS' in window) {
-        // @ts-expect-error - particlesJS has no proper types, but we need to reset pJSDom to avoid memory leaks
         window.pJSDom = [];
       }
     };

@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Alfa_Slab_One, Open_Sans, Fira_Code } from 'next/font/google';
 import ClientLayout from './client-layout';
 import AosInitializer from '@/components/AosInitializer';
-import { Analytics } from '@/components/GoogleAnalytics';
 import '@/app/globals.css';
 
 // Load fonts with optimized settings
@@ -161,7 +160,6 @@ export default function RootLayout({
         <ClientLayout>
           {children}
           <AosInitializer />
-          <Analytics />
         </ClientLayout>
         
         <script
