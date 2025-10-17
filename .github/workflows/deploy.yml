@@ -49,26 +49,24 @@ jobs:
             node_modules
             .next/cache
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
             ${{ runner.os }}-node-
       
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          npm ci --prefer-offline
-          npm install -D @vercel/ncc
-      
+          npm ci --prefer-offline --legacy-peer-deps
+          npm install -D @vercel/ncc --legacy-peer-deps
+          
       - name: Install dependencies (cached)
         if: steps.cache.outputs.cache-hit == 'true'
         run: |
-          npm ci --prefer-offline --cache .npm --prefer-offline
-          npm install -D @vercel/ncc
+          npm ci --prefer-offline --cache .npm --legacy-peer-deps
+          npm install -D @vercel/ncc --legacy-peer-deps
 
       - name: Build with Next.js
         env:
           NODE_ENV: 'production'
           GH_PAGES: 'true'
-          USE_CUSTOM_DOMAIN: 'true'
           GITHUB_ACTIONS: 'true'
           NEXT_TELEMETRY_DISABLED: '1'
           NEXT_PUBLIC_BASE_URL: 'https://www.josebarbeito.com'
