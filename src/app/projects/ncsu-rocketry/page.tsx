@@ -146,7 +146,7 @@ export default function NCSURocketryPage() {
               </div>
               
               <div className="w-full md:w-1/2 flex justify-center">
-                <div className="relative h-96 w-full max-w-2xl rounded-xl overflow-hidden shadow-2xl" data-aos="fade-left">
+                <div className="relative h-96 w-full max-w-3xl rounded-xl overflow-hidden shadow-2xl" data-aos="fade-left">
                   <Image
                     src="/rdre/rdre-schematic-diagram.jpg"
                     alt="RDRE Schematic Diagram - Save as: /public/rdre/rdre-schematic-diagram.jpg"
@@ -238,10 +238,10 @@ export default function NCSURocketryPage() {
                 <div className="mb-6">
                   <div className="relative w-full h-64 md:h-80 rounded-lg overflow-hidden mb-2">
                     <Image
-                      src="/rdre/rdre-schematic-diagram.jpg"
-                      alt="RDRE Turbine Power Extraction System"
+                      src="/rdre/RDE-award.png"
+                      alt="AIAA Scitech 2025 Achievement Award"
                       fill
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                   <p className="text-sm text-blue-200 italic">
@@ -259,10 +259,12 @@ export default function NCSURocketryPage() {
                   </p>
                 </div>
                 
-                <p className="text-blue-100">
-                  Corey Thunes, Donovan Ngum, Ellie Murray, &lt;strong&gt;Jose Barbeito&lt;/strong&gt;, Lucas Nicol, Rodrigo Dacosta, Trevor Larsen and James Braun&lt;br /&gt;
-                  North Carolina State University (Raleigh, NC)
-                </p>
+                <div 
+                  className="text-blue-100"
+                  dangerouslySetInnerHTML={{
+                    __html: 'Corey Thunes, Donovan Ngum, Ellie Murray, <strong>Jose Barbeito</strong>, Lucas Nicol, Rodrigo Dacosta, Trevor Larsen and James Braun<br />North Carolina State University (Raleigh, NC)'
+                  }}
+                />
               </div>
             </div>
           </div>
