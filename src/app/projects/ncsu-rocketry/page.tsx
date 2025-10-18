@@ -83,13 +83,12 @@ export default function NCSURocketryPage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 w-full">
         <div className="w-full flex flex-col items-center">
           <div className="text-center w-full mb-12" data-aos="fade-up">
-            <h2 className="text-4xl font-bold">Project Overview</h2>
           </div>
           
           <div className="w-full max-w-4xl">
             <div className="flex flex-col md:flex-row items-center gap-12">
               <div className="w-full md:w-1/2" data-aos="fade-right">
-                <div className="space-y-6 text-gray-700 dark:text-gray-300">
+                <div className="space-y-6 text-white">
                   <p className="text-center md:text-left">
                     As part of the NC State Liquid Rocketry Lab, I collaborated with Dr. James Braun&apos;s research group to develop
                     a novel power extraction system for Rotating Detonation Rocket Engines (RDREs). Our team designed and
@@ -131,7 +130,7 @@ export default function NCSURocketryPage() {
             </div>
             
             <div className="flex flex-col md:flex-row items-center gap-12">
-              <div className="w-full md:w-1/2 space-y-6 text-gray-700 dark:text-gray-300" data-aos="fade-right">
+              <div className="w-full md:w-1/2 space-y-6 text-gray-200 dark:text-gray-300" data-aos="fade-right">
                 <p>
                   A Rotating Detonation Engine (RDE) is a type of propulsion system that utilizes continuous detonation
                   waves to combust fuel and oxidizer. Unlike traditional rocket engines that rely on deflagration
@@ -174,7 +173,7 @@ export default function NCSURocketryPage() {
                   <FaCog className="text-blue-600 dark:text-blue-400 text-2xl mr-3" />
                   <h3 className="text-xl font-semibold">Turbine Design</h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-white">
                   Designed a high-efficiency axial flow turbine optimized for the unique exhaust conditions of the RDRE,
                   including temperature-resistant materials and aerodynamically optimized blades.
                 </p>
@@ -185,7 +184,7 @@ export default function NCSURocketryPage() {
                   <FaTools className="text-blue-600 dark:text-blue-400 text-2xl mr-3" />
                   <h3 className="text-xl font-semibold">Manufacturing</h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-white">
                   Utilized advanced manufacturing techniques including CNC machining and 3D printing to create precision
                   components capable of withstanding extreme temperatures and pressures.
                 </p>
@@ -196,7 +195,7 @@ export default function NCSURocketryPage() {
                   <FaWind className="text-blue-600 dark:text-blue-400 text-2xl mr-3" />
                   <h3 className="text-xl font-semibold">CFD Analysis</h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-white">
                   Conducted computational fluid dynamics (CFD) simulations to analyze flow characteristics,
                   optimize turbine performance, and validate design parameters under various operating conditions.
                 </p>
@@ -207,7 +206,7 @@ export default function NCSURocketryPage() {
                   <FaFlask className="text-blue-600 dark:text-blue-400 text-2xl mr-3" />
                   <h3 className="text-xl font-semibold">Validation, Verification, and Testing</h3>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-white">
                   Performed comprehensive Validation, Verification, and Testing (VVT) to ensure structural integrity and
                   performance reliability of turbine components under operational conditions.
                 </p>
@@ -218,14 +217,14 @@ export default function NCSURocketryPage() {
       </section>
 
       {/* Results and Impact */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 py-20">
+      <section className="bg-gradient-to-r from-blue-900 to-blue-800 py-20">
         <div className="w-full flex flex-col items-center">
           <div className="text-center w-full mb-12">
             <h2 className="text-4xl font-bold text-white" data-aos="fade-up">Results and Impact</h2>
           </div>
           
           <div className="w-full max-w-5xl text-center">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20" data-aos="fade-up">
+            <div className="bg-blue-900 rounded-xl p-8 border border-blue-400/30 shadow-2xl" data-aos="fade-up">
               <div className="space-y-6">
                 <div className="bg-yellow-500 text-blue-900 font-bold text-sm inline-block px-3 py-1 rounded-full">
                   AIAA SCITECH 2025 ACHIEVEMENT
@@ -244,23 +243,56 @@ export default function NCSURocketryPage() {
                       className="object-contain"
                     />
                   </div>
-                  <p className="text-sm text-blue-200 italic">
+                  <p className="text-sm text-white font-medium">
                     Our team&apos;s RDRE turbine power extraction system design
                   </p>
                 </div>
                 
-                <p className="text-blue-100 text-lg">
+                <p className="text-white text-lg font-medium">
                   Our team was honored to receive third place at the prestigious AIAA Scitech 2025 conference in the undergraduate team category for our work on:
                 </p>
                 
-                <div className="bg-white/5 rounded-lg p-6">
-                  <p className="text-blue-100 text-xl font-medium">
-                    &quot;Design and Analysis of Axial Turbine Power Extraction from a Small-Scale Rotating Detonation Rocket Combustor&quot;
+                <div className="bg-blue-800 rounded-lg p-6 mb-4 border border-blue-500/30">
+                  <p className="text-white text-xl font-semibold mb-4">
+                    "Design and Analysis of Axial Turbine Power Extraction from a Small-Scale Rotating Detonation Rocket Combustor"
                   </p>
+                  <div className="space-y-2">
+                    <p className="text-white">
+                      <a 
+                        href="https://mae.ncsu.edu/2025/04/24/nc-state-liquid-rocketry-lab-team-takes-third-at-aiaa-student-conference-chapter-named-best-in-nation/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-300 hover:text-blue-100 underline"
+                      >
+                        Read more about it here
+                      </a>
+                    </p>
+                    <p className="text-white">
+                      The team's full paper is available at:{' '}
+                      <a 
+                        href="https://region2.aiaastudentconference.org/collection/2025/manuscripts/99367.pdf" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-300 hover:text-blue-100 underline"
+                      >
+                        AIAA Region II Manuscript 99367
+                      </a>
+                    </p>
+                    <p className="text-white">
+                      <a 
+                        href="https://aiaa.org/scitech/program/program/" 
+                        target="_blank" 
+                        rel="opener noreferrer"
+                        className="text-blue-300 hover:text-blue-100 underline"
+                      >
+                        View the full Scitech 2025 program
+                      </a>
+                    </p>
+                  </div>
                 </div>
                 
                 <div 
-                  className="text-blue-100"
+                  className="text-white"
                   dangerouslySetInnerHTML={{
                     __html: 'Corey Thunes, Donovan Ngum, Ellie Murray, <strong>Jose Barbeito</strong>, Lucas Nicol, Rodrigo Dacosta, Trevor Larsen and James Braun<br />North Carolina State University (Raleigh, NC)'
                   }}
