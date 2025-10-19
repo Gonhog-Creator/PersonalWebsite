@@ -21,25 +21,25 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/Argentina/argentina';
+  const basePath = '/img/Italy/Venice/Venice';
   return `${basePath} (${id}).jpg`;
 };
 
 //STEP TWO
 const PAGE_CONTENT = {
-  title: 'Argentina',
-  description: 'From the Perito Moreno Glacier to El Chalten in Calafate to the vast plains and volcanoes of Patagonia, Argentina is a country of immense beauty, rich culture, and breathtaking landscapes.',
+  title: 'Venice',
+  description: 'Centuries of history, art, and culture, all thrown together on 118 islands. Welcome to Venice.',
   header: {
-    backgroundImage: '/img/Argentina/argentina_panorama (8).jpg',
-    altText: 'Argentina Panorama'
+    backgroundImage: '/img/Italy/Venice/venice-panorama (3).jpg',
+    altText: 'Venice Panorama'
   },
   panoramas: {
-    description: 'From glaciers to dusty deserts, I think I photographed plenty of Argentina.',
-    imagePath: '/img/Argentina/argentina_panorama'
+    description: 'And you thought the Belgium Panoramas were busy.',
+    imagePath: '/img/Italy/Venice/venice-panorama'
   },
   video: {
     id: 'UBHQtwZpIk0',
-    title: 'Argentina 2025 Travel Recap'
+    title: 'Venice 2025 Travel Recap'
   }
 };
 
@@ -54,16 +54,14 @@ const panoramaDetails: Record<number, { location: string }> = {
   2: { location: 'DescriptionComingSoon' },
   3: { location: 'DescriptionComingSoon' },
   4: { location: 'DescriptionComingSoon' },
-  5: { location: 'DescriptionComingSoon' },
-  6: { location: 'DescriptionComingSoon' },
-  7: { location: 'DescriptionComingSoon' }
+  5: { location: 'DescriptionComingSoon' }
 };
 
 //STEP FOUR
 export default function VeniceGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 353 }, (_, i) => {
+    return Array.from({ length: 65 }, (_, i) => {
       const details = imageDetails[i + 1] || { alt: `Photo ${i + 1}` };
       const image: GalleryImage = {
         id: i + 1,

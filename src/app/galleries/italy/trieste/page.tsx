@@ -21,25 +21,25 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/Argentina/argentina';
+  const basePath = '/img/Italy/Trieste/Trieste';
   return `${basePath} (${id}).jpg`;
 };
 
 //STEP TWO
 const PAGE_CONTENT = {
-  title: 'Argentina',
-  description: 'From the Perito Moreno Glacier to El Chalten in Calafate to the vast plains and volcanoes of Patagonia, Argentina is a country of immense beauty, rich culture, and breathtaking landscapes.',
+  title: 'Trieste',
+  description: 'Sailboats, seafood, and brutalist architecture, all thrown together on the vivid shores of northeastern Italy and lit up by the setting sun.',
   header: {
-    backgroundImage: '/img/Argentina/argentina_panorama (8).jpg',
-    altText: 'Argentina Panorama'
+    backgroundImage: '/img/Italy/Trieste/trieste-panorama (9).jpg',
+    altText: 'Trieste Panorama'
   },
   panoramas: {
-    description: 'From glaciers to dusty deserts, I think I photographed plenty of Argentina.',
-    imagePath: '/img/Argentina/argentina_panorama'
+    description: 'I think I was the only one on the beach to get every sailboat in one photo for Barcolana 2025!',
+    imagePath: '/img/Italy/Trieste/trieste-panorama'
   },
   video: {
     id: 'UBHQtwZpIk0',
-    title: 'Argentina 2025 Travel Recap'
+    title: 'Trieste 2025 Travel Recap'
   }
 };
 
@@ -56,14 +56,17 @@ const panoramaDetails: Record<number, { location: string }> = {
   4: { location: 'DescriptionComingSoon' },
   5: { location: 'DescriptionComingSoon' },
   6: { location: 'DescriptionComingSoon' },
-  7: { location: 'DescriptionComingSoon' }
+  7: { location: 'DescriptionComingSoon' },
+  8: { location: 'DescriptionComingSoon' },
+  9: { location: 'DescriptionComingSoon' },
+  10: { location: 'DescriptionComingSoon' }
 };
 
-//STEP FOUR
+//STEP FOUR - change image number
 export default function ArgentinaGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 353 }, (_, i) => {
+    return Array.from({ length: 203 }, (_, i) => {
       const details = imageDetails[i + 1] || { alt: `Photo ${i + 1}` };
       const image: GalleryImage = {
         id: i + 1,
