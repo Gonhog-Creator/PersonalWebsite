@@ -254,7 +254,7 @@ export default function NCSURocketryPage() {
                 
                 <div className="bg-blue-800 rounded-lg p-6 mb-4 border border-blue-500/30">
                   <p className="text-white text-xl font-semibold mb-4">
-                    "Design and Analysis of Axial Turbine Power Extraction from a Small-Scale Rotating Detonation Rocket Combustor"
+                    &ldquo;Design and Analysis of Axial Turbine Power Extraction from a Small-Scale Rotating Detonation Rocket Combustor&rdquo;
                   </p>
                   <div className="space-y-2">
                     <p className="text-white">
@@ -268,7 +268,7 @@ export default function NCSURocketryPage() {
                       </a>
                     </p>
                     <p className="text-white">
-                      The team's full paper is available at:{' '}
+                      The team&apos;s full paper is available at:{' '}
                       <a 
                         href="https://region2.aiaastudentconference.org/collection/2025/manuscripts/99367.pdf" 
                         target="_blank" 

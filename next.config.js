@@ -42,18 +42,28 @@ const nextConfig = {
   assetPrefix: assetPrefix,
   trailingSlash: true,
   
+  // Image configuration
+  images: {
+    unoptimized: true,
+    loader: 'default',
+    domains: [
+      'm.media-amazon.com',
+      'image.tmdb.org',
+      'via.placeholder.com'
+    ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+  },
+  
   // Experimental features
   experimental: {
     appDir: true,
     optimizeCss: true,
     esmExternals: true,
-  },
-  
-  // Image optimization for static export
-  images: {
-    unoptimized: true,
-    domains: ['images.unsplash.com', 'source.unsplash.com'],
-    path: basePath ? `${basePath}/_next/image` : '/_next/image',
   },
   
   // Environment variables for client-side
@@ -101,12 +111,6 @@ const nextConfig = {
     return config;
   },
   
-  // Image optimization for static export
-  images: {
-    unoptimized: true,
-    loader: 'default',
-    path: basePath ? `${basePath}/_next/image` : '/_next/image',
-  },
   
   // Environment variables for client-side
   env: {

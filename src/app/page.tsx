@@ -11,6 +11,11 @@ import { Hero } from '@/components/Hero/Hero';
 import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { Icon } from '@/components/ui/Icon'; // Importing our custom Icon component
 
+const SideQuests = dynamic(
+  () => import('@/components/SideQuests/SideQuests').then(mod => mod.default),
+  { ssr: false, loading: () => <div className="py-20 text-center">Loading side quests...</div> }
+);
+
 const WavyBackground = dynamic(
   () => import('@/components/ui/wavy-background').then(mod => mod.WavyBackground),
   { ssr: false }
@@ -124,6 +129,9 @@ export default function Home() {
             <Photography />
           </div>
         </section>
+
+        {/* Side Quests Section */}
+        <SideQuests />
 
         {/* Technical Skills Section */}
         <section id="technical-skills" className="relative py-8 overflow-hidden">
