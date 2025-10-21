@@ -55,7 +55,7 @@ const MapWithNoSSR = dynamic(
   () => import('react-leaflet').then((mod) => {
     const { MapContainer, TileLayer, GeoJSON, useMap } = mod;
     
-    // Create a controller component to handle map instance
+      // Create a controller component to handle map instance
   interface MapControllerProps {
     onMapCreated: (map: LeafletMap) => void;
     mapRef: React.RefObject<LeafletMap | null>;
@@ -74,16 +74,17 @@ const MapWithNoSSR = dynamic(
       const zoomControl = L.control.zoom({
         position: 'bottomright'
       });
-      zoomControl.addTo(map);
       
       // Store the zoom control reference for cleanup
       const customMap = map as CustomMap;
       customMap.zoomControl = zoomControl;
       
-      // Update the ref and call the onMapCreated callback
+      // Update the map ref
       if (mapRef) {
-        mapRef.current = customMap;
+        mapRef.current = map;
       }
+      
+      // Notify parent component that map is created
       onMapCreated(customMap);
       
       // Cleanup function
@@ -98,7 +99,7 @@ const MapWithNoSSR = dynamic(
   };
 
   return function MapComponent({ 
-      center, 
+      center,
       zoom, 
       minZoom, 
       maxZoom, 
@@ -223,6 +224,7 @@ export default function MapView() {
   // Map reference is used by the MapController component
   const mapRef = useRef<LeafletMap | null>(null);
   const [map, setMap] = useState<LeafletMap | null>(null);
+  const mapInstanceRef = useRef<LeafletMap | null>(null);
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [countriesData, setCountriesData] = useState<CountryData | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<CountryFeature | null>(null);
@@ -253,7 +255,13 @@ export default function MapView() {
     
     loadData();
     
-    // No cleanup needed here as we want to keep the data loaded
+    // Cleanup function to prevent memory leaks
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
   }, [isClient]);
 
   // Keep track of last hover check for UK
