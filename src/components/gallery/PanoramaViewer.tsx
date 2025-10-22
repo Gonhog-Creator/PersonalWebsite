@@ -204,6 +204,7 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
             alt={imageProps.alt || 'Panorama view'}
           />
         </div>
+        {/* Hover effect disabled as per user request
         <div className="absolute inset-0 flex items-end justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="w-full py-3 bg-black/80 flex flex-col items-center">
             <p className="text-white text-sm md:text-base font-medium text-center px-2">
@@ -211,6 +212,7 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
             </p>
           </div>
         </div>
+        */}
       </div>
 
       {/* Modal */}

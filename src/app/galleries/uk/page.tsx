@@ -289,11 +289,15 @@ export default function UnitedKingdomGallery() {
                         style={{ display: 'block' }}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
                       />
-                      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-                        <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                          {image.alt}
-                        </p>
-                      </div>
+                      {
+            /* Hover effect disabled as per user request
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+              <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
+                {image.alt}
+              </p>
+            </div>
+            */
+          }
                     </div>
                   </div>
                 </div>
