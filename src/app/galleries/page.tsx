@@ -98,6 +98,13 @@ const galleries = [
     image: '/img/Scotland/scotland_panorama (3).jpg',
     count: 58,
     location: 'Europe'
+  },
+  {
+    id: 'italy',
+    title: 'Italy',
+    image: '/img/Italy/Trieste/trieste-panorama (6).jpg',
+    count: 355,
+    location: 'Europe'
   }
 ];
 
