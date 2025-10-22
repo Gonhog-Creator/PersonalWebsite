@@ -172,9 +172,9 @@ export default function ItalyMap() {
                 }
                 
                 // Force garbage collection if available
-                if (typeof window !== 'undefined' && (window as any).gc) {
+                if (typeof window !== 'undefined' && window.gc) {
                   try {
-                    (window as any).gc();
+                    window.gc();
                   } catch (e) {
                     console.warn('Error running garbage collection:', e);
                   }
