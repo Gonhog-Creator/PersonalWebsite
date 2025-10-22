@@ -103,16 +103,61 @@ const getMovies = async (): Promise<MovieData> => {
 };
 
 const MovieCard = ({ movie }: { movie: Movie }) => {
+  // State to control mobile overlay visibility
+  const [showMobileOverlay, setShowMobileOverlay] = useState(false);
+
   // Format the rating to 1 decimal place
   const formatRating = (rating: number | undefined) => {
-    if (rating === undefined) return 'N/A';
+    if (rating === undefined || rating === 0) return 'N/A';
     return rating % 1 === 0 ? rating.toString() : rating.toFixed(1);
   };
 
+  // Calculate if any of the additional scores are present
+  const hasAdditionalScores = [
+    movie.protagonistRating,
+    movie.antagonistRating,
+    movie.soundtrackRating,
+    movie.setDesignRating,
+    movie.plotRating,
+    movie.endingRating
+  ].some(score => score && score > 0);
+
+  // Toggle mobile overlay
+  const toggleMobileOverlay = (e: React.MouseEvent) => {
+    // Only toggle on mobile (touch devices)
+    if ('ontouchstart' in window || navigator.maxTouchPoints) {
+      e.preventDefault();
+      setShowMobileOverlay(!showMobileOverlay);
+    }
+  };
+
+  // Function to render a score bar
+  const renderScoreBar = (label: string, score: number | undefined) => {
+    if (!score || score === 0) return null;
+    
+    return (
+      <div className="mb-1">
+        <div className="flex justify-between text-xs mb-0.5">
+          <span className="text-gray-700 dark:text-gray-300 font-medium">{label}</span>
+          <span className="font-semibold text-gray-900 dark:text-white">{score.toFixed(1)}</span>
+        </div>
+        <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-yellow-500" 
+            style={{ width: `${(score / 10) * 100}%` }}
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl flex flex-col h-full group">
-      {/* Image container with filled image */}
-      <div className="relative aspect-[2/3] w-full overflow-hidden bg-gray-50 dark:bg-gray-800">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl flex flex-col h-full group relative">
+      {/* Image container with filled image and overlay */}
+      <div 
+        className="relative aspect-[2/3] w-full overflow-hidden bg-gray-50 dark:bg-gray-800 cursor-pointer md:cursor-default"
+        onClick={toggleMobileOverlay}
+      >
         {movie.posterUrl && !movie.posterUrl.includes('placeholder') ? (
           <Image
             src={movie.posterUrl}
@@ -124,7 +169,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
             onError={(e) => {
               // Fallback to placeholder if image fails to load
               const target = e.target as HTMLImageElement;
-              target.src = '/img/placeholder-movie.svg';
+              target.src = '/img/projects/movies/placeholder-movie.svg';
               target.onerror = null; // Prevent infinite loop
             }}
           />
@@ -138,6 +183,43 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
         <div className="absolute top-2 right-2 bg-yellow-500 text-white text-sm font-bold px-2 py-1 rounded-md shadow-md">
           {formatRating(movie.myRating)}/10
         </div>
+
+        {/* Score breakdown overlay - Desktop (hover) and Mobile (click) */}
+        {hasAdditionalScores && (
+          <div className={`
+            absolute inset-0 bg-gradient-to-t from-black/90 via-black/80 to-transparent 
+            transition-all duration-300 flex flex-col justify-end p-4
+            ${showMobileOverlay ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+            md:opacity-0 md:group-hover:opacity-100
+          `}>
+            <div className={`
+              transform transition-transform duration-300
+              ${showMobileOverlay ? 'translate-y-0' : 'translate-y-8 group-hover:translate-y-0'}
+              md:translate-y-8 md:group-hover:translate-y-0
+            `}>
+              <h4 className="text-sm font-semibold text-white mb-2">SCORE BREAKDOWN</h4>
+              <div className="space-y-2.5">
+                {renderScoreBar('Protagonist', movie.protagonistRating)}
+                {renderScoreBar('Antagonist', movie.antagonistRating)}
+                {renderScoreBar('Soundtrack', movie.soundtrackRating)}
+                {renderScoreBar('Set Design', movie.setDesignRating)}
+                {renderScoreBar('Plot', movie.plotRating)}
+                {renderScoreBar('Ending', movie.endingRating)}
+              </div>
+              {/* Close button for mobile */}
+              <button 
+                className="md:hidden absolute top-2 right-2 text-white/80 hover:text-white text-sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowMobileOverlay(false);
+                }}
+                aria-label="Close scores"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       
       {/* Movie info - compact layout */}
@@ -404,7 +486,7 @@ export default function MyMoviesPage() {
                 priority={false}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = '/img/placeholder-movie.jpg';
+                  target.src = '/img/projects/movies/placeholder-movie.jpg';
                 }}
               />
             ))}
@@ -417,27 +499,30 @@ export default function MyMoviesPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-gray-900/30 via-transparent to-gray-900/30 z-10"></div>
         
         {/* Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 px-4">
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-20 px-2 sm:px-4">
           {/* Metrics Row */}
-          <div className="flex items-center justify-between w-full max-w-5xl px-8 mb-6">
-            <div className="text-center w-48">
-              <div className="text-yellow-400 font-['Alfa_Slab_One'] text-5xl md:text-6xl lg:text-7xl font-extrabold leading-none">
+          <div className="flex flex-col md:flex-row items-center justify-between w-full max-w-5xl px-2 sm:px-8 mb-4 md:mb-6 space-y-4 md:space-y-0">
+            {/* Movies Count - Mobile First */}
+            <div className="text-center w-32 sm:w-40 md:w-48 order-1 md:order-none">
+              <div className="text-yellow-400 font-['Alfa_Slab_One'] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-none">
                 {metrics?.totalMovies?.toLocaleString() || '0'}
               </div>
-              <div className="text-white text-sm uppercase tracking-wider mt-2">
+              <div className="text-white text-xs sm:text-sm uppercase tracking-wider mt-1 sm:mt-2">
                 Movies
               </div>
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-['Alfa_Slab_One'] font-extrabold text-white text-center px-8">
+            {/* Title - Center on mobile, middle on desktop */}
+            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-['Alfa_Slab_One'] font-extrabold text-white text-center px-2 sm:px-8 order-first md:order-none w-full md:w-auto">
               Movie Masterclass
             </h1>
             
-            <div className="text-center w-48">
-              <div className="text-yellow-400 font-['Alfa_Slab_One'] text-5xl md:text-6xl lg:text-7xl font-extrabold leading-none">
+            {/* Hours - Mobile First */}
+            <div className="text-center w-32 sm:w-40 md:w-48 order-2 md:order-none">
+              <div className="text-yellow-400 font-['Alfa_Slab_One'] text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-none">
                 {metrics?.totalHours ? metrics.totalHours.toLocaleString(undefined, {maximumFractionDigits: 1}) : '0'}
               </div>
-              <div className="text-white text-sm uppercase tracking-wider mt-2">
+              <div className="text-white text-xs sm:text-sm uppercase tracking-wider mt-1 sm:mt-2">
                 Hours
               </div>
             </div>
