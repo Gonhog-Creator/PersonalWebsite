@@ -88,78 +88,112 @@ export default function ItalyMap() {
   useEffect(() => {
     setIsClient(true);
     
+    // Generate a new unique ID for the map container
+    mapContainerId.current = `map-${Math.random().toString(36).substr(2, 9)}`;
+    
     // Cleanup function for the map
     return () => {
       if (cleanupDone.current) return;
       cleanupDone.current = true;
       
       if (mapRef.current) {
-        try {
-          const map = mapRef.current;
-          
-          // Check if the map is still valid
-          if (!map || !map.getContainer || !map.getContainer().parentNode) {
-            return;
-          }
-          
-          // Remove all event listeners
-          if (map.off) map.off();
-          
-          // Stop any ongoing animations
-          map.stop();
-          
-          // Clear all layers if the map is still valid
-          if (map.eachLayer) {
-            map.eachLayer(layer => {
-              try {
-                if (map.removeLayer) map.removeLayer(layer);
-              } catch (e) {
-                console.warn('Error removing layer:', e);
-              }
-            });
-          }
-          
-          // Remove the map from the DOM
+        const cleanupMap = async () => {
           try {
+            const map = mapRef.current;
+            if (!map) return;
+            
+            // Check if the map is still valid
+            if (!map.getContainer || !map.getContainer().parentNode) {
+              return;
+            }
+            
+            // Store container reference before removing the map
             const container = map.getContainer();
-            if (container && container.parentNode) {
-              map.remove();
+            
+            // Remove all event listeners
+            if (typeof map.off === 'function') {
+              try {
+                map.off();
+              } catch (e) {
+                console.warn('Error removing event listeners:', e);
+              }
+            }
+            
+            // Stop any ongoing animations
+            if (typeof map.stop === 'function') {
+              try {
+                map.stop();
+              } catch (e) {
+                console.warn('Error stopping animations:', e);
+              }
+            }
+            
+            // Remove all map layers
+            if (typeof map.eachLayer === 'function') {
+              try {
+                map.eachLayer(layer => {
+                  try {
+                    if (typeof map.removeLayer === 'function') {
+                      map.removeLayer(layer);
+                    }
+                  } catch (e) {
+                    console.warn('Error removing layer:', e);
+                  }
+                });
+              } catch (e) {
+                console.warn('Error during layer cleanup:', e);
+              }
+            }
+            
+            // Remove the map instance
+            if (typeof map.remove === 'function') {
+              try {
+                map.remove();
+              } catch (e) {
+                console.warn('Error removing map:', e);
+              }
             }
             
             // Clear the container
             if (container) {
-              container.innerHTML = '';
-              container.remove();
+              try {
+                // Clear the container
+                container.innerHTML = '';
+                
+                // Remove the container from the DOM
+                if (container.parentNode) {
+                  container.parentNode.removeChild(container);
+                }
+                
+                // Clear any remaining references
+                const leafletContainer = container as HTMLElement & { _leaflet_id?: number };
+                if (leafletContainer._leaflet_id) {
+                  delete leafletContainer._leaflet_id;
+                }
+                
+                // Force garbage collection if available
+                if (typeof window !== 'undefined' && (window as any).gc) {
+                  try {
+                    (window as any).gc();
+                  } catch (e) {
+                    console.warn('Error running garbage collection:', e);
+                  }
+                }
+                
+              } catch (e) {
+                console.warn('Error cleaning up container:', e);
+              }
             }
+            
           } catch (e) {
-            console.warn('Error removing map container:', e);
+            console.error('Error during map cleanup:', e);
+          } finally {
+            mapRef.current = null;
+            cleanupDone.current = true;
           }
-          
-          // Clear any remaining references
-          const container = map.getContainer() as HTMLElement & { _leaflet_id?: number };
-          if (container) {
-            try {
-              // Clean up any Leaflet references in the container
-              if (container._leaflet_id) {
-                delete container._leaflet_id;
-              }
-              // Remove the container from the DOM if it's still there
-              if (container.parentNode) {
-                container.parentNode.removeChild(container);
-              }
-            } catch (e) {
-              console.warn('Error clearing map container references:', e);
-            }
-          }
-          
-          // Clear the reference
-          mapRef.current = null;
-          
-        } catch (e) {
-          console.error('Error during map cleanup:', e);
-        } finally {
-          cleanupDone.current = true;
-        }
+        };
+
+        cleanupMap();
       }
     };
   }, []); // No dependencies to prevent unnecessary re-renders
