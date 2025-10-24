@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
-import { RegionFeature, getRegionStyle } from '@/data/italyRegions';
+import { RegionFeature, RegionProperties, getRegionStyle } from '@/data/italyRegions';
 
 // Dynamically import all Leaflet components to avoid SSR issues
 const MapContainer = dynamic(
@@ -27,19 +27,10 @@ const ZoomControl = dynamic(
   { ssr: false }
 );
 
-interface RegionFeature extends GeoJSON.Feature {
-  id: string;
-  properties: {
-    name: string;
-    [key: string]: any;
-  };
-}
+// Using RegionFeature and RegionProperties from italyRegions.ts
 
 interface CountryMapProps {
-  regions: {
-    type: string;
-    features: RegionFeature[];
-  };
+  regions: GeoJSON.FeatureCollection<GeoJSON.Geometry, RegionProperties>;
   bounds: L.LatLngBoundsExpression;
   onRegionClick?: (region: string) => void;
   hoveredRegion?: string | null;
@@ -75,14 +66,11 @@ export default function CountryMap({
     };
   }, []);
 
-  const handleMapCreated = useCallback((map: L.Map) => {
-    mapRef.current = map;
-    
-    // Set up map options
-    if (map.zoomControl) {
-      map.zoomControl.setPosition('bottomright');
-    }
-    
+  // Set up map when component mounts
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
     // Set initial view
     map.fitBounds(bounds, { padding: [50, 50] });
     
