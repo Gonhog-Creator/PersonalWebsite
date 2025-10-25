@@ -221,5 +221,21 @@ export const astroPhotos: AstroPhoto[] = [
     date: formatDate('2026-02-28'),
     src: getImagePath(26),
     alt: 'Mountain Valley Stars - Captured in Patagonia, Argentina'
+  },
+  {
+    id: 27,
+    title: 'Milky Way over Tree',
+    location: 'Bald Head Island, North Carolina',
+    date: formatDate('2025-07-21'),
+    src: getImagePath(27),
+    alt: 'Milky Way over Tree - Captured in Bald Head Island, North Carolina'
+  },
+  {
+    id: 28,
+    title: 'Milky Way over Marsh',
+    location: 'Bald Head Island, North Carolina',
+    date: formatDate('2025-07-21'),
+    src: getImagePath(28),
+    alt: 'Milky Way over Marsh - Captured in Bald Head Island, North Carolina'
   }
 ];

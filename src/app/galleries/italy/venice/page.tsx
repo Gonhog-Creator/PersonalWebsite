@@ -30,7 +30,7 @@ const PAGE_CONTENT = {
   title: 'Venice',
   description: 'Centuries of history, art, and culture, all thrown together on 118 islands. Welcome to Venice.',
   header: {
-    backgroundImage: '/img/Italy/Venice/venice-panorama (3).jpg',
+    backgroundImage: '/img/Italy/Venice/venice-panorama (7).jpg',
     altText: 'Venice Panorama'
   },
   panoramas: {
@@ -50,11 +50,13 @@ const imageDetails: Record<number, ImageDetails> = {
   2: { alt: 'DescriptionComingSoon' },
 };
 const panoramaDetails: Record<number, { location: string }> = {
-  1: { location: 'DescriptionComingSoon' },
-  2: { location: 'DescriptionComingSoon' },
-  3: { location: 'DescriptionComingSoon' },
-  4: { location: 'DescriptionComingSoon' },
-  5: { location: 'DescriptionComingSoon' }
+  1: {},
+  2: {},
+  3: {},
+  4: {},
+  5: {},
+  6: {},
+  7: {}
 };
 
 //STEP FOUR

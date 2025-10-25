@@ -20,14 +20,7 @@ interface GalleryImage {
 type GalleryView = 'photos' | 'panoramas' | 'drone';
 
 
-// Helper function to generate image paths
-const getImagePath = (id: number) => {
-  const basePath = '/img/USA/usa';
-  return `${basePath} (${id}).jpg`;
-};
-
-// List of missing photo numbers to exclude
-const missingPhotos: number[] = [2];
+// Image paths are now included directly in the galleryImages array
 
 // Masonry layout breakpoints
 const breakpointCols = {
@@ -36,101 +29,26 @@ const breakpointCols = {
   700: 1
 };
 
-// Image details with descriptions and locations
-const imageDetails: Record<number, { alt: string; location: string }> = {
-  1: { alt: 'Waterfall created by glaciermelt', location: 'Washington' },
-  3: { alt: 'Entrance to Reno', location: 'Nevada' },
-  4: { alt: 'Mojave Sand Dunes', location: 'California' },
-  5: { alt: 'Montezuma Castle', location: 'Arizona' },
-  6: { alt: 'Arch at Bryce Canyon National Park', location: 'Utah' },
-  7: { alt: 'Natural Arches', location: 'Oregon' },
-  8: { alt: 'Diablo Lake', location: 'Washington' },
-  9: { alt: 'Mountain', location: 'Arizona' },
-  10: { alt: 'Arches National Park', location: 'Utah' },
-  11: { alt: 'Me hiking', location: 'Oregon' },
-  12: { alt: 'Death Valley', location: 'California' },
-  13: { alt: 'Coastline', location: 'Oregon' },
-  14: { alt: 'Inside vegetation', location: 'Oregon' },
-  15: { alt: 'Handstand on Devil\'s Bridge', location: 'Arizona' },
-  16: { alt: 'Standing with redwoods', location: 'California' },
-  17: { alt: 'Pinecone', location: 'Oregon' },
-  18: { alt: 'Standing IN redwoods', location: 'California' },
-  19: { alt: 'Me and hoodoos', location: 'Utah' },
-  20: { alt: 'Smoke in the air', location: 'Oregon' },
-  21: { alt: 'Standing in arches', location: 'Utah' },
-  22: { alt: 'Smokey sunset', location: 'Oregon' },
-  23: { alt: 'Grand Canyon', location: 'Arizona' },
-  24: { alt: 'Flaming skies', location: 'Oregon' },
-  25: { alt: 'Standing in arches', location: 'Utah' },
-  26: { alt: 'Rough Skinned Newt', location: 'Oregon' },
-  27: { alt: 'Standing in arches', location: 'Utah' },
-  28: { alt: 'Saguaro Cactus', location: 'Arizona' },
-  29: { alt: 'Bryce Canyon National Park', location: 'Arizona' },
-  30: { alt: 'Mt. Olympus over runway', location: 'Washington' },
-  31: { alt: 'Leavenworth', location: 'Washington' },
-  32: { alt: 'Mount Olympus from afar', location: 'Washington' },
-  33: { alt: 'Sunset road', location: 'Washington' },
-  34: { alt: 'Sea and Mt. Olympus', location: 'Washington' },
-  35: { alt: 'Snow and Mt. Olympus', location: 'Washington' },
-  36: { alt: 'Seattle', location: 'Washington' },
-  37: { alt: 'Rainbow clouds', location: 'Washington' },
-  38: { alt: 'Fern Canyon', location: 'Oregon' },
-  39: { alt: 'Mount Rainier over Lost Lake', location: 'Oregon' },
-  40: { alt: 'Snowballs', location: 'Washington' },
-  41: { alt: 'Montezuma Well', location: 'Arizona' },
-  42: { alt: 'Backflip', location: 'Arizona' },
-  43: { alt: 'Banana Slug', location: 'Oregon' },
-  44: { alt: 'Mountain Lake', location: 'Oregon' },
-  45: { alt: 'Waterfall', location: 'Oregon' },
-  46: { alt: 'Interesting rock formation', location: 'Utah' },
-  47: { alt: 'Kalaloch Tree of Life', location: 'Oregon' },
-  48: { alt: 'Just hanging out', location: 'Oregon' },
-  49: { alt: 'Dustdevil', location: 'Montana' },
-  50: { alt: 'River rapids', location: 'Montana' },
-  51: { alt: 'Waterfall', location: 'Montana' },
-  52: { alt: 'Lake MacDonald', location: 'Montana' },
-  53: { alt: 'Sunset', location: 'Montana' },
-  54: { alt: 'Mount Rushmore', location: 'South Dakota' },
-  55: { alt: 'Mount Rushmore', location: 'South Dakota' },
-  56: { alt: 'Sunset', location: 'South Dakota' },
-  57: { alt: 'Lichen on tree', location: 'Oregon' },
-  58: { alt: 'Mountain', location: 'Oregon' },
-  59: { alt: 'Lost Lake', location: 'Oregon' },
-  60: { alt: 'Mount Rainier with clouds', location: 'Oregon' },
-  61: { alt: 'Jeff relaxes', location: 'Oregon' },
-  62: { alt: 'Mount Rainier over Lost Lake', location: 'Oregon' },
-  63: { alt: 'Bird on tree', location: 'Oregon' },
-  64: { alt: 'Mountain Zen', location: 'Oregon' },
-};
+// Total number of photos in the gallery
+const totalPhotos = 64;
+
+// Generate an array of photo numbers (excluding any missing photos)
+const photoNumbers = Array.from({ length: totalPhotos }, (_, i) => i + 1).filter(
+  num => num !== 2 // Exclude photo #2 as it's missing
+);
+
+// Generate gallery images with default alt text
+const galleryImages: GalleryImage[] = photoNumbers.map(id => ({
+  id,
+  src: `/img/USA/usa (${id}).jpg`,
+  alt: `USA Photo ${id}`,
+  location: 'USA'
+}));
 
 export default function USAGallery() {
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
   
-  // Generate gallery images with useMemo, excluding missing photos
-  const galleryImages = useMemo<GalleryImage[]>(() => {
-    // Start with images from imageDetails
-    const images = Object.entries(imageDetails)
-      .map(([id, details]) => ({
-        id: parseInt(id, 10),
-        src: getImagePath(parseInt(id, 10)),
-        alt: details.alt,
-        location: details.location
-      }));
-    
-    // Add any additional images that might not be in imageDetails
-    for (let i = 1; i <= 50; i++) {
-      if (!missingPhotos.includes(i) && !imageDetails[i]) {
-        images.push({
-          id: i,
-          src: getImagePath(i),
-          alt: `Photo ${i}`,
-          location: 'USA'
-        });
-      }
-    }
-    
-    return images.filter(image => !missingPhotos.includes(image.id));
-  }, []);
+  // Gallery images are generated based on the totalPhotos constant
 
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   

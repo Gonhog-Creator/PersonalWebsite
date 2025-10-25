@@ -142,6 +142,39 @@ export default function AstrophotographyGallery() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [dsoImageOrientation, setDsoImageOrientation] = useState<'horizontal' | 'vertical' | null>(null);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+
+  // Close lightbox with Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedImage) {
+        closeLightbox();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage]);
+
+  // Close lightbox when clicking outside the image
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      closeLightbox();
+    }
+  };
+
+  // Close lightbox function
+  const closeLightbox = () => {
+    setSelectedImage(null);
+    document.body.style.overflow = 'unset';
+    document.documentElement.classList.remove('modal-open');
+  };
+
+  // Open lightbox with the clicked image
+  const openLightbox = (image: AstroPhoto | DSOImage) => {
+    setSelectedImage(image);
+    document.body.style.overflow = 'hidden';
+    document.documentElement.classList.add('modal-open');
+  };
   
   // YouTube IFrame API to handle video end
   useEffect(() => {
@@ -318,22 +351,7 @@ export default function AstrophotographyGallery() {
     setDsoImageOrientation(orientation);
   };
 
-  // Lightbox functions for photo gallery
-  const openLightbox = (photo: AstroPhoto) => {
-    setSelectedImage(photo);
-    document.body.style.overflow = 'hidden';
-  };
-
-  const closeLightbox = () => {
-    setSelectedImage(null);
-    document.body.style.overflow = 'unset';
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeLightbox();
-    }
-  };
+  // Lightbox functions are now defined at the component level
 
   // Render the appropriate content based on the current view
   const renderContent = () => {

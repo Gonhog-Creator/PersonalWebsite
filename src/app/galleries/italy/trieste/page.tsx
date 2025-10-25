@@ -59,11 +59,16 @@ const panoramaDetails: Record<number, { location: string }> = {
   7: { location: 'DescriptionComingSoon' },
   8: { location: 'DescriptionComingSoon' },
   9: { location: 'DescriptionComingSoon' },
-  10: { location: 'DescriptionComingSoon' }
+  10: {},
+  11: {},
+  12: {},
+  13: {},
+  14: {},
+  15: {}
 };
 
 //STEP FOUR - change image number
-export default function ArgentinaGallery() {
+export default function TriesteGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 203 }, (_, i) => {
