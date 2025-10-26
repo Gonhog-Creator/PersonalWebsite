@@ -376,7 +376,6 @@ export default function BelgiumGallery() {
                     <PanoramaViewer
                       src={`/img/Belgium/belgium_panorama (${item.id}).jpg`}
                       alt={`${item.location}`}
-                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>

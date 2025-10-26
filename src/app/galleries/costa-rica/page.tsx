@@ -451,7 +451,6 @@ export default function CostaRicaGallery() {
                     <PanoramaViewer
                       src={`/img/Costa Rica/panorama-costarica (${item.id}).jpg`}
                       alt={`${item.location}`}
-                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>

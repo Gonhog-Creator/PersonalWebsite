@@ -375,7 +375,6 @@ export default function FranceGallery() {
                     <PanoramaViewer
                       src={`/img/France/france_panorama (${item.id}).jpg`}
                       alt={`${item.location}`}
-                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>

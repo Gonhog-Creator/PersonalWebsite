@@ -367,7 +367,6 @@ export default function GreeceGallery() {
                     <PanoramaViewer
                       src={`/img/Greece/greece_panorama (${item.id}).jpg`}
                       alt={`${item.location}`}
-                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>

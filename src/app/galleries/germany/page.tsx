@@ -390,7 +390,6 @@ export default function GermanyGallery() {
                     <PanoramaViewer
                       src={`/img/Germany/germany_panorama (${item.id}).jpg`}
                       alt={`${item.location}`}
-                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>

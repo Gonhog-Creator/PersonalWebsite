@@ -332,7 +332,6 @@ export default function UnitedKingdomGallery() {
                     <PanoramaViewer
                       src={`/img/United Kingdom/united_kingdom_panorama (${item.id}).jpg`}
                       alt={`${item.location}`}
-                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>

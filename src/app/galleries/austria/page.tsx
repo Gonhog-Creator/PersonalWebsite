@@ -441,7 +441,6 @@ export default function AustriaGallery() {
                     <PanoramaViewer
                       src={`/img/Austria/austria_panorama (${item.id}).jpg`}
                       alt={`${item.location}`}
-                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>

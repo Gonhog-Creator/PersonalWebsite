@@ -356,7 +356,6 @@ export default function AustraliaGallery() {
                     <PanoramaViewer
                       src={`/img/Australia/panorama-australia (${item.id}).jpg`}
                       alt={`${item.location}`}
-                      location={item.location}
                       priority={index <= 1}
                     />
                   </div>
