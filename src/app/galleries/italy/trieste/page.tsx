@@ -38,7 +38,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Italy/Trieste/trieste-panorama'
   },
   video: {
-    id: 'UBHQtwZpIk0',
+    id: '4215XWpwzfY',
     title: 'Trieste 2025 Travel Recap'
   }
 };

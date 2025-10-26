@@ -366,17 +366,38 @@ export default function AustraliaGallery() {
         )}
 
         {currentView === 'drone' && (
-          <div className="w-full flex justify-center items-center min-h-screen py-16">
-            <div className="w-full max-w-6xl px-4 flex flex-col items-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Australia Drone Footage</h2>
-              <div className="w-full max-w-6xl">
-                <VideoPlayer 
-                  src="/vids/Australia 2025 Recap 2k.mp4"
-                  title="Australia 2025 Drone Footage"
-                  className="rounded-lg shadow-xl"
-                />
+          <div className="w-full flex flex-col items-center py-16 px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Australia Drone Footage</h2>
+            
+            {/* YouTube Video */}
+            <div className="w-full max-w-6xl mb-16">
+              <div className="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-xl shadow-2xl">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/CXbFRmoTbJo?autoplay=1&mute=1"
+                  title="Australia Drone Footage"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-[500px] md:h-[600px] lg:h-[700px]"
+                ></iframe>
               </div>
-              <div className="h-32 w-full"></div>
+            </div>
+
+            {/* Scuba Footage */}
+            <div className="w-full max-w-6xl mt-16">
+              <h3 className="text-2xl font-bold text-white mb-6 text-center">Scuba Footage</h3>
+              <div className="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-xl shadow-2xl">
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/_Jaljdfbswc?autoplay=1&mute=1"
+                  title="Great Barrier Reef Scuba Diving"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-[400px] md:h-[500px] lg:h-[600px]"
+                ></iframe>
+              </div>
             </div>
           </div>
         )}
