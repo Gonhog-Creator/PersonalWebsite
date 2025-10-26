@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
@@ -29,26 +29,21 @@ const breakpointCols = {
   700: 1
 };
 
-// Total number of photos in the gallery
-const totalPhotos = 64;
-
-// Generate an array of photo numbers (excluding any missing photos)
-const photoNumbers = Array.from({ length: totalPhotos }, (_, i) => i + 1).filter(
-  num => num !== 2 // Exclude photo #2 as it's missing
-);
-
-// Generate gallery images with default alt text
-const galleryImages: GalleryImage[] = photoNumbers.map(id => ({
-  id,
-  src: `/img/USA/usa (${id}).jpg`,
-  alt: `USA Photo ${id}`,
-  location: 'USA'
-}));
+// Total number of photos in the gallery (including any missing ones)
+const totalPhotos = 68;
 
 export default function USAGallery() {
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
   
-  // Gallery images are generated based on the totalPhotos constant
+  // Generate gallery images with default alt text
+  const galleryImages: GalleryImage[] = Array.from({ length: totalPhotos }, (_, i) => i + 1)
+    .filter(num => num !== 2) // Exclude photo #2 as it's missing
+    .map(id => ({
+      id,
+      src: `/img/USA/usa (${id}).jpg`,
+      alt: `USA Photo ${id}`,
+      location: 'USA'
+    }));
 
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   
@@ -68,18 +63,7 @@ export default function USAGallery() {
     }
   }, [closeLightbox]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeLightbox();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [closeLightbox]);
-
-  // Verify image paths in development
+  // Debug effect to verify image paths (development only)
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
       console.log('Verifying image paths...');
@@ -91,6 +75,18 @@ export default function USAGallery() {
       });
     }
   }, [galleryImages]);
+
+  // Handle keyboard events for lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [closeLightbox]);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -104,7 +100,6 @@ export default function USAGallery() {
             src="/img/USA/panorama-USA-1.jpg"
             alt="USA Panorama"
             fill
-            className="object-cover object-center"
             priority
           />
           <div className="absolute inset-0 bg-black/5"></div>
@@ -218,20 +213,12 @@ export default function USAGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {[
-                  { id: 1, location: 'DescriptionComingSoon' },
-                  { id: 2, location: 'DescriptionComingSoon' },
-                  { id: 3, location: 'DescriptionComingSoon' },
-                  { id: 4, location: 'DescriptionComingSoon' },
-                  { id: 5, location: 'DescriptionComingSoon' },
-                  { id: 6, location: 'DescriptionComingSoon' },
-                ].map((item, index) => (
-                  <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
+                {Array.from({ length: 11 }, (_, i) => i + 1).map((id) => (
+                  <div key={id} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`/img/USA/panorama-USA-${item.id}.jpg`}
-                      alt={`${item.location}`}
-                      location={item.location}
-                      priority={index <= 1}
+                      src={`/img/USA/panorama-USA-${id}.jpg`}
+                      alt={`USA Panorama ${id}`}
+                      priority={id <= 3}
                     />
                   </div>
                 ))}

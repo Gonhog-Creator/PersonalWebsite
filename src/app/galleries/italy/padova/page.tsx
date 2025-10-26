@@ -246,13 +246,12 @@ export default function PadovaGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {panoramaImages.map((item, index) => (
-                  <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
+                {panoramaImages.map((item) => (
+                  <div key={item.id} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
                       src={`${PAGE_CONTENT.panoramas.imagePath} (${item.id}).jpg`}
-                      alt={`Panorama ${item.id}`}
-                      location={item.location}
-                      priority={index <= 1}
+                      alt={`${PAGE_CONTENT.title} Panorama ${item.id}`}
+                      priority={item.id <= 3}
                     />
                   </div>
                 ))}

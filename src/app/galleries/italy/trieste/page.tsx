@@ -49,22 +49,9 @@ const imageDetails: Record<number, ImageDetails> = {
   1: { alt: 'DescriptionComingSoon' },
   2: { alt: 'DescriptionComingSoon' },
 };
-const panoramaDetails: Record<number, { location: string }> = {
-  1: { location: 'DescriptionComingSoon' },
-  2: { location: 'DescriptionComingSoon' },
-  3: { location: 'DescriptionComingSoon' },
-  4: { location: 'DescriptionComingSoon' },
-  5: { location: 'DescriptionComingSoon' },
-  6: { location: 'DescriptionComingSoon' },
-  7: { location: 'DescriptionComingSoon' },
-  8: { location: 'DescriptionComingSoon' },
-  9: { location: 'DescriptionComingSoon' },
-  10: {},
-  11: {},
-  12: {},
-  13: {},
-  14: {},
-  15: {}
+// Generate panorama images with default alt text
+const getPanoramaPath = (id: number) => {
+  return `/img/Italy/Trieste/trieste-panorama (${id}).jpg`;
 };
 
 //STEP FOUR - change image number
@@ -81,10 +68,6 @@ export default function TriesteGallery() {
       return image;
     });
   }, []);
-
-
-
-
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
   const openLightbox = (image: GalleryImage) => {setSelectedImage(image); document.body.style.overflow = 'hidden';};
@@ -117,13 +100,6 @@ export default function TriesteGallery() {
     }
   }, [galleryImages]);
 
-  // Generate panorama images with useMemo, using the panoramaDetails for locations
-  const panoramaImages = useMemo(() => {
-    return Object.entries(panoramaDetails).map(([id, details]) => ({
-      id: parseInt(id),
-      location: details.location || 'DescriptionComingSoon'
-    }));
-  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -254,13 +230,12 @@ export default function TriesteGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {panoramaImages.map((item, index) => (
-                  <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
+                {Array.from({ length: 15 }, (_, i) => (
+                  <div key={i + 1} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`${PAGE_CONTENT.panoramas.imagePath} (${item.id}).jpg`}
-                      alt={`Panorama ${item.id}`}
-                      location={item.location}
-                      priority={index <= 1}
+                      src={getPanoramaPath(i + 1)}
+                      alt={`${PAGE_CONTENT.title} Panorama ${i + 1}`}
+                      priority={i + 1 <= 3}
                     />
                   </div>
                 ))}

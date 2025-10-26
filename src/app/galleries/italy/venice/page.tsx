@@ -49,15 +49,6 @@ const imageDetails: Record<number, ImageDetails> = {
   1: { alt: 'DescriptionComingSoon' },
   2: { alt: 'DescriptionComingSoon' },
 };
-const panoramaDetails: Record<number, { location: string }> = {
-  1: {},
-  2: {},
-  3: {},
-  4: {},
-  5: {},
-  6: {},
-  7: {}
-};
 
 //STEP FOUR
 export default function VeniceGallery() {
@@ -109,13 +100,8 @@ export default function VeniceGallery() {
     }
   }, [galleryImages]);
 
-  // Generate panorama images with useMemo, using the panoramaDetails for locations
-  const panoramaImages = useMemo(() => {
-    return Object.entries(panoramaDetails).map(([id, details]) => ({
-      id: parseInt(id),
-      location: details.location || 'DescriptionComingSoon'
-    }));
-  }, []);
+  // Get the number of panorama images
+  const panoramaCount = 7; // Update this number based on your actual panorama count
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -246,13 +232,12 @@ export default function VeniceGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {panoramaImages.map((item, index) => (
-                  <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
+                {Array.from({ length: panoramaCount }, (_, i) => (
+                  <div key={i + 1} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`${PAGE_CONTENT.panoramas.imagePath} (${item.id}).jpg`}
-                      alt={`Panorama ${item.id}`}
-                      location={item.location}
-                      priority={index <= 1}
+                      src={`${PAGE_CONTENT.panoramas.imagePath} (${i + 1}).jpg`}
+                      alt={`${PAGE_CONTENT.title} Panorama ${i + 1}`}
+                      priority={i < 3}
                     />
                   </div>
                 ))}

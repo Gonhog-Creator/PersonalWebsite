@@ -4,11 +4,9 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import Image, { ImageProps } from 'next/image';
 import { FaTimes } from 'react-icons/fa';
 
-interface PanoramaViewerProps extends Omit<ImageProps, 'onClick' | 'className'> {
-  location?: string;
-}
+// Removed empty interface in favor of direct type usage
 
-export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps) {
+export function PanoramaViewer({ ...imageProps }: Omit<ImageProps, 'onClick' | 'className'>) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -265,12 +263,7 @@ export function PanoramaViewer({ location, ...imageProps }: PanoramaViewerProps)
               />
             </div>
             
-            {/* Location indicator at the top right */}
-            {location && (
-              <div className="absolute top-4 left-4 bg-black/70 text-white text-sm px-3 py-1 rounded-full">
-                {location}
-              </div>
-            )}
+            {/* Location indicator removed as per user preference */}
           </div>
         </div>
       )}
