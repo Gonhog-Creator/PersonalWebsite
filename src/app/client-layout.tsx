@@ -31,11 +31,25 @@ function ClientLayoutContent({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Helper function to safely add class to document element
+function addDarkClass() {
+  // Only run on client-side
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.add('dark');
+    document.documentElement.style.colorScheme = 'dark';
+  }
+}
+
 export default function ClientLayout({ children }: ClientLayoutProps) {
   // Set dark theme on the root element
   useEffect(() => {
-    document.documentElement.classList.add('dark');
+    addDarkClass();
   }, []);
+
+  // Also run on mount to handle cases where the effect doesn't trigger
+  if (typeof document !== 'undefined') {
+    addDarkClass();
+  }
 
   return <ClientLayoutContent>{children}</ClientLayoutContent>;
 }

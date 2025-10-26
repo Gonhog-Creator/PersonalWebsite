@@ -42,10 +42,9 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+    { color: '#0a0a0a' }, // Always use dark theme color
   ],
-  colorScheme: 'light dark',
+  colorScheme: 'dark', // Force dark mode
 };
 
 // Metadata for SEO
