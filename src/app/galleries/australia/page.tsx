@@ -8,7 +8,6 @@ import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-import { VideoPlayer } from '@/components/gallery/VideoPlayer';
 
 interface GalleryImage {
   id: number;
