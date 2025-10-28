@@ -21,7 +21,7 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/Italy/Rome/rome';
+  const basePath = '/img/Italy/Rome/Rome';
   return `${basePath} (${id}).jpg`;
 };
 
@@ -51,7 +51,7 @@ const imageDetails: Record<number, ImageDetails> = {
 };
 // Generate panorama images with default alt text
 const getPanoramaPath = (id: number) => {
-  return `/img/Italy/Rome/Rome-panorama (${id}).jpg`;
+  return `/img/Italy/Rome/rome-panorama (${id}).jpg`;
 };
 
 //STEP FOUR - change image number and panorama size below
