@@ -21,7 +21,13 @@ const projects: ProjectItem[] = [
     description: 'Rating every movie I watch!',
     path: '/side-quests/my-movies'
   },
-  // Add more projects here as they're created
+  {
+    id: 'rocketry-lab',
+    title: 'NC State Liquid Rocketry Lab',
+    image: '/img/RDE/RDE_Cover.png',
+    description: 'Advanced Projects Team Member - Rotating Detonation Engine Development',
+    path: '/projects/ncsu-rocketry'
+  }
 ];
 
 const container = {

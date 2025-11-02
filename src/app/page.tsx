@@ -114,7 +114,7 @@ export default function Home() {
         <section id="experience" className="py-20 bg-gray-50 dark:bg-gray-800">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 dark:text-white">My <span className="text-blue-600 dark:text-blue-400">Experience</span></h2>
+              <h2 className="text-4xl font-bold mb-4 dark:text-white">Work <span className="text-blue-600 dark:text-blue-400">Experience</span></h2>
             </div>
             <Work />
           </div>
