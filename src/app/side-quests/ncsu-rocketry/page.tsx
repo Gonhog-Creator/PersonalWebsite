@@ -25,7 +25,7 @@ export default function NCSURocketryPage() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/rdre/RDRE Main Background.jpg"
+            src="/img/projects/RDE/RDRE Main Background.jpg"
             alt="RDRE Turbine Background"
             fill
             className="object-cover object-center"
@@ -105,7 +105,7 @@ export default function NCSURocketryPage() {
               <div className="w-full md:w-1/2 flex justify-center">
                 <div className="relative h-96 w-full max-w-xl rounded-xl overflow-hidden shadow-2xl" data-aos="fade-left">
                   <Image
-                    src="/rdre/rde-diagram.jpg"
+                    src="/img/projects/RDE/rde-diagram.jpg"
                     alt="RDE Turbine Diagram - Save as: /public/rdre/rde-diagram.jpg"
                     fill
                     className="object-cover"
@@ -147,7 +147,7 @@ export default function NCSURocketryPage() {
               <div className="w-full md:w-1/2 flex justify-center">
                 <div className="relative h-96 w-full max-w-3xl rounded-xl overflow-hidden shadow-2xl" data-aos="fade-left">
                   <Image
-                    src="/rdre/rdre-schematic-diagram.jpg"
+                    src="/img/projects/RDE/rdre-schematic-diagram.jpg"
                     alt="RDRE Schematic Diagram - Save as: /public/rdre/rdre-schematic-diagram.jpg"
                     fill
                     className="object-cover"
@@ -237,7 +237,7 @@ export default function NCSURocketryPage() {
                 <div className="mb-6">
                   <div className="relative w-full h-64 md:h-80 rounded-lg overflow-hidden mb-2">
                     <Image
-                      src="/rdre/RDE-award.png"
+                      src="/img/projects/RDE/RDE-award.png"
                       alt="AIAA Scitech 2025 Achievement Award"
                       fill
                       className="object-contain"
@@ -319,7 +319,7 @@ export default function NCSURocketryPage() {
                   data-aos="fade-up"
                 >
                   <Image
-                    src={`/rdre/gallery-${item}.jpg`}
+                    src={`/img/projects/RDE/gallery-${item}.jpg`}
                     alt={`RDRE Project ${item}`}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"
