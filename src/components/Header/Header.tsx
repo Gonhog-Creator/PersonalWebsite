@@ -18,6 +18,7 @@ const navLinks: NavLink[] = [
   { name: 'About', href: 'about', icon: 'mdi:account' },
   { name: 'Experience', href: 'experience', icon: 'mdi:coffee' },
   { name: 'Photography', href: 'photography', icon: 'mdi:camera' },
+  { name: 'Food Tree', href: 'side-quests/foodtree', icon: 'mdi:food-apple' },
   { name: 'Contact', href: 'contact', icon: 'mdi:email' },
 ];
 

@@ -1,35 +1,10 @@
 'use client';
 
-import { Suspense, useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
-
-interface ClientLayoutProps {
-  children: React.ReactNode;
-}
-
-// Create a wrapper component that uses the navigation hooks
-function NavigationHandler({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  
-  useEffect(() => {
-    // Scroll to top on route change
-    window.scrollTo(0, 0);
-  }, [pathname, searchParams]);
-
-  return <>{children}</>;
-}
-
-// Wrap the component that uses useSearchParams in Suspense
-function ClientLayoutContent({ children }: { children: React.ReactNode }) {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-900"></div>}>
-      <NavigationHandler>
-        {children}
-      </NavigationHandler>
-    </Suspense>
-  );
-}
+import { ReactNode, Suspense, useEffect } from 'react';
+import { ThemeProvider } from 'next-themes';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/react';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 // Helper function to safely add class to document element
 function addDarkClass() {
@@ -39,6 +14,26 @@ function addDarkClass() {
     document.documentElement.style.colorScheme = 'dark';
   }
 }
+
+// Navigation handler component
+function NavigationHandler({ children }: { children: ReactNode }) {
+  return <>{children}</>;
+}
+
+// Wrap the component that uses useSearchParams in Suspense
+function ClientLayoutContent({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-900"></div>}>
+      <NavigationHandler>
+        {children}
+      </NavigationHandler>
+    </Suspense>
+  );
+}
+
+type ClientLayoutProps = {
+  children: ReactNode;
+};
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   // Set dark theme on the root element
@@ -51,5 +46,17 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     addDarkClass();
   }
 
-  return <ClientLayoutContent>{children}</ClientLayoutContent>;
+  return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <AuthProvider>
+        <ClientLayoutContent>
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <SpeedInsights />
+          <Analytics />
+        </ClientLayoutContent>
+      </AuthProvider>
+    </ThemeProvider>
+  );
 }
