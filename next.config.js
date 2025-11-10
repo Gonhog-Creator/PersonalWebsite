@@ -1,43 +1,18 @@
 /** @type {import('next').NextConfig} */
-const path = require('path');
 const webpack = require('webpack');
-
-// Environment variables
 const isProd = process.env.NODE_ENV === 'production';
 const isVercel = process.env.VERCEL === '1';
-
-// Base configuration
 const basePath = '';
 const assetPrefix = '';
 
 const nextConfig = {
-  // Base configuration
   basePath,
   assetPrefix,
   trailingSlash: true,
   
   // Image configuration
   images: {
-    unoptimized: true,
-    domains: ['www.josebarbeito.com', 'josebarbeito.com'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'm.media-amazon.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'image.tmdb.org',
-      },
-      {
-        protocol: 'https',
-        hostname: 'via.placeholder.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'www.josebarbeito.com',
-      },
-    ],
+    domains: ['josebarbeito.com', 'm.media-amazon.com', 'image.tmdb.org', 'via.placeholder.com'],
   },
   
   // Disable React strict mode for static export
