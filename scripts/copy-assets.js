@@ -8,6 +8,11 @@ const outDir = path.join(__dirname, '..', 'out');
 // Ensure the output directory exists
 fs.ensureDirSync(outDir);
 
+// Create .nojekyll file in the out directory
+const noJekyllPath = path.join(outDir, '.nojekyll');
+fs.writeFileSync(noJekyllPath, '');
+console.log('Created .nojekyll file in the out directory');
+
 // Copy public directory to out directory
 fs.copySync(srcDir, outDir, {
   dereference: true,
