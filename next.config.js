@@ -10,13 +10,6 @@ const isVercel = process.env.VERCEL === '1';
 const basePath = '';
 const assetPrefix = '';
 
-// Log the configuration for debugging
-console.log('Next.js Config:');
-console.log('- isProd:', isProd);
-console.log('- isVercel:', isVercel);
-console.log('- basePath:', basePath);
-console.log('- assetPrefix:', assetPrefix);
-
 const nextConfig = {
   // Base configuration
   basePath,

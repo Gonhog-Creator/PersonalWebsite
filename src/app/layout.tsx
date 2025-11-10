@@ -3,6 +3,7 @@ import { Inter, Alfa_Slab_One, Open_Sans, Fira_Code } from 'next/font/google';
 import ClientLayout from './client-layout';
 import AosInitializer from '@/components/AosInitializer';
 import { Analytics } from '@/components/GoogleAnalytics';
+import GradientLayout from '@/components/GradientLayout';
 import '@/app/globals.css';
 
 // Load fonts with optimized settings
@@ -158,9 +159,11 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 transition-colors duration-300">
         <ClientLayout>
-          {children}
-          <AosInitializer />
-          <Analytics />
+          <GradientLayout>
+            {children}
+            <AosInitializer />
+            <Analytics />
+          </GradientLayout>
         </ClientLayout>
         
         <script
