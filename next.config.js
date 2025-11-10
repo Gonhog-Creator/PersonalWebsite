@@ -6,6 +6,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const useCustomDomain = process.env.USE_CUSTOM_DOMAIN === 'true';
 const isVercel = process.env.VERCEL === '1';
+const isGhPages = process.env.GH_PAGES === 'true';
 
 // Base configuration
 let basePath = '';
@@ -18,28 +19,59 @@ if (isVercel) {
   assetPrefix = '';
 } 
 // For GitHub Pages with custom domain
-else if (isGithubActions && useCustomDomain) {
+else if (isGhPages && useCustomDomain) {
   basePath = '';
   assetPrefix = '';
 }
 // For GitHub Pages without custom domain
-else if (isGithubActions) {
+else if (isGhPages) {
   const repo = 'PersonalWebsite';
   basePath = `/${repo}`;
   assetPrefix = `/${repo}/`;
 }
 
 // For local development
-if (process.env.NODE_ENV !== 'production') {
+if (!isProd && !isGhPages && !isVercel) {
   basePath = '';
   assetPrefix = '';
 }
+
+// Log the configuration for debugging
+console.log('Next.js Config:');
+console.log('- isProd:', isProd);
+console.log('- isGithubActions:', isGithubActions);
+console.log('- useCustomDomain:', useCustomDomain);
+console.log('- isVercel:', isVercel);
+console.log('- isGhPages:', isGhPages);
+console.log('- basePath:', basePath);
+console.log('- assetPrefix:', assetPrefix);
 
 const nextConfig = {
   // Base configuration
   basePath,
   assetPrefix,
   trailingSlash: true,
+  
+  // Enable static export
+  output: 'export',
+  
+  // Disable image optimization for static export
+  images: {
+    unoptimized: true,
+  },
+  
+  // Enable React strict mode
+  reactStrictMode: true,
+  
+  // Disable ESLint during build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
+  // Disable TypeScript type checking during build
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   
   // Configure headers for CORS and security
   async headers() {

@@ -7,7 +7,6 @@
     }
   ],
   "routes": [
-    // API routes with CORS and no caching
     {
       "src": "/api/(.*)",
       "dest": "/api/$1",
@@ -19,12 +18,10 @@
         "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Authorization"
       }
     },
-    // FoodTree API routes
     {
       "src": "/side-quests/foodtree/api/(.*)",
       "dest": "/api/foodtree/$1"
     },
-    // Static assets with long cache TTL
     {
       "src": "/(.*)",
       "dest": "/$1",
@@ -40,5 +37,9 @@
     "env": {
       "NEXT_PUBLIC_VERCEL_ENV": "production"
     }
+  },
+  "github": {
+    "enabled": true,
+    "autoJobCancelation": true
   }
 }
