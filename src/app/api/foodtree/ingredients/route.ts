@@ -115,13 +115,16 @@ export async function GET(request: Request) {
       const uniqueIngredients = Array.from(
         new Map(filteredIngredients.map(item => [item.id, item])).values()
       );
-      
       return uniqueIngredients;
     });
     
     return NextResponse.json(ingredients);
   } catch (error) {
-    console.error('Error in ingredients API:', error);
+    console.error('Error in GET /api/foodtree/ingredients:', error);
+    // In production, return empty array instead of error for static export
+    if (process.env.NODE_ENV === 'production') {
+      return NextResponse.json([]);
+    }
     return NextResponse.json(
       { error: 'Failed to fetch ingredients' },
       { status: 500 }

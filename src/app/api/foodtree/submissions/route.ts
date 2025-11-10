@@ -167,7 +167,19 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error('Error in GET /api/foodtree/submissions:', error);
+    console.error('Error fetching submissions:', error);
+    
+    // In production, return empty array instead of error for static export
+    if (process.env.NODE_ENV === 'production') {
+      return new NextResponse(JSON.stringify([]), {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders,
+        },
+      });
+    }
+    
     return new NextResponse(
       JSON.stringify({ error: 'Failed to fetch submissions' }),
       { 
