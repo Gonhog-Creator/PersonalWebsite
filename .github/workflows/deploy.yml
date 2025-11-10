@@ -59,7 +59,8 @@ jobs:
           echo "Running build..."
           npm run build:gh-pages
           
-          # Create necessary files for GitHub Pages
+          # Ensure out directory exists and create necessary files for GitHub Pages
+          mkdir -p out
           touch out/.nojekyll
           touch out/.gitkeep
           
