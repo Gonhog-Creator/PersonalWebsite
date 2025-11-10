@@ -26,6 +26,7 @@ const nextConfig = {
   // Image configuration
   images: {
     unoptimized: true,
+    domains: ['www.josebarbeito.com', 'josebarbeito.com'],
     remotePatterns: [
       {
         protocol: 'https',

@@ -3,12 +3,20 @@ import GoogleProvider from 'next-auth/providers/google';
 
 // Helper to get the base URL
 const getBaseUrl = () => {
-  if (process.env.NEXTAUTH_URL) return process.env.NEXTAUTH_URL;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  if (process.env.NODE_ENV === 'production') {
+    // In production, use the custom domain with www
+    return 'https://www.josebarbeito.com';
+  }
+  // In development, use localhost
   return `http://localhost:${process.env.PORT || 3000}`;
 };
 
 const baseUrl = getBaseUrl();
+
+// Ensure NEXTAUTH_URL is set for production
+if (process.env.NODE_ENV === 'production' && !process.env.NEXTAUTH_URL) {
+  console.warn('NEXTAUTH_URL environment variable is not set in production');
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
