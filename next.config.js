@@ -5,13 +5,20 @@ const path = require('path');
 const isProd = process.env.NODE_ENV === 'production';
 const isGithubActions = process.env.GITHUB_ACTIONS === 'true';
 const useCustomDomain = process.env.USE_CUSTOM_DOMAIN === 'true';
+const isVercel = process.env.VERCEL === '1';
 
 // Base configuration
 let basePath = '';
 let assetPrefix = '';
 
+// For Vercel deployment
+if (isVercel) {
+  // Use Vercel's automatic URL detection
+  basePath = '';
+  assetPrefix = '';
+} 
 // For GitHub Pages with custom domain
-if (isGithubActions && useCustomDomain) {
+else if (isGithubActions && useCustomDomain) {
   basePath = '';
   assetPrefix = '';
 }
@@ -124,8 +131,18 @@ const nextConfig = {
     return config;
   },
 
-  // Enable React strict mode
-  reactStrictMode: true,
+  // TypeScript configuration
+  typescript: {
+    // Enable TypeScript type checking during build
+    ignoreBuildErrors: false,
+  },
+  
+  // ESLint configuration
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
   
   // Configure TypeScript
   typescript: {

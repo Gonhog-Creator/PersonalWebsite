@@ -3,28 +3,42 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": ".next"
-      }
-    },
-    {
-      "src": "pages/api/**/*.js",
-      "use": "@vercel/node"
+      "use": "@vercel/next"
     }
   ],
   "routes": [
+    // API routes with CORS and no caching
     {
       "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "dest": "/api/$1",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      "headers": {
+        "Cache-Control": "no-store, max-age=0",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Authorization"
+      }
     },
+    // FoodTree API routes
     {
       "src": "/side-quests/foodtree/api/(.*)",
       "dest": "/api/foodtree/$1"
     },
+    // Static assets with long cache TTL
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_VERCEL_ENV": "production"
+    }
+  }
 }

@@ -22,21 +22,69 @@ export const getRedisClient = async (): Promise<RedisClient> => {
   
   try {
     const url = process.env.REDIS_URL || 'redis://localhost:6379';
+    console.log('Connecting to Redis at:', url.replace(/:([^:]+)@/, ':***@')); // Log redacted URL
+    
     const isSecure = url.startsWith('rediss://');
     
+    // Close existing connection if it exists
+    if (redisClient) {
+      try {
+        await redisClient.quit();
+      } catch (e) {
+        console.warn('Error closing existing Redis connection:', e);
+      }
+      redisClient = null;
+    }
+
     redisClient = createClient({
       url,
       socket: {
         tls: isSecure,
-        rejectUnauthorized: false // Only set to false for development with self-signed certs
-      }
+        rejectUnauthorized: false, // Required for Redis Cloud with TLS
+        connectTimeout: 10000, // 10 seconds
+        reconnectStrategy: (retries) => {
+          console.log(`Redis reconnecting attempt ${retries}`);
+          if (retries > 5) {
+            console.error('Max reconnection attempts reached');
+            return new Error('Max reconnection attempts reached');
+          }
+          return Math.min(retries * 200, 2000); // Exponential backoff up to 2s
+        }
+      },
+      pingInterval: 10000, // Send a ping every 10 seconds to keep the connection alive
+      disableOfflineQueue: false // Allow commands to be queued while reconnecting
     }) as RedisClient;
+
+    // Add error event listeners
+    redisClient.on('error', (err) => {
+      console.error('Redis client error:', err);
+    });
+
+    redisClient.on('connect', () => {
+      console.log('Redis client connected');
+    });
+
+    redisClient.on('ready', () => {
+      console.log('Redis client ready');
+    });
+
+    redisClient.on('reconnecting', () => {
+      console.log('Redis client reconnecting...');
+    });
     
     await redisClient.connect();
-    console.log('Connected to Redis');
+    console.log('Successfully connected to Redis');
     return redisClient;
   } catch (error) {
     console.error('Failed to connect to Redis:', error);
+    if (redisClient) {
+      try {
+        await redisClient.quit();
+      } catch (e) {
+        console.warn('Error closing Redis connection after failed connect:', e);
+      }
+      redisClient = null;
+    }
     throw error;
   } finally {
     isConnecting = false;
@@ -221,15 +269,65 @@ export async function submissionExists(type: string, name: string): Promise<bool
   }
 }
 
+// List all ingredients
+export async function listIngredients(): Promise<any[]> {
+  const client = await getRedisClient();
+  try {
+    const keys = await client.keys('ingredient:*');
+    if (keys.length === 0) return [];
+    
+    const values = await Promise.all(
+      keys.map(async (key) => {
+        const value = await client.get(key);
+        return value ? JSON.parse(value) : null;
+      })
+    );
+    
+    return values.filter(Boolean);
+  } catch (error) {
+    console.error('Error listing ingredients:', error);
+    return [];
+  }
+}
+
+// Delete a submission by ID
 export async function deleteSubmission(id: string): Promise<boolean> {
-  return withRedis(async (client) => {
-    try {
-      const key = `submission:${id}`;
-      const result = await client.del(key);
-      return result > 0; // Returns true if the key was deleted
-    } catch (error) {
-      console.error('Error deleting submission:', error);
-      throw new Error('Failed to delete submission');
+  const client = await getRedisClient();
+  try {
+    if (!id.startsWith('submission:')) {
+      id = `submission:${id}`;
     }
-  });
+    
+    const result = await client.del(id);
+    return result === 1;
+  } catch (error) {
+    console.error('Error deleting submission:', error);
+    return false;
+  }
+}
+
+// Create a new ingredient
+export async function createIngredient(ingredient: {
+  name: string;
+  type: string;
+  category: string;
+  description?: string;
+}): Promise<boolean> {
+  const client = await getRedisClient();
+  try {
+    const id = `ingredient:${Date.now()}`;
+    await client.set(
+      id,
+      JSON.stringify({
+        ...ingredient,
+        id,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      })
+    );
+    return true;
+  } catch (error) {
+    console.error('Error creating ingredient:', error);
+    return false;
+  }
 }
