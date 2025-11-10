@@ -62,19 +62,13 @@ const nextConfig = {
   // Environment variables for client-side
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
-    NEXT_PUBLIC_SITE_URL: useCustomDomain ? 'https://www.josebarbeito.com' : basePath,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   },
   
   // Webpack configuration
   webpack: (config, { isServer, isServerRuntimeConfig }) => {
-    // Skip API routes in static export
-    if (isServer && process.env.NEXT_PHASE === 'phase-export') {
-      config.plugins.push(
-        new webpack.IgnorePlugin({
-          resourceRegExp: /^\/api\//,
-        })
-      );
-    }
+    // Webpack configuration for both server and client
+    // Note: Removed static export specific code since we're not using it anymore
     // Add a rule to handle static files
     config.module.rules.push({
       test: /\.(png|jpg|jpeg|gif|svg|eot|ttf|woff|woff2)$/i,
@@ -115,8 +109,7 @@ const nextConfig = {
     config.plugins.push(
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
-        'process.env.IS_SERVER': JSON.stringify(isServer),
-        'process.env.IS_STATIC_EXPORT': JSON.stringify(isStaticExport),
+        'process.env.IS_SERVER': JSON.stringify(isServer)
       })
     );
 
