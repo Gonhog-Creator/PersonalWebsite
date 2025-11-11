@@ -21,7 +21,7 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/Italy/Padova/padova';
+  const basePath = '/img/Italy/Padova/Padova';
   return `${basePath} (${id}).jpg`;
 };
 
@@ -30,7 +30,7 @@ const PAGE_CONTENT = {
   title: 'Padova',
   description: 'The birthplace of modern astronomical observation through Galileo Galilei, filled with churches and students, and my home base for my time in Italy.',
   header: {
-    backgroundImage: '/img/Italy/Padova/padova-panorama (2).jpg',
+    backgroundImage: '/img/Italy/Padova/padova-panorama (1).jpg',
     altText: 'Padova Panorama'
   },
   panoramas: {
@@ -45,7 +45,7 @@ const PAGE_CONTENT = {
 
 
 // Get the number of panorama images
-const panoramaCount = 3; // Update this number based on your actual panorama count
+const panoramaCount = 1; // Update this number based on your actual panorama count
 
 //STEP FOUR
 export default function PadovaGallery() {
