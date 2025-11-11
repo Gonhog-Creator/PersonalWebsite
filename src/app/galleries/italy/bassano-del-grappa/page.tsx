@@ -28,7 +28,7 @@ const getImagePath = (id: number) => {
 //STEP TWO
 const PAGE_CONTENT = {
   title: 'Bassano Del Grappo',
-  description: 'Centuries of history, art, and culture, all thrown together on 118 islands. Welcome to Venice.',
+  description: 'Lots of mountains, a few statues, and one cool looking bridge. The perfect quaint italian town tucked into the Alps.',
   header: {
     backgroundImage: '/img/Italy/Bassano/bassano-panorama (2).jpg',
     altText: 'Bassano Panorama'
