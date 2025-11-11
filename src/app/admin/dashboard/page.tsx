@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { Search, Eye, Trash2, AlertCircle, Loader2 } from 'lucide-react';
 import { Submission, SubmissionFilters } from '@/types/submission';
@@ -175,13 +175,6 @@ const Input = ({
   />
 );
 
-const statusOptions = [
-  { value: 'all', label: 'All Statuses' },
-  { value: 'pending', label: 'Pending' },
-  { value: 'approved', label: 'Approved' },
-  { value: 'rejected', label: 'Rejected' },
-];
-
 const typeOptions = [
   { value: 'all', label: 'All Types' },
   { value: 'ingredient', label: 'Ingredient' },
@@ -197,22 +190,15 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [filters, setFilters] = useState<SubmissionFilters>({});
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  // Remove dark mode state and effects since we're only using light mode
 
-  // Apply dark mode class to body
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
-
+  // Fetch all submissions on initial load
   const fetchSubmissions = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await getSubmissions(filters);
+      // Fetch all submissions without filters
+      const data = await getSubmissions({});
       setSubmissions(data);
     } catch (err) {
       console.error('Failed to fetch submissions:', err);
@@ -220,7 +206,24 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, []);
+
+  // Filter submissions based on search term and other filters
+  const filteredSubmissions = useMemo(() => {
+    return submissions.filter(submission => {
+      // Search by name or ID
+      const searchTerm = (filters.search || '').toLowerCase();
+      const matchesSearch = !searchTerm || 
+        (submission.data?.name?.toLowerCase().includes(searchTerm)) || 
+        submission.id.toLowerCase().includes(searchTerm) ||
+        (submission.submittedBy && submission.submittedBy.toLowerCase().includes(searchTerm));
+
+      // Filter by type if specified
+      const matchesType = !filters.type || submission.type === filters.type;
+
+      return matchesSearch && matchesType;
+    });
+  }, [submissions, filters.search, filters.type]);
 
   // Fetch submissions when filters change
   useEffect(() => {
@@ -270,171 +273,220 @@ export default function AdminDashboard() {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-      <div className="p-6 max-w-7xl mx-auto">
-        {/* Dark mode toggle */}
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
-            aria-label="Toggle dark mode"
-          >
-            {darkMode ? '☀️' : '🌙'}
-          </button>
+    <div className="min-h-screen w-full bg-gray-900 text-gray-100 transition-colors duration-200 overflow-x-hidden flex justify-center">
+      <div className="w-full max-w-[1800px] px-4 sm:px-6 lg:px-8 py-6">
+        {/* Header */}
+        <div className="md:flex md:items-center md:justify-between mb-8">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-bold leading-7 text-white sm:truncate sm:text-3xl">
+              Submissions
+            </h1>
+            <p className="mt-1 text-sm text-gray-300">
+              Manage and review all user submissions
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col sm:flex-row justify-center items-center mb-6 gap-4">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Submissions</h1>
-          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-white" />
-              <Input
-                placeholder="Search submissions..."
-                className="pl-10 w-full bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                value={filters.search || ''}
-                onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-              />
-            </div>
-            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-              <div className="w-full sm:w-48">
-                <select
-                  value={filters.status || 'all'}
-                  onChange={(e) =>
-                    setFilters({
-                      ...filters,
-                      status: e.target.value === 'all' ? undefined : (e.target.value as Submission['status']),
-                    })
-                  }
-                  className="h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                  {statusOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="w-full sm:w-48">
-                <select
-                  value={filters.type || 'all'}
-                  onChange={(e) =>
-                    setFilters({
-                      ...filters,
-                      type: e.target.value === 'all' ? undefined : e.target.value,
-                    })
-                  }
-                  className="h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                  {typeOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+
+        {/* Filters */}
+        <div className="bg-gray-800 shadow-sm rounded-lg p-4 mb-6 border border-gray-700">
+          <div className="flex justify-center w-full">
+            <div className="w-full max-w-4xl">
+              <div className="grid grid-cols-1 md:grid-cols-10 gap-4">
+                {/* Search Input */}
+                <div className="md:col-span-7">
+                  <label htmlFor="search" className="block text-sm font-medium text-gray-300 mb-1">
+                    Search
+                  </label>
+                  <div className="relative rounded-md shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Search className="h-4 w-4 text-gray-400" />
+                    </div>
+                    <Input
+                      id="search"
+                      placeholder="Search by name, ID, or submitter..."
+                      className="pl-10 w-full bg-white text-black border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                      value={filters.search || ''}
+                      onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                {/* Type Selector */}
+                <div className="md:col-span-2">
+                  <label htmlFor="type" className="block text-sm font-medium text-gray-300 mb-1">
+                    Type
+                  </label>
+                  <select
+                    id="type"
+                    value={filters.type || 'all'}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        type: e.target.value === 'all' ? undefined : e.target.value,
+                      })
+                    }
+                    className="h-10 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {typeOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Reset Button */}
+                <div className="md:col-span-1 flex items-end">
+                  <Button
+                    variant="outline"
+                    className="w-full h-10 bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
+                    onClick={() => setFilters({})}
+                  >
+                    Reset
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+          <div className="rounded-md bg-red-50 dark:bg-red-900/30 p-4 mb-6 border border-red-200 dark:border-red-800">
             <div className="flex">
               <div className="flex-shrink-0">
                 <AlertCircle className="h-5 w-5 text-red-400" />
               </div>
               <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
+                <p className="text-sm font-medium text-red-800 dark:text-red-200">
+                  {error}
+                </p>
               </div>
             </div>
           </div>
         )}
 
-        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden transition-colors duration-200">
+        <div className="bg-gray-800 shadow-sm rounded-lg overflow-hidden border border-gray-700 transition-colors duration-200 w-full">
           {loading ? (
-            <div className="flex items-center justify-center p-12">
-              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-              <span className="ml-2">Loading submissions...</span>
+            <div className="flex flex-col items-center justify-center p-12 space-y-4">
+              <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+              <p className="text-gray-300">Loading submissions...</p>
             </div>
           ) : submissions.length === 0 ? (
             <div className="text-center p-12">
-              <p className="text-gray-500">No submissions found.</p>
+              <svg
+                className="mx-auto h-12 w-12 text-gray-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-white">No submissions</h3>
+              <p className="mt-1 text-sm text-gray-400">
+                {Object.keys(filters).length > 0
+                  ? 'No submissions match your filters.'
+                  : 'Get started by creating a new submission.'}
+              </p>
               {Object.keys(filters).length > 0 && (
-                <Button
-                  variant="ghost"
-                  className="mt-2"
-                  onClick={() => setFilters({})}
-                >
-                  Clear filters
-                </Button>
+                <div className="mt-6">
+                  <Button
+                    variant="outline"
+                    className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
+                    onClick={() => setFilters({})}
+                  >
+                    Clear all filters
+                  </Button>
+                </div>
               )}
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>ID</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Submitted By</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {submissions.map((submission) => (
-                  <TableRow key={submission.id}>
-                    <TableCell className="font-medium">
-                      {submission.id.substring(0, 8)}...
-                    </TableCell>
-                    <TableCell>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {submission.type}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-sm text-gray-600">
-                      {submission.submittedBy}
-                    </TableCell>
-                    <TableCell className="text-sm text-gray-500">
-                      {format(new Date(submission.submittedAt), 'MMM d, yyyy')}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          submission.status === 'approved'
-                            ? 'success'
-                            : submission.status === 'rejected'
-                            ? 'destructive'
-                            : 'secondary'
-                        }
-                      >
-                        {submission.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setSelectedSubmission(submission)}
-                      >
-                        <Eye className="h-4 w-4" />
-                        <span className="sr-only">View</span>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-red-600 hover:text-red-800"
-                        onClick={() =>
-                          confirm('Are you sure you want to delete this submission?') &&
-                          handleDelete(submission.id)
-                        }
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        <span className="sr-only">Delete</span>
-                      </Button>
-                    </TableCell>
+            <div className="w-full overflow-x-auto">
+              <Table className="w-full table-fixed">
+                <colgroup>
+                  <col className="w-24" />
+                  <col className="min-w-[200px]" />
+                  <col className="w-24" />
+                  <col className="min-w-[150px]" />
+                  <col className="w-32" />
+                  <col className="w-32" />
+                </colgroup>
+                <TableHeader className="bg-gray-700">
+                  <TableRow className="border-b border-gray-600">
+                    <TableHead className="w-24 py-3.5 px-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">ID</TableHead>
+                    <TableHead className="min-w-[200px] py-3.5 px-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Name</TableHead>
+                    <TableHead className="w-24 py-3.5 px-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Type</TableHead>
+                    <TableHead className="min-w-[150px] py-3.5 px-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Submitted By</TableHead>
+                    <TableHead className="w-32 py-3.5 px-2 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider">Date</TableHead>
+                    <TableHead className="w-32 py-3.5 px-2 text-right text-xs font-semibold text-gray-300 uppercase tracking-wider">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody className="divide-y divide-gray-200">
+                  {filteredSubmissions.map((submission) => (
+                    <TableRow 
+                      key={submission.id}
+                      className="bg-gray-800 hover:bg-gray-700/80 transition-colors border-b border-gray-700"
+                    >
+                      <TableCell className="whitespace-nowrap py-4 px-4 text-sm font-medium text-white">
+                        <span className="font-mono">
+                          {submission.id.includes(':') 
+                            ? submission.id.split(':')[1].substring(0, 8)
+                            : submission.id.substring(0, 8) + '...'}
+                        </span>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-300">
+                        {submission.data?.name || submission.submittedName || 'N/A'}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap py-4 px-4">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900/30 text-blue-300 border border-blue-800/50">
+                          {submission.type}
+                        </span>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-300">
+                        {submission.data?.submittedName || submission.submittedBy || 'N/A'}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-400">
+                        <time dateTime={submission.submittedAt}>
+                          {format(new Date(submission.submittedAt), 'MMM d, yyyy')}
+                        </time>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap py-4 px-4 text-right text-sm font-medium">
+                        <div className="flex items-center justify-end space-x-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-gray-400 hover:text-blue-400 hover:bg-gray-600"
+                            onClick={() => setSelectedSubmission(submission)}
+                            title="View details"
+                          >
+                            <Eye className="h-4 w-4" />
+                            <span className="sr-only">View</span>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-gray-400 hover:text-red-400 hover:bg-gray-600"
+                            onClick={() =>
+                              window.confirm('Are you sure you want to delete this submission?') &&
+                              handleDelete(submission.id)
+                            }
+                            title="Delete submission"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            <span className="sr-only">Delete</span>
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </div>
       </div>

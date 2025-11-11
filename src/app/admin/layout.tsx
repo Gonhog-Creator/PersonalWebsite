@@ -27,9 +27,9 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <main className="py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-900 w-full overflow-x-hidden">
+      <main className="w-full">
+        <div className="w-full">
           {children}
         </div>
       </main>
