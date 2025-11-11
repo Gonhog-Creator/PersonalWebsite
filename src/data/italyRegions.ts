@@ -210,6 +210,32 @@ export const italyRegions: GeoJSON.FeatureCollection<GeoJSON.Geometry, RegionPro
           ]
         ]
       }
+    },
+    {
+      type: 'Feature',
+      id: 'bologna',
+      properties: {
+        name: 'Bologna',
+        id: 'bologna',
+        galleryPath: '/galleries/italy/bologna'
+      },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [11.2756469, 44.5439363],
+            [11.2437031, 44.5236234],
+            [11.2220637, 44.4518600],
+            [11.2777078, 44.4212173],
+            [11.3694175, 44.4141059],
+            [11.4521966, 44.4295537],
+            [11.4662794, 44.4658277],
+            [11.4357095, 44.5297425],
+            [11.3522434, 44.5573927],
+            [11.2756469, 44.5439363]
+          ]
+        ]
+      }
     }
   ]
 };

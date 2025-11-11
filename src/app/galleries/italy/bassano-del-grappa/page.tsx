@@ -43,22 +43,15 @@ const PAGE_CONTENT = {
   }
 };
 
-//STEP ThREE
-// Image details for alt text
-const imageDetails: Record<number, ImageDetails> = {
-  1: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
-};
-
- // Get the number of panorama images
-  const panoramaCount = 3; // Update this number based on your actual panorama count
+// Get the number of panorama images
+const panoramaCount = 3; // Update this number based on your actual panorama count
 
 //STEP FOUR
 export default function BassanoGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 76 }, (_, i) => {
-      const details = imageDetails[i + 1] || { alt: `Photo ${i + 1}` };
+      const details = { alt: `Photo ${i + 1}` };
       const image: GalleryImage = {
         id: i + 1,
         src: getImagePath(i + 1),

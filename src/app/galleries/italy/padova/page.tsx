@@ -21,50 +21,38 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/Argentina/argentina';
+  const basePath = '/img/Italy/Padova/padova';
   return `${basePath} (${id}).jpg`;
 };
 
 //STEP TWO
 const PAGE_CONTENT = {
-  title: 'Argentina',
-  description: 'From the Perito Moreno Glacier to El Chalten in Calafate to the vast plains and volcanoes of Patagonia, Argentina is a country of immense beauty, rich culture, and breathtaking landscapes.',
+  title: 'Padova',
+  description: 'The birthplace of modern astronomical observation through Galileo Galilei, filled with churches and students, and my home base for my time in Italy.',
   header: {
-    backgroundImage: '/img/Argentina/argentina_panorama (8).jpg',
-    altText: 'Argentina Panorama'
+    backgroundImage: '/img/Italy/Padova/padova-panorama (2).jpg',
+    altText: 'Padova Panorama'
   },
   panoramas: {
-    description: 'From glaciers to dusty deserts, I think I photographed plenty of Argentina.',
-    imagePath: '/img/Argentina/argentina_panorama'
+    description: 'If you look carefully you can see my classroom.',
+    imagePath: '/img/Italy/Padova/padova-panorama'
   },
   video: {
-    id: 'UBHQtwZpIk0',
-    title: 'Argentina 2025 Travel Recap'
+    id: '',
+    title: 'Padova From Above'
   }
 };
 
-//STEP ThREE
-// Image details for alt text
-const imageDetails: Record<number, ImageDetails> = {
-  1: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
-};
-const panoramaDetails: Record<number, { location: string }> = {
-  1: { location: 'DescriptionComingSoon' },
-  2: { location: 'DescriptionComingSoon' },
-  3: { location: 'DescriptionComingSoon' },
-  4: { location: 'DescriptionComingSoon' },
-  5: { location: 'DescriptionComingSoon' },
-  6: { location: 'DescriptionComingSoon' },
-  7: { location: 'DescriptionComingSoon' }
-};
+
+// Get the number of panorama images
+const panoramaCount = 3; // Update this number based on your actual panorama count
 
 //STEP FOUR
 export default function PadovaGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 353 }, (_, i) => {
-      const details = imageDetails[i + 1] || { alt: `Photo ${i + 1}` };
+    return Array.from({ length: 15 }, (_, i) => {
+      const details = { alt: `Photo ${i + 1}` };
       const image: GalleryImage = {
         id: i + 1,
         src: getImagePath(i + 1),
@@ -109,19 +97,11 @@ export default function PadovaGallery() {
     }
   }, [galleryImages]);
 
-  // Generate panorama images with useMemo, using the panoramaDetails for locations
-  const panoramaImages = useMemo(() => {
-    return Object.entries(panoramaDetails).map(([id, details]) => ({
-      id: parseInt(id),
-      location: details.location || 'DescriptionComingSoon'
-    }));
-  }, []);
-
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Project Header */}
       <ProjectHeader />
-      
+
       {/* Header with title and navigation */}
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
@@ -246,12 +226,12 @@ export default function PadovaGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {panoramaImages.map((item) => (
-                  <div key={item.id} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
+                {Array.from({ length: panoramaCount }, (_, i) => (
+                  <div key={i + 1} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`${PAGE_CONTENT.panoramas.imagePath} (${item.id}).jpg`}
-                      alt={`${PAGE_CONTENT.title} Panorama ${item.id}`}
-                      priority={item.id <= 3}
+                      src={`${PAGE_CONTENT.panoramas.imagePath} (${i + 1}).jpg`}
+                      alt={`${PAGE_CONTENT.title} Panorama ${i + 1}`}
+                      priority={i < 3}
                     />
                   </div>
                 ))}
