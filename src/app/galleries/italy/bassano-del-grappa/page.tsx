@@ -38,8 +38,8 @@ const PAGE_CONTENT = {
     imagePath: '/img/Italy/Bassano/bassano-panorama'
   },
   video: {
-    id: '',
-    title: 'Bassano 2025 Travel Recap'
+    id: '8zhJ1ux5xiE',
+    title: 'Bassano Dep Grappa From Above'
   }
 };
 
