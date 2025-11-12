@@ -38,7 +38,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Italy/Venice/venice-panorama'
   },
   video: {
-    id: 'UBHQtwZpIk0',
+    id: 'cVL1T_H6q3c',
     title: 'Venice 2025 Travel Recap'
   }
 };
