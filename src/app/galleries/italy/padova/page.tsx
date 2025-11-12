@@ -38,7 +38,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Italy/Padova/padova-panorama'
   },
   video: {
-    id: '',
+    id: 'XsTUcwKmE2c',
     title: 'Padova From Above'
   }
 };
