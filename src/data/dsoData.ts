@@ -184,7 +184,7 @@ export const dsoImages: DSOImage[] = [
     fullDescription: 'The Pleiades (M45), also known as the Seven Sisters, is an open star cluster containing middle-aged, hot B-type stars located in the constellation of Taurus. It is among the star clusters nearest to Earth and is the cluster most obvious to the naked eye in the night sky. The cluster is dominated by hot blue and luminous stars that have formed within the last 100 million years. The name of the Pleiades comes from Ancient Greek mythology, where they represented the Seven Sisters. The cluster is about 444 light-years away and contains over 1,000 confirmed members, though only a handful are visible to the naked eye. The cluster is particularly well-known for its reflection nebulae, which are clouds of interstellar dust that reflect the light of the stars within the cluster.',
     type: 'star-cluster',
     constellation: 'Taurus',
-    imageUrl: '/img/Astro/M45-12.25.24-857x10sec.jpg',
+    imageUrl: '/img/Astro/M45-10.16.25-809x10sec.jpg',
     telescope: 'Seestar S50',
     exposure: '2.3 hours (857x10sec)',
     location: 'Durham, NC',
