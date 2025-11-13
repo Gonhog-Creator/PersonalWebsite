@@ -21,20 +21,20 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/Italy/Bologna/Bologna';
+  const basePath = '/img/Italy/Bologna/bologna';
   return `${basePath} (${id}).jpg`;
 };
 
 //STEP TWO
 const PAGE_CONTENT = {
   title: 'Bologna',
-  description: 'The birthplace of modern astronomical observation through Galileo Galilei, filled with churches and students, and my home base for my time in Italy.',
+  description: 'A ancient medieval town where brick towers, endless pasta, and countless porticoes create a unique urban landscape.',
   header: {
-    backgroundImage: '/img/Italy/Bologna/bologna-panorama (1).jpg',
+    backgroundImage: '/img/Italy/Bologna/bologna-panorama (6).jpg',
     altText: 'Bologna Panorama'
   },
   panoramas: {
-    description: 'If you look carefully you can see my classroom.',
+    description: 'Counting every arch on the way to the basilica.',
     imagePath: '/img/Italy/Bologna/bologna-panorama'
   },
   video: {
@@ -45,13 +45,13 @@ const PAGE_CONTENT = {
 
 
 // Get the number of panorama images
-const panoramaCount = 1; // Update this number based on your actual panorama count
+const panoramaCount = 9; // Update this number based on your actual panorama count
 
 //STEP FOUR
 export default function BolognaGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 15 }, (_, i) => {
+    return Array.from({ length: 129 }, (_, i) => {
       const details = { alt: `Photo ${i + 1}` };
       const image: GalleryImage = {
         id: i + 1,
