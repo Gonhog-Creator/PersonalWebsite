@@ -1,68 +1,91 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
-import { VideoPlayer } from '@/components/gallery/VideoPlayer';
+import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
-interface GalleryImage {
-  id: number;
-  src: string;
-  alt: string;
-  location: string;
-}
+/*
+For updating this gallery, update all things in steps 1-4
+1 - Image path for gallery
+2 - Page content
+3 - Image details for alt text
+4 - Export Name
+*/
 
-type GalleryView = 'photos' | 'panoramas' | 'drone';
 
-
-// Image paths are now included directly in the galleryImages array
-
-// Masonry layout breakpoints
-const breakpointCols = {
-  default: 3,
-  1100: 2,
-  700: 1
+//STEP ONE
+const getImagePath = (id: number) => {
+  const basePath = '/img/USA/usa';
+  return `${basePath} (${id}).jpg`;
 };
 
-// Total number of photos in the gallery (including any missing ones)
-const totalPhotos = 68;
+//STEP TWO
+const PAGE_CONTENT = {
+  title: 'United States of America',
+  description: '35 states, 20 national parks, 11,200 miles. Through two road trips through the western United States, I have seen a large swath of this great country and enjoyed every second of it.',
+  header: {
+    backgroundImage: '/img/USA/panorama-USA-1.jpg',
+    altText: 'USA Panorama'
+  },
+  panoramas: {
+    description: 'Maybe with a big enough photo I can see every state bird.',
+    imagePath: '/img/USA/panorama-USA-'
+  },
+  video: {
+    id: '',
+    title: 'USA Recap'
+  }
+};
 
+// Get the number of panorama images
+const panoramaCount = 7; // Update this number based on your actual panorama count
+
+
+//STEP FOUR
 export default function USAGallery() {
-  const [currentView, setCurrentView] = useState<GalleryView>('photos');
-  
-  // Generate gallery images with default alt text
-  const galleryImages: GalleryImage[] = Array.from({ length: totalPhotos }, (_, i) => i + 1)
-    .filter(num => num !== 2) // Exclude photo #2 as it's missing
-    .map(id => ({
-      id,
-      src: `/img/USA/usa (${id}).jpg`,
-      alt: `USA Photo ${id}`,
-      location: 'USA'
-    }));
+  // Generate gallery images with useMemo, excluding photo #2
+  const galleryImages = useMemo<GalleryImage[]>(() => {
+    return Array.from({ length: 68 }, (_, i) => {
+      const id = i + 1;
+      // Skip photo #2
+      if (id === 2) return null;
+      
+      const details = { alt: `Photo ${id}` };
+      const image: GalleryImage = {
+        id,
+        src: getImagePath(id),
+        alt: details.alt
+      };
+      return image;
+    }).filter((img): img is GalleryImage => img !== null);
+  }, []);
+
 
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  
-  const closeLightbox = useCallback(() => {
-    setSelectedImage(null);
-    document.body.style.overflow = 'unset';
-  }, []);
-  
-  const openLightbox = useCallback((image: GalleryImage) => {
-    setSelectedImage(image);
-    document.body.style.overflow = 'hidden';
-  }, []);
-  
-  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeLightbox();
-    }
-  }, [closeLightbox]);
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  const openLightbox = (image: GalleryImage) => {setSelectedImage(image); document.body.style.overflow = 'hidden';};
+  const closeLightbox = () => {setSelectedImage(null); document.body.style.overflow = 'unset';};
 
+  const handleBackdropClick = (e: React.MouseEvent) => {if (e.target === e.currentTarget) {closeLightbox();}};
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Verify image paths
   // Debug effect to verify image paths (development only)
   useEffect(() => {
     if (process.env.NODE_ENV === 'development') {
@@ -76,18 +99,6 @@ export default function USAGallery() {
     }
   }, [galleryImages]);
 
-  // Handle keyboard events for lightbox
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeLightbox();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [closeLightbox]);
-
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       {/* Project Header */}
@@ -97,25 +108,23 @@ export default function USAGallery() {
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
-            src="/img/USA/panorama-USA-1.jpg"
-            alt="USA Panorama"
+            src={PAGE_CONTENT.header.backgroundImage}
+            alt={PAGE_CONTENT.header.altText}
             fill
             priority
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-black/5"></div>
         </div>
-
         <div className="relative h-full flex items-center justify-center text-center px-4">
           <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">United States of America</h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">{PAGE_CONTENT.title}</h1>
             <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
-              35 states, 20 national parks, 11,200 miles. Through two road trips through the western United States, I have seen a large swath of this great country and enjoyed every second of it.
+              {PAGE_CONTENT.description}
             </p>
           </div>
         </div>
       </div>
-
-      {/* Navigation Section */}
       <section className="w-full bg-gray-900 py-12">
         <div className="w-full flex justify-center px-4">
           <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
@@ -149,7 +158,13 @@ export default function USAGallery() {
         {currentView === 'photos' ? (
           <div className="w-full px-4">
             <Masonry
-              breakpointCols={breakpointCols}
+              breakpointCols={{
+                default: 5,
+                1600: 4,
+                1200: 3,
+                800: 2,
+                500: 1
+              }}
               className="flex w-auto"
               columnClassName="masonry-column"
             >
@@ -181,15 +196,6 @@ export default function USAGallery() {
                         style={{ display: 'block' }}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
                       />
-                      {
-            /* Hover effect disabled as per user request
-            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/90 via-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
-              <p className="text-white text-sm md:text-base font-semibold px-6 py-4 w-full text-center">
-                {image.alt}
-              </p>
-            </div>
-            */
-          }
                     </div>
                   </div>
                 </div>
@@ -205,7 +211,7 @@ export default function USAGallery() {
                 <div className="w-full max-w-4xl px-4">
                   <div className="w-full text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-white">
-                      Maybe with a big enough photo I can see every state bird.
+                      {PAGE_CONTENT.panoramas.description}
                     </h2>
                   </div>
                 </div>
@@ -213,12 +219,12 @@ export default function USAGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {Array.from({ length: 11 }, (_, i) => i + 1).map((id) => (
-                  <div key={id} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
+                {Array.from({ length: panoramaCount }, (_, i) => (
+                  <div key={i + 1} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`/img/USA/panorama-USA-${id}.jpg`}
-                      alt={`USA Panorama ${id}`}
-                      priority={id <= 3}
+                      src={`${PAGE_CONTENT.panoramas.imagePath}${i + 1}.jpg`}
+                      alt={`${PAGE_CONTENT.title} Panorama ${i + 1}`}
+                      priority={i < 3}
                     />
                   </div>
                 ))}
@@ -230,16 +236,15 @@ export default function USAGallery() {
         {currentView === 'drone' && (
           <div className="w-full flex justify-center items-center min-h-screen py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">United States 2025 Recap</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">{PAGE_CONTENT.video.title}</h2>
               <div className="w-full max-w-6xl">
-                <VideoPlayer 
-                  src="/vids/USA 2025 Recap 2k.mp4"
-                  title="United States 2025 Drone Footage"
+                <YouTubePlayer
+                  videoId={PAGE_CONTENT.video.id}
+                  title={PAGE_CONTENT.video.title}
                   className="rounded-lg shadow-xl"
                 />
               </div>
-              {/* Add space below the video */}
-              <div className="h-32 w-full"></div>
+              <div className="h-16 w-full"></div>
             </div>
           </div>
         )}
@@ -275,3 +280,15 @@ export default function USAGallery() {
     </div>
   );
 }
+
+interface ImageDetails {
+  alt: string;
+}
+
+interface GalleryImage {
+  id: number;
+  src: string;
+  alt: string;
+}
+
+type GalleryView = 'photos' | 'panoramas' | 'drone';
