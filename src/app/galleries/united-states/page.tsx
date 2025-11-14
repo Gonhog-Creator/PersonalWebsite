@@ -21,8 +21,8 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/USA/usa';
-  return `${basePath} (${id}).jpg`;
+  const basePath = '/img/USA';
+  return `${basePath}/usa (${id}).jpg`;
 };
 
 //STEP TWO
@@ -93,7 +93,26 @@ export default function USAGallery() {
       galleryImages.forEach(img => {
         const imgEl = new window.Image();
         imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
+        imgEl.onerror = () => {
+          console.error(`❌ Error loading image: ${img.src}`);
+          // Try with different case variations
+          const tryVariations = [
+            img.src.replace(/\.jpg$/i, '.JPG'),
+            img.src.replace(/\.JPG$/i, '.jpg'),
+            img.src.replace('usa ', 'USA '),
+            img.src.replace('USA ', 'usa ')
+          ];
+          
+          tryVariations.forEach(variation => {
+            if (variation !== img.src) {
+              console.log(`🔄 Trying variation: ${variation}`);
+              const testImg = new window.Image();
+              testImg.onload = () => console.log(`✅ Found working variation: ${variation}`);
+              testImg.onerror = () => console.log(`❌ Variation failed: ${variation}`);
+              testImg.src = variation;
+            }
+          });
+        };
         imgEl.src = img.src;
       });
     }
@@ -195,6 +214,16 @@ export default function USAGallery() {
                         className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
                         style={{ display: 'block' }}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          // Try different case variations if the image fails to load
+                          if (target.src.includes('.jpg')) {
+                            target.src = target.src.replace(/\.jpg$/i, '.JPG');
+                          } else if (target.src.includes('.JPG')) {
+                            target.src = target.src.replace(/\.JPG$/i, '.jpg');
+                          }
+                        }}
+                        unoptimized={true} // Try with unoptimized to see if it helps with loading
                       />
                     </div>
                   </div>
