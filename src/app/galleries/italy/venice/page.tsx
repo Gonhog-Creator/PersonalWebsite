@@ -43,19 +43,12 @@ const PAGE_CONTENT = {
   }
 };
 
-//STEP ThREE
-// Image details for alt text
-const imageDetails: Record<number, ImageDetails> = {
-  1: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
-};
-
 //STEP FOUR
 export default function VeniceGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 65 }, (_, i) => {
-      const details = imageDetails[i + 1] || { alt: `Photo ${i + 1}` };
+      const details = { alt: `Photo ${i + 1}` };
       const image: GalleryImage = {
         id: i + 1,
         src: getImagePath(i + 1),
@@ -64,8 +57,6 @@ export default function VeniceGallery() {
       return image;
     });
   }, []);
-
-
 
 
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);

@@ -21,8 +21,8 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/Italy/Padova/Padova';
-  return `${basePath} (${id}).jpg`;
+  const basePath = '/img/Italy/Padova/Padova-';
+  return `${basePath}${id}.jpg`;
 };
 
 //STEP TWO
@@ -30,12 +30,12 @@ const PAGE_CONTENT = {
   title: 'Padova',
   description: 'The birthplace of modern astronomical observation through Galileo Galilei, filled with churches and students, and my home base for my time in Italy.',
   header: {
-    backgroundImage: '/img/Italy/Padova/padova-panorama (1).jpg',
+    backgroundImage: '/img/Italy/Padova/padova-panorama-1.jpg',
     altText: 'Padova Panorama'
   },
   panoramas: {
     description: 'If you look carefully you can see my classroom.',
-    imagePath: '/img/Italy/Padova/padova-panorama'
+    imagePath: '/img/Italy/Padova/padova-panorama-'
   },
   video: {
     id: 'XsTUcwKmE2c',
@@ -51,7 +51,7 @@ const panoramaCount = 1; // Update this number based on your actual panorama cou
 export default function PadovaGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
-    return Array.from({ length: 15 }, (_, i) => {
+    return Array.from({ length: 9 }, (_, i) => {
       const details = { alt: `Photo ${i + 1}` };
       const image: GalleryImage = {
         id: i + 1,
@@ -229,7 +229,7 @@ export default function PadovaGallery() {
                 {Array.from({ length: panoramaCount }, (_, i) => (
                   <div key={i + 1} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`${PAGE_CONTENT.panoramas.imagePath} (${i + 1}).jpg`}
+                      src={`${PAGE_CONTENT.panoramas.imagePath}${i + 1}.jpg`}
                       alt={`${PAGE_CONTENT.title} Panorama ${i + 1}`}
                       priority={i < 3}
                     />

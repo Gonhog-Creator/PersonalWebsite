@@ -30,7 +30,7 @@ const PAGE_CONTENT = {
   title: 'Bologna',
   description: 'A ancient medieval town where brick towers, endless pasta, and countless porticoes create a unique urban landscape.',
   header: {
-    backgroundImage: '/img/Italy/Bologna/bologna-panorama (6).jpg',
+    backgroundImage: '/img/Italy/Bologna/bologna-panorama(6).jpg',
     altText: 'Bologna Panorama'
   },
   panoramas: {
@@ -229,7 +229,7 @@ export default function BolognaGallery() {
                 {Array.from({ length: panoramaCount }, (_, i) => (
                   <div key={i + 1} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`${PAGE_CONTENT.panoramas.imagePath} (${i + 1}).jpg`}
+                      src={`${PAGE_CONTENT.panoramas.imagePath}(${i + 1}).jpg`}
                       alt={`${PAGE_CONTENT.title} Panorama ${i + 1}`}
                       priority={i < 3}
                     />
