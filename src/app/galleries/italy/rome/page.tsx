@@ -179,13 +179,19 @@ export default function RomeGallery() {
                   <div className="relative w-full overflow-hidden rounded-lg">
                     <style jsx global>{`
                       .masonry-column {
-                        padding-left: 8px;
-                        padding-right: 8px;
+                        padding-left: 8px !important;
+                        padding-right: 8px !important;
                       }
                       .masonry-column > div {
-                        margin-bottom: 16px;
+                        margin-bottom: 16px !important;
                         border-radius: 0.5rem;
                         overflow: hidden;
+                      }
+                      .masonry-column:first-child {
+                        padding-left: 0 !important;
+                      }
+                      .masonry-column:last-child {
+                        padding-right: 0 !important;
                       }
                     `}</style>
                     <div className="relative w-full h-full">
