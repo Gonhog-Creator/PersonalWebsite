@@ -1,104 +1,59 @@
 /** @type {import('next').NextConfig} */
-const webpack = require('webpack');
-const isProd = process.env.NODE_ENV === 'production';
-const isVercel = process.env.VERCEL === '1';
-const basePath = '';
-const assetPrefix = '';
+const path = require('path');
 
-const nextConfig = {
-  basePath,
-  assetPrefix,
+const isProd = process.env.NODE_ENV === 'production';
+
+module.exports = {
+  // Basic configuration
   trailingSlash: true,
+  generateEtags: true,
+  compress: true,
   
-  // Image configuration
+  // Image optimization
   images: {
     domains: ['josebarbeito.com', 'm.media-amazon.com', 'image.tmdb.org', 'via.placeholder.com'],
+    formats: ['image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
   },
   
-  // Disable React strict mode for static export
-  reactStrictMode: false,
+  // Build optimizations
+  reactStrictMode: true,
   
-  // Disable ESLint during build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // Disable source maps in production
+  productionBrowserSourceMaps: false,
   
-  // TypeScript configuration
+  // Configure TypeScript
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true
   },
   
-  // Environment variables for client-side
-  env: {
-    NEXT_PUBLIC_BASE_PATH: basePath,
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+  // Configure ESLint
+  eslint: {
+    ignoreDuringBuilds: true
   },
   
   // Webpack configuration
-  webpack: (config, { isServer, isServerRuntimeConfig }) => {
-    // Webpack configuration for both server and client
-    // Note: Removed static export specific code since we're not using it anymore
-    // Add a rule to handle static files
+  webpack: (config, { isServer, dev }) => {
+    // Enable webpack's filesystem cache in production
+    if (!dev) {
+      config.cache = {
+        type: 'filesystem',
+        buildDependencies: {
+          config: [__filename]
+        },
+        name: isServer ? 'server' : 'client'
+      };
+    }
+    
+    // Add asset handling
     config.module.rules.push({
       test: /\.(png|jpg|jpeg|gif|svg|eot|ttf|woff|woff2)$/i,
       type: 'asset/resource',
+      generator: {
+        filename: 'static/media/[name].[hash][ext]'
+      }
     });
-
-    // Handle Node.js modules that might be problematic in the browser
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-        dns: false,
-        child_process: false,
-        path: false,
-        os: false,
-        crypto: false,
-        stream: false,
-        http: false,
-        https: false,
-        zlib: false,
-        querystring: false,
-        url: false,
-        buffer: false,
-        util: false,
-        assert: false,
-        events: false,
-        string_decoder: false,
-        timers: false,
-      };
-    }
-
-    // Handle canvas module if needed
-    config.externals = [...(config.externals || []), { canvas: 'canvas' }];
-
-    // Handle environment variables
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
-        'process.env.IS_SERVER': JSON.stringify(isServer)
-      })
-    );
-
+    
     return config;
-  },
-  
-  // Configure static page generation timeout (in seconds)
-  staticPageGenerationTimeout: 60,
-  
-  // Server components external packages
-  serverExternalPackages: ['canvas'],
-  
-  // Production browser source maps (disabled for better performance)
-  productionBrowserSourceMaps: false,
-  
-  // Disable compression in development
-  compress: isProd,
-  
-  // Configure page extensions
-  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  }
 };
-
-module.exports = nextConfig;
