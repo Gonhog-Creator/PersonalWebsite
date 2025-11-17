@@ -30,7 +30,7 @@ const PAGE_CONTENT = {
   title: 'United States of America',
   description: '35 states, 20 national parks, 11,200 miles. Through two road trips through the western United States, I have seen a large swath of this great country and enjoyed every second of it.',
   header: {
-    backgroundImage: '/img/USA/panorama-USA-1.jpg',
+    backgroundImage: '/img/USA/panorama-USA-1.JPG',
     altText: 'USA Panorama'
   },
   panoramas: {
