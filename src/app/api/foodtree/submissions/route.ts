@@ -62,13 +62,12 @@ export async function POST(request: Request) {
       ...data,
       // Normalize the name
       name: normalizeName(data.name),
-      // Add submission metadata
-      submittedBy: session.user.email,
+      // Add submission metadata for anonymous users
+      submittedBy: 'anonymous',
+      submittedName: data.submittedName || 'Anonymous User',
       submittedAt: new Date().toISOString(),
-      // Use the provided name or fall back to the user's name/email
-      submittedName: data.submittedName || session.user.name || session.user.email.split('@')[0],
-      // Ensure we have a proper createdAt date
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      status: 'pending' // Ensure status is set for new submissions
     };
 
     // Clean up any undefined values
