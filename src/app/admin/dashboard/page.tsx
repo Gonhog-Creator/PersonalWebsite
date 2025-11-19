@@ -448,7 +448,7 @@ export default function AdminDashboard() {
                         </span>
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-300">
-                        {submission.data?.submittedName || submission.submittedBy || 'N/A'}
+                        {submission.data?.submittedName || submission.submittedBy || 'Anonymous'}
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-400">
                         <time dateTime={submission.submittedAt}>

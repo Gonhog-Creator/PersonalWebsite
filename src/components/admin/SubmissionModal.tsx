@@ -159,7 +159,9 @@ export function SubmissionModal({ submission, onClose, onStatusChange, onDelete 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Submitted By</h3>
-                <p className="mt-1 text-gray-900">{submission.submittedBy}</p>
+                <p className="mt-1 text-gray-900">
+                  {submission.data?.submittedName || submission.submittedBy || 'Anonymous'}
+                </p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Submitted On</h3>
