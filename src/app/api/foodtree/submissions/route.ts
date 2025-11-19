@@ -30,23 +30,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    const session = await getServerSession(authOptions);
-    
-    // Only allow submissions from authenticated users
-    if (!session?.user) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { 
-          status: 401,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders,
-          },
-        }
-      );
-    }
-
     const { type, data } = await request.json();
+    
+    // No authentication required for submissions
 
     if (!type || !data || !data.name) {
       return new NextResponse(
@@ -138,21 +124,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const session = await getServerSession(authOptions);
-    
-    // Only allow authenticated users to view submissions
-    if (!session?.user) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { 
-          status: 401,
-          headers: {
-            'Content-Type': 'application/json',
-            ...corsHeaders,
-          },
-        }
-      );
-    }
+    // No authentication required to view submissions
 
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');
