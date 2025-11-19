@@ -38,7 +38,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Italy/Bologna/bologna-panorama'
   },
   video: {
-    id: '',
+    id: 'vDFjbGAT7wo',
     title: 'Bologna From Above'
   }
 };
