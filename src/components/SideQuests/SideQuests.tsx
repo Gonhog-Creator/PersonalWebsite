@@ -56,14 +56,12 @@ export default function SideQuests() {
   const [hoveredProject, setHoveredProject] = useState<string | null>(null);
 
   return (
-    <section className="py-20 bg-white dark:bg-gray-900">
+    <section className="py-20 bg-gray-900">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4 dark:text-white">
-            Side <span className="text-blue-600 dark:text-blue-400">Quests</span>
+          <h2 className="text-4xl font-bold mb-4 text-white">
+            Side <span className="text-blue-400">Quests</span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-          </p>
         </div>
 
         <motion.div
@@ -77,7 +75,7 @@ export default function SideQuests() {
             <motion.div
               key={project.id}
               variants={item}
-              className="relative group overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 w-full max-w-[280px] sm:max-w-xs md:max-w-sm"
+              className="relative group overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 w-full max-w-[280px] sm:max-w-xs md:max-w-sm bg-gray-800"
               onMouseEnter={() => setHoveredProject(project.id)}
               onMouseLeave={() => setHoveredProject(null)}
             >

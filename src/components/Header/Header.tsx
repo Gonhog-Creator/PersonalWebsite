@@ -69,10 +69,10 @@ export function Header() {
       <div className="relative">
         <Sidebar />
         <header 
-          className={`w-full transition-all duration-300 ease-in-out font-sans ${
+          className={`w-full transition-all duration-300 ease-in-out font-sans py-3 shadow-sm fixed top-0 left-0 right-0 ${
             isScrolled 
-              ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-3 shadow-sm' 
-              : 'bg-transparent dark:bg-transparent py-6'
+              ? 'bg-gray-900/80 backdrop-blur-md' 
+              : 'bg-transparent'
           }`}
           style={{ paddingLeft: '72px' }}
         >
@@ -98,8 +98,8 @@ export function Header() {
                     onClick={(e) => handleNavigation(e, link.href)}
                     className="relative group flex items-center py-8 cursor-pointer"
                   >
-                    <Icon icon={link.icon} className="w-6 h-6 text-gray-800 dark:text-white group-hover:scale-110 transition-transform duration-200" />
-                    <span className="text-gray-800 dark:text-white text-base font-medium tracking-wide ml-4">{link.name}</span>
+                    <Icon icon={link.icon} className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-200" />
+                    <span className="text-white text-base font-medium tracking-wide ml-4">{link.name}</span>
                     <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 transition-all duration-300 transform scale-x-0 group-hover:scale-x-100"></span>
                   </a>
                 ))}
@@ -135,7 +135,7 @@ export function Header() {
                         key={`mobile-${link.href}`}
                         href={`#${link.href}`}
                         onClick={(e) => handleNavigation(e, link.href)}
-                        className="flex items-center px-4 py-3 text-white hover:bg-[#2d3133] rounded-lg transition-colors duration-200 group cursor-pointer"
+                        className="flex items-center px-4 py-3 text-white hover:bg-gray-800 rounded-lg transition-colors duration-200 group cursor-pointer"
                       >
                         <Icon icon={link.icon} className="w-6 h-6 text-blue-400" />
                         <span className="ml-4 text-lg font-medium">{link.name}</span>

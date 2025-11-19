@@ -39,7 +39,7 @@ const Work = () => {
   ];
 
   return (
-    <section className="w-full bg-white dark:bg-gray-900 transition-colors duration-300 py-16 md:py-24">
+    <section className="w-full bg-gray-800 py-16 md:py-24">
       <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto">
         <div className="w-full flex justify-center">
           <div className="w-full max-w-4xl">
@@ -47,12 +47,12 @@ const Work = () => {
             {workExperiences.map((experience, index) => (
               <div 
                 key={experience.id}
-                className="flex flex-col md:flex-row gap-8 lg:gap-12 p-6 rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="flex flex-col md:flex-row gap-8 lg:gap-12 p-6 rounded-xl bg-gray-800 border border-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300"
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
               >
                 <div className="md:w-5/12">
-                  <div className="relative overflow-hidden rounded-xl aspect-[4/3] border-2 border-blue-100 dark:border-gray-700">
+                  <div className="relative overflow-hidden rounded-xl aspect-[4/3] border-2 border-gray-700">
                     <Image
                       src={experience.image}
                       alt={experience.title}
@@ -66,20 +66,20 @@ const Work = () => {
                 
                 <div className="md:w-7/12 flex flex-col justify-center">
                   <div className="mb-2">
-                    <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full">
+                    <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-900/30 text-blue-300 rounded-full">
                       {experience.period}
                     </span>
                   </div>
                   
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                     {experience.title}
                   </h3>
                   
-                  <p className="text-lg text-blue-600 dark:text-blue-400 font-medium mb-4">
+                  <p className="text-lg text-blue-400 font-medium mb-4">
                     {experience.role}
                   </p>
                   
-                  <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  <p className="text-gray-300 mb-6">
                     {experience.description}
                   </p>
 
@@ -87,7 +87,7 @@ const Work = () => {
                     {experience.skills.map((skill, i) => (
                       <span 
                         key={i}
-                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm rounded-full"
+                        className="px-3 py-1 bg-gray-700 text-gray-200 text-sm rounded-full"
                       >
                         {skill}
                       </span>

@@ -36,18 +36,34 @@ type ClientLayoutProps = {
 };
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
-  // Set dark theme on the root element
+  // Enforce dark theme
   useEffect(() => {
     addDarkClass();
+    // Force dark mode on html element
+    document.documentElement.classList.add('dark');
+    document.documentElement.style.colorScheme = 'dark';
+    
+    // Prevent theme switching
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          if (!document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.add('dark');
+          }
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
   }, []);
 
-  // Also run on mount to handle cases where the effect doesn't trigger
-  if (typeof document !== 'undefined') {
-    addDarkClass();
-  }
-
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <AuthProvider>
         <ClientLayoutContent>
           <main className="min-h-screen">

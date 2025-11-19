@@ -94,14 +94,13 @@ const Photography = () => {
   }, []);
 
   return (
-    <section className="py-16 md:py-24 bg-white dark:bg-gray-900 transition-colors duration-300" id="photography">
+    <section className="py-16 md:py-24 bg-gray-900" id="photography">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-
         {/* World Map Section */}
         <div className="w-full flex flex-col items-center mb-32" data-aos="fade-up">
           <div className="w-full max-w-4xl px-4">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">World Map</h3>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <h3 className="text-2xl font-bold text-white mb-6 text-center">World Map</h3>
+            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               <div className="w-full h-[500px] relative">
                 <Image
                   src="/img/WorldMapImage.png"
@@ -132,9 +131,9 @@ const Photography = () => {
 
         {/* Astrophotography Section */}
         <div className="mt-32 mb-32 text-center" data-aos="fade-up">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Astrophotography</h3>
+          <h3 className="text-2xl font-bold text-white mb-4">Astrophotography</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               <div className="relative w-full h-64">
                 <Image 
                   src="/img/Astro/M31-10.6.25-4.75hours.jpg"
@@ -177,9 +176,9 @@ const Photography = () => {
 
         {/* All Galleries Section */}
         <div className="mt-20 text-center" data-aos="fade-up">
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">View All Galleries</h3>
+          <h3 className="text-2xl font-bold text-white mb-4">View All Galleries</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               <div className="relative w-full h-64">
                 <Image 
                   src="/img/Greece/greece (67).jpg" 

@@ -43,9 +43,9 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { color: '#0a0a0a' }, // Always use dark theme color
+    { color: '#0a0a0a' },
   ],
-  colorScheme: 'dark', // Force dark mode
+  colorScheme: 'dark',
 };
 
 // Metadata for SEO
@@ -140,7 +140,9 @@ export default function RootLayout({
   return (
     <html 
       lang="en" 
-      className={`${inter.variable} ${alfaSlabOne.variable} ${openSans.variable} ${firaCode.variable} scroll-smooth`}
+      className={`${inter.variable} ${alfaSlabOne.variable} ${openSans.variable} ${firaCode.variable} scroll-smooth dark`}
+      data-theme="dark"
+      style={{ colorScheme: 'dark' }}
       suppressHydrationWarning
     >
       <head>
@@ -157,7 +159,7 @@ export default function RootLayout({
         {/* Favicon */}
         <link rel="icon" href="/img/favicon.ico" />
       </head>
-      <body className="min-h-screen bg-white dark:bg-[#0a0a0a] text-gray-900 dark:text-gray-100 transition-colors duration-300">
+      <body className="min-h-screen bg-[#0a0a0a] text-gray-100">
         <ClientLayout>
           <GradientLayout>
             {children}

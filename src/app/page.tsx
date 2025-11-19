@@ -55,48 +55,48 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen font-sans text-gray-800 bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen font-sans bg-gray-900 text-gray-100">
       <Sidebar />
       <Header />
       <Hero />
 
-      <main className="relative bg-white dark:bg-gray-900">
+      <main className="relative bg-gray-900">
         {/* About Section */}
-        <section id="about" className="py-20">
+        <section id="about" className="py-20 bg-gray-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 dark:text-white">About <span className="text-blue-600 dark:text-blue-400">Me</span></h2>
+              <h2 className="text-4xl font-bold mb-4 text-white">About <span className="text-blue-400">Me</span></h2>
             </div>
 
             <div className="flex flex-col lg:flex-row items-center gap-12">
               <div className="lg:w-1/2" data-aos="fade-right">
-                <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-200">Who am I?</h3>
-                <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                <h3 className="text-2xl font-semibold mb-4 text-white">Who am I?</h3>
+                <p className="text-gray-300 mb-4 leading-relaxed">
                   I&apos;m a passionate Chemical Engineer and Material Scientist with a strong interest in materials innovation and sustainable technologies.
                   In May 2025 I completed my bachelors in Chemical Engineering and Material Science at North Carolina State University and am now pursing my Master&apos;s degree at the University of Padua, in northern Italy.
                 </p>
-                <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
+                <p className="text-gray-300 mb-6 leading-relaxed">
                   My journey in engineering has equipped me with skills in materials characterization, process optimization, and data analysis, along with a problem-solving mindset that I apply to both my academic and personal projects.
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div>
-                    <h4 className="font-semibold text-gray-800 dark:text-gray-300 transition-colors duration-200">Name:</h4>
-                    <p className="text-gray-600 dark:text-gray-300 transition-colors duration-200">Jose Maria Barbeito</p>
+                    <h4 className="font-semibold text-gray-300">Name:</h4>
+                    <p className="text-gray-300">Jose Maria Barbeito</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800 dark:text-gray-300">Email:</h4>
-                    <p className="text-gray-600 dark:text-gray-300">josemaria.barbeito@icloud.com</p>
+                    <h4 className="font-semibold text-gray-300">Email:</h4>
+                    <p className="text-gray-300">josemaria.barbeito@icloud.com</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800 dark:text-gray-300">Education:</h4>
-                    <p className="text-gray-600 dark:text-gray-300">NC State University</p>
-                    <p className="text-gray-600 dark:text-gray-300">Padua University</p>
+                    <h4 className="font-semibold text-gray-300">Education:</h4>
+                    <p className="text-gray-300">NC State University</p>
+                    <p className="text-gray-300">Padua University</p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800 dark:text-gray-300">Degrees:</h4>
-                    <p className="text-gray-600 dark:text-gray-300">B.S. Chemical Engineering</p>
-                    <p className="text-gray-600 dark:text-gray-300">M.S. Material Science Engineering</p>
+                    <h4 className="font-semibold text-gray-300">Degrees:</h4>
+                    <p className="text-gray-300">B.S. Chemical Engineering</p>
+                    <p className="text-gray-300">M.S. Material Science Engineering</p>
                   </div>
                 </div>
               </div>
@@ -111,20 +111,20 @@ export default function Home() {
         </section>
 
         {/* Work Experience Section */}
-        <section id="experience" className="py-20 bg-gray-50 dark:bg-gray-800">
+        <section id="experience" className="py-20 bg-gray-800">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 dark:text-white">Work <span className="text-blue-600 dark:text-blue-400">Experience</span></h2>
+              <h2 className="text-4xl font-bold mb-4 text-white">Work <span className="text-blue-400">Experience</span></h2>
             </div>
             <Work />
           </div>
         </section>
 
         {/* Photography Section */}
-        <section id="photography" className="pt-20 pb-8">
+        <section id="photography" className="pt-20 pb-8 bg-gray-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 dark:text-white">My <span className="text-blue-600 dark:text-blue-400">Photography</span></h2>
+              <h2 className="text-4xl font-bold mb-4 text-white">My <span className="text-blue-400">Photography</span></h2>
             </div>
             <Photography />
           </div>
@@ -190,57 +190,61 @@ export default function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-800 dark:to-gray-900 w-full py-20 px-4">
-          <div className="w-full max-w-md mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
-                Get In <span className="text-blue-600">Touch</span>
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300">Feel free to reach out to me!</p>
-            </div>
-
-            <div
-              className={`bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 transform ${
-                isHovered ? 'scale-105 shadow-blue-500/20' : 'shadow-lg'
-              }`}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              onClick={handleEmailClick}
-            >
-              <div className="p-8 flex flex-col items-center text-center cursor-pointer">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center transition-transform duration-300 hover:rotate-12">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-8 w-8 text-blue-600 dark:text-blue-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
+        <section id="contact" className="py-20 bg-gradient-to-br from-gray-800 to-gray-900 w-full">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <div className="text-center mb-8">
+                  <h2 className="text-4xl font-bold text-white mb-4">
+                    Get In <span className="text-blue-400">Touch</span>
+                  </h2>
+                  <p className="text-gray-300">Feel free to reach out to me!</p>
                 </div>
 
-                <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Email Me!</h3>
-                <p className="text-blue-600 dark:text-blue-400 font-mono text-lg transition-all duration-300 hover:tracking-wider">
-                  josemaria.barbeito@icloud.com
-                </p>
-              </div>
+                <div
+                  className={`bg-gray-800 rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 transform ${
+                    isHovered ? 'scale-105 shadow-blue-500/20' : 'shadow-lg'
+                  }`}
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  onClick={handleEmailClick}
+                >
+                  <div className="p-8 flex flex-col items-center text-center cursor-pointer">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-900 flex items-center justify-center transition-transform duration-300 hover:rotate-12">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8 text-blue-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
 
-              <div className={`h-1.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-1000 ${
-                isHovered ? 'opacity-100' : 'opacity-70'
-              }`}></div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Email Me!</h3>
+                    <p className="text-blue-400 font-mono text-lg transition-all duration-300 hover:tracking-wider">
+                      josemaria.barbeito@icloud.com
+                    </p>
+                  </div>
+
+                  <div className={`h-1.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-1000 ${
+                    isHovered ? 'opacity-100' : 'opacity-70'
+                  }`}></div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
       <footer className="relative h-[6vh] w-full">
-        <div className="absolute bottom-0 left-0 right-0 py-2 bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-sm">
+        <div className="absolute bottom-0 left-0 right-0 py-2 bg-gray-900/90 backdrop-blur-sm">
           <div className="container mx-auto px-4 text-center">
             <p className="text-gray-300 text-sm md:text-base">© 2025 Jose Maria Barbeito. All rights reserved.</p>
           </div>
