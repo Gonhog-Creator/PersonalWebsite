@@ -63,8 +63,7 @@ export async function POST(request: Request) {
       // Normalize the name
       name: normalizeName(data.name),
       // Add submission metadata for anonymous users
-      submittedBy: 'anonymous',
-      submittedName: data.submittedName || 'Anonymous User',
+      submittedName: data.submittedName,
       submittedAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
       status: 'pending' // Ensure status is set for new submissions
