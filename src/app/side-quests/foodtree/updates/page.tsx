@@ -8,6 +8,16 @@ export const metadata: Metadata = {
 
 const updates = [
   {
+    version: '1.1.1',
+    date: 'November 20, 2025',
+    title: 'Update Page',
+    type: 'enhancement',
+    changes: [
+      'Added Update Page for Food Tree Project'
+      'Minor Fixes'
+    ]
+  },
+  {
     version: '1.1.0',
     date: 'November 20, 2025',
     title: 'Improved Data Management',
@@ -15,7 +25,10 @@ const updates = [
     changes: [
       'Standardized submission data structure',
       'Enhanced data validation and cleanup',
-      'Improved error handling and user feedback'
+      'Improved error handling and user feedback',
+      'Updated Admin Page for cleanliness'
+      'Reorganized Ingredient submission typed to Animal, Plant, Other, and Processed',
+      'Animal submission now offers Animal Product vs Source Animal'
     ]
   },
   {
@@ -26,7 +39,8 @@ const updates = [
     changes: [
       'Basic food tree visualization',
       'Ingredient submission system',
-      'Category-based organization'
+      'Main Page Creation',
+      'Tile Added to Side Quests'
     ]
   }
 ];
