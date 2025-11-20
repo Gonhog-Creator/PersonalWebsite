@@ -190,7 +190,7 @@ const FoodTreeContent = () => {
               </a>
             </p>
             <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
-              Version 1.0.0 · Last updated November 2025
+              Version 1.1.0 · Last updated November 2025
             </p>
         </div>
         <ToastContainer 

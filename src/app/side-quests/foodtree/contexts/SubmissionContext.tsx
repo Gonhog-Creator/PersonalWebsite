@@ -49,18 +49,28 @@ export function SubmissionProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ type, data }),
       });
 
-      const responseText = await response.text();
       let responseData;
+      const responseText = await response.text();
       
       try {
         responseData = responseText ? JSON.parse(responseText) : {};
+        console.log('[SubmissionContext] Parsed response data:', responseData);
       } catch (e) {
-        console.error('Failed to parse JSON response:', responseText);
+        console.error('[SubmissionContext] Failed to parse JSON response. Response text:', responseText);
         throw new Error('Invalid server response');
       }
 
       if (!response.ok) {
-        throw new Error(responseData.error || 'Failed to submit');
+        // Handle duplicate entry error specifically
+        if (response.status === 400 && responseData.error?.includes('already exists')) {
+          // Instead of throwing, we'll return a custom error object
+          const error = new Error(`"${data.name}" already exists in the database.`);
+          error.name = 'DuplicateEntryError';
+          throw error;
+        }
+        const error = new Error(responseData.error || 'Failed to submit');
+        error.name = 'SubmissionError';
+        throw error;
       }
       
       // Update the local state with the new submission
@@ -68,7 +78,7 @@ export function SubmissionProvider({ children }: { children: ReactNode }) {
       
       // Set success message
       setSuccess({ 
-        message: 'was successfully added to the database!',
+        message: ' was successfully added to the database!',
         itemName: data.name
       });
       
@@ -77,10 +87,24 @@ export function SubmissionProvider({ children }: { children: ReactNode }) {
       
       return responseData;
     } catch (err) {
-      console.error('Error in addSubmission:', err);
-      const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-      setError(`Failed to submit: ${errorMessage}`);
-      throw err;
+      // Don't log expected errors to the console
+      if (!(err instanceof Error && err.name === 'DuplicateEntryError')) {
+        console.error('Error in addSubmission:', err);
+      }
+      
+      const errorMessage = err instanceof Error ? 
+        (err.name === 'DuplicateEntryError' ? err.message : `Failed to submit: ${err.message}`) : 
+        'An unknown error occurred';
+      
+      setError(errorMessage);
+      
+      // Clear error after 5 seconds
+      setTimeout(() => setError(null), 5000);
+      
+      // Only re-throw if it's not a duplicate entry error
+      if (!(err instanceof Error && err.name === 'DuplicateEntryError')) {
+        throw err;
+      }
     } finally {
       setIsLoading(false);
     }

@@ -45,8 +45,16 @@ export const authOptions: NextAuthOptions = {
       // Add admin role to the token
       if (user?.email === process.env.ADMIN_EMAIL) {
         token.role = 'admin';
+        token.isAdmin = true;
       }
       return token;
+    },
+    async session({ session, token }) {
+      // Add the isAdmin flag to the session
+      if (session.user) {
+        session.user.isAdmin = token.isAdmin === true;
+      }
+      return session;
     },
     async session({ session, token }) {
       // Add role to the session

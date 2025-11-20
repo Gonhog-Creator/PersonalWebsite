@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-hot-toast';
 import * as z from 'zod';
@@ -40,9 +41,29 @@ const PREPARATION_METHODS = [
 
 const ingredientSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
-  source: z.enum(['grown', 'gathered', 'prepared']),
+  source: z.enum(['plant', 'animal', 'other', 'prepared']),
+  animalType: z.string().optional(),
+  isSourceAnimal: z.boolean().default(false),
   preparationMethod: z.enum([...PREPARATION_METHODS]).optional(),
   parentIngredients: z.array(z.string()).optional(),
+}).superRefine((data, ctx) => {
+  // Only validate animalType if source is 'animal' and not a source animal
+  if (data.source === 'animal' && !data.isSourceAnimal && (!data.animalType || data.animalType.trim() === '')) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Please select a Source Animal',
+      path: ['animalType']
+    });
+  }
+  
+  // Only validate parentIngredients if source is 'prepared'
+  if (data.source === 'prepared' && (!data.parentIngredients || !data.parentIngredients.some(ing => ing.trim() !== ''))) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'At least one parent ingredient is required for prepared items',
+      path: ['parentIngredients']
+    });
+  }
 });
 
 type IngredientFormData = z.infer<typeof ingredientSchema>;
@@ -52,23 +73,66 @@ export function AddIngredientForm() {
   const [parentIngredients, setParentIngredients] = useState<string[]>(['']);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [userName, setUserName] = useLocalStorage<string>('foodtree-username', '');
+  const [animalProducts, setAnimalProducts] = useState<Array<{name: string, isSource: boolean}>>([]);
   const { addSubmission } = useSubmissions();
   
   const {
     register,
     handleSubmit,
-    formState: { errors },
     watch,
+    getValues,
+    setValue,
+    trigger,
+    formState: { errors },
     reset,
   } = useForm<IngredientFormData>({
     resolver: zodResolver(ingredientSchema),
     defaultValues: {
-      source: 'grown',
-      nutritionalInfo: {},
+      source: 'plant',
+      isSourceAnimal: false, // Default to Animal Product (false)
     },
   });
 
   const source = watch('source');
+  const isSourceAnimal = watch('isSourceAnimal');
+  
+  // Fetch source animals when source is 'animal'
+  useEffect(() => {
+    const fetchSourceAnimals = async () => {
+      if (source === 'animal') {
+        try {
+          // Fetch all ingredients and filter for source animals
+          const response = await fetch('/api/foodtree/ingredients');
+          if (!response.ok) {
+            throw new Error('Failed to fetch ingredients');
+          }
+          
+          const ingredients = await response.json();
+          
+          // Filter for source animals (where source is 'animal' and isSourceAnimal is true)
+          const sourceAnimals = ingredients.filter((ingredient: any) => 
+            (ingredient.source === 'animal' || ingredient.foodType === 'animal') && 
+            ingredient.isSourceAnimal === true
+          );
+          
+          setAnimalProducts(sourceAnimals.map((animal: any) => ({
+            id: animal.id,
+            name: animal.name,
+            isSource: true
+          })));
+          
+        } catch (error) {
+          console.error('Error fetching source animals:', error);
+          toast.error('Failed to load animal types');
+          setAnimalProducts([]);
+        }
+      } else {
+        setAnimalProducts([]);
+      }
+    };
+    
+    fetchSourceAnimals();
+  }, [source]);
 
   const handleAddIngredient = () => {
     if (parentIngredients.filter(Boolean).length < 3) {
@@ -88,31 +152,215 @@ export function AddIngredientForm() {
     setParentIngredients(newIngredients.length ? newIngredients : ['']);
   };
 
+  useEffect(() => {
+    const validIngredients = parentIngredients.filter(ing => ing && ing.trim() !== '');
+    setValue('parentIngredients', validIngredients, { shouldValidate: true });
+  }, [parentIngredients, setValue]);
+
   const onSubmit = async (data: IngredientFormData) => {
+    console.log('Form submission started', { data });
+    
+    // Prepare the submission data
+    const submissionData: any = {
+      name: data.name.trim(),
+      source: data.source,
+      submittedBy: userName || 'Anonymous',
+      timestamp: new Date().toISOString(),
+    };
+    
+    // Add type-specific fields
+    if (data.source === 'animal') {
+      submissionData.isSourceAnimal = data.isSourceAnimal;
+      if (!data.isSourceAnimal && data.animalType) {
+        submissionData.animalType = data.animalType;
+        submissionData.parentIngredients = [data.animalType];
+      }
+    } else if (data.source === 'prepared') {
+      submissionData.preparationMethod = data.preparationMethod;
+      submissionData.parentIngredients = data.parentIngredients?.filter(ing => ing.trim() !== '');
+    }
+
     try {
-      if (!userName) {
-        toast.error('Please enter your name');
+      console.log('Starting form submission', { data, parentIngredients });
+      // Filter out any empty parent ingredients
+      const validParentIngredients = parentIngredients.filter(ing => ing && ing.trim() !== '');
+      console.log('Filtered parent ingredients:', validParentIngredients);
+      
+      // Validate parent ingredients for prepared items
+      if (data.source === 'prepared') {
+        console.log('Validating prepared item with parent ingredients:', validParentIngredients);
+        if (validParentIngredients.length === 0) {
+          console.log('Validation failed: No parent ingredients selected');
+          toast.error('Please select at least one parent ingredient');
+          return;
+        }
+        if (!data.preparationMethod) {
+          console.log('Validation failed: No preparation method selected');
+          toast.error('Please select a preparation method');
+          return;
+        }
+      }
+
+      // Prepare submission data
+      const submissionData: any = {
+        name: data.name.trim(),
+        source: data.source,
+        submittedBy: userName || 'Anonymous',
+        timestamp: new Date().toISOString(),
+      };
+      
+      // Add parent ingredients for prepared items
+      if (data.source === 'prepared') {
+        submissionData.parentIngredients = validParentIngredients;
+        submissionData.preparationMethod = data.preparationMethod;
+      }
+
+      // Add type-specific fields
+      if (data.source === 'animal') {
+        submissionData.isSourceAnimal = data.isSourceAnimal;
+        if (!data.isSourceAnimal && data.animalType) {
+          submissionData.animalType = data.animalType;
+          submissionData.parentIngredients = [data.animalType];
+        }
+      } else if (data.source === 'prepared') {
+        submissionData.preparationMethod = data.preparationMethod;
+        submissionData.parentIngredients = parentIngredients.filter(Boolean);
+      }
+
+      console.log('Prepared submission data:', submissionData);
+      
+      try {
+        console.log('Calling addSubmission with type: ingredient');
+        const result = await addSubmission('ingredient', submissionData);
+        console.log('addSubmission result:', result);
+        
+        // Show success message
+        toast.success('Ingredient submitted successfully!');
+      } catch (error) {
+        console.error('Error in addSubmission:', error);
+        throw error; // Re-throw to be caught by the outer catch block
+      }
+      
+      // Reset form
+      reset({
+        name: '',
+        source: 'plant',
+        animalType: undefined,
+        isSourceAnimal: false,
+        preparationMethod: undefined,
+        parentIngredients: [],
+      });
+      setParentIngredients(['']);
+      
+    } catch (error) {
+      console.error('Error submitting ingredient:', error);
+      if (error instanceof Error) {
+        // Handle the specific error message from the server
+        if (error.message.includes('Ingredient "') && error.message.includes('" already exists')) {
+          // Extract the ingredient name from the error message
+          const ingredientName = error.message.match(/Ingredient \"([^\"]+)\"/)?.[1] || 'This item';
+          toast.error(`${ingredientName} already exists in the database.`);
+        } else if (error.message.includes('duplicate') || error.message.includes('already exists')) {
+          // Fallback for any other duplicate/conflict errors
+          toast.error('This item already exists in the database.');
+        } else {
+          // Generic error for all other cases
+          toast.error('Failed to submit. Please try again.');
+        }
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const validateForm = (values: any) => {
+    // 1. Check for missing name
+    if (!values.name?.trim()) {
+      toast.error('Please enter a name for the ingredient');
+      return false;
+    }
+    
+    // 2. Validate based on source type
+    if (values.source === 'animal' && !values.isSourceAnimal) {
+      if (!values.animalType?.trim()) {
+        toast.error('Please select a Source Animal');
+        return false;
+      }
+    } 
+    
+    // 3. Validate prepared items
+    if (values.source === 'prepared') {
+      const validIngredients = parentIngredients.filter(ing => ing?.trim());
+      if (validIngredients.length === 0) {
+        toast.error('Please add at least one parent ingredient');
+        return false;
+      }
+      if (!values.preparationMethod) {
+        toast.error('Please select a preparation method');
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
+  const checkForDuplicates = async (ingredientName: string) => {
+    try {
+      const response = await fetch(`/api/foodtree/ingredients?name=${encodeURIComponent(ingredientName)}`);
+      if (response.ok) {
+        const existingIngredients = await response.json();
+        if (existingIngredients && existingIngredients.length > 0) {
+          throw new Error(`${ingredientName} already exists in the database.`);
+        }
+      }
+    } catch (error) {
+      throw error; // Re-throw to be handled by the caller
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (isSubmitting) {
+      console.log('Already submitting, ignoring');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setDuplicateError(null);
+    
+    try {
+      // Get current form values
+      const formValues = getValues();
+      const ingredientName = formValues.name?.trim();
+      
+      // 1. Basic validation (name, required fields)
+      if (!validateForm(formValues)) {
         return;
       }
       
-      setDuplicateError(null);
-      setIsSubmitting(true);
+      // 2. Check for duplicates
+      await checkForDuplicates(ingredientName);
       
-      await addSubmission('ingredient', {
-        ...data,
-        parentIngredients: parentIngredients.filter(Boolean),
-        submittedBy: userName
-      });
+      // 3. Ensure parentIngredients are up to date
+      const validIngredients = parentIngredients.filter(ing => ing?.trim());
+      if (formValues.source === 'prepared' && validIngredients.length === 0) {
+        toast.error('Please add at least one parent ingredient');
+        return;
+      }
+      setValue('parentIngredients', validIngredients, { shouldValidate: true });
       
-      reset();
-      setParentIngredients(['']);
-      toast.success('Ingredient submitted successfully!');
+      // 4. If we get here, all validations passed - submit the form
+      console.log('All validations passed, submitting form');
+      await handleSubmit(onSubmit)(e);
     } catch (error) {
-      console.error('Error submitting form:', error);
-      if (error instanceof Error && error.message.includes('already exists')) {
-        setDuplicateError(error.message);
-      } else {
-        toast.error(error instanceof Error ? error.message : 'Failed to submit ingredient');
+      console.error('Form submission error:', error);
+      if (error instanceof Error) {
+        if (error.message.includes('duplicate') || error.message.includes('already exists')) {
+          toast.error(error.message);
+        } else if (!error.message.includes('User aborted a request')) {
+          toast.error('An error occurred. Please try again.');
+        }
       }
     } finally {
       setIsSubmitting(false);
@@ -120,7 +368,7 @@ export function AddIngredientForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form onSubmit={handleFormSubmit} className="space-y-6">
       <div className="mb-6">
         <label htmlFor="userName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Your Name <span className="text-red-500">*</span>
@@ -163,24 +411,135 @@ export function AddIngredientForm() {
           Source
           <span className="text-red-500 ml-1">*</span>
         </label>
-        <div className="grid grid-cols-3 gap-4 justify-items-center">
-          {[
-            { value: 'grown', label: ' Grown' },
-            { value: 'gathered', label: ' Gathered' },
-            { value: 'prepared', label: ' Prepared' },
-          ].map((option) => (
-            <label key={option.value} className="flex items-center">
+        <div className="flex flex-col items-center gap-4">
+          {/* First row with Plant, Animal, Other */}
+          <div className="grid grid-cols-3 gap-4">
+            {[
+              { value: 'plant', label: ' 🌱 Plant' },
+              { value: 'animal', label: ' 🐄 Animal' },
+              { value: 'other', label: ' 🧂 Other' },
+            ].map((option) => (
+              <label key={option.value} className="flex items-center">
+                <input
+                  type="radio"
+                  value={option.value}
+                  className="h-6 w-6 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                  {...register('source')}
+                />
+                <span className="ml-2 text-2xl text-center text-gray-700 dark:text-gray-300">
+                  {option.label}
+                </span>
+              </label>
+            ))}
+          </div>
+          
+          {/* Second row with Prepared centered */}
+          <div className="flex justify-center w-full">
+            <label className="flex items-center">
               <input
                 type="radio"
-                value={option.value}
+                value="prepared"
                 className="h-6 w-6 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                 {...register('source')}
               />
               <span className="ml-2 text-2xl text-center text-gray-700 dark:text-gray-300">
-                {option.label}
+                🍳 Prepared
               </span>
             </label>
-          ))}
+          </div>
+
+          {/* Animal Type Selection - Only show when source is 'animal' */}
+          {watch('source') === 'animal' && (
+            <div className="w-full mt-4">
+              <div className="text-center gap-4">
+              </div>
+              <div className="flex justify-center gap-4">
+                <div className={`flex-1 max-w-md p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors ${
+                  !isSourceAnimal ? 'bg-gray-100 dark:bg-gray-800' : ''
+                }`}>
+                  <label className="flex items-center justify-center cursor-pointer">
+                    <input
+                      type="radio"
+                      value="product"
+                      className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                      checked={!isSourceAnimal}
+                      onChange={() => {
+                        // Only validate if source is 'animal'
+                        const shouldValidate = source === 'animal';
+                        setValue('isSourceAnimal', false, { shouldValidate });
+                        if (shouldValidate) {
+                          trigger('animalType');
+                        }
+                      }}
+                    />
+                    <span className="ml-2 text-lg">Animal Product</span>
+                  </label>
+                </div>
+                <div className={`flex-1 max-w-md p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors ${
+                  isSourceAnimal ? 'bg-gray-100 dark:bg-gray-800' : ''
+                }`}>
+                  <label className="flex items-center justify-center cursor-pointer">
+                    <input
+                      type="radio"
+                      value="source"
+                      className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                      checked={isSourceAnimal}
+                      onChange={() => {
+                        // Only validate if source is 'animal'
+                        const shouldValidate = source === 'animal';
+                        setValue('isSourceAnimal', true, { shouldValidate });
+                        setValue('animalType', undefined, { shouldValidate });
+                        if (shouldValidate) {
+                          trigger('animalType');
+                        }
+                      }}
+                    />
+                    <span className="ml-2 text-lg">Source Animal</span>
+                  </label>
+                </div>
+              </div>
+            <div className="h-4"></div> {/* Spacer */}
+              {source === 'animal' && !isSourceAnimal && (
+                <div className="mt-6">
+                  <div className="text-center mb-4">
+                    <label className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      Select Source Animal
+                      <span className="text-red-500 ml-1">*</span>
+                    </label>
+                  </div>
+                  
+                  <div className="max-h-60 overflow-y-auto">
+                    {animalProducts.length > 0 ? (
+                      <div className="flex flex-col items-center gap-2">
+                        {animalProducts.map((animal) => (
+                          <label 
+                            key={animal.id} 
+                            className="w-full max-w-md flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                          >
+                            <input
+                              type="radio"
+                              value={animal.name}
+                              className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                              {...register('animalType', { required: 'Please select a source animal' })}
+                            />
+                            <span className="ml-3 text-gray-900 dark:text-gray-100">
+                              {animal.name}
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-center text-gray-500 py-4">
+                        No source animals found. Please add a source animal first.
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Error message removed from here to prevent duplicate messages */}
+                </div>
+              )}
+            </div>
+          )}
         </div>
         {errors.source && (
           <p className="mt-1 text-2xl text-center text-red-600 dark:text-red-400">
@@ -194,10 +553,12 @@ export function AddIngredientForm() {
           <div className="space-y-8">
             <div>
               <div className="h-4"></div>
-              <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Preparation Method
-                <span className="text-red-500 ml-1">*</span>
-              </label>
+              <div className="text-center mb-4">
+                <label className="block text-2xl font-medium text-gray-700 dark:text-gray-300">
+                  Preparation Method
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+              </div>
               <div className="grid grid-cols-3 gap-4 justify-items-center">
                 {PREPARATION_METHODS.map((method) => (
                   <label key={method} className="flex items-center">
@@ -221,9 +582,14 @@ export function AddIngredientForm() {
             </div>
             <div className="h-4"></div>
             <div>
-              <label className="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Parent Ingredients
-              </label>
+              <div className="text-center mb-4">
+                <h3 className="text-2xl font-medium text-gray-700 dark:text-gray-300">
+                  Parent Ingredients <span className="text-red-500">*</span>
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  Select 1-3 parent ingredients
+                </p>
+              </div>
               <div className="w-full flex justify-center">
                 <div className="space-y-4 w-full max-w-md">
                   {/* Display selected parent ingredients */}
@@ -296,12 +662,23 @@ export function AddIngredientForm() {
       
       {/* Submit Button */}
       <div className="flex justify-center pb-8">
-        <div className="space-y-2">
+        <div className="space-y-2 w-full max-w-xs">
           <InteractiveHoverButton 
-            type="submit" 
-            className="w-64 text-lg" 
+            type="submit"
+            className={cn(
+              'w-full py-4 text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full transition-all duration-200',
+              isSubmitting && 'cursor-not-allowed opacity-80'
+            )}
+            text={isSubmitting ? 'Submitting...' : 'Submit Ingredient'}
             disabled={isSubmitting}
-            text={isSubmitting ? 'Submitting...' : 'Submit'}
+            onClick={(e) => {
+              console.log('Submit button clicked', { 
+                event: e, 
+                isSubmitting,
+                formData: watch(),
+                parentIngredients
+              });
+            }}
           />
           {duplicateError && (
             <div className="text-center text-sm text-red-600 dark:text-red-400 transition-opacity duration-300">

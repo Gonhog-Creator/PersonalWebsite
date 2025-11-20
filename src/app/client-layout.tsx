@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { Toaster } from 'react-hot-toast';
 
 // Helper function to safely add class to document element
 function addDarkClass() {
@@ -27,6 +28,33 @@ function ClientLayoutContent({ children }: { children: ReactNode }) {
       <NavigationHandler>
         {children}
       </NavigationHandler>
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#1f2937',
+            color: '#fff',
+            border: '1px solid #374151',
+            borderRadius: '0.5rem',
+            padding: '0.75rem 1.25rem',
+            fontSize: '0.875rem',
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: '#10B981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            duration: 5000,
+            iconTheme: {
+              primary: '#EF4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
     </Suspense>
   );
 }

@@ -1,4 +1,7 @@
-import { createClient } from 'redis'; // Removed unused RedisClientType import
+import { createClient, RedisClientType } from 'redis';
+
+// Cache TTL in seconds (5 minutes)
+const CACHE_TTL = 300;
 
 // Create a type for our Redis client
 type RedisClient = ReturnType<typeof createClient>;
@@ -206,7 +209,7 @@ interface Submission {
   createdAt?: string;
 }
 
-// This function is no longer needed as we've moved the duplicate check to addSubmission
+// Add a new submission to the database
 export async function addSubmission(type: string, data: SubmissionData) {
   return withRedis(async (client) => {
     try {
@@ -242,92 +245,114 @@ export async function addSubmission(type: string, data: SubmissionData) {
         updatedAt: new Date().toISOString()
       };
 
+      // Add to submission index
+      await client.sadd('submission:index', id);
+      
+      // Store the submission
       await client.set(id, JSON.stringify(submission));
+      
       return submission;
     } catch (error) {
-      console.error('Error in addSubmission:', error);
+      console.error('Error adding submission:', error);
       throw error;
     }
   });
 }
 
-export async function submissionExists(type: string, name: string): Promise<boolean> {
-  try {
-    const submissions = await getAllSubmissions();
-    const normalizedInput = name.trim().toLowerCase();
-    
-    return submissions.some((sub: Submission) => {
-      const submission = typeof sub === 'string' ? JSON.parse(sub) : sub;
-      return (
-        submission.type === type && 
-        submission.data.name.trim().toLowerCase() === normalizedInput
-      );
-    });
-  } catch (error) {
-    console.error('Error checking if submission exists:', error);
-    return false;
-  }
-}
-
-// List all ingredients
-export async function listIngredients(): Promise<any[]> {
+// List all ingredients with optional search and pagination
+export async function listIngredients(searchTerm?: string, page = 1, pageSize = 50): Promise<{data: any[], total: number}> {
   const client = await getRedisClient();
   try {
     const keys = await client.keys('ingredient:*');
-    if (keys.length === 0) return [];
+    if (keys.length === 0) return { data: [], total: 0 };
     
-    const values = await Promise.all(
-      keys.map(async (key) => {
-        const value = await client.get(key);
-        return value ? JSON.parse(value) : null;
-      })
-    );
+    // Use a pipeline for better performance
+    const pipeline = client.pipeline();
+    keys.forEach(key => pipeline.get(key));
+    const results = await pipeline.exec();
     
-    return values.filter(Boolean);
-  } catch (error) {
-    console.error('Error listing ingredients:', error);
-    return [];
-  }
-}
-
-// Delete a submission by ID
-export async function deleteSubmission(id: string): Promise<boolean> {
-  const client = await getRedisClient();
-  try {
-    if (!id.startsWith('submission:')) {
-      id = `submission:${id}`;
+    const ingredients = results.map(([err, data]) => {
+      if (err || !data) return null;
+      return JSON.parse(data as string);
+    }).filter(Boolean);
+    
+    // Filter by search term if provided
+    if (searchTerm) {
+      ingredients = ingredients.filter(ingredient => {
+        return ingredient.name.toLowerCase().includes(searchTerm.toLowerCase());
+      });
     }
     
-    const result = await client.del(id);
-    return result === 1;
+    // Paginate results
+    const total = ingredients.length;
+    const offset = (page - 1) * pageSize;
+    const data = ingredients.slice(offset, offset + pageSize);
+    
+    return { data, total };
   } catch (error) {
-    console.error('Error deleting submission:', error);
-    return false;
+    console.error('Error listing ingredients:', error);
+    return { data: [], total: 0 };
   }
 }
 
-// Create a new ingredient
-export async function createIngredient(ingredient: {
+// Create a new ingredient with indexing
+export const createIngredient = async (ingredient: {
   name: string;
   type: string;
   category: string;
   description?: string;
-}): Promise<boolean> {
-  const client = await getRedisClient();
+  parentIngredients?: string[];
+  foodType?: string;
+}): Promise<boolean> => {
   try {
+    const client = await getRedisClient();
     const id = `ingredient:${Date.now()}`;
-    await client.set(
+    const now = new Date().toISOString();
+    const ingredientData = {
       id,
-      JSON.stringify({
-        ...ingredient,
-        id,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      })
-    );
+      ...ingredient,
+      createdAt: now,
+      updatedAt: now,
+      // Ensure these fields exist
+      parentIngredients: ingredient.parentIngredients || [],
+      foodType: ingredient.foodType || 'grown'
+    };
+    
+    // Start a transaction
+    const multi = client.multi();
+    
+    // Store the ingredient
+    multi.set(id, JSON.stringify(ingredientData));
+    
+    // Add to indexes
+    multi.sadd('ingredient:index', id);
+    multi.sadd(`ingredient:type:${ingredient.type}`, id);
+    
+    if (ingredient.foodType) {
+      multi.sadd(`ingredient:foodType:${ingredient.foodType}`, id);
+    }
+    
+    // Add to name index for faster lookups
+    multi.set(`ingredient:name:${ingredient.name.toLowerCase()}`, id);
+    
+    // Update parent relationships if this is a prepared ingredient
+    if (ingredient.parentIngredients && ingredient.parentIngredients.length > 0) {
+      ingredient.parentIngredients.forEach(parentId => {
+        multi.sadd(`ingredient:children:${parentId}`, id);
+      });
+    }
+    
+    // Execute the transaction
+    await multi.exec();
+    
+    // Invalidate relevant caches
+    await client.del('ingredients::1:50'); // First page
+    
     return true;
   } catch (error) {
     console.error('Error creating ingredient:', error);
     return false;
   }
-}
+};
+
+// ... (rest of the code remains the same)

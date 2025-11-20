@@ -8,6 +8,7 @@ import { Search, Eye, Trash2, AlertCircle, Loader2 } from 'lucide-react';
 import { Submission, SubmissionFilters } from '@/types/submission';
 import { getSubmissions, updateSubmissionStatus, deleteSubmission } from '@/lib/api/submissions';
 import { SubmissionModal } from '@/components/admin/SubmissionModal';
+import { MigrationTool } from '../components/MigrationTool';
 import React from 'react';
 
 // Reusable Button component
@@ -287,6 +288,11 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Migration Tool */}
+        <div className="mb-6">
+          <MigrationTool />
+        </div>
+
         {/* Filters */}
         <div className="bg-gray-800 shadow-sm rounded-lg p-4 mb-6 border border-gray-700">
           <div className="flex justify-center w-full">
@@ -352,8 +358,9 @@ export default function AdminDashboard() {
 
         {error && (
           <div className="rounded-md bg-red-50 dark:bg-red-900/30 p-4 mb-6 border border-red-200 dark:border-red-800">
-            <div className="flex">
-              <div className="flex-shrink-0">
+            <div className="space-y-6">
+              <MigrationTool />
+              <div className="flex justify-between items-center">
                 <AlertCircle className="h-5 w-5 text-red-400" />
               </div>
               <div className="ml-3">

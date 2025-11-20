@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 
-export type NodeType = 'ingredient' | 'dish' | 'root' | 'grown' | 'gathered';
+export type NodeType = 'ingredient' | 'dish' | 'root' | 'plant' | 'animal' | 'other';
 
 export interface FoodNode {
   id: string;
@@ -106,8 +106,9 @@ export const useFoodTree = () => {
   }, []);
   
   // Helper function to categorize ingredients
-  const getIngredientCategory = (ingredient: { foodType?: string }): 'grown' | 'gathered' => {
-    return ingredient.foodType === 'gathered' ? 'gathered' : 'grown';
+  const getIngredientCategory = (ingredient: { foodType?: string }): 'plant' | 'animal' | 'other' => {
+    const type = ingredient.foodType || 'plant'; // Default to 'plant' if not specified
+    return type === 'animal' ? 'animal' : type === 'other' ? 'other' : 'plant';
   };
 
   // Fetch and process ingredients
@@ -177,8 +178,9 @@ export const useFoodTree = () => {
   }
 
   // Categorize ingredients based on their foodType
-  const categorizeIngredient = (ingredient: CategorizableIngredient): 'grown' | 'gathered' => {
-    return ingredient.foodType === 'gathered' ? 'gathered' : 'grown';
+  const categorizeIngredient = (ingredient: CategorizableIngredient): 'plant' | 'animal' | 'other' => {
+    const type = ingredient.foodType || 'plant'; // Default to 'plant' if not specified
+    return type === 'animal' ? 'animal' : type === 'other' ? 'other' : 'plant';
   };
 
   // Fetch and transform data into nodes and edges
@@ -191,63 +193,83 @@ export const useFoodTree = () => {
         const ingredients = await fetchIngredients();
         if (!isSubscribed || !isMounted.current) return;
 
-        // Create root nodes
+        // Create root node
         const rootNode: FoodNode = {
           id: 'root',
           name: 'Food Tree',
           type: 'root',
           children: [],
-          position: [0, 0, 0],  // Root at the bottom center
-          color: '#4F46E5',
-          size: 0.8
+          position: [0, 0, 0],  // Root at the center
+          color: '#9ca3af',
+          size: 1.2
         };
 
-        const grownNode: FoodNode = {
-          id: 'grown',
-          name: 'Grown',
-          type: 'grown',
+        // Create category nodes in a triangle formation around the root
+        const plantNode: FoodNode = {
+          id: 'plant',
+          name: '🌱 Plant',
+          type: 'plant',
           children: [],
-          position: [-5, 3, 0],  // Positioned above and to the left of root
-          color: '#10b981',
-          size: 0.7
+          position: [0, 8, -5],
+          color: '#86efac',
+          size: 1.0
         };
 
-        const gatheredNode: FoodNode = {
-          id: 'gathered',
-          name: 'Gathered',
-          type: 'gathered',
+        const animalNode: FoodNode = {
+          id: 'animal',
+          name: '🐄 Animal',
+          type: 'animal',
           children: [],
-          position: [5, 3, 0],  // Positioned above and to the right of root
-          color: '#3b82f6',
-          size: 0.7
+          position: [-6, 8, 5],
+          color: '#fca5a5',
+          size: 1.0
         };
+
+        const otherNode: FoodNode = {
+          id: 'other',
+          name: '🧂 Other',
+          type: 'other',
+          children: [],
+          position: [6, 8, 5],
+          color: '#93c5fd',
+          size: 1.0
+        };
+
+        // Connect root to category nodes
+        rootNode.children = ['plant', 'animal', 'other'];
 
         // Create ingredient nodes
         const ingredientNodes: FoodNode[] = [];
         const nodeMap = new Map<string, FoodNode>();
         
         // Separate ingredients into categories
-        const grownIngredients = ingredients.filter(ing => 
-          categorizeIngredient(ing) === 'grown');
-        const gatheredIngredients = ingredients.filter(ing => 
-          categorizeIngredient(ing) === 'gathered');
-        console.log('Grown ingredients:', grownIngredients);
-        console.log('Gathered ingredients:', gatheredIngredients);
+        const plantIngredients = ingredients.filter(ing => 
+          categorizeIngredient(ing) === 'plant');
+        const animalIngredients = ingredients.filter(ing => 
+          categorizeIngredient(ing) === 'animal');
+        const otherIngredients = ingredients.filter(ing => 
+          categorizeIngredient(ing) === 'other');
+          
+        console.log('Plant ingredients:', plantIngredients);
+        console.log('Animal ingredients:', animalIngredients);
+        console.log('Other ingredients:', otherIngredients);
         
         // Generate positions for each category in a circle
-        // Grown items on the left, Gathered on the right
-        // Use larger base radius for categories with more items
-        const grownBaseRadius = 3 + Math.min(grownIngredients.length * 0.2, 2);
-        const gatheredBaseRadius = 3 + Math.min(gatheredIngredients.length * 0.2, 2);
+        // Positioned around their respective category nodes
+        const plantBaseRadius = 3 + Math.min(plantIngredients.length * 0.15, 3);
+        const animalBaseRadius = 3 + Math.min(animalIngredients.length * 0.15, 3);
+        const otherBaseRadius = 3 + Math.min(otherIngredients.length * 0.15, 3);
         
-        const grownPositions = generatePositions(grownIngredients.length, -6, 4, grownBaseRadius, 'grown');
-        const gatheredPositions = generatePositions(gatheredIngredients.length, 6, 4, gatheredBaseRadius, 'gathered');
+        // Generate positions around each category node
+        const plantPositions = generatePositions(plantIngredients.length, 0, 8, plantBaseRadius, 'plant');
+        const animalPositions = generatePositions(animalIngredients.length, -6, 8, animalBaseRadius, 'animal');
+        const otherPositions = generatePositions(otherIngredients.length, 6, 8, otherBaseRadius, 'other');
         
         // Track node positions to prevent overlap
         const positionMap = new Map<string, [number, number, number]>();
         
         // Process all ingredients with their categories
-        const processIngredients = (ingredients: Ingredient[], positions: [number, number, number][], category: 'grown' | 'gathered') => {
+        const processIngredients = (ingredients: Ingredient[], positions: [number, number, number][], category: 'plant' | 'animal' | 'other') => {
     console.log(`Processing ${category} ingredients:`, ingredients);
     
     return ingredients.map((ingredient, index) => {
@@ -280,8 +302,15 @@ export const useFoodTree = () => {
               positions[index][2]
             ];
             
-            // Determine color - orange for dishes, green for all ingredients
-            const color = isDish ? '#f59e0b' : '#10b981'; // Orange for dishes, green for ingredients
+            // Determine color based on category and type
+            let color = '#93c5fd'; // Default blue
+            if (category === 'plant') {
+              color = isDish ? '#86efac' : '#4ade80'; // Light green for plant dishes, green for ingredients
+            } else if (category === 'animal') {
+              color = isDish ? '#fca5a5' : '#f87171'; // Light red for animal dishes, red for ingredients
+            } else {
+              color = isDish ? '#93c5fd' : '#60a5fa'; // Light blue for other dishes, blue for ingredients
+            }
             
             const node: FoodNode = {
               id: ingredient.id,
@@ -302,35 +331,41 @@ export const useFoodTree = () => {
           }).filter(Boolean) as FoodNode[];
         };
         
-        // Process ingredients from each category
-        const processedGrown = processIngredients(grownIngredients, grownPositions, 'grown');
-        const processedGathered = processIngredients(gatheredIngredients, gatheredPositions, 'gathered');
+        // Process all ingredients
+        const allIngredientNodes = [
+          ...processIngredients(plantIngredients, plantPositions, 'plant'),
+          ...processIngredients(animalIngredients, animalPositions, 'animal'),
+          ...processIngredients(otherIngredients, otherPositions, 'other')
+        ].filter(Boolean) as FoodNode[];
         
-        // Combine all nodes
-        const allIngredientNodes = [...processedGrown, ...processedGathered];
-        console.log('Processed grown:', processedGrown);
-        console.log('Processed gathered:', processedGathered);
         console.log('All ingredient nodes:', allIngredientNodes);
         
         ingredientNodes.push(...allIngredientNodes);
         console.log('Ingredient nodes after push:', ingredientNodes);
 
         // Create edges
-        const newEdges: Edge[] = [
-          // Connect root to category nodes
+        const edges: Edge[] = [
+          // Connect root to category nodes with colored edges
           {
             sourceId: 'root',
-            targetId: 'grown',
+            targetId: 'plant',
             sourcePosition: rootNode.position,
-            targetPosition: grownNode.position,
-            color: '#6b7280'
+            targetPosition: plantNode.position,
+            color: '#86efac' // Light green
           },
           {
             sourceId: 'root',
-            targetId: 'gathered',
+            targetId: 'animal',
             sourcePosition: rootNode.position,
-            targetPosition: gatheredNode.position,
-            color: '#6b7280'
+            targetPosition: animalNode.position,
+            color: '#fca5a5' // Light red
+          },
+          {
+            sourceId: 'root',
+            targetId: 'other',
+            sourcePosition: rootNode.position,
+            targetPosition: otherNode.position,
+            color: '#93c5fd' // Light blue
           }
         ];
         
@@ -340,33 +375,37 @@ export const useFoodTree = () => {
           if (!ingredient) return;
           
           // Determine the category based on the ingredient's foodType
-          const foodType = ingredient.foodType || 'grown';
+          const foodType = ingredient.foodType || 'plant';
           
           // Only connect to category nodes if this is a root ingredient (no parent ingredients)
           // or if it's a base ingredient that should be connected to a category
           const shouldConnectToCategory = !ingredient.parentIngredients?.length || 
                                        (ingredient.parentIngredients?.length === 0);
           
-          if (shouldConnectToCategory && (foodType === 'grown' || foodType === 'gathered')) {
-            const isGrown = foodType === 'grown';
-            const categoryId = isGrown ? 'grown' : 'gathered';
-            const categoryNode = isGrown ? grownNode : gatheredNode;
+          if (shouldConnectToCategory && (foodType === 'plant' || foodType === 'animal' || foodType === 'other')) {
+            const isPlant = foodType === 'plant';
+            const isAnimal = foodType === 'animal';
+            const isOther = foodType === 'other';
+            const categoryId = isPlant ? 'plant' : isAnimal ? 'animal' : 'other';
+            const categoryNode = isPlant ? plantNode : isAnimal ? animalNode : otherNode;
             
             // Only add the edge if the node is actually positioned
             if (node.position && node.position.every(coord => coord !== undefined)) {
-              newEdges.push({
+              edges.push({
                 sourceId: categoryId,
                 targetId: node.id,
                 sourcePosition: categoryNode.position,
                 targetPosition: node.position,
-                color: isGrown ? '#86efac' : '#93c5fd' // Lighter green/blue for edges
+                color: isPlant ? '#86efac' : isAnimal ? '#fca5a5' : '#93c5fd' // Lighter green/blue for edges
               });
               
               // Add to the category's children if not already there
-              if (isGrown && !grownNode.children.includes(node.id)) {
-                grownNode.children.push(node.id);
-              } else if (!isGrown && !gatheredNode.children.includes(node.id)) {
-                gatheredNode.children.push(node.id);
+              if (isPlant && !plantNode.children.includes(node.id)) {
+                plantNode.children.push(node.id);
+              } else if (isAnimal && !animalNode.children.includes(node.id)) {
+                animalNode.children.push(node.id);
+              } else if (isOther && !otherNode.children.includes(node.id)) {
+                otherNode.children.push(node.id);
               }
             }
           }
@@ -467,7 +506,7 @@ export const useFoodTree = () => {
             }
             
             // Add edge with a curved path
-            newEdges.push({
+            edges.push({
               sourceId: parentNode.id,
               targetId: node.id,
               sourcePosition: parentNode.position,
@@ -487,7 +526,7 @@ export const useFoodTree = () => {
         sortedIngredients.forEach(ingredient => processNode(ingredient));
 
         // Run force-directed layout simulation
-        runForceSimulation(nodeMap, newEdges);
+        runForceSimulation(nodeMap, edges);
 
         // Connect dishes to their base ingredients
         // This function is currently unused but kept for future implementation
@@ -526,15 +565,21 @@ export const useFoodTree = () => {
         };
 
         // Create final nodes array with all nodes
-        const finalNodes = [rootNode, grownNode, gatheredNode, ...ingredientNodes];
+        const finalNodes = [rootNode, plantNode, animalNode, otherNode, ...allIngredientNodes];
         
         console.log('Final nodes to render:', finalNodes);
-        console.log('Final edges to render:', newEdges);
+        console.log('Final edges to render:', edges);
         
+        // Add all nodes to the node map
+        [rootNode, plantNode, animalNode, otherNode, ...allIngredientNodes].forEach(node => {
+          nodeMap.set(node.id, node);
+          positionMap.set(node.id, node.position);
+        });
+
         // Update state with the final nodes and edges
         if (isSubscribed && isMounted.current) {
           setNodes(finalNodes);
-          setEdges(newEdges);
+          setEdges(edges);
         }
       } catch (err) {
         if (err.name !== 'AbortError' && isSubscribed && isMounted.current) {
@@ -577,12 +622,15 @@ export const useFoodTree = () => {
   };
 
   function runForceSimulation(nodeMap: Map<string, FoodNode>, edges: Edge[]) {
-    // Initialize velocities and positions
+    // Convert node map to array for easier iteration
+    const nodesArray = Array.from(nodeMap.values());
+    
+    // Initialize velocities and forces
     const velocities = new Map<string, [number, number, number]>();
     const forces = new Map<string, [number, number, number]>();
     
-    // Initialize velocities and forces
-    nodeMap.forEach((node) => {
+    // Initialize velocities and forces for all nodes
+    nodesArray.forEach(node => {
       velocities.set(node.id, [0, 0, 0]);
       forces.set(node.id, [0, 0, 0]);
     });
@@ -590,38 +638,45 @@ export const useFoodTree = () => {
     // Run simulation
     let iteration = 0;
     const step = () => {
-      // Clear forces
-      forces.forEach((_, id) => {
-        forces.set(id, [0, 0, 0]);
+      // Clear forces for all nodes
+      nodesArray.forEach(node => {
+        forces.set(node.id, [0, 0, 0]);
       });
 
       // Apply repulsion between all pairs of nodes
-      const nodesArray = Array.from(nodeMap.values());
       for (let i = 0; i < nodesArray.length; i++) {
         const node1 = nodesArray[i];
-        const force1 = forces.get(node1.id)!;
+        const force1 = forces.get(node1.id);
+        if (!force1) continue;
         
         for (let j = i + 1; j < nodesArray.length; j++) {
           const node2 = nodesArray[j];
-          const force2 = forces.get(node2.id)!;
+          const force2 = forces.get(node2.id);
+          if (!force2) continue;
           
           // Calculate distance between nodes
           const dx = node1.position[0] - node2.position[0];
           const dy = node1.position[1] - node2.position[1];
           const dz = node1.position[2] - node2.position[2];
-          const distance = Math.max(0.1, Math.sqrt(dx * dx + dy * dy + dz * dz));
+          const distanceSquared = dx * dx + dy * dy + dz * dz;
+          const distance = Math.max(0.1, Math.sqrt(distanceSquared));
           
           // Calculate repulsion force (inverse square law)
-          const repulsion = REPULSION_STRENGTH * FORCE_STRENGTH / (distance * distance);
+          const repulsion = REPULSION_STRENGTH * FORCE_STRENGTH / distanceSquared;
           
-          // Update forces
-          force1[0] += (dx / distance) * repulsion;
-          force1[1] += (dy / distance) * repulsion;
-          force1[2] += (dz / distance) * repulsion;
+          // Update forces with a small epsilon to prevent division by zero
+          const epsilon = 1e-6;
+          const forceFactor = repulsion / (distance + epsilon);
           
-          force2[0] -= (dx / distance) * repulsion;
-          force2[1] -= (dy / distance) * repulsion;
-          force2[2] -= (dz / distance) * repulsion;
+          // Update forces for node1
+          force1[0] += dx * forceFactor;
+          force1[1] += dy * forceFactor;
+          force1[2] += dz * forceFactor;
+          
+          // Update forces for node2 (equal and opposite)
+          force2[0] -= dx * forceFactor;
+          force2[1] -= dy * forceFactor;
+          force2[2] -= dz * forceFactor;
         }
       }
 
@@ -632,37 +687,48 @@ export const useFoodTree = () => {
         
         if (!sourceNode || !targetNode) return;
         
-        const sourceForce = forces.get(sourceNode.id)!;
-        const targetForce = forces.get(targetNode.id)!;
+        const sourceForce = forces.get(sourceNode.id);
+        const targetForce = forces.get(targetNode.id);
+        
+        if (!sourceForce || !targetForce) return;
         
         // Calculate distance between nodes
         const dx = targetNode.position[0] - sourceNode.position[0];
         const dy = targetNode.position[1] - sourceNode.position[1];
         const dz = targetNode.position[2] - sourceNode.position[2];
-        const distance = Math.max(0.1, Math.sqrt(dx * dx + dy * dy + dz * dz));
+        const distanceSquared = dx * dx + dy * dy + dz * dz;
+        const distance = Math.max(0.1, Math.sqrt(distanceSquared));
         
         // Calculate spring force (Hooke's law)
         const springForce = SPRING_STRENGTH * FORCE_STRENGTH * (distance - SPRING_LENGTH);
         
-        // Update forces
-        sourceForce[0] += (dx / distance) * springForce;
-        sourceForce[1] += (dy / distance) * springForce;
-        sourceForce[2] += (dz / distance) * springForce;
+        // Update forces with a small epsilon to prevent division by zero
+        const epsilon = 1e-6;
+        const forceFactor = springForce / (distance + epsilon);
         
-        targetForce[0] -= (dx / distance) * springForce;
-        targetForce[1] -= (dy / distance) * springForce;
-        targetForce[2] -= (dz / distance) * springForce;
+        // Update forces for source node
+        sourceForce[0] += dx * forceFactor;
+        sourceForce[1] += dy * forceFactor;
+        sourceForce[2] += dz * forceFactor;
+        
+        // Update forces for target node (equal and opposite)
+        targetForce[0] -= dx * forceFactor;
+        targetForce[1] -= dy * forceFactor;
+        targetForce[2] -= dz * forceFactor;
       });
 
       // Update velocities and positions
-      nodeMap.forEach((node) => {
-        const velocity = velocities.get(node.id)!;
-        const force = forces.get(node.id)!;
+      nodesArray.forEach(node => {
+        const velocity = velocities.get(node.id);
+        const force = forces.get(node.id);
         
-        // Update velocity (F = ma, but we assume mass = 1)
-        velocity[0] = (velocity[0] + force[0]) * VELOCITY_DECAY;
-        velocity[1] = (velocity[1] + force[1]) * VELOCITY_DECAY;
-        velocity[2] = (velocity[2] + force[2]) * VELOCITY_DECAY;
+        // Skip if velocity or force is not found (shouldn't happen, but better safe than sorry)
+        if (!velocity || !force) return;
+        
+        // Safely update velocity (F = ma, but we assume mass = 1)
+        velocity[0] = ((velocity[0] || 0) + (force[0] || 0)) * VELOCITY_DECAY;
+        velocity[1] = ((velocity[1] || 0) + (force[1] || 0)) * VELOCITY_DECAY;
+        velocity[2] = ((velocity[2] || 0) + (force[2] || 0)) * VELOCITY_DECAY;
         
         // Limit maximum velocity
         const speed = Math.sqrt(velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2]);

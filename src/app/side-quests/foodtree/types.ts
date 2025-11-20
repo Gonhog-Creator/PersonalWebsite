@@ -1,4 +1,4 @@
-export type IngredientSource = 'grown' | 'gathered' | 'prepared';
+export type IngredientSource = 'plant' | 'animal' | 'other';
 export type PreparationMethod = 'chopped' | 'diced' | 'sliced' | 'minced' | 'grated' | 'mashed' | 'blended' | 'crushed' | 'juiced' | 'peeled';
 export type CookingMethod = 'cooked' | 'steamed' | 'boiled' | 'toasted' | 'grilled' | 'smoked' | 'oil-fried' | 'air-fried' | 'raw' | 'mixed' | 'blended' | 'shredded' | 'baked';
 
@@ -13,6 +13,8 @@ export interface BaseItem {
 export interface BaseIngredient extends BaseItem {
   type: 'ingredient';
   source: IngredientSource;
+  animalType?: string; // e.g., 'cow', 'pig', 'chicken' for animal products
+  isSourceAnimal?: boolean; // true if this is the source animal itself
   preparationMethod?: PreparationMethod;
   parentIngredients?: string[]; // IDs of parent ingredients if source is 'prepared'
   nutritionalInfo?: {
