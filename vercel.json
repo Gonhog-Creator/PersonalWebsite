@@ -1,4 +1,5 @@
 {
+  "description": "Configuration updated to fix caching issues - triggering new deployment",
   "version": 2,
   "builds": [
     {
