@@ -3,6 +3,30 @@ const path = require('path');
 
 const isProd = process.env.NODE_ENV === 'production';
 
+// Security headers
+const securityHeaders = [
+  {
+    key: 'X-Content-Type-Options',
+    value: 'nosniff',
+  },
+  {
+    key: 'X-Frame-Options',
+    value: 'DENY',
+  },
+  {
+    key: 'X-XSS-Protection',
+    value: '1; mode=block',
+  },
+  {
+    key: 'Referrer-Policy',
+    value: 'strict-origin-when-cross-origin',
+  },
+  {
+    key: 'Cache-Control',
+    value: 'public, max-age=0, must-revalidate',
+  },
+];
+
 module.exports = {
   // Basic configuration
   trailingSlash: true,
