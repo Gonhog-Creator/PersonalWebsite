@@ -30,12 +30,9 @@
       }
     }
   ],
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_VERCEL_ENV": "production",
-      "NEXT_TELEMETRY_DISABLED": "1"
-    },
-    "force": true
+  "env": {
+    "NEXT_PUBLIC_VERCEL_ENV": "production",
+    "NEXT_TELEMETRY_DISABLED": "1"
   },
   "github": {
     "enabled": true,
