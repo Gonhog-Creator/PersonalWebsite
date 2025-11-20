@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { CubeIcon } from '@heroicons/react/24/outline';
 import { SubmissionProvider, useSubmissions } from './contexts/SubmissionContext';
+import { getLatestUpdate } from './utils/updates';
 import { SilverBorderButton } from '@/components/ui/SilverBorderButton';
 import { AddIngredientForm } from './components/AddIngredientForm';
 import { SubmissionQueue } from './components/SubmissionQueue';
@@ -194,9 +195,9 @@ const FoodTreeContent = () => {
                 href="/side-quests/foodtree/updates" 
                 className="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
               >
-                Version 1.1.0
+                Version {getLatestUpdate().version}
               </Link>
-              {' '}· Last updated November 2025
+              {' '}· Last updated {getLatestUpdate().date.split(',')[0]}
             </p>
         </div>
         <ToastContainer 

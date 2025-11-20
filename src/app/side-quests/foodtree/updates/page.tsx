@@ -13,7 +13,7 @@ const updates = [
     title: 'Update Page',
     type: 'enhancement',
     changes: [
-      'Added Update Page for Food Tree Project'
+      'Added Update Page for Food Tree Project',
       'Minor Fixes'
     ]
   },
