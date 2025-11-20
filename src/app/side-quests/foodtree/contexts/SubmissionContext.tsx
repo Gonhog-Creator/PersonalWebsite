@@ -76,14 +76,7 @@ export function SubmissionProvider({ children }: { children: ReactNode }) {
       // Update the local state with the new submission
       setSubmissions(prev => [responseData, ...prev]);
       
-      // Set success message
-      setSuccess({ 
-        message: ' was successfully added to the database!',
-        itemName: data.name
-      });
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => setSuccess(null), 3000);
+      // Success toast is shown by the form component
       
       return responseData;
     } catch (err) {

@@ -305,16 +305,41 @@ export function AddIngredientForm() {
   };
 
   const checkForDuplicates = async (ingredientName: string) => {
+    if (!ingredientName) return;
+    
     try {
-      const response = await fetch(`/api/foodtree/ingredients?name=${encodeURIComponent(ingredientName)}`);
-      if (response.ok) {
-        const existingIngredients = await response.json();
-        if (existingIngredients && existingIngredients.length > 0) {
-          throw new Error(`${ingredientName} already exists in the database.`);
-        }
+      const response = await fetch(`/api/foodtree/ingredients?search=${encodeURIComponent(ingredientName.trim())}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Error checking for duplicates:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorData
+        });
+        // Don't block submission if there's an error checking for duplicates
+        return;
+      }
+      
+      const result = await response.json();
+      
+      // Check if any ingredient name matches (case insensitive)
+      const normalizedInput = ingredientName.trim().toLowerCase();
+      const duplicate = result.some((item: any) => 
+        item.name && item.name.trim().toLowerCase() === normalizedInput
+      );
+      
+      if (duplicate) {
+        throw new Error(`"${ingredientName}" already exists in the database.`);
       }
     } catch (error) {
-      throw error; // Re-throw to be handled by the caller
+      console.error('Error in checkForDuplicates:', error);
+      // Only re-throw if it's our duplicate error
+      if (error instanceof Error && error.message.includes('already exists')) {
+        throw error;
+      }
+      // For other errors, log but don't block submission
+      console.log('Non-blocking error during duplicate check, continuing with submission');
     }
   };
 

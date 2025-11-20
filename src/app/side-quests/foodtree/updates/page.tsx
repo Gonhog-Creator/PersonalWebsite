@@ -2,6 +2,15 @@ import UpdatesClient from './UpdatesClient';
 
 export const updates = [
   {
+    version: '1.1.2',
+    date: 'November 20, 2025',
+    title: 'Submission Hotfix',
+    type: 'enhancement',
+    changes: [
+      'Fixed issue with duplicate submission searching that was causing all submissions to be rejected'
+    ]
+  },
+  {
     version: '1.1.1',
     date: 'November 20, 2025',
     title: 'Update Page',

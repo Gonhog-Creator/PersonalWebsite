@@ -213,25 +213,46 @@ interface Submission {
 export async function addSubmission(type: string, data: SubmissionData) {
   return withRedis(async (client) => {
     try {
-      // Check for existing submission with the same name and type
-      const submissions = await getAllSubmissions();
       const normalizedInput = data.name.trim().toLowerCase();
       
-      const exists = submissions.some((sub: Submission) => {
+      // Check for existing submission with the same name and type
+      const submissions = await getAllSubmissions();
+      const submissionExists = submissions.some((sub: Submission) => {
         return (
           sub.type === type && 
           sub.data?.name?.trim().toLowerCase() === normalizedInput
         );
       });
       
-      if (exists) {
-        const formattedName = data.name
-          .split(' ')
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join(' ');
-        throw new Error(`Ingredient "${formattedName}" already exists`);
+      if (submissionExists) {
+        throw new Error(`"${data.name}" already exists in submissions`);
+      }
+
+      // Check for existing ingredient with the same name
+      const ingredientKeys = await client.keys('ingredient:*');
+      if (ingredientKeys.length > 0) {
+        const pipeline = client.multi();
+        ingredientKeys.forEach(key => pipeline.get(key));
+        const results = await pipeline.exec();
+        
+        const ingredientExists = results.some(([err, item]) => {
+          if (err || !item) return false;
+          try {
+            const ingredient = JSON.parse(item as string);
+            return ingredient.name && 
+                   ingredient.name.trim().toLowerCase() === normalizedInput;
+          } catch (e) {
+            console.error('Error parsing ingredient:', e);
+            return false;
+          }
+        });
+
+        if (ingredientExists) {
+          throw new Error(`"${data.name}" already exists in the database`);
+        }
       }
       
+      // If we get here, no duplicates found - create the submission
       const id = `submission:${Date.now()}`;
       const submission = {
         id,
@@ -245,15 +266,33 @@ export async function addSubmission(type: string, data: SubmissionData) {
         updatedAt: new Date().toISOString()
       };
 
-      // Add to submission index
-      await client.sadd('submission:index', id);
-      
-      // Store the submission
-      await client.set(id, JSON.stringify(submission));
-      
-      return submission;
+      try {
+        // First add to the submission index
+        await client.sAdd('submission:index', id);
+        
+        // Then store the submission
+        await client.set(id, JSON.stringify(submission));
+        
+        console.log('Successfully added submission:', { id, name: data.name });
+        return submission;
+      } catch (error) {
+        console.error('Error in submission transaction:', error);
+        // Attempt to clean up if something went wrong
+        try {
+          await client.sRem('submission:index', id);
+          await client.del(id);
+        } catch (cleanupError) {
+          console.error('Error during cleanup after failed submission:', cleanupError);
+        }
+        throw error;
+      }
     } catch (error) {
-      console.error('Error adding submission:', error);
+      console.error('Error in addSubmission:', {
+        error,
+        type,
+        name: data.name,
+        timestamp: new Date().toISOString()
+      });
       throw error;
     }
   });
