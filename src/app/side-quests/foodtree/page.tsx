@@ -190,7 +190,13 @@ const FoodTreeContent = () => {
               </a>
             </p>
             <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
-              Version 1.1.0 · Last updated November 2025
+              <Link 
+                href="/side-quests/foodtree/updates" 
+                className="text-indigo-500 hover:text-indigo-600 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors"
+              >
+                Version 1.1.0
+              </Link>
+              {' '}· Last updated November 2025
             </p>
         </div>
         <ToastContainer 

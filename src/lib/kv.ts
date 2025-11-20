@@ -355,4 +355,26 @@ export const createIngredient = async (ingredient: {
   }
 };
 
+// Delete a submission by ID
+export async function deleteSubmission(id: string): Promise<boolean> {
+  return withRedis(async (client) => {
+    try {
+      // Delete the submission from the main submissions hash
+      const key = `submission:${id}`;
+      await client.del(key);
+      
+      // Remove from pending submissions set if it exists there
+      await client.sRem('submissions:pending', id);
+      
+      // Remove from approved submissions set if it exists there
+      await client.sRem('submissions:approved', id);
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting submission:', error);
+      throw error;
+    }
+  });
+}
+
 // ... (rest of the code remains the same)
