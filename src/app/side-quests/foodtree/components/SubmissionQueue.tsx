@@ -75,6 +75,8 @@ export function SubmissionQueue() {
                         {submission.data.name || 'New ' + submission.type}
                       </p>
                       <p className="text-sm text-gray-500">
+                        Submitted by {submission.submittedBy || submission.data?.submittedBy || 'Anonymous'}
+                        <span className="mx-2">•</span>
                         {formatDistanceToNow(new Date(submission.submittedAt), { addSuffix: true })}
                       </p>
                     </div>

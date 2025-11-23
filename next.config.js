@@ -33,6 +33,20 @@ module.exports = {
   generateEtags: true,
   compress: true,
   
+  // URL rewrites
+  async rewrites() {
+    return [
+      {
+        source: '/foodtree',
+        destination: '/side-quests/foodtree',
+      },
+      {
+        source: '/foodtree/:path*',
+        destination: '/side-quests/foodtree/:path*',
+      },
+    ];
+  },
+  
   // Image optimization
   images: {
     domains: ['josebarbeito.com', 'm.media-amazon.com', 'image.tmdb.org', 'via.placeholder.com'],
