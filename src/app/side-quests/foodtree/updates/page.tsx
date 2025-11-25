@@ -2,6 +2,17 @@ import UpdatesClient from './UpdatesClient';
 
 export const updates = [
   {
+    version: '1.2.1',
+    date: 'November 25, 2025',
+    title: 'Misc Fixes',
+    type: 'enhancement',
+    changes: [
+      'Added Molasses to whitelist',
+      'Fixed highlighting effect for nodes with multiple parent nodes',
+      'Updated Node Repulsion code'
+    ]
+  },
+  {
     version: '1.2.0',
     date: 'November 25, 2025',
     title: 'Selection Update',

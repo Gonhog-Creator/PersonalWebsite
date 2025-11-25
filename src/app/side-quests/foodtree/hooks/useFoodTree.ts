@@ -82,13 +82,14 @@ const generatePositions = (
 };
 
 // Force simulation parameters
-const FORCE_STRENGTH = 0.7; // Overall force strength
-const REPULSION_STRENGTH = 0.6; // How strongly nodes repel each other
-const SPRING_STRENGTH = 0.05; // How strongly connected nodes attract
+const FORCE_STRENGTH = 0.8; // Overall force strength
+const REPULSION_STRENGTH = 0.8; // Base repulsion strength between nodes
+const MAIN_NODE_REPULSION_MULTIPLIER = 1.8; // Reduced extra repulsion for main nodes
+const SPRING_STRENGTH = 0.08; // Spring strength for connections
 const SPRING_LENGTH = 3; // Optimal distance between connected nodes
-const VELOCITY_DECAY = 0.6; // How quickly nodes slow down
+const VELOCITY_DECAY = 0.7; // How quickly nodes slow down
 const MAX_VELOCITY = 10; // Maximum velocity a node can have
-const ITERATIONS = 100; // Number of simulation steps to run
+const ITERATIONS = 120; // Number of simulation steps to run
 
 export const useFoodTree = () => {
   const [nodes, setNodes] = useState<FoodNode[]>([]);
@@ -661,8 +662,18 @@ export const useFoodTree = () => {
           const distanceSquared = dx * dx + dy * dy + dz * dz;
           const distance = Math.max(0.1, Math.sqrt(distanceSquared));
           
-          // Calculate repulsion force (inverse square law)
-          const repulsion = REPULSION_STRENGTH * FORCE_STRENGTH / distanceSquared;
+          // Calculate base repulsion force (inverse square law)
+          let repulsion = REPULSION_STRENGTH * FORCE_STRENGTH / distanceSquared;
+          
+          // Apply extra repulsion for main nodes (Plant, Animal, Other)
+          const isMainNode1 = node1.type === 'root' || node1.name.toLowerCase() === 'plant' || 
+                            node1.name.toLowerCase() === 'animal' || node1.name.toLowerCase() === 'other';
+          const isMainNode2 = node2.type === 'root' || node2.name.toLowerCase() === 'plant' || 
+                            node2.name.toLowerCase() === 'animal' || node2.name.toLowerCase() === 'other';
+          
+          if (isMainNode1 || isMainNode2) {
+            repulsion *= MAIN_NODE_REPULSION_MULTIPLIER;
+          }
           
           // Update forces with a small epsilon to prevent division by zero
           const epsilon = 1e-6;

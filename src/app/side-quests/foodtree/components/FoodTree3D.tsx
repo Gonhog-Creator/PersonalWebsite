@@ -170,27 +170,34 @@ const FoodTree = React.memo(({ nodes, edges, onNodeClick }: FoodTreeProps) => {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [highlightedNodes, setHighlightedNodes] = useState<Set<string>>(new Set());
   
-  // Find all ancestor node IDs (path to root)
+  // Find all ancestor node IDs (all paths to root)
   const getAncestorIds = useCallback((nodeId: string, nodeMap: Map<string, FoodNode>): string[] => {
-    const ancestors: string[] = [];
-    let currentId = nodeId;
     const visited = new Set<string>();
+    const queue: string[] = [nodeId];
+    const allAncestors = new Set<string>([nodeId]);
     
-    // First, find all parent nodes
-    while (currentId && !visited.has(currentId)) {
-      visited.add(currentId);
-      ancestors.push(currentId);
+    // Use BFS to find all ancestors
+    while (queue.length > 0) {
+      const currentId = queue.shift()!;
       
-      // Find all nodes that have currentId as a child (i.e., parents of current node)
-      const parentNode = Array.from(nodeMap.values()).find(node => 
+      if (visited.has(currentId)) continue;
+      visited.add(currentId);
+      
+      // Find all parent nodes of the current node
+      const parentNodes = Array.from(nodeMap.values()).filter(node => 
         node.children.includes(currentId)
       );
       
-      if (!parentNode) break;
-      currentId = parentNode.id;
+      // Add all parents to the queue and ancestors set
+      parentNodes.forEach(parent => {
+        if (!allAncestors.has(parent.id)) {
+          allAncestors.add(parent.id);
+          queue.push(parent.id);
+        }
+      });
     }
     
-    return ancestors;
+    return Array.from(allAncestors);
   }, []);
   
   // Handle node click with highlighting
@@ -333,11 +340,17 @@ const FoodTree = React.memo(({ nodes, edges, onNodeClick }: FoodTreeProps) => {
       {memoizedEdges}
       <OrbitControls
         enableDamping={true}
+        dampingFactor={0.05}
         enableZoom={true}
         enablePan={true}
-        minDistance={5}
-        maxDistance={50}
-        zoomSpeed={0.5}
+        minDistance={3}  // Closer minimum zoom
+        maxDistance={100}  // Further maximum zoom
+        zoomSpeed={0.8}  // Faster zoom
+        rotateSpeed={0.8}  // Slightly slower rotation for better control
+        panSpeed={1.2}  // Faster panning
+        screenSpacePanning={true}  // More intuitive panning
+        maxPolarAngle={Math.PI / 1.5}  // Prevent going under the ground
+        minPolarAngle={0}  // Allow looking from top to bottom
       />
     </ErrorBoundary>
   );
