@@ -10,7 +10,8 @@ export const updates = [
       'Added Molasses to whitelist',
       'Fixed highlighting effect for nodes with multiple parent nodes',
       'Updated Node Repulsion code',
-      'Ingredients can now have up to 5 parent ingredients'
+      'Ingredients can now have up to 5 parent ingredients',
+      'Admin Dashboard Updates, I can now download and upload the database as a JSON'
     ]
   },
   {

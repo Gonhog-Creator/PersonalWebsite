@@ -44,6 +44,10 @@ module.exports = {
         source: '/foodtree/:path*',
         destination: '/side-quests/foodtree/:path*',
       },
+      {
+        source: '/foodtreesubmissions',
+        destination: '/api/foodtree/submissions',
+      },
     ];
   },
   

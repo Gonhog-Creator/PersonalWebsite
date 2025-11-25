@@ -94,7 +94,6 @@ export const getRedisClient = async (): Promise<RedisClient> => {
   }
 };
 
-// For backward compatibility
 export const redis = {
   get: async (key: string) => {
     const client = await getRedisClient();
@@ -108,9 +107,11 @@ export const redis = {
     const client = await getRedisClient();
     return client.keys(pattern);
   },
-  // Add other Redis methods as needed
+  del: async (key: string) => {
+    const client = await getRedisClient();
+    return client.del(key);
+  }
 };
-
 
 // Create a new Redis client for each request
 export async function withRedis<T>(fn: (client: RedisClient) => Promise<T>): Promise<T> {

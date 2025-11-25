@@ -2,9 +2,10 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState, useMemo } from 'react';
+import { useCallback, useEffect, useState, useMemo, useRef } from 'react';
+import { resetRedisDatabase } from '@/lib/server/redis-actions';
 import { format } from 'date-fns';
-import { Search, Eye, Trash2, AlertCircle, Loader2, PieChart, Table as TableIcon } from 'lucide-react';
+import { Search, Eye, Trash2, AlertCircle, Loader2, PieChart, Table as TableIcon, Download, Upload } from 'lucide-react';
 import { Submission, SubmissionFilters } from '@/types/submission';
 import { getSubmissions, updateSubmissionStatus, deleteSubmission } from '@/lib/api/submissions';
 import { SubmissionModal } from '@/components/admin/SubmissionModal';
@@ -201,7 +202,158 @@ export default function AdminDashboard() {
     issues?: number;
     details?: string[];
   } | null>(null);
-  // Remove dark mode state and effects since we're only using light mode
+
+  const RedisResetButton = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const content = event.target?.result as string;
+          // Validate JSON
+          JSON.parse(content);
+          
+          setIsLoading(true);
+          setError(null);
+          setSuccess(null);
+          
+          const result = await resetRedisDatabase(content);
+          
+          if (result.success) {
+            setSuccess('Database reset successfully! Page will reload...');
+            setTimeout(() => window.location.reload(), 1000);
+          } else {
+            throw new Error(result.message);
+          }
+        } catch (err) {
+          console.error('Error processing file:', err);
+          setError('Invalid JSON file. Please check the format and try again.');
+        } finally {
+          setIsLoading(false);
+          // Reset file input
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    const handleDownload = async () => {
+      try {
+        const response = await fetch('/api/foodtree/submissions');
+        const data = await response.json();
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `submissions-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error('Error downloading submissions:', err);
+        setError('Failed to download submissions. Please try again.');
+      }
+    };
+
+    return (
+      <div className="flex items-center gap-8">
+        <button
+          onClick={handleDownload}
+          className="h-10 px-6 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+          title="Download Submissions"
+          disabled={isLoading}
+        >
+          <Download className="h-4 w-4" />
+          <span>Export Data</span>
+        </button>
+        
+        <div className="relative">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="h-10 px-6 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+            title="Import Database"
+            disabled={isLoading}
+          >
+            <Upload className="h-4 w-4" />
+            <span>Import Data</span>
+          </button>
+          
+          {isOpen && (
+            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50">
+              <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Import Database</h4>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
+                Upload a JSON file to reset the database. This will delete all existing data.
+              </p>
+              
+              <div className="mt-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Select JSON File
+                </label>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  accept=".json,application/json"
+                  onChange={handleFileUpload}
+                  className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                    dark:file:bg-blue-900/30 dark:file:text-blue-300
+                    dark:hover:file:bg-blue-900/50"
+                  disabled={isLoading}
+                />
+              </div>
+              
+              <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                <p className="font-medium">File Format:</p>
+                <pre className="mt-1 p-2 bg-gray-100 dark:bg-gray-700 rounded text-xs overflow-x-auto">
+                  {`{
+  "key1": { "name": "value1" },
+  "key2": { "name": "value2" }
+}`}
+                </pre>
+              </div>
+
+              {error && (
+                <div className="mt-3 text-sm text-red-600 dark:text-red-400">
+                  {error}
+                </div>
+              )}
+              {success && (
+                <div className="mt-3 text-sm text-green-600 dark:text-green-400">
+                  {success}
+                </div>
+              )}
+              
+              <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
+                  disabled={isLoading}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   // Fetch all submissions on initial load
   const fetchSubmissions = useCallback(async () => {
@@ -327,78 +479,78 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Filters */}
+        {/* Top Bar with Filters and Actions */}
         <div className="bg-gray-800 shadow-sm rounded-lg p-4 mb-6 border border-gray-700">
-          <div className="flex justify-center w-full">
-            <div className="w-full max-w-5xl">
-              <div className="grid grid-cols-12 gap-4 items-end">
-                {/* Search Input */}
-                <div className="col-span-12 md:col-span-5">
-                  <label htmlFor="search" className="block text-sm font-medium text-gray-300 mb-1">
-                    Search
-                  </label>
-                  <div className="relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Search className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="search"
-                      placeholder="Search by name, ID, or submitter..."
-                      className="pl-10 w-full bg-white text-black border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                      value={filters.search || ''}
-                      onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-                    />
-                  </div>
+          <div className="flex flex-wrap items-end gap-3">
+            {/* Search Input */}
+            <div className="flex-1 min-w-[200px] max-w-md">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-400" />
                 </div>
+                <Input
+                  type="text"
+                  placeholder="Search submissions..."
+                  className="pl-10 h-10 bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  value={filters.search || ''}
+                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                />
+              </div>
+            </div>
 
-                {/* Type Selector */}
-                <div className="col-span-8 md:col-span-3">
-                  <label htmlFor="type" className="block text-sm font-medium text-gray-300 mb-1">
-                    Type
-                  </label>
-                  <select
-                    id="type"
-                    value={filters.type || 'all'}
-                    onChange={(e) =>
-                      setFilters({
-                        ...filters,
-                        type: e.target.value === 'all' ? undefined : e.target.value,
-                      })
-                    }
-                    className="h-10 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {typeOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+            {/* Type Selector */}
+            <div className="w-48">
+              <label htmlFor="type" className="block text-sm font-medium text-gray-300 mb-1">
+                Type
+              </label>
+              <select
+                id="type"
+                value={filters.type || 'all'}
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    type: e.target.value === 'all' ? undefined : e.target.value,
+                  })
+                }
+                className="h-10 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                {typeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-                {/* Reset Button */}
-                <div className="col-span-4 md:col-span-1">
-                  <Button
-                    variant="outline"
-                    className="w-full h-10 bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
-                    onClick={() => setFilters({})}
-                  >
-                    Reset
-                  </Button>
-                </div>
-                
-                {/* Action Buttons */}
-                <div className="col-span-6 md:col-span-2">
-                  <MigrationTool onCheckComplete={setMigrationResult} />
-                </div>
-                
-                <div className="col-span-6 md:col-span-1">
-                  <button
-                    onClick={() => setViewMode(viewMode === 'table' ? 'chart' : 'table')}
-                    className="w-full h-10 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center"
-                  >
-                    {viewMode === 'table' ? 'Chart' : 'Table'}
-                  </button>
-                </div>
+            {/* Reset Button */}
+            <Button
+              variant="outline"
+              className="h-10 bg-gray-700 text-white border-gray-600 hover:bg-gray-600 px-4 mr  -2"
+              onClick={() => setFilters({})}
+            >
+              Reset
+            </Button>
+            
+            {/* Spacer to push buttons to the right */}
+            <div className="flex-1"></div>
+            
+            {/* Action Buttons */}
+            <div className="flex items-center gap-6">
+              <div className="flex items-center">
+                <MigrationTool onCheckComplete={setMigrationResult} />
+              </div>
+              
+              <div className="flex items-center">
+                <button
+                  onClick={() => setViewMode(viewMode === 'table' ? 'chart' : 'table')}
+                  className="h-10 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center whitespace-nowrap"
+                >
+                  {viewMode === 'table' ? 'View Chart' : 'View Table'}
+                </button>
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <RedisResetButton />
               </div>
             </div>
           </div>
@@ -545,7 +697,14 @@ export default function AdminDashboard() {
         ) : (
           <div className="bg-gray-800 shadow-sm rounded-lg overflow-hidden border border-gray-700 p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <FoodTypeChart submissions={submissions} />
+              <div className="space-y-8">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium text-white">Charts</h3>
+                  <RedisResetButton />
+                </div>
+                <MigrationTool />
+                <FoodTypeChart submissions={submissions} />
+              </div>
               <div className="bg-gray-700 p-6 rounded-lg shadow">
                 <h3 className="text-lg font-medium mb-4 text-white">
                   Submission Statistics
