@@ -4,7 +4,8 @@ const WHITELISTED_WORDS = [
   'scunthorpe',         // Town in England
   'cocktail', 'cockpit', // Common words that might trigger false positives
   'assassin', 'classic', 'classical', // Words containing 'ass'
-  'bass', 'pass', 'glass', 'grass'    // Words ending with 'ass'
+  'bass', 'pass', 'glass', 'grass',   // Words ending with 'ass'
+  'molasses'                         // Sweetener
 ].map(word => word.toLowerCase());
 
 // List of profane words to filter out (this is a basic example - consider using a more comprehensive list)
