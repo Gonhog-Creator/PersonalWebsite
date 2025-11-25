@@ -160,7 +160,7 @@ export function AddIngredientForm() {
   }, [source]);
 
   const handleAddIngredient = () => {
-    if (parentIngredients.filter(Boolean).length < 3) {
+    if (parentIngredients.filter(Boolean).length < 5) {
       setParentIngredients(prev => [...prev, '']);
     }
   };
@@ -631,7 +631,7 @@ export function AddIngredientForm() {
                   Parent Ingredients <span className="text-red-500">*</span>
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Select 1-3 parent ingredients
+                  Select 1-5 parent ingredients
                 </p>
               </div>
               <div className="w-full flex justify-center">
@@ -661,14 +661,14 @@ export function AddIngredientForm() {
                   )}
 
                   {/* Search box for adding new parent ingredients */}
-                  {parentIngredients.filter(Boolean).length < 3 && (
+                  {parentIngredients.filter(Boolean).length < 5 && (
                     <div className="flex items-center gap-2">
                       <div className="flex-grow">
                         <IngredientSearch
                           onSelect={(ingredient) => {
                             const filteredIngredients = parentIngredients.filter(Boolean);
-                            if (filteredIngredients.length >= 3) {
-                              toast.error('Maximum of 3 parent ingredients allowed');
+                            if (filteredIngredients.length >= 5) {
+                              toast.error('Maximum of 5 parent ingredients allowed');
                               return;
                             }
                             const newIngredients = [...parentIngredients];

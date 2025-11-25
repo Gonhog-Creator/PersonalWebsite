@@ -9,7 +9,8 @@ export const updates = [
     changes: [
       'Added Molasses to whitelist',
       'Fixed highlighting effect for nodes with multiple parent nodes',
-      'Updated Node Repulsion code'
+      'Updated Node Repulsion code',
+      'Ingredients can now have up to 5 parent ingredients'
     ]
   },
   {
