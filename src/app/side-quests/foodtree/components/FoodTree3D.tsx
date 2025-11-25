@@ -17,6 +17,7 @@ interface FoodNode {
   position: [number, number, number];
   color: string;
   size: number;
+  highlighted?: boolean;
 }
 
 interface NodeProps {
@@ -36,22 +37,42 @@ const Node: React.FC<NodeProps> = ({ node, onClick }) => {
     }
   });
 
+  const isHighlighted = node.highlighted;
+  const showHoverEffect = hovered && !isHighlighted;
+  const nodeColor = showHoverEffect ? 'hotpink' : node.color;
+  const nodeScale = showHoverEffect ? 1.2 : 1;
+
   return (
     <group position={node.position}>
+      {/* Main node */}
       <mesh
         ref={meshRef}
         onClick={() => onClick(node)}
         onPointerOver={() => setHover(true)}
         onPointerOut={() => setHover(false)}
-        scale={hovered ? 1.2 : 1}
+        scale={nodeScale}
       >
         <sphereGeometry args={[node.size, 32, 32]} />
         <meshStandardMaterial 
-          color={hovered ? 'hotpink' : node.color} 
+          color={nodeColor}
           roughness={0.4}
           metalness={0.3}
         />
       </mesh>
+      
+      {/* Outline effect for highlighted nodes */}
+      {isHighlighted && (
+        <mesh>
+          <sphereGeometry args={[node.size * 1.1, 32, 32]} />
+          <meshBasicMaterial 
+            color="#ffd700"
+            transparent={true}
+            opacity={0.8}
+            wireframe={true}
+            wireframeLinewidth={2}
+          />
+        </mesh>
+      )}
       <Billboard
         position={[0, -node.size - 0.3, 0]}
         follow={true}
@@ -79,10 +100,11 @@ interface EdgeProps {
   start: THREE.Vector3;
   end: THREE.Vector3;
   color?: string;
+  highlighted?: boolean;
   edgeKey?: string;
 }
 
-const Edge: React.FC<EdgeProps> = ({ start, end, color = 'white' }) => {
+const Edge: React.FC<EdgeProps> = ({ start, end, color = 'white', highlighted = false }) => {
   const points = useMemo(() => {
     const curve = new THREE.QuadraticBezierCurve3(
       new THREE.Vector3(start.x, start.y, start.z),
@@ -105,7 +127,12 @@ const Edge: React.FC<EdgeProps> = ({ start, end, color = 'white' }) => {
 
   return (
     <line geometry={lineGeometry}>
-      <lineBasicMaterial color={color} linewidth={1} />
+      <lineBasicMaterial 
+        color={highlighted ? '#ffd700' : color} 
+        linewidth={highlighted ? 2 : 1} 
+        opacity={highlighted ? 1 : 0.6}
+        transparent={!highlighted}
+      />
     </line>
   );
 };
@@ -140,6 +167,69 @@ class ErrorBoundary extends React.Component<{children: React.ReactNode}, { hasEr
 
 // FoodTree component for rendering the 3D food tree
 const FoodTree = React.memo(({ nodes, edges, onNodeClick }: FoodTreeProps) => {
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [highlightedNodes, setHighlightedNodes] = useState<Set<string>>(new Set());
+  
+  // Find all ancestor node IDs (path to root)
+  const getAncestorIds = useCallback((nodeId: string, nodeMap: Map<string, FoodNode>): string[] => {
+    const ancestors: string[] = [];
+    let currentId = nodeId;
+    const visited = new Set<string>();
+    
+    // First, find all parent nodes
+    while (currentId && !visited.has(currentId)) {
+      visited.add(currentId);
+      ancestors.push(currentId);
+      
+      // Find all nodes that have currentId as a child (i.e., parents of current node)
+      const parentNode = Array.from(nodeMap.values()).find(node => 
+        node.children.includes(currentId)
+      );
+      
+      if (!parentNode) break;
+      currentId = parentNode.id;
+    }
+    
+    return ancestors;
+  }, []);
+  
+  // Handle node click with highlighting
+  const handleNodeClick = useCallback((node: FoodNode) => {
+    onNodeClick(node);
+    
+    // If clicking the same node again, clear selection
+    if (selectedNodeId === node.id) {
+      setSelectedNodeId(null);
+      setHighlightedNodes(new Set());
+      return;
+    }
+    
+    // Create a map for quick lookup
+    const nodeMap = new Map(nodes.map(n => [n.id, n]));
+    
+    // Get all ancestor IDs (path to root)
+    const ancestorIds = getAncestorIds(node.id, nodeMap);
+    
+    // Create a set of all highlighted node IDs (selected node + ancestors)
+    const newHighlightedNodes = new Set(ancestorIds);
+    
+    setSelectedNodeId(node.id);
+    setHighlightedNodes(newHighlightedNodes);
+  }, [nodes, onNodeClick, selectedNodeId, getAncestorIds]);
+  
+  // Create a map of node IDs to their highlighted state
+  const nodeHighlightMap = useMemo(() => {
+    const map = new Map<string, boolean>();
+    nodes.forEach(node => {
+      map.set(node.id, highlightedNodes.has(node.id));
+    });
+    return map;
+  }, [nodes, highlightedNodes]);
+  
+  // Check if an edge should be highlighted (connects two highlighted nodes)
+  const isEdgeHighlighted = useCallback((edge: Edge) => {
+    return highlightedNodes.has(edge.sourceId) && highlightedNodes.has(edge.targetId);
+  }, [highlightedNodes]);
   const { camera, gl } = useThree(); // Removed unused scene variable
   const [contextLost, setContextLost] = useState(false);
 
@@ -206,20 +296,15 @@ const FoodTree = React.memo(({ nodes, edges, onNodeClick }: FoodTreeProps) => {
   const { processedNodes, memoizedEdges } = useMemo(() => {
     if (!nodes) return { processedNodes: [], memoizedEdges: [] };
 
-    console.log('Raw nodes from useFoodTree:', nodes);
-    console.log('Node types:', nodes.map(n => `${n.name} (${n.type})`));
-    console.log('Node count:', nodes.length);
-    console.log('Edge count:', edges.length);
-    console.log('Edges:', edges.map(e => `${e.sourceId} -> ${e.targetId}`));
-    
     const processedNodes = nodes.map((node) => (
       <Node 
         key={node.id}
         node={{
           ...node,
+          highlighted: nodeHighlightMap.get(node.id) || false,
           parentIngredients: node.parentIngredients || []
         }}
-        onClick={onNodeClick}
+        onClick={handleNodeClick}
       />
     ));
 
@@ -229,11 +314,12 @@ const FoodTree = React.memo(({ nodes, edges, onNodeClick }: FoodTreeProps) => {
         start={new THREE.Vector3(...edge.sourcePosition)}
         end={new THREE.Vector3(...edge.targetPosition)}
         color={edge.color}
+        highlighted={isEdgeHighlighted(edge)}
       />
     ));
 
     return { processedNodes, memoizedEdges };
-  }, [nodes, edges, onNodeClick]);
+  }, [nodes, edges, nodeHighlightMap, handleNodeClick, isEdgeHighlighted]);
 
   if (contextLost) {
     return null;

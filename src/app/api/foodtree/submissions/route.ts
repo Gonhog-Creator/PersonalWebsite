@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth-options';
 import { addSubmission as addSubmissionToKv, getAllSubmissions, deleteSubmission } from '@/lib/kv';
+import { containsProfanity, sanitizeText } from '@/lib/profanityFilter';
 
 // CORS headers for preflight requests
 export const OPTIONS = async () => {
@@ -47,6 +48,76 @@ export async function POST(request: Request) {
       );
     }
 
+    // Check for profanity in the submission
+    const checkForProfanity = (data: any): string | null => {
+      // Check name
+      if (containsProfanity(data.name)) {
+        return 'Name contains inappropriate language';
+      }
+      
+      // Check description if it exists
+      if (data.description && containsProfanity(data.description)) {
+        return 'Description contains inappropriate language';
+      }
+      
+      // Check submittedName if it exists
+      if (data.submittedName && containsProfanity(data.submittedName)) {
+        return 'Submitted by name contains inappropriate language';
+      }
+      
+      // Check parentIngredients if they exist
+      if (Array.isArray(data.parentIngredients)) {
+        for (const ingredient of data.parentIngredients) {
+          if (containsProfanity(ingredient)) {
+            return 'One or more ingredients contain inappropriate language';
+          }
+        }
+      }
+      
+      return null;
+    };
+
+    // Check for profanity
+    const profanityError = checkForProfanity(data);
+    if (profanityError) {
+      return new NextResponse(
+        JSON.stringify({ error: profanityError }),
+        { 
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders,
+          },
+        }
+      );
+    }
+
+    // Sanitize text fields
+    const sanitizeData = (data: any): any => {
+      const sanitized = { 
+        ...data,
+        // Ensure submittedBy is included in the data object
+        submittedBy: data.submittedBy || data.data?.submittedBy || 'Anonymous'
+      };
+      
+      // Sanitize string fields
+      const stringFields = ['name', 'description', 'submittedName', 'animalType', 'preparationMethod', 'submittedBy'];
+      stringFields.forEach(field => {
+        if (sanitized[field]) {
+          sanitized[field] = sanitizeText(sanitized[field]);
+        }
+      });
+      
+      // Sanitize array fields
+      if (Array.isArray(sanitized.parentIngredients)) {
+        sanitized.parentIngredients = sanitized.parentIngredients.map((ingredient: string) => 
+          sanitizeText(ingredient)
+        );
+      }
+      
+      return sanitized;
+    };
+
     // Normalize the submission name (capitalize first letter of each word)
     const normalizeName = (name: string): string => {
       if (!name) return name;
@@ -57,13 +128,14 @@ export async function POST(request: Request) {
         .trim();
     };
 
-    // Prepare submission data with proper formatting
+    // Sanitize and prepare submission data
+    const sanitizedData = sanitizeData(data);
     const submissionData = {
-      ...data,
+      ...sanitizedData,
       // Normalize the name
-      name: normalizeName(data.name),
+      name: normalizeName(sanitizedData.name),
       // Add submission metadata for anonymous users
-      submittedName: data.submittedName,
+      submittedName: sanitizedData.submittedName,
       submittedAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
       status: 'pending' // Ensure status is set for new submissions

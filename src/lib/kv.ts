@@ -162,9 +162,12 @@ export async function getAllSubmissions() {
             data: {
               ...(parsed.data || {}),
               name: parsed.data?.name || parsed.name,
-              submittedBy: parsed.data?.submittedBy || parsed.submittedBy,
+              // Check both root and data for submittedBy
+              submittedBy: parsed.data?.submittedBy || parsed.submittedBy || 'Anonymous',
               submittedName: parsed.data?.submittedName || parsed.submittedName
-            }
+            },
+            // Ensure submittedBy is at the root as well
+            submittedBy: parsed.submittedBy || parsed.data?.submittedBy || 'Anonymous'
           };
           
           // Clean up any undefined values
@@ -254,13 +257,18 @@ export async function addSubmission(type: string, data: SubmissionData) {
       
       // If we get here, no duplicates found - create the submission
       const id = `submission:${Date.now()}`;
+      const { submittedBy, ...restData } = data;
       const submission = {
         id,
         type,
         data: {
-          ...data,
-          name: data.name.trim()
+          ...restData,
+          name: data.name.trim(),
+          // Ensure submittedBy is included in the data object
+          submittedBy: submittedBy || data.submittedBy || 'Anonymous'
         },
+        // Also include submittedBy at the root for backward compatibility
+        submittedBy: submittedBy || data.submittedBy || 'Anonymous',
         status: 'pending',
         submittedAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()

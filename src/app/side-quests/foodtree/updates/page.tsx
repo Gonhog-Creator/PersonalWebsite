@@ -2,6 +2,17 @@ import UpdatesClient from './UpdatesClient';
 
 export const updates = [
   {
+    version: '1.2.0',
+    date: 'November 25, 2025',
+    title: 'Selection Update',
+    type: 'enhancement',
+    changes: [
+      'Changes to interactive tree, you can now select a node and see all parent nodes highlighted in yellow',
+      'Improved submission handling to filter out profanity',
+      'Admin Dashboard updates'
+    ]
+  },
+  {
     version: '1.1.2',
     date: 'November 20, 2025',
     title: 'Submission Hotfix',

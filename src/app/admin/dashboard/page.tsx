@@ -4,11 +4,12 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { format } from 'date-fns';
-import { Search, Eye, Trash2, AlertCircle, Loader2 } from 'lucide-react';
+import { Search, Eye, Trash2, AlertCircle, Loader2, PieChart, Table as TableIcon } from 'lucide-react';
 import { Submission, SubmissionFilters } from '@/types/submission';
 import { getSubmissions, updateSubmissionStatus, deleteSubmission } from '@/lib/api/submissions';
 import { SubmissionModal } from '@/components/admin/SubmissionModal';
 import { MigrationTool } from '../components/MigrationTool';
+import { FoodTypeChart } from '../components/FoodTypeChart';
 import React from 'react';
 
 // Reusable Button component
@@ -191,6 +192,15 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [filters, setFilters] = useState<SubmissionFilters>({});
+  const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
+  const [migrationResult, setMigrationResult] = useState<{
+    success: boolean;
+    message: string;
+    total?: number;
+    valid?: number;
+    issues?: number;
+    details?: string[];
+  } | null>(null);
   // Remove dark mode state and effects since we're only using light mode
 
   // Fetch all submissions on initial load
@@ -288,18 +298,42 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Migration Tool */}
-        <div className="mb-6">
-          <MigrationTool />
-        </div>
+        {/* Migration Result Banner */}
+        {migrationResult && (
+          <div className={`p-3 mb-4 rounded-md text-sm ${
+            migrationResult.success ? 'bg-green-50 dark:bg-green-900/20' : 'bg-yellow-50 dark:bg-yellow-900/20'
+          }`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="font-medium">
+                  {migrationResult.success ? '✅ Check Complete' : '⚠️ Issues Found'}
+                </h4>
+                <p>{migrationResult.message}</p>
+                {migrationResult.details && migrationResult.details.length > 0 && (
+                  <div className="mt-2">
+                    {migrationResult.details.map((detail, i) => (
+                      <div key={i} className="text-xs opacity-80">{detail}</div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => setMigrationResult(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="bg-gray-800 shadow-sm rounded-lg p-4 mb-6 border border-gray-700">
           <div className="flex justify-center w-full">
-            <div className="w-full max-w-4xl">
-              <div className="grid grid-cols-1 md:grid-cols-10 gap-4">
+            <div className="w-full max-w-5xl">
+              <div className="grid grid-cols-12 gap-4 items-end">
                 {/* Search Input */}
-                <div className="md:col-span-7">
+                <div className="col-span-12 md:col-span-5">
                   <label htmlFor="search" className="block text-sm font-medium text-gray-300 mb-1">
                     Search
                   </label>
@@ -318,7 +352,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Type Selector */}
-                <div className="md:col-span-2">
+                <div className="col-span-8 md:col-span-3">
                   <label htmlFor="type" className="block text-sm font-medium text-gray-300 mb-1">
                     Type
                   </label>
@@ -342,7 +376,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Reset Button */}
-                <div className="md:col-span-1 flex items-end">
+                <div className="col-span-4 md:col-span-1">
                   <Button
                     variant="outline"
                     className="w-full h-10 bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
@@ -350,6 +384,20 @@ export default function AdminDashboard() {
                   >
                     Reset
                   </Button>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="col-span-6 md:col-span-2">
+                  <MigrationTool onCheckComplete={setMigrationResult} />
+                </div>
+                
+                <div className="col-span-6 md:col-span-1">
+                  <button
+                    onClick={() => setViewMode(viewMode === 'table' ? 'chart' : 'table')}
+                    className="w-full h-10 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center"
+                  >
+                    {viewMode === 'table' ? 'Chart' : 'Table'}
+                  </button>
                 </div>
               </div>
             </div>
@@ -359,7 +407,6 @@ export default function AdminDashboard() {
         {error && (
           <div className="rounded-md bg-red-50 dark:bg-red-900/30 p-4 mb-6 border border-red-200 dark:border-red-800">
             <div className="space-y-6">
-              <MigrationTool />
               <div className="flex justify-between items-center">
                 <AlertCircle className="h-5 w-5 text-red-400" />
               </div>
@@ -371,48 +418,48 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
-
-        <div className="bg-gray-800 shadow-sm rounded-lg overflow-hidden border border-gray-700 transition-colors duration-200 w-full">
-          {loading ? (
-            <div className="flex flex-col items-center justify-center p-12 space-y-4">
-              <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
-              <p className="text-gray-300">Loading submissions...</p>
-            </div>
-          ) : submissions.length === 0 ? (
-            <div className="text-center p-12">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1}
-                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <h3 className="mt-2 text-sm font-medium text-white">No submissions</h3>
-              <p className="mt-1 text-sm text-gray-400">
-                {Object.keys(filters).length > 0
-                  ? 'No submissions match your filters.'
-                  : 'Get started by creating a new submission.'}
-              </p>
-              {Object.keys(filters).length > 0 && (
-                <div className="mt-6">
-                  <Button
-                    variant="outline"
-                    className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
-                    onClick={() => setFilters({})}
-                  >
-                    Clear all filters
-                  </Button>
-                </div>
-              )}
-            </div>
-          ) : (
+        
+        {loading ? (
+          <div className="bg-gray-800 shadow-sm rounded-lg overflow-hidden border border-gray-700 p-12 flex flex-col items-center justify-center">
+            <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+            <p className="mt-4 text-gray-300">Loading submissions...</p>
+          </div>
+        ) : submissions.length === 0 ? (
+          <div className="bg-gray-800 shadow-sm rounded-lg overflow-hidden border border-gray-700 text-center p-12">
+            <svg
+              className="mx-auto h-12 w-12 text-gray-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1}
+                d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <h3 className="mt-2 text-sm font-medium text-white">No submissions</h3>
+            <p className="mt-1 text-sm text-gray-400">
+              {Object.keys(filters).length > 0
+                ? 'No submissions match your filters.'
+                : 'Get started by creating a new submission.'}
+            </p>
+            {Object.keys(filters).length > 0 && (
+              <div className="mt-6">
+                <Button
+                  variant="outline"
+                  className="bg-gray-700 text-white border-gray-600 hover:bg-gray-600"
+                  onClick={() => setFilters({})}
+                >
+                  Clear all filters
+                </Button>
+              </div>
+            )}
+          </div>
+        ) : viewMode === 'table' ? (
+          <div className="bg-gray-800 shadow-sm rounded-lg overflow-hidden border border-gray-700">
             <div className="w-full overflow-x-auto">
               <Table className="w-full table-fixed">
                 <colgroup>
@@ -494,8 +541,48 @@ export default function AdminDashboard() {
                 </TableBody>
               </Table>
             </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="bg-gray-800 shadow-sm rounded-lg overflow-hidden border border-gray-700 p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <FoodTypeChart submissions={submissions} />
+              <div className="bg-gray-700 p-6 rounded-lg shadow">
+                <h3 className="text-lg font-medium mb-4 text-white">
+                  Submission Statistics
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-300">Total Submissions</p>
+                    <p className="text-2xl font-semibold text-white">{submissions.length}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-300">Status</p>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-gray-300">Pending</span>
+                        <span className="font-medium text-white">
+                          {submissions.filter(s => s.status === 'pending').length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-300">Approved</span>
+                        <span className="text-green-400 font-medium">
+                          {submissions.filter(s => s.status === 'approved').length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-300">Rejected</span>
+                        <span className="text-red-400 font-medium">
+                          {submissions.filter(s => s.status === 'rejected').length}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <SubmissionModal

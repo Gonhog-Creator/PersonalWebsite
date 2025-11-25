@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-hot-toast';
 import * as z from 'zod';
+import { containsProfanity } from '@/lib/profanityFilter';
 import { FormInput } from './FormInput';
 import { useSubmissions } from '../contexts/SubmissionContext';
 import { InteractiveHoverButton } from '@/components/ui/interactive-hover-submit';
@@ -39,13 +40,37 @@ const PREPARATION_METHODS = [
   'whisked'
 ] as const;
 
+// Custom validation for profanity
+const validateNoProfanity = (value: string, fieldName: string) => {
+  if (value && containsProfanity(value)) {
+    return `${fieldName} contains inappropriate language`;
+  }
+  return true;
+};
+
 const ingredientSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  name: z.string()
+    .min(2, 'Name must be at least 2 characters')
+    .refine(val => !containsProfanity(val), {
+      message: 'Name contains inappropriate language',
+    }),
   source: z.enum(['plant', 'animal', 'other', 'prepared']),
-  animalType: z.string().optional(),
+  animalType: z.string()
+    .optional()
+    .refine(val => !val || !containsProfanity(val), {
+      message: 'Animal type contains inappropriate language',
+    }),
   isSourceAnimal: z.boolean().default(false),
-  preparationMethod: z.enum([...PREPARATION_METHODS]).optional(),
-  parentIngredients: z.array(z.string()).optional(),
+  preparationMethod: z.enum([...PREPARATION_METHODS])
+    .optional()
+    .refine(val => !val || !containsProfanity(val), {
+      message: 'Preparation method contains inappropriate language',
+    }),
+  parentIngredients: z.array(
+    z.string().refine(val => !containsProfanity(val), {
+      message: 'Ingredient contains inappropriate language',
+    })
+  ).optional(),
 }).superRefine((data, ctx) => {
   // Only validate animalType if source is 'animal' and not a source animal
   if (data.source === 'animal' && !data.isSourceAnimal && (!data.animalType || data.animalType.trim() === '')) {
@@ -157,27 +182,24 @@ export function AddIngredientForm() {
     setValue('parentIngredients', validIngredients, { shouldValidate: true });
   }, [parentIngredients, setValue]);
 
+  const onError = (errors: any) => {
+    console.error('Form validation errors:', errors);
+    
+    // Check for name field error which could be profanity-related
+    if (errors.name?.message?.includes('inappropriate language')) {
+      toast.error('Ingredient not submitted due to inappropriate language');
+    } else {
+      toast.error('Please fix the form errors before submitting');
+    }
+  };
+
   const onSubmit = async (data: IngredientFormData) => {
     console.log('Form submission started', { data });
     
-    // Prepare the submission data
-    const submissionData: any = {
-      name: data.name.trim(),
-      source: data.source,
-      submittedBy: userName || 'Anonymous',
-      timestamp: new Date().toISOString(),
-    };
-    
-    // Add type-specific fields
-    if (data.source === 'animal') {
-      submissionData.isSourceAnimal = data.isSourceAnimal;
-      if (!data.isSourceAnimal && data.animalType) {
-        submissionData.animalType = data.animalType;
-        submissionData.parentIngredients = [data.animalType];
-      }
-    } else if (data.source === 'prepared') {
-      submissionData.preparationMethod = data.preparationMethod;
-      submissionData.parentIngredients = data.parentIngredients?.filter(ing => ing.trim() !== '');
+    // Check for profanity in the name
+    if (containsProfanity(data.name)) {
+      toast.error('Ingredient not submitted due to inappropriate language');
+      return;
     }
 
     try {
@@ -209,14 +231,11 @@ export function AddIngredientForm() {
         timestamp: new Date().toISOString(),
       };
       
-      // Add parent ingredients for prepared items
+      // Add type-specific fields
       if (data.source === 'prepared') {
         submissionData.parentIngredients = validParentIngredients;
         submissionData.preparationMethod = data.preparationMethod;
-      }
-
-      // Add type-specific fields
-      if (data.source === 'animal') {
+      } else if (data.source === 'animal') {
         submissionData.isSourceAnimal = data.isSourceAnimal;
         if (!data.isSourceAnimal && data.animalType) {
           submissionData.animalType = data.animalType;
