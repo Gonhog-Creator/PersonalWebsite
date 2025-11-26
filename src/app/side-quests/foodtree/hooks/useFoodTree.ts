@@ -13,6 +13,7 @@ export interface FoodNode {
   position: [number, number, number];
   color: string;
   size: number;
+  depth: number; // Degree of separation from the root
 }
 
 interface Edge {
@@ -89,7 +90,7 @@ const SPRING_STRENGTH = 0.08; // Spring strength for connections
 const SPRING_LENGTH = 3; // Optimal distance between connected nodes
 const VELOCITY_DECAY = 0.7; // How quickly nodes slow down
 const MAX_VELOCITY = 10; // Maximum velocity a node can have
-const ITERATIONS = 120; // Number of simulation steps to run
+const ITERATIONS = 150; // Increased iterations for better convergence with depth-based positioning
 
 export const useFoodTree = () => {
   const [nodes, setNodes] = useState<FoodNode[]>([]);
@@ -202,7 +203,8 @@ export const useFoodTree = () => {
           children: [],
           position: [0, 0, 0],  // Root at the center
           color: '#9ca3af',
-          size: 1.2
+          size: 1.2,
+          depth: 0  // Root has depth 0
         };
 
         // Create category nodes in a triangle formation around the root
@@ -213,7 +215,8 @@ export const useFoodTree = () => {
           children: [],
           position: [0, 8, -5],
           color: '#86efac',
-          size: 1.0
+          size: 1.0,
+          depth: 1  // One step from root
         };
 
         const animalNode: FoodNode = {
@@ -223,7 +226,8 @@ export const useFoodTree = () => {
           children: [],
           position: [-6, 8, 5],
           color: '#fca5a5',
-          size: 1.0
+          size: 1.0,
+          depth: 1  // One step from root
         };
 
         const otherNode: FoodNode = {
@@ -233,7 +237,8 @@ export const useFoodTree = () => {
           children: [],
           position: [6, 8, 5],
           color: '#93c5fd',
-          size: 1.0
+          size: 1.0,
+          depth: 1  // One step from root
         };
 
         // Connect root to category nodes
@@ -313,6 +318,22 @@ export const useFoodTree = () => {
               color = isDish ? '#93c5fd' : '#60a5fa'; // Light blue for other dishes, blue for ingredients
             }
             
+            // Calculate depth based on parent nodes
+            let nodeDepth = 2; // Default to 2 (root -> category -> this node)
+            
+            if (ingredient.parentIngredients?.length) {
+              // If we have parent ingredients, find the minimum depth among them and add 1
+              const parentDepths = ingredient.parentIngredients
+                .map(parentId => {
+                  const parent = nodeMap.get(parentId);
+                  return parent ? (parent.depth ?? 2) : 2; // Default to 2 if parent not found
+                });
+              
+              if (parentDepths.length > 0) {
+                nodeDepth = Math.min(...parentDepths) + 1;
+              }
+            }
+            
             const node: FoodNode = {
               id: ingredient.id,
               name: ingredient.name,
@@ -321,7 +342,8 @@ export const useFoodTree = () => {
               parentIngredients: ingredient.parentIngredients || [],
               position: [...basePosition],
               color,
-              size: isDish ? 0.6 : 0.5
+              size: isDish ? 0.6 : 0.5,
+              depth: nodeDepth
             };
             
             console.log(`Created ${category} node:`, node);
@@ -456,10 +478,13 @@ export const useFoodTree = () => {
           
           if (parentNodes.length === 0) return;
 
-          // Calculate node depth (max parent depth + 1)
-          const parentDepths = parentNodes.map(p => nodeDepths.get(p.id) ?? 0);
-          const depth = Math.max(...parentDepths) + 1;
+          // Calculate node depth (minimum parent depth + 1)
+          const parentDepths = parentNodes.map(p => nodeDepths.get(p.id) ?? 2);
+          const depth = Math.min(...parentDepths) + 1;
           nodeDepths.set(node.id, depth);
+          
+          // Update the node's depth property
+          node.depth = depth;
 
           // Calculate average position of all parents
           const avgParentPos = parentNodes.reduce(
@@ -607,13 +632,14 @@ export const useFoodTree = () => {
     return () => {
       if (simulationRef.current) {
         cancelAnimationFrame(simulationRef.current);
+        simulationRef.current = undefined;
       }
     };
   }, []);
 
   // Memoize the nodes and edges to prevent unnecessary re-renders
-  const memoizedNodes = useMemo(() => nodes, [nodes]);
-  const memoizedEdges = useMemo(() => edges, [edges]);
+  const memoizedNodes = useMemo(() => nodes, [nodes.length, JSON.stringify(nodes)]);
+  const memoizedEdges = useMemo(() => edges, [edges.length, JSON.stringify(edges)]);
 
   return { 
     nodes: memoizedNodes, 
@@ -755,15 +781,31 @@ export const useFoodTree = () => {
         node.position[2] += velocity[2];
       });
 
-      // Update the nodes in the React state with new positions
+      // Update the nodes and edges in the React state with new positions
       if (isMounted.current) {
-        setNodes(prevNodes => 
-          prevNodes.map(node => {
-            const updatedNode = nodeMap.get(node.id);
-            return updatedNode ? { ...node, position: [...updatedNode.position] } : node;
-          })
-        );
-        setEdges(prevEdges => [...prevEdges]);
+        // Update node positions
+        const updatedNodes = Array.from(nodeMap.values()).map(node => ({
+          ...node,
+          position: [...node.position] as [number, number, number]
+        }));
+        
+        // Update edge positions
+        const updatedEdges = edges.map(edge => {
+          const sourceNode = nodeMap.get(edge.sourceId);
+          const targetNode = nodeMap.get(edge.targetId);
+          
+          if (!sourceNode || !targetNode) return edge;
+          
+          return {
+            ...edge,
+            sourcePosition: [...sourceNode.position] as [number, number, number],
+            targetPosition: [...targetNode.position] as [number, number, number]
+          };
+        });
+        
+        // Batch state updates
+        setNodes(updatedNodes);
+        setEdges(updatedEdges);
       }
 
       // Continue simulation if not done
