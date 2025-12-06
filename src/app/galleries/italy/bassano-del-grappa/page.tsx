@@ -27,7 +27,7 @@ const getImagePath = (id: number) => {
 
 //STEP TWO
 const PAGE_CONTENT = {
-  title: 'Bassano Del Grappo',
+  title: 'Bassano Del Grappa',
   description: 'Lots of mountains, a few statues, and one cool looking bridge. The perfect quaint italian town tucked into the Alps.',
   header: {
     backgroundImage: '/img/Italy/Bassano/bassano-panorama (2).jpg',
@@ -39,7 +39,7 @@ const PAGE_CONTENT = {
   },
   video: {
     id: '8zhJ1ux5xiE',
-    title: 'Bassano Dep Grappa From Above'
+    title: 'Bassano Del Grappa From Above'
   }
 };
 
