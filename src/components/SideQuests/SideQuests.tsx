@@ -15,6 +15,14 @@ type ProjectItem = {
 
 const projects: ProjectItem[] = [
   {
+    id: 'folding',
+    title: 'Folding @ Home',
+    image: '/img/projects/folding/folding.jpg',
+    description: 'Contributing to scientific research by donating computing power',
+    path: 'https://stats.foldingathome.org/donor/id/755263407',
+    external: true
+  },
+  {
     id: 'my-movies',
     title: 'My Movies',
     image: '/img/projects/movies/popcorncover.jpg',
@@ -89,12 +97,13 @@ export default function SideQuests() {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   <div 
-                    className={`absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent transition-opacity duration-300 flex items-end justify-center ${
+                    className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent transition-opacity duration-300 flex flex-col items-center justify-end pb-8 ${
                       hoveredProject === project.id ? 'opacity-100' : 'opacity-0'
                     }`}
                   >
-                    <div className="p-6 w-full text-center">
-                      <p className="text-gray-200 text-lg">{project.description}</p>
+                    <div className="w-full px-6 text-center">
+                      <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
+                      <p className="text-gray-200 text-sm">{project.description}</p>
                     </div>
                   </div>
                 </div>
