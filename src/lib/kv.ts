@@ -324,17 +324,17 @@ export async function listIngredients(searchTerm?: string, page = 1, pageSize = 
       return JSON.parse(data as string);
     }).filter(Boolean);
     
-    // Filter by search term if provided
-    if (searchTerm) {
-      ingredients = ingredients.filter(ingredient => {
-        return ingredient.name.toLowerCase().includes(searchTerm.toLowerCase());
-      });
-    }
+    // Filter by search term if provided and create a new variable for filtered results
+    const filteredIngredients = searchTerm
+      ? ingredients.filter(ingredient => 
+          ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : ingredients;
     
     // Paginate results
-    const total = ingredients.length;
+    const total = filteredIngredients.length;
     const offset = (page - 1) * pageSize;
-    const data = ingredients.slice(offset, offset + pageSize);
+    const data = filteredIngredients.slice(offset, offset + pageSize);
     
     return { data, total };
   } catch (error) {

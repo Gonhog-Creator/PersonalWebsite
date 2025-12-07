@@ -28,6 +28,11 @@ const securityHeaders = [
 ];
 
 module.exports = {
+  // Disable Turbopack and configure webpack
+  experimental: {
+    webpackBuildWorker: true,
+    turbopack: false
+  },
   // Basic configuration
   trailingSlash: true,
   generateEtags: true,
@@ -53,7 +58,24 @@ module.exports = {
   
   // Image optimization
   images: {
-    domains: ['josebarbeito.com', 'm.media-amazon.com', 'image.tmdb.org', 'via.placeholder.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'josebarbeito.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'image.tmdb.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
+      },
+    ],
     formats: ['image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
   },
@@ -67,11 +89,6 @@ module.exports = {
   // Configure TypeScript
   typescript: {
     ignoreBuildErrors: true
-  },
-  
-  // Configure ESLint
-  eslint: {
-    ignoreDuringBuilds: true
   },
   
   // Webpack configuration

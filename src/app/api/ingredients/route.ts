@@ -1,24 +1,21 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import { redis } from '@/lib/kv';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const search = searchParams.get('search');
 
-  const { search } = req.query;
-
-  if (!search || typeof search !== 'string') {
-    return res.status(400).json({ error: 'Search query is required' });
+  if (!search) {
+    return NextResponse.json(
+      { error: 'Search query is required' },
+      { status: 400 }
+    );
   }
 
   try {
     // Get all submissions
     const keys = await redis.keys('submission:*');
-    if (keys.length === 0) return res.status(200).json([]);
+    if (keys.length === 0) return NextResponse.json([]);
     
     // Get all values in a single pipeline
     const values = await Promise.all(keys.map(key => redis.get(key)));
@@ -40,12 +37,17 @@ export default async function handler(
         submission.data?.name?.toLowerCase().includes(search.toLowerCase())
       );
 
-    return res.status(200).json(submissions);
+    return NextResponse.json(submissions);
   } catch (error) {
     console.error('Error searching ingredients:', error);
-    return res.status(500).json({ 
-      error: 'Failed to search ingredients',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    });
+    return NextResponse.json(
+      { 
+        error: 'Failed to search ingredients',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    );
   }
 }
+
+export const dynamic = 'force-dynamic'; // Ensure dynamic route behavior
