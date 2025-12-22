@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "lastUpdated": "2025-10-20T23:26:46.051229",
-    "totalMovies": 200,
-    "totalHours": 404,
+    "lastUpdated": "2025-12-22T19:37:34.074183",
+    "totalMovies": 218,
+    "totalHours": 438,
     "generatedBy": "process_movies.py",
     "version": "1.2.0",
-    "newMovies": 4,
+    "newMovies": 22,
     "updatedMovies": 196
   },
   "movies": [
@@ -51,7 +51,7 @@
       "language": "English",
       "country": "United States, Canada, United Arab Emirates, Hungary, Italy, New Zealand, Jordan, Gambia",
       "metascore": "79",
-      "awards": "Won 2 Oscars. 116 wins & 372 nominations total",
+      "awards": "Won 2 Oscars. 117 wins & 372 nominations total",
       "production": "N/A"
     },
     {
@@ -355,6 +355,49 @@
       "country": "United States, United Kingdom"
     },
     {
+      "id": "movie_22",
+      "title": "Edge Of Tomorrow",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc5OTk4MTM3M15BMl5BanBnXkFtZTgwODcxNjg3MDE@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Sci-Fi",
+      "myRating": 9.3,
+      "imdbScore": 7.9,
+      "rottenTomatoesScore": 0.9,
+      "protagonistRating": 8.9,
+      "antagonistRating": 9.5,
+      "soundtrackRating": 7.6,
+      "setDesignRating": 9.1,
+      "plotRating": 9.5,
+      "endingRating": 9.3,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 113,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.11000000000000001,
+        "rotten": 0.01
+      },
+      "position": 23,
+      "imdbId": "tt1631867",
+      "plot": "A man fighting in a war against aliens must relive the same day every time he dies until he can find a way to stop their power source with the help of an elite soldier.",
+      "imdbRating": 79.0,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Sci-Fi"
+      ],
+      "rated": "PG-13",
+      "director": "Doug Liman",
+      "actors": [
+        "Tom Cruise",
+        "Emily Blunt",
+        "Bill Paxton"
+      ],
+      "language": "English",
+      "country": "United States, Canada, India"
+    },
+    {
       "id": "movie_9",
       "title": "Gladiator II",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWYzZTM5ZGQtOGE5My00NmM2LWFlMDEtMGNjYjdmOWM1MzA1XkEyXkFqcGc@._V1_SX300.jpg",
@@ -398,57 +441,12 @@
       "country": "United States, United Kingdom"
     },
     {
-      "id": "movie_10",
-      "title": "La La Land",
-      "releaseDate": "",
-      "genre": "Comedy, Drama, Music",
-      "myRating": 9.2,
-      "imdbScore": 8.0,
-      "rottenTomatoesScore": 0.91,
-      "protagonistRating": 9.1,
-      "antagonistRating": 9.5,
-      "soundtrackRating": 8.7,
-      "setDesignRating": 8.5,
-      "plotRating": 9.7,
-      "endingRating": 10.0,
-      "year": "2016",
-      "watchedDate": "",
-      "runtime": 128,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.12,
-        "rotten": 0.02
-      },
-      "position": 10,
-      "imdbId": "tt3783958",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzUzNDM2NzM2MV5BMl5BanBnXkFtZTgwNTM3NTg4OTE@._V1_SX300.jpg",
-      "plot": "When Sebastian, a pianist, and Mia, an actress, follow their passion and achieve success in their respective fields, they find themselves torn between their love for each other and their careers.",
-      "genres": [
-        "Comedy",
-        "Drama",
-        "Music"
-      ],
-      "rated": "PG-13",
-      "director": "Damien Chazelle",
-      "actors": [
-        "Ryan Gosling",
-        "Emma Stone",
-        "Rosemarie DeWitt"
-      ],
-      "language": "English, Cantonese",
-      "country": "United States, Hong Kong",
-      "metascore": "94",
-      "awards": "Won 6 Oscars. 242 wins & 307 nominations total",
-      "production": "N/A"
-    },
-    {
       "id": "movie_11",
       "title": "The Martian",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_SX300.jpg",
       "releaseDate": "",
       "genre": "Adventure, Drama, Sci-Fi",
-      "myRating": 9.2,
+      "myRating": 9.3,
       "imdbScore": 8.0,
       "rottenTomatoesScore": 0.9,
       "protagonistRating": 9.2,
@@ -484,6 +482,51 @@
       ],
       "language": "English, Mandarin",
       "country": "United States, United Kingdom, Hungary, Jordan"
+    },
+    {
+      "id": "movie_12",
+      "title": "La La Land",
+      "releaseDate": "",
+      "genre": "Comedy, Drama, Music",
+      "myRating": 9.2,
+      "imdbScore": 8.0,
+      "rottenTomatoesScore": 0.91,
+      "protagonistRating": 9.1,
+      "antagonistRating": 9.5,
+      "soundtrackRating": 8.7,
+      "setDesignRating": 8.5,
+      "plotRating": 9.7,
+      "endingRating": 10.0,
+      "year": "2016",
+      "watchedDate": "",
+      "runtime": 128,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.12,
+        "rotten": 0.02
+      },
+      "position": 12,
+      "imdbId": "tt3783958",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzUzNDM2NzM2MV5BMl5BanBnXkFtZTgwNTM3NTg4OTE@._V1_SX300.jpg",
+      "plot": "When Sebastian, a pianist, and Mia, an actress, follow their passion and achieve success in their respective fields, they find themselves torn between their love for each other and their careers.",
+      "genres": [
+        "Comedy",
+        "Drama",
+        "Music"
+      ],
+      "rated": "PG-13",
+      "director": "Damien Chazelle",
+      "actors": [
+        "Ryan Gosling",
+        "Emma Stone",
+        "Rosemarie DeWitt"
+      ],
+      "language": "English, Cantonese",
+      "country": "United States, Hong Kong",
+      "metascore": "94",
+      "awards": "Won 6 Oscars. 242 wins & 307 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_12",
@@ -572,49 +615,6 @@
       "country": "United States"
     },
     {
-      "id": "movie_15",
-      "title": "Spider-Man: No Way Home",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmFiZGZjMmEtMTA0Ni00MzA2LTljMTYtZGI2MGJmZWYzZTQ2XkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Adventure, Fantasy",
-      "myRating": 9.2,
-      "imdbScore": 8.2,
-      "rottenTomatoesScore": 0.9,
-      "protagonistRating": 9.0,
-      "antagonistRating": 9.0,
-      "soundtrackRating": 8.7,
-      "setDesignRating": 9.1,
-      "plotRating": 9.5,
-      "endingRating": 9.9,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 148,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.1,
-        "rotten": 0.01
-      },
-      "position": 15,
-      "imdbId": "tt10872600",
-      "plot": "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear.",
-      "imdbRating": 82.0,
-      "genres": [
-        "Action",
-        "Adventure",
-        "Fantasy"
-      ],
-      "rated": "PG-13",
-      "director": "Jon Watts",
-      "actors": [
-        "Tom Holland",
-        "Zendaya",
-        "Benedict Cumberbatch"
-      ],
-      "language": "English, Tagalog",
-      "country": "United States"
-    },
-    {
       "id": "movie_202",
       "title": "The Lord of the Rings: The Return of the King",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTZkMjBjNWMtZGI5OC00MGU0LTk4ZTItODg2NWM3NTVmNWQ4XkEyXkFqcGc@._V1_SX300.jpg",
@@ -656,6 +656,49 @@
       ],
       "language": "English, Quenya, Old English, Sindarin",
       "country": "New Zealand, United States"
+    },
+    {
+      "id": "movie_15",
+      "title": "Spider-Man: No Way Home",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmFiZGZjMmEtMTA0Ni00MzA2LTljMTYtZGI2MGJmZWYzZTQ2XkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Fantasy",
+      "myRating": 9.2,
+      "imdbScore": 8.2,
+      "rottenTomatoesScore": 0.9,
+      "protagonistRating": 9.0,
+      "antagonistRating": 9.0,
+      "soundtrackRating": 8.7,
+      "setDesignRating": 9.1,
+      "plotRating": 9.5,
+      "endingRating": 9.9,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 148,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.1,
+        "rotten": 0.01
+      },
+      "position": 15,
+      "imdbId": "tt10872600",
+      "plot": "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help. When a spell goes wrong, dangerous foes from other worlds start to appear.",
+      "imdbRating": 82.0,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Fantasy"
+      ],
+      "rated": "PG-13",
+      "director": "Jon Watts",
+      "actors": [
+        "Tom Holland",
+        "Zendaya",
+        "Benedict Cumberbatch"
+      ],
+      "language": "English, Tagalog",
+      "country": "United States"
     },
     {
       "id": "movie_16",
@@ -916,49 +959,6 @@
       "country": "United States, India"
     },
     {
-      "id": "movie_22",
-      "title": "Edge Of Tomorrow",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc5OTk4MTM3M15BMl5BanBnXkFtZTgwODcxNjg3MDE@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Adventure, Sci-Fi",
-      "myRating": 9.0,
-      "imdbScore": 7.9,
-      "rottenTomatoesScore": 0.9,
-      "protagonistRating": 8.9,
-      "antagonistRating": 9.5,
-      "soundtrackRating": 7.6,
-      "setDesignRating": 9.1,
-      "plotRating": 9.5,
-      "endingRating": 9.3,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 113,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.11000000000000001,
-        "rotten": 0.01
-      },
-      "position": 23,
-      "imdbId": "tt1631867",
-      "plot": "A man fighting in a war against aliens must relive the same day every time he dies until he can find a way to stop their power source with the help of an elite soldier.",
-      "imdbRating": 79.0,
-      "genres": [
-        "Action",
-        "Adventure",
-        "Sci-Fi"
-      ],
-      "rated": "PG-13",
-      "director": "Doug Liman",
-      "actors": [
-        "Tom Cruise",
-        "Emily Blunt",
-        "Bill Paxton"
-      ],
-      "language": "English",
-      "country": "United States, Canada, India"
-    },
-    {
       "id": "movie_23",
       "title": "Tenet",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTU0ZjZlYTUtYzIwMC00ZmQzLWEwZTAtZWFhMWIwYjMxY2I3XkEyXkFqcGc@._V1_SX300.jpg",
@@ -1131,49 +1131,6 @@
       "country": "New Zealand, United States, United Kingdom"
     },
     {
-      "id": "movie_27",
-      "title": "The Accountant",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDc5Mzg2NTYxNV5BMl5BanBnXkFtZTgwMjQ2ODAwOTE@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Crime, Drama",
-      "myRating": 8.9,
-      "imdbScore": 7.3,
-      "rottenTomatoesScore": 0.5,
-      "protagonistRating": 9.5,
-      "antagonistRating": 9.2,
-      "soundtrackRating": 7.7,
-      "setDesignRating": 8.6,
-      "plotRating": 9.4,
-      "endingRating": 8.9,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 128,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.16,
-        "rotten": 0.36
-      },
-      "position": 28,
-      "imdbId": "tt2140479",
-      "plot": "As a math savant uncooks the books for a new client, the Treasury Department closes in on his activities, and the body count starts to rise.",
-      "imdbRating": 73.0,
-      "genres": [
-        "Action",
-        "Crime",
-        "Drama"
-      ],
-      "rated": "R",
-      "director": "Gavin O'Connor",
-      "actors": [
-        "Ben Affleck",
-        "Anna Kendrick",
-        "J.K. Simmons"
-      ],
-      "language": "English, Indonesian, French",
-      "country": "United States"
-    },
-    {
       "id": "movie_28",
       "title": "Memories of Murder",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYmRjOWE5NmMtYTdkYS00ODFlLWJiMTMtYzE2NDZlZjlkZDQ0XkEyXkFqcGc@._V1_SX300.jpg",
@@ -1217,6 +1174,49 @@
       "country": "South Korea"
     },
     {
+      "id": "movie_27",
+      "title": "The Accountant",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDc5Mzg2NTYxNV5BMl5BanBnXkFtZTgwMjQ2ODAwOTE@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Crime, Drama",
+      "myRating": 8.9,
+      "imdbScore": 7.3,
+      "rottenTomatoesScore": 0.5,
+      "protagonistRating": 9.5,
+      "antagonistRating": 9.2,
+      "soundtrackRating": 7.7,
+      "setDesignRating": 8.6,
+      "plotRating": 9.4,
+      "endingRating": 8.9,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 128,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.16,
+        "rotten": 0.36
+      },
+      "position": 28,
+      "imdbId": "tt2140479",
+      "plot": "As a math savant uncooks the books for a new client, the Treasury Department closes in on his activities, and the body count starts to rise.",
+      "imdbRating": 73.0,
+      "genres": [
+        "Action",
+        "Crime",
+        "Drama"
+      ],
+      "rated": "R",
+      "director": "Gavin O'Connor",
+      "actors": [
+        "Ben Affleck",
+        "Anna Kendrick",
+        "J.K. Simmons"
+      ],
+      "language": "English, Indonesian, French",
+      "country": "United States"
+    },
+    {
       "id": "movie_29",
       "title": "Saving Private Ryan",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGZhZGQ1ZWUtZTZjYS00MDJhLWFkYjctN2ZlYjE5NWYwZDM2XkEyXkFqcGc@._V1_SX300.jpg",
@@ -1256,6 +1256,48 @@
         "Tom Sizemore"
       ],
       "language": "English, French, German, Czech",
+      "country": "United States"
+    },
+    {
+      "id": "movie_31",
+      "title": "Good Will Hunting",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDdjZGQ5YzEtNTc2My00Mjc0LWFlMTctYzkwMzZlNzdiZWYzXkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Drama, Romance",
+      "myRating": 8.8,
+      "imdbScore": 8.3,
+      "rottenTomatoesScore": 1.0,
+      "protagonistRating": 9.7,
+      "antagonistRating": 9.7,
+      "soundtrackRating": 7.1,
+      "setDesignRating": 7.2,
+      "plotRating": 9.6,
+      "endingRating": 9.7,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 126,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.05,
+        "rotten": 0.09
+      },
+      "position": 32,
+      "imdbId": "tt0119217",
+      "plot": "A therapist counsels Will Hunting, a janitor with a genius IQ.",
+      "imdbRating": 83.0,
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "rated": "R",
+      "director": "Gus Van Sant",
+      "actors": [
+        "Robin Williams",
+        "Matt Damon",
+        "Ben Affleck"
+      ],
+      "language": "English",
       "country": "United States"
     },
     {
@@ -1302,46 +1344,49 @@
       "country": "United States, Mexico"
     },
     {
-      "id": "movie_31",
-      "title": "Good Will Hunting",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDdjZGQ5YzEtNTc2My00Mjc0LWFlMTctYzkwMzZlNzdiZWYzXkEyXkFqcGc@._V1_SX300.jpg",
+      "id": "movie_33",
+      "title": "Her",
       "releaseDate": "",
-      "genre": "Drama, Romance",
+      "genre": "Drama, Romance, Sci-Fi",
       "myRating": 8.8,
-      "imdbScore": 8.3,
-      "rottenTomatoesScore": 1.0,
-      "protagonistRating": 9.7,
-      "antagonistRating": 9.7,
-      "soundtrackRating": 7.1,
-      "setDesignRating": 7.2,
-      "plotRating": 9.6,
-      "endingRating": 9.7,
-      "year": "N/A",
+      "imdbScore": 8.0,
+      "rottenTomatoesScore": 0.95,
+      "protagonistRating": 8.8,
+      "antagonistRating": 9.3,
+      "soundtrackRating": 7.5,
+      "setDesignRating": 8.9,
+      "plotRating": 9.0,
+      "endingRating": 9.3,
+      "year": "2013",
       "watchedDate": "",
       "runtime": 126,
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.05,
-        "rotten": 0.09
+        "imdb": 0.0,
+        "rotten": 0.0
       },
-      "position": 32,
-      "imdbId": "tt0119217",
-      "plot": "A therapist counsels Will Hunting, a janitor with a genius IQ.",
-      "imdbRating": 83.0,
+      "position": 33,
+      "imdbId": "tt1798709",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjA1Nzk0OTM2OF5BMl5BanBnXkFtZTgwNjU2NjEwMDE@._V1_SX300.jpg",
+      "plot": "In the near future, a lonely writer develops an unlikely relationship with an operating system designed to meet his every need.",
       "genres": [
         "Drama",
-        "Romance"
+        "Romance",
+        "Sci-Fi"
       ],
       "rated": "R",
-      "director": "Gus Van Sant",
+      "director": "Spike Jonze",
       "actors": [
-        "Robin Williams",
-        "Matt Damon",
-        "Ben Affleck"
+        "Joaquin Phoenix",
+        "Amy Adams",
+        "Scarlett Johansson"
       ],
       "language": "English",
-      "country": "United States"
+      "country": "United States",
+      "metascore": "91",
+      "awards": "Won 1 Oscar. 83 wins & 187 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_32",
@@ -1559,49 +1604,6 @@
       "country": "China, Japan, United States"
     },
     {
-      "id": "movie_37",
-      "title": "Deadpool",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzY3ZWU5NGQtOTViNC00ZWVmLTliNjAtNzViNzlkZWQ4YzQ4XkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Comedy, Sci-Fi",
-      "myRating": 8.7,
-      "imdbScore": 8.0,
-      "rottenTomatoesScore": 0.8,
-      "protagonistRating": 9.4,
-      "antagonistRating": 8.9,
-      "soundtrackRating": 8.5,
-      "setDesignRating": 7.6,
-      "plotRating": 8.9,
-      "endingRating": 8.6,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 108,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.06999999999999999,
-        "rotten": 0.02
-      },
-      "position": 38,
-      "imdbId": "tt1431045",
-      "plot": "A wisecracking mercenary gets experimented on and becomes immortal yet hideously scarred, and sets out to track down the man who ruined his looks.",
-      "imdbRating": 80.0,
-      "genres": [
-        "Action",
-        "Comedy",
-        "Sci-Fi"
-      ],
-      "rated": "R",
-      "director": "Tim Miller",
-      "actors": [
-        "Ryan Reynolds",
-        "Morena Baccarin",
-        "T.J. Miller"
-      ],
-      "language": "English",
-      "country": "United States"
-    },
-    {
       "id": "movie_38",
       "title": "Carry-On",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTNkMjQzNmQtNzE4ZC00NDlmLTkyYjAtZDZkYTQ5NjBmYThlXkEyXkFqcGc@._V1_SX300.jpg",
@@ -1645,49 +1647,47 @@
       "country": "United States"
     },
     {
-      "id": "movie_39",
-      "title": "Snowpiercer",
+      "id": "movie_37",
+      "title": "Deadpool",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzY3ZWU5NGQtOTViNC00ZWVmLTliNjAtNzViNzlkZWQ4YzQ4XkEyXkFqcGc@._V1_SX300.jpg",
       "releaseDate": "",
-      "genre": "Action, Sci-Fi, Thriller",
+      "genre": "Action, Comedy, Sci-Fi",
       "myRating": 8.7,
-      "imdbScore": 7.1,
-      "rottenTomatoesScore": 0.94,
-      "protagonistRating": 8.5,
-      "antagonistRating": 8.6,
-      "soundtrackRating": 7.6,
-      "setDesignRating": 8.8,
-      "plotRating": 9.1,
-      "endingRating": 9.3,
-      "year": "2013",
+      "imdbScore": 8.0,
+      "rottenTomatoesScore": 0.8,
+      "protagonistRating": 9.4,
+      "antagonistRating": 8.9,
+      "soundtrackRating": 8.5,
+      "setDesignRating": 7.6,
+      "plotRating": 8.9,
+      "endingRating": 8.6,
+      "year": "N/A",
       "watchedDate": "",
-      "runtime": 126,
+      "runtime": 108,
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.16,
-        "rotten": 0.06999999999999999
+        "imdb": 0.06999999999999999,
+        "rotten": 0.02
       },
-      "position": 40,
-      "imdbId": "tt1706620",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQ3NzA1MTY3MV5BMl5BanBnXkFtZTgwNzE2Mzg5MTE@._V1_SX300.jpg",
-      "plot": "In a future where a failed climate change experiment has killed all life except for the survivors who boarded the Snowpiercer (a train that travels around the globe), a new class system emerges.",
+      "position": 38,
+      "imdbId": "tt1431045",
+      "plot": "A wisecracking mercenary gets experimented on and becomes immortal yet hideously scarred, and sets out to track down the man who ruined his looks.",
+      "imdbRating": 80.0,
       "genres": [
         "Action",
-        "Sci-Fi",
-        "Thriller"
+        "Comedy",
+        "Sci-Fi"
       ],
       "rated": "R",
-      "director": "Bong Joon Ho",
+      "director": "Tim Miller",
       "actors": [
-        "Chris Evans",
-        "Jamie Bell",
-        "Tilda Swinton"
+        "Ryan Reynolds",
+        "Morena Baccarin",
+        "T.J. Miller"
       ],
-      "language": "English, Korean, French, Japanese, Czech, German",
-      "country": "South Korea, Czech Republic",
-      "metascore": "84",
-      "awards": "36 wins & 109 nominations total",
-      "production": "N/A"
+      "language": "English",
+      "country": "United States"
     },
     {
       "id": "movie_40",
@@ -1731,6 +1731,51 @@
       ],
       "language": "English, Italian, French, Japanese",
       "country": "United States"
+    },
+    {
+      "id": "movie_42",
+      "title": "Snowpiercer",
+      "releaseDate": "",
+      "genre": "Action, Sci-Fi, Thriller",
+      "myRating": 8.7,
+      "imdbScore": 7.1,
+      "rottenTomatoesScore": 0.94,
+      "protagonistRating": 8.5,
+      "antagonistRating": 8.6,
+      "soundtrackRating": 7.6,
+      "setDesignRating": 8.8,
+      "plotRating": 9.1,
+      "endingRating": 9.3,
+      "year": "2013",
+      "watchedDate": "",
+      "runtime": 126,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.16,
+        "rotten": 0.06999999999999999
+      },
+      "position": 42,
+      "imdbId": "tt1706620",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQ3NzA1MTY3MV5BMl5BanBnXkFtZTgwNzE2Mzg5MTE@._V1_SX300.jpg",
+      "plot": "In a future where a failed climate change experiment has killed all life except for the survivors who boarded the Snowpiercer (a train that travels around the globe), a new class system emerges.",
+      "genres": [
+        "Action",
+        "Sci-Fi",
+        "Thriller"
+      ],
+      "rated": "R",
+      "director": "Bong Joon Ho",
+      "actors": [
+        "Chris Evans",
+        "Song Kang-ho",
+        "Ed Harris"
+      ],
+      "language": "English, Korean, French, Japanese, Czech, German",
+      "country": "South Korea, Czech Republic",
+      "metascore": "84",
+      "awards": "36 wins & 109 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_47",
@@ -1861,46 +1906,47 @@
       "country": "United States, Czech Republic, Australia, Canada, Italy"
     },
     {
-      "id": "movie_43",
-      "title": "Forrest Gump",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_SX300.jpg",
+      "id": "movie_45",
+      "title": "Blade Runner 2049",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_SX300.jpg",
       "releaseDate": "",
-      "genre": "Drama, Romance",
+      "genre": "Action, Drama, Mystery",
       "myRating": 8.6,
-      "imdbScore": 8.8,
-      "rottenTomatoesScore": 0.8,
-      "protagonistRating": 8.9,
-      "antagonistRating": 8.6,
-      "soundtrackRating": 7.5,
-      "setDesignRating": 7.6,
-      "plotRating": 9.5,
-      "endingRating": 9.6,
+      "imdbScore": 8.0,
+      "rottenTomatoesScore": 0.9,
+      "protagonistRating": 8.5,
+      "antagonistRating": 8.7,
+      "soundtrackRating": 7.8,
+      "setDesignRating": 9.1,
+      "plotRating": 8.9,
+      "endingRating": 8.7,
       "year": "N/A",
       "watchedDate": "",
-      "runtime": 142,
+      "runtime": 164,
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.02,
-        "rotten": 0.11000000000000001
+        "imdb": 0.06,
+        "rotten": 0.02
       },
-      "position": 44,
-      "imdbId": "tt0109830",
-      "plot": "The history of the United States from the 1950s to the '70s unfolds from the perspective of an Alabama man with an IQ of 75, who yearns to be reunited with his childhood sweetheart.",
-      "imdbRating": 88.0,
+      "position": 46,
+      "imdbId": "tt1856101",
+      "plot": "Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade Runner Rick Deckard, who's been missing for thirty years.",
+      "imdbRating": 80.0,
       "genres": [
+        "Action",
         "Drama",
-        "Romance"
+        "Mystery"
       ],
-      "rated": "PG-13",
-      "director": "Robert Zemeckis",
+      "rated": "R",
+      "director": "Denis Villeneuve",
       "actors": [
-        "Tom Hanks",
-        "Robin Wright",
-        "Gary Sinise"
+        "Harrison Ford",
+        "Ryan Gosling",
+        "Ana de Armas"
       ],
       "language": "English",
-      "country": "United States"
+      "country": "United States, Canada, Spain"
     },
     {
       "id": "movie_44",
@@ -1946,47 +1992,46 @@
       "country": "United States, Hong Kong, Nepal"
     },
     {
-      "id": "movie_45",
-      "title": "Blade Runner 2049",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzA1Njg4NzYxOV5BMl5BanBnXkFtZTgwODk5NjU3MzI@._V1_SX300.jpg",
+      "id": "movie_43",
+      "title": "Forrest Gump",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDYwNzVjMTItZmU5YS00YjQ5LTljYjgtMjY2NDVmYWMyNWFmXkEyXkFqcGc@._V1_SX300.jpg",
       "releaseDate": "",
-      "genre": "Action, Drama, Mystery",
+      "genre": "Drama, Romance",
       "myRating": 8.6,
-      "imdbScore": 8.0,
-      "rottenTomatoesScore": 0.9,
-      "protagonistRating": 8.5,
-      "antagonistRating": 8.7,
-      "soundtrackRating": 7.8,
-      "setDesignRating": 9.1,
-      "plotRating": 8.9,
-      "endingRating": 8.7,
+      "imdbScore": 8.8,
+      "rottenTomatoesScore": 0.8,
+      "protagonistRating": 8.9,
+      "antagonistRating": 8.6,
+      "soundtrackRating": 7.5,
+      "setDesignRating": 7.6,
+      "plotRating": 9.5,
+      "endingRating": 9.6,
       "year": "N/A",
       "watchedDate": "",
-      "runtime": 164,
+      "runtime": 142,
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.06,
-        "rotten": 0.02
+        "imdb": 0.02,
+        "rotten": 0.11000000000000001
       },
-      "position": 46,
-      "imdbId": "tt1856101",
-      "plot": "Young Blade Runner K's discovery of a long-buried secret leads him to track down former Blade Runner Rick Deckard, who's been missing for thirty years.",
-      "imdbRating": 80.0,
+      "position": 44,
+      "imdbId": "tt0109830",
+      "plot": "The history of the United States from the 1950s to the '70s unfolds from the perspective of an Alabama man with an IQ of 75, who yearns to be reunited with his childhood sweetheart.",
+      "imdbRating": 88.0,
       "genres": [
-        "Action",
         "Drama",
-        "Mystery"
+        "Romance"
       ],
-      "rated": "R",
-      "director": "Denis Villeneuve",
+      "rated": "PG-13",
+      "director": "Robert Zemeckis",
       "actors": [
-        "Harrison Ford",
-        "Ryan Gosling",
-        "Ana de Armas"
+        "Tom Hanks",
+        "Robin Wright",
+        "Gary Sinise"
       ],
       "language": "English",
-      "country": "United States, Canada, Spain"
+      "country": "United States"
     },
     {
       "id": "movie_46",
@@ -2548,6 +2593,50 @@
       "country": "United Kingdom, United States"
     },
     {
+      "id": "movie_62",
+      "title": "Together",
+      "releaseDate": "",
+      "genre": "Horror, Romance",
+      "myRating": 8.4,
+      "imdbScore": 6.7,
+      "rottenTomatoesScore": 0.9,
+      "protagonistRating": 8.4,
+      "antagonistRating": 9.1,
+      "soundtrackRating": 6.2,
+      "setDesignRating": 8.6,
+      "plotRating": 8.9,
+      "endingRating": 9.0,
+      "year": "2025",
+      "watchedDate": "",
+      "runtime": 102,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 62,
+      "imdbId": "tt31184028",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BOWI1Mzg0OWUtNDYxYy00Mzk3LTgxMjMtYWYxZjJhMjI4NDcyXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Years into their relationship, Tim and Millie find themselves at a crossroads as they move to the country. With tensions already flaring, an encounter with an unnatural force threatens to corrupt their lives, their love and their ...",
+      "genres": [
+        "Horror",
+        "Romance"
+      ],
+      "rated": "R",
+      "director": "Michael Shanks",
+      "actors": [
+        "Dave Franco",
+        "Alison Brie",
+        "Damon Herriman"
+      ],
+      "language": "English",
+      "country": "Australia, United States",
+      "metascore": "75",
+      "awards": "4 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_60",
       "title": "The Menu",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BN2Q0YWE1MjktODJlMi00NTRiLWI2ZTctZTAxNjkyODVjM2EyXkEyXkFqcGc@._V1_SX300.jpg",
@@ -2891,49 +2980,6 @@
       "country": "United States, South Korea, Cambodia"
     },
     {
-      "id": "movie_69",
-      "title": "Harry Potter and the Chamber of Secrets",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGJhM2M2MWYtZjIzMC00MDZmLThkY2EtOWViMDhhYjRhMzk4XkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Adventure, Family, Fantasy",
-      "myRating": 8.1,
-      "imdbScore": 7.5,
-      "rottenTomatoesScore": 0.8,
-      "protagonistRating": 7.8,
-      "antagonistRating": 8.1,
-      "soundtrackRating": 8.0,
-      "setDesignRating": 8.5,
-      "plotRating": 8.1,
-      "endingRating": 8.3,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 161,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.06,
-        "rotten": 0.01
-      },
-      "position": 70,
-      "imdbId": "tt0295297",
-      "plot": "Harry Potter lives his second year at Hogwarts with Ron and Hermione when a message on the wall announces that the legendary Chamber of Secrets has been opened. The trio soon realize that, to save the school, it will take a lot of...",
-      "imdbRating": 75.0,
-      "genres": [
-        "Adventure",
-        "Family",
-        "Fantasy"
-      ],
-      "rated": "PG",
-      "director": "Chris Columbus",
-      "actors": [
-        "Daniel Radcliffe",
-        "Rupert Grint",
-        "Emma Watson"
-      ],
-      "language": "English, Latin",
-      "country": "United Kingdom, United States"
-    },
-    {
       "id": "movie_70",
       "title": "Cars",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTg5NzY0MzA2MV5BMl5BanBnXkFtZTYwNDc3NTc2._V1_SX300.jpg",
@@ -2977,6 +3023,139 @@
       "country": "United States"
     },
     {
+      "id": "movie_69",
+      "title": "Harry Potter and the Chamber of Secrets",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGJhM2M2MWYtZjIzMC00MDZmLThkY2EtOWViMDhhYjRhMzk4XkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Adventure, Family, Fantasy",
+      "myRating": 8.1,
+      "imdbScore": 7.5,
+      "rottenTomatoesScore": 0.8,
+      "protagonistRating": 7.8,
+      "antagonistRating": 8.1,
+      "soundtrackRating": 8.0,
+      "setDesignRating": 8.5,
+      "plotRating": 8.1,
+      "endingRating": 8.3,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 161,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.06,
+        "rotten": 0.01
+      },
+      "position": 70,
+      "imdbId": "tt0295297",
+      "plot": "Harry Potter lives his second year at Hogwarts with Ron and Hermione when a message on the wall announces that the legendary Chamber of Secrets has been opened. The trio soon realize that, to save the school, it will take a lot of...",
+      "imdbRating": 75.0,
+      "genres": [
+        "Adventure",
+        "Family",
+        "Fantasy"
+      ],
+      "rated": "PG",
+      "director": "Chris Columbus",
+      "actors": [
+        "Daniel Radcliffe",
+        "Rupert Grint",
+        "Emma Watson"
+      ],
+      "language": "English, Latin",
+      "country": "United Kingdom, United States"
+    },
+    {
+      "id": "movie_73",
+      "title": "The Long Walk",
+      "releaseDate": "",
+      "genre": "Horror, Sci-Fi, Thriller",
+      "myRating": 8.1,
+      "imdbScore": 6.8,
+      "rottenTomatoesScore": 0.88,
+      "protagonistRating": 8.6,
+      "antagonistRating": 7.4,
+      "soundtrackRating": 7.5,
+      "setDesignRating": 8.5,
+      "plotRating": 7.9,
+      "endingRating": 8.9,
+      "year": "2025",
+      "watchedDate": "",
+      "runtime": 108,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 73,
+      "imdbId": "tt10374610",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNmE4YmIxNWQtMzJhMy00NDI5LWFmYjEtMGYyMmFhNzdjODVmXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "A group of teenage boys compete in an annual contest known as \"The Long Walk,\" in which they must maintain a certain walking speed or get shot.",
+      "genres": [
+        "Horror",
+        "Sci-Fi",
+        "Thriller"
+      ],
+      "rated": "R",
+      "director": "Francis Lawrence",
+      "actors": [
+        "Cooper Hoffman",
+        "David Jonsson",
+        "Garrett Wareing"
+      ],
+      "language": "English",
+      "country": "United States, Canada",
+      "metascore": "71",
+      "awards": "1 win total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_74",
+      "title": "Avatar: Fire and Ash",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Fantasy",
+      "myRating": 8.1,
+      "imdbScore": 0.0,
+      "rottenTomatoesScore": 0.0,
+      "protagonistRating": 7.2,
+      "antagonistRating": 7.7,
+      "soundtrackRating": 9.3,
+      "setDesignRating": 10.0,
+      "plotRating": 6.4,
+      "endingRating": 8.1,
+      "year": "2025",
+      "watchedDate": "",
+      "runtime": 195,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 74,
+      "imdbId": "tt1757678",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDYxY2I1OGMtN2Y4MS00ZmU1LTgyNDAtODA0MzAyYjI0N2Y2XkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Jake and Neytiri's family grapples with grief after Neteyam's death, encountering a new, aggressive Na'vi tribe, the Ash People, who are led by the fiery Varang, as the conflict on Pandora escalates and a new moral focus emerges.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Fantasy"
+      ],
+      "rated": "PG-13",
+      "director": "James Cameron",
+      "actors": [
+        "Kate Winslet",
+        "Zoe Saldaña",
+        "Edie Falco"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "N/A",
+      "awards": "2 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_71",
       "title": "Batman Begins",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BODIyMDdhNTgtNDlmOC00MjUxLWE2NDItODA5MTdkNzY3ZTdhXkEyXkFqcGc@._V1_SX300.jpg",
@@ -3017,6 +3196,49 @@
         "Ken Watanabe"
       ],
       "language": "English, Mandarin",
+      "country": "United States, United Kingdom"
+    },
+    {
+      "id": "movie_92",
+      "title": "Avatar",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDEzMmQwZjctZWU2My00MWNlLWE0NjItMDJlYTRlNGJiZjcyXkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Fantasy",
+      "myRating": 8.1,
+      "imdbScore": 7.9,
+      "rottenTomatoesScore": 0.8,
+      "protagonistRating": 6.8,
+      "antagonistRating": 7.5,
+      "soundtrackRating": 8.7,
+      "setDesignRating": 9.3,
+      "plotRating": 7.8,
+      "endingRating": 7.4,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 162,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.02
+      },
+      "position": 93,
+      "imdbId": "tt0499549",
+      "plot": "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
+      "imdbRating": 79.0,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Fantasy"
+      ],
+      "rated": "PG-13",
+      "director": "James Cameron",
+      "actors": [
+        "Sam Worthington",
+        "Zoe Saldaña",
+        "Sigourney Weaver"
+      ],
+      "language": "English, Spanish",
       "country": "United States, United Kingdom"
     },
     {
@@ -3277,6 +3499,49 @@
       "country": "United States, Canada"
     },
     {
+      "id": "movie_81",
+      "title": "Avatar: The Way of Water",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWNlMWQyMTQtZjc5MC00NTljLTgxZTctZDZiZTBmODY5MTkyXkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Fantasy",
+      "myRating": 8.0,
+      "imdbScore": 7.5,
+      "rottenTomatoesScore": 0.8,
+      "protagonistRating": 6.8,
+      "antagonistRating": 8.3,
+      "soundtrackRating": 9.3,
+      "setDesignRating": 9.6,
+      "plotRating": 7.3,
+      "endingRating": 6.7,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 192,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.05,
+        "rotten": 0.04
+      },
+      "position": 82,
+      "imdbId": "tt1630029",
+      "plot": "Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Na'vi race to protect their home.",
+      "imdbRating": 75.0,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Fantasy"
+      ],
+      "rated": "PG-13",
+      "director": "James Cameron",
+      "actors": [
+        "Sam Worthington",
+        "Zoe Saldaña",
+        "Sigourney Weaver"
+      ],
+      "language": "English",
+      "country": "United States"
+    },
+    {
       "id": "movie_78",
       "title": "Chaos Walking",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BODI3NjZiZDAtZWRlZi00MzYyLWEwOTctNjFhMmQ3MzBjMGJhXkEyXkFqcGc@._V1_SX300.jpg",
@@ -3318,6 +3583,51 @@
       ],
       "language": "English",
       "country": "United States, Canada, Hong Kong, Luxembourg"
+    },
+    {
+      "id": "movie_85",
+      "title": "Frankenstein",
+      "releaseDate": "",
+      "genre": "Drama, Horror, Sci-Fi",
+      "myRating": 8.0,
+      "imdbScore": 7.5,
+      "rottenTomatoesScore": 0.86,
+      "protagonistRating": 8.6,
+      "antagonistRating": 7.8,
+      "soundtrackRating": 6.7,
+      "setDesignRating": 9.1,
+      "plotRating": 8.0,
+      "endingRating": 8.0,
+      "year": "2025",
+      "watchedDate": "",
+      "runtime": 150,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 85,
+      "imdbId": "tt1312221",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzYzNDYxMTQtMTU4OS00MTdlLThhMTQtZjI4NGJmMTZmNmRiXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Dr. Victor Frankenstein, a brilliant but egotistical scientist, brings a creature to life in a monstrous experiment that ultimately leads to the undoing of both the creator and his tragic creation.",
+      "genres": [
+        "Drama",
+        "Horror",
+        "Sci-Fi"
+      ],
+      "rated": "R",
+      "director": "Guillermo del Toro",
+      "actors": [
+        "Oscar Isaac",
+        "Jacob Elordi",
+        "Christoph Waltz"
+      ],
+      "language": "English, Danish, French",
+      "country": "Mexico, United States",
+      "metascore": "77",
+      "awards": "5 wins & 18 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_79",
@@ -3363,6 +3673,49 @@
       "country": "Italy"
     },
     {
+      "id": "movie_87",
+      "title": "It",
+      "releaseDate": "",
+      "genre": "Horror",
+      "myRating": 8.0,
+      "imdbScore": 7.3,
+      "rottenTomatoesScore": 0.85,
+      "protagonistRating": 7.7,
+      "antagonistRating": 8.9,
+      "soundtrackRating": 6.5,
+      "setDesignRating": 8.8,
+      "plotRating": 7.4,
+      "endingRating": 8.8,
+      "year": "2017",
+      "watchedDate": "",
+      "runtime": 135,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 87,
+      "imdbId": "tt1396484",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGZmOTZjNzUtOTE4OS00OGM3LWJiNGEtZjk4Yzg2M2Q1YzYxXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "In the summer of 1989, a group of bullied kids band together to destroy a shape-shifting monster, which disguises itself as a clown and preys on the children of Derry, their small Maine town.",
+      "genres": [
+        "Horror"
+      ],
+      "rated": "R",
+      "director": "Andy Muschietti",
+      "actors": [
+        "Bill Skarsgård",
+        "Jaeden Martell",
+        "Finn Wolfhard"
+      ],
+      "language": "English, Hebrew",
+      "country": "United States, Canada",
+      "metascore": "69",
+      "awards": "12 wins & 49 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_80",
       "title": "Harry Potter and the Sorcerer's Stone",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTU1MzgyMDMtMzBlZS00YzczLThmYWEtMjU3YmFlOWEyMjE1XkEyXkFqcGc@._V1_SX300.jpg",
@@ -3404,49 +3757,6 @@
       ],
       "language": "English, Latin",
       "country": "United Kingdom, United States"
-    },
-    {
-      "id": "movie_81",
-      "title": "Avatar: The Way of Water",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWNlMWQyMTQtZjc5MC00NTljLTgxZTctZDZiZTBmODY5MTkyXkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Adventure, Fantasy",
-      "myRating": 8.0,
-      "imdbScore": 7.5,
-      "rottenTomatoesScore": 0.8,
-      "protagonistRating": 6.8,
-      "antagonistRating": 8.3,
-      "soundtrackRating": 9.3,
-      "setDesignRating": 9.6,
-      "plotRating": 7.3,
-      "endingRating": 6.7,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 192,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.05,
-        "rotten": 0.04
-      },
-      "position": 82,
-      "imdbId": "tt1630029",
-      "plot": "Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Na'vi race to protect their home.",
-      "imdbRating": 75.0,
-      "genres": [
-        "Action",
-        "Adventure",
-        "Fantasy"
-      ],
-      "rated": "PG-13",
-      "director": "James Cameron",
-      "actors": [
-        "Sam Worthington",
-        "Zoe Saldaña",
-        "Sigourney Weaver"
-      ],
-      "language": "English",
-      "country": "United States"
     },
     {
       "id": "movie_82",
@@ -3705,6 +4015,51 @@
       "country": "United States"
     },
     {
+      "id": "movie_95",
+      "title": "The Creator",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Drama",
+      "myRating": 8.0,
+      "imdbScore": 6.7,
+      "rottenTomatoesScore": 0.67,
+      "protagonistRating": 7.7,
+      "antagonistRating": 7.4,
+      "soundtrackRating": 7.4,
+      "setDesignRating": 8.9,
+      "plotRating": 8.1,
+      "endingRating": 8.2,
+      "year": "2023",
+      "watchedDate": "",
+      "runtime": 133,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 95,
+      "imdbId": "tt11858890",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDkxMTUxOTQtYzM4Yi00YzA2LTgzOTYtNDg2NTliODE0ZTRjXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Against the backdrop of a war between humans and robots with artificial intelligence, a former soldier finds the robots' secret weapon to end the conflict, an AI in the form of a child.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Drama"
+      ],
+      "rated": "PG-13",
+      "director": "Gareth Edwards",
+      "actors": [
+        "John David Washington",
+        "Madeleine Yuna Voyles",
+        "Gemma Chan"
+      ],
+      "language": "English, Thai",
+      "country": "United States, Cambodia, Japan",
+      "metascore": "63",
+      "awards": "Nominated for 2 Oscars. 13 wins & 49 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_88",
       "title": "Harry Potter and the Goblet of Fire",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTI1NDMyMjExOF5BMl5BanBnXkFtZTcwOTc4MjQzMQ@@._V1_SX300.jpg",
@@ -3791,48 +4146,6 @@
       "country": "United States"
     },
     {
-      "id": "movie_90",
-      "title": "The Notebook",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZjE0ZjgzMzYtMTAxYi00NGMzLThmZDktNzFlMzA2MWRmYWQ0XkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Drama, Romance",
-      "myRating": 7.9,
-      "imdbScore": 7.8,
-      "rottenTomatoesScore": 0.5,
-      "protagonistRating": 8.6,
-      "antagonistRating": 7.5,
-      "soundtrackRating": 5.5,
-      "setDesignRating": 6.5,
-      "plotRating": 9.7,
-      "endingRating": 9.7,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 123,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.01,
-        "rotten": 0.25
-      },
-      "position": 91,
-      "imdbId": "tt0332280",
-      "plot": "An elderly man reads to a woman with dementia the story of two young lovers whose romance is threatened by the difference in their respective social classes.",
-      "imdbRating": 78.0,
-      "genres": [
-        "Drama",
-        "Romance"
-      ],
-      "rated": "PG-13",
-      "director": "Nick Cassavetes",
-      "actors": [
-        "Gena Rowlands",
-        "James Garner",
-        "Rachel McAdams"
-      ],
-      "language": "English",
-      "country": "United States"
-    },
-    {
       "id": "movie_91",
       "title": "Mary Poppins",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNThiNjgzMTYtZjUzMC00YTVlLTg4MDItMmFjMDIwYjg4ZDAwXkEyXkFqcGc@._V1_SX300.jpg",
@@ -3876,47 +4189,46 @@
       "country": "United States"
     },
     {
-      "id": "movie_92",
-      "title": "Avatar",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDEzMmQwZjctZWU2My00MWNlLWE0NjItMDJlYTRlNGJiZjcyXkEyXkFqcGc@._V1_SX300.jpg",
+      "id": "movie_90",
+      "title": "The Notebook",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZjE0ZjgzMzYtMTAxYi00NGMzLThmZDktNzFlMzA2MWRmYWQ0XkEyXkFqcGc@._V1_SX300.jpg",
       "releaseDate": "",
-      "genre": "Action, Adventure, Fantasy",
+      "genre": "Drama, Romance",
       "myRating": 7.9,
-      "imdbScore": 7.9,
-      "rottenTomatoesScore": 0.8,
-      "protagonistRating": 6.8,
+      "imdbScore": 7.8,
+      "rottenTomatoesScore": 0.5,
+      "protagonistRating": 8.6,
       "antagonistRating": 7.5,
-      "soundtrackRating": 8.7,
-      "setDesignRating": 9.3,
-      "plotRating": 7.8,
-      "endingRating": 7.4,
+      "soundtrackRating": 5.5,
+      "setDesignRating": 6.5,
+      "plotRating": 9.7,
+      "endingRating": 9.7,
       "year": "N/A",
       "watchedDate": "",
-      "runtime": 162,
+      "runtime": 123,
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.0,
-        "rotten": 0.02
+        "imdb": 0.01,
+        "rotten": 0.25
       },
-      "position": 93,
-      "imdbId": "tt0499549",
-      "plot": "A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.",
-      "imdbRating": 79.0,
+      "position": 91,
+      "imdbId": "tt0332280",
+      "plot": "An elderly man reads to a woman with dementia the story of two young lovers whose romance is threatened by the difference in their respective social classes.",
+      "imdbRating": 78.0,
       "genres": [
-        "Action",
-        "Adventure",
-        "Fantasy"
+        "Drama",
+        "Romance"
       ],
       "rated": "PG-13",
-      "director": "James Cameron",
+      "director": "Nick Cassavetes",
       "actors": [
-        "Sam Worthington",
-        "Zoe Saldaña",
-        "Sigourney Weaver"
+        "Gena Rowlands",
+        "James Garner",
+        "Rachel McAdams"
       ],
-      "language": "English, Spanish",
-      "country": "United States, United Kingdom"
+      "language": "English",
+      "country": "United States"
     },
     {
       "id": "movie_93",
@@ -4262,44 +4574,44 @@
       "country": "United Kingdom, United States"
     },
     {
-      "id": "movie_101",
-      "title": "The Tomorrow War",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYmUyNzY2YWYtNWQ0My00ODMwLTkwOTQtOTA0ZjM0MjRmYjJiXkEyXkFqcGc@._V1_SX300.jpg",
+      "id": "movie_103",
+      "title": "Memento",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYmQ3MjliNjAtNWFiZS00YWI1LTlmZTktMzBiNDE1NjRhZjU0XkEyXkFqcGc@._V1_SX300.jpg",
       "releaseDate": "",
-      "genre": "Action, Adventure, Drama",
+      "genre": "Drama, Mystery, Thriller",
       "myRating": 7.8,
-      "imdbScore": 6.6,
-      "rottenTomatoesScore": 0.5,
-      "protagonistRating": 7.8,
-      "antagonistRating": 8.3,
-      "soundtrackRating": 6.9,
-      "setDesignRating": 7.5,
-      "plotRating": 8.3,
-      "endingRating": 8.2,
+      "imdbScore": 8.4,
+      "rottenTomatoesScore": 0.9,
+      "protagonistRating": 8.5,
+      "antagonistRating": 8.5,
+      "soundtrackRating": 8.6,
+      "setDesignRating": 7.4,
+      "plotRating": 7.5,
+      "endingRating": 6.5,
       "year": "N/A",
       "watchedDate": "",
-      "runtime": 138,
+      "runtime": 113,
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.12,
-        "rotten": 0.27
+        "imdb": 0.06,
+        "rotten": 0.16
       },
-      "position": 102,
-      "imdbId": "tt9777666",
-      "plot": "A family man travels to the year 2051 to join a global war against a deadly alien species.",
-      "imdbRating": 66.0,
+      "position": 104,
+      "imdbId": "tt0209144",
+      "plot": "A former insurance investigator who now suffers from anterograde amnesia uses notes and tattoos to hunt down his wife's murderer.",
+      "imdbRating": 84.0,
       "genres": [
-        "Action",
-        "Adventure",
-        "Drama"
+        "Drama",
+        "Mystery",
+        "Thriller"
       ],
-      "rated": "PG-13",
-      "director": "Chris McKay",
+      "rated": "R",
+      "director": "Christopher Nolan",
       "actors": [
-        "Chris Pratt",
-        "Yvonne Strahovski",
-        "J.K. Simmons"
+        "Guy Pearce",
+        "Carrie-Anne Moss",
+        "Joe Pantoliano"
       ],
       "language": "English",
       "country": "United States"
@@ -4348,44 +4660,44 @@
       "country": "Australia, United States"
     },
     {
-      "id": "movie_103",
-      "title": "Memento",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYmQ3MjliNjAtNWFiZS00YWI1LTlmZTktMzBiNDE1NjRhZjU0XkEyXkFqcGc@._V1_SX300.jpg",
+      "id": "movie_101",
+      "title": "The Tomorrow War",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYmUyNzY2YWYtNWQ0My00ODMwLTkwOTQtOTA0ZjM0MjRmYjJiXkEyXkFqcGc@._V1_SX300.jpg",
       "releaseDate": "",
-      "genre": "Drama, Mystery, Thriller",
+      "genre": "Action, Adventure, Drama",
       "myRating": 7.8,
-      "imdbScore": 8.4,
-      "rottenTomatoesScore": 0.9,
-      "protagonistRating": 8.5,
-      "antagonistRating": 8.5,
-      "soundtrackRating": 8.6,
-      "setDesignRating": 7.4,
-      "plotRating": 7.5,
-      "endingRating": 6.5,
+      "imdbScore": 6.6,
+      "rottenTomatoesScore": 0.5,
+      "protagonistRating": 7.8,
+      "antagonistRating": 8.3,
+      "soundtrackRating": 6.9,
+      "setDesignRating": 7.5,
+      "plotRating": 8.3,
+      "endingRating": 8.2,
       "year": "N/A",
       "watchedDate": "",
-      "runtime": 113,
+      "runtime": 138,
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.06,
-        "rotten": 0.16
+        "imdb": 0.12,
+        "rotten": 0.27
       },
-      "position": 104,
-      "imdbId": "tt0209144",
-      "plot": "A former insurance investigator who now suffers from anterograde amnesia uses notes and tattoos to hunt down his wife's murderer.",
-      "imdbRating": 84.0,
+      "position": 102,
+      "imdbId": "tt9777666",
+      "plot": "A family man travels to the year 2051 to join a global war against a deadly alien species.",
+      "imdbRating": 66.0,
       "genres": [
-        "Drama",
-        "Mystery",
-        "Thriller"
+        "Action",
+        "Adventure",
+        "Drama"
       ],
-      "rated": "R",
-      "director": "Christopher Nolan",
+      "rated": "PG-13",
+      "director": "Chris McKay",
       "actors": [
-        "Guy Pearce",
-        "Carrie-Anne Moss",
-        "Joe Pantoliano"
+        "Chris Pratt",
+        "Yvonne Strahovski",
+        "J.K. Simmons"
       ],
       "language": "English",
       "country": "United States"
@@ -4434,6 +4746,48 @@
       "country": "United States, Canada"
     },
     {
+      "id": "movie_106",
+      "title": "Ocean's Twelve",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjgxNjY3ODEtMTZhOC00NjgyLTg4YTAtZjA4ZDI2MDQ4OGJmXkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Crime, Thriller",
+      "myRating": 7.8,
+      "imdbScore": 6.5,
+      "rottenTomatoesScore": 0.6,
+      "protagonistRating": 7.7,
+      "antagonistRating": 8.1,
+      "soundtrackRating": 6.5,
+      "setDesignRating": 8.1,
+      "plotRating": 8.0,
+      "endingRating": 8.4,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 125,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.13,
+        "rotten": 0.22999999999999998
+      },
+      "position": 107,
+      "imdbId": "tt0349903",
+      "plot": "Daniel Ocean recruits one more team member so he can pull off three major European heists in this sequel to Ocean's Eleven (2001).",
+      "imdbRating": 65.0,
+      "genres": [
+        "Crime",
+        "Thriller"
+      ],
+      "rated": "PG-13",
+      "director": "Steven Soderbergh",
+      "actors": [
+        "George Clooney",
+        "Brad Pitt",
+        "Julia Roberts"
+      ],
+      "language": "English, Dutch, French, Italian, Mandarin",
+      "country": "United States"
+    },
+    {
       "id": "movie_105",
       "title": "Transformers",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZjM3ZDA2YmItMzhiMi00ZGI3LTg3ZGQtOTk3Nzk0MDY0ZDZhXkEyXkFqcGc@._V1_SX300.jpg",
@@ -4474,48 +4828,6 @@
         "Josh Duhamel"
       ],
       "language": "English, Spanish",
-      "country": "United States"
-    },
-    {
-      "id": "movie_106",
-      "title": "Ocean's Twelve",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjgxNjY3ODEtMTZhOC00NjgyLTg4YTAtZjA4ZDI2MDQ4OGJmXkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Crime, Thriller",
-      "myRating": 7.8,
-      "imdbScore": 6.5,
-      "rottenTomatoesScore": 0.6,
-      "protagonistRating": 7.7,
-      "antagonistRating": 8.1,
-      "soundtrackRating": 6.5,
-      "setDesignRating": 8.1,
-      "plotRating": 8.0,
-      "endingRating": 8.4,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 125,
-      "style": "nan",
-      "mediaType": "Nan",
-      "differences": {
-        "imdb": 0.13,
-        "rotten": 0.22999999999999998
-      },
-      "position": 107,
-      "imdbId": "tt0349903",
-      "plot": "Daniel Ocean recruits one more team member so he can pull off three major European heists in this sequel to Ocean's Eleven (2001).",
-      "imdbRating": 65.0,
-      "genres": [
-        "Crime",
-        "Thriller"
-      ],
-      "rated": "PG-13",
-      "director": "Steven Soderbergh",
-      "actors": [
-        "George Clooney",
-        "Brad Pitt",
-        "Julia Roberts"
-      ],
-      "language": "English, Dutch, French, Italian, Mandarin",
       "country": "United States"
     },
     {
@@ -4605,49 +4917,6 @@
       "country": "United States, Hong Kong, Bulgaria, Netherlands, Canada, United Kingdom, France"
     },
     {
-      "id": "movie_109",
-      "title": "Spiderhead",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BM2VkZjczZjItYWI1ZS00NDU0LWE4NDItMzczNzc5ZDJkNTQ2XkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Crime, Drama",
-      "myRating": 7.8,
-      "imdbScore": 5.5,
-      "rottenTomatoesScore": 0.4,
-      "protagonistRating": 7.6,
-      "antagonistRating": 8.6,
-      "soundtrackRating": 6.5,
-      "setDesignRating": 7.1,
-      "plotRating": 8.6,
-      "endingRating": 8.2,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 106,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.22999999999999998,
-        "rotten": 0.39
-      },
-      "position": 110,
-      "imdbId": "tt9783600",
-      "plot": "In the near future, convicts are offered the chance to volunteer as medical subjects to shorten their sentence. One such subject for a new drug capable of generating feelings of love begins questioning the reality of his emotions.",
-      "imdbRating": 55.0,
-      "genres": [
-        "Action",
-        "Crime",
-        "Drama"
-      ],
-      "rated": "R",
-      "director": "Joseph Kosinski",
-      "actors": [
-        "Chris Hemsworth",
-        "Miles Teller",
-        "Jurnee Smollett"
-      ],
-      "language": "English",
-      "country": "United States"
-    },
-    {
       "id": "movie_110",
       "title": "KPop Demon Hunters",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTBiYWJlMjQtOTIyMy00NTY4LWFhOWItOWZhNzc3NGMyMjc2XkEyXkFqcGc@._V1_SX300.jpg",
@@ -4689,6 +4958,49 @@
       ],
       "language": "English, Korean",
       "country": "United States, Canada"
+    },
+    {
+      "id": "movie_109",
+      "title": "Spiderhead",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BM2VkZjczZjItYWI1ZS00NDU0LWE4NDItMzczNzc5ZDJkNTQ2XkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Crime, Drama",
+      "myRating": 7.8,
+      "imdbScore": 5.5,
+      "rottenTomatoesScore": 0.4,
+      "protagonistRating": 7.6,
+      "antagonistRating": 8.6,
+      "soundtrackRating": 6.5,
+      "setDesignRating": 7.1,
+      "plotRating": 8.6,
+      "endingRating": 8.2,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 106,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.22999999999999998,
+        "rotten": 0.39
+      },
+      "position": 110,
+      "imdbId": "tt9783600",
+      "plot": "In the near future, convicts are offered the chance to volunteer as medical subjects to shorten their sentence. One such subject for a new drug capable of generating feelings of love begins questioning the reality of his emotions.",
+      "imdbRating": 55.0,
+      "genres": [
+        "Action",
+        "Crime",
+        "Drama"
+      ],
+      "rated": "R",
+      "director": "Joseph Kosinski",
+      "actors": [
+        "Chris Hemsworth",
+        "Miles Teller",
+        "Jurnee Smollett"
+      ],
+      "language": "English",
+      "country": "United States"
     },
     {
       "id": "movie_111",
@@ -5017,7 +5329,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_119",
+      "id": "movie_126",
       "title": "The Penguin Lessons",
       "releaseDate": "2025-03-28",
       "genre": "Drama",
@@ -5039,7 +5351,7 @@
         "imdb": 0.05,
         "rotten": 0.02
       },
-      "position": 120,
+      "position": 126,
       "imdbId": "tt26677014",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTU1MmE0NDEtNjM0OC00MjExLThmNjUtNTE4ZGU0NjRmY2NlXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A disillusioned Englishman who goes to work in a school in a divided Argentina in 1976 finds his life transformed when he rescues an orphaned penguin from the beach.",
@@ -5187,6 +5499,95 @@
       ],
       "language": "English",
       "country": "United States, Iceland"
+    },
+    {
+      "id": "movie_130",
+      "title": "Into the Wild",
+      "releaseDate": "",
+      "genre": "Adventure, Biography, Drama",
+      "myRating": 7.4,
+      "imdbScore": 8.0,
+      "rottenTomatoesScore": 0.83,
+      "protagonistRating": 8.2,
+      "antagonistRating": 8.0,
+      "soundtrackRating": 5.7,
+      "setDesignRating": 7.0,
+      "plotRating": 6.9,
+      "endingRating": 8.8,
+      "year": "2007",
+      "watchedDate": "",
+      "runtime": 148,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 130,
+      "imdbId": "tt0758758",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTgwZTJhNWMtNzVjMy00YzQzLWI4MTAtYmJhOGQ5ZmQ3MDM0XkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "After graduating from Emory University, top student and athlete Christopher McCandless abandons his possessions, gives his entire $24,000 savings account to charity and hitchhikes to Alaska to live in the wilderness.",
+      "genres": [
+        "Adventure",
+        "Biography",
+        "Drama"
+      ],
+      "rated": "R",
+      "director": "Sean Penn",
+      "actors": [
+        "Emile Hirsch",
+        "Marcia Gay Harden",
+        "William Hurt"
+      ],
+      "language": "English, Danish",
+      "country": "United States",
+      "metascore": "73",
+      "awards": "Nominated for 2 Oscars. 23 wins & 106 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_131",
+      "title": "Materialists",
+      "releaseDate": "",
+      "genre": "Comedy, Romance",
+      "myRating": 7.3,
+      "imdbScore": 6.3,
+      "rottenTomatoesScore": 0.78,
+      "protagonistRating": 7.7,
+      "antagonistRating": 7.8,
+      "soundtrackRating": 6.5,
+      "setDesignRating": 6.0,
+      "plotRating": 7.4,
+      "endingRating": 8.7,
+      "year": "2025",
+      "watchedDate": "",
+      "runtime": 116,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 131,
+      "imdbId": "tt30253473",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNmQxMTI1YmEtOGY3Yi00NzVlLWEzMjAtYTI1NWZkNDFiMDg1XkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "An ambitious young New York City matchmaker finds herself torn between the perfect match and her imperfect ex.",
+      "genres": [
+        "Comedy",
+        "Romance"
+      ],
+      "rated": "R",
+      "director": "Celine Song",
+      "actors": [
+        "Dakota Johnson",
+        "Chris Evans",
+        "Pedro Pascal"
+      ],
+      "language": "English",
+      "country": "United States, Finland, United Kingdom",
+      "metascore": "70",
+      "awards": "6 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_123",
@@ -5359,6 +5760,51 @@
       ],
       "language": "English, French",
       "country": "United States, China, Colombia"
+    },
+    {
+      "id": "movie_136",
+      "title": "The Fall Guy",
+      "releaseDate": "",
+      "genre": "Action, Comedy, Drama",
+      "myRating": 7.3,
+      "imdbScore": 6.8,
+      "rottenTomatoesScore": 0.82,
+      "protagonistRating": 7.3,
+      "antagonistRating": 6.8,
+      "soundtrackRating": 8.0,
+      "setDesignRating": 8.7,
+      "plotRating": 6.5,
+      "endingRating": 6.4,
+      "year": "2024",
+      "watchedDate": "",
+      "runtime": 126,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 136,
+      "imdbId": "tt1684562",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BM2U0MTJiYTItMjNiZS00MzU4LTkxYTAtYTU0ZGY1ODJhMjRhXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "A stuntman, fresh off an almost career-ending accident, has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job.",
+      "genres": [
+        "Action",
+        "Comedy",
+        "Drama"
+      ],
+      "rated": "PG-13",
+      "director": "David Leitch",
+      "actors": [
+        "Ryan Gosling",
+        "Emily Blunt",
+        "Aaron Taylor-Johnson"
+      ],
+      "language": "English",
+      "country": "Canada, Australia, United States",
+      "metascore": "73",
+      "awards": "23 wins & 48 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_127",
@@ -5920,48 +6366,6 @@
       "country": "United States, United Kingdom, Canada"
     },
     {
-      "id": "movie_140",
-      "title": "The Amateur",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjhkZjM3ZWYtMjUxMS00YzhlLTkxZWYtMzhkMzFhOTQ1NjRkXkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Thriller",
-      "myRating": 7.0,
-      "imdbScore": 6.5,
-      "rottenTomatoesScore": 0.6,
-      "protagonistRating": 8.7,
-      "antagonistRating": 6.4,
-      "soundtrackRating": 5.6,
-      "setDesignRating": 6.0,
-      "plotRating": 7.6,
-      "endingRating": 7.7,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 122,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.05,
-        "rotten": 0.09
-      },
-      "position": 141,
-      "imdbId": "tt0899043",
-      "plot": "When his supervisors at the CIA refuse to take action after his wife is killed in a London terrorist attack, a decoder takes matters into his own hands.",
-      "imdbRating": 65.0,
-      "genres": [
-        "Action",
-        "Thriller"
-      ],
-      "rated": "PG-13",
-      "director": "James Hawes",
-      "actors": [
-        "Rami Malek",
-        "Rachel Brosnahan",
-        "Jon Bernthal"
-      ],
-      "language": "English",
-      "country": "United States"
-    },
-    {
       "id": "movie_141",
       "title": "A Scanner Darkly",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDliMjJiYTYtYWU0YS00OTUzLWI4MjMtYmM1YzgxNDcwOTZjXkEyXkFqcGc@._V1_SX300.jpg",
@@ -6000,6 +6404,48 @@
         "Keanu Reeves",
         "Winona Ryder",
         "Robert Downey Jr."
+      ],
+      "language": "English",
+      "country": "United States"
+    },
+    {
+      "id": "movie_140",
+      "title": "The Amateur",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjhkZjM3ZWYtMjUxMS00YzhlLTkxZWYtMzhkMzFhOTQ1NjRkXkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Thriller",
+      "myRating": 7.0,
+      "imdbScore": 6.5,
+      "rottenTomatoesScore": 0.6,
+      "protagonistRating": 8.7,
+      "antagonistRating": 6.4,
+      "soundtrackRating": 5.6,
+      "setDesignRating": 6.0,
+      "plotRating": 7.6,
+      "endingRating": 7.7,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 122,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.05,
+        "rotten": 0.09
+      },
+      "position": 141,
+      "imdbId": "tt0899043",
+      "plot": "When his supervisors at the CIA refuse to take action after his wife is killed in a London terrorist attack, a decoder takes matters into his own hands.",
+      "imdbRating": 65.0,
+      "genres": [
+        "Action",
+        "Thriller"
+      ],
+      "rated": "PG-13",
+      "director": "James Hawes",
+      "actors": [
+        "Rami Malek",
+        "Rachel Brosnahan",
+        "Jon Bernthal"
       ],
       "language": "English",
       "country": "United States"
@@ -6219,49 +6665,6 @@
       "country": "United States"
     },
     {
-      "id": "movie_147",
-      "title": "Eternals",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZTBiZjI2M2UtZTNiNy00NmU4LWJiMjYtZjk4MDIzMzhlMjFlXkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Adventure, Fantasy",
-      "myRating": 6.9,
-      "imdbScore": 6.2,
-      "rottenTomatoesScore": 0.5,
-      "protagonistRating": 6.5,
-      "antagonistRating": 8.3,
-      "soundtrackRating": 6.3,
-      "setDesignRating": 8.1,
-      "plotRating": 7.1,
-      "endingRating": 5.1,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 156,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.06999999999999999,
-        "rotten": 0.22000000000000003
-      },
-      "position": 148,
-      "imdbId": "tt9032400",
-      "plot": "The saga of the Eternals, a race of immortal beings who lived on Earth and shaped its history and civilizations.",
-      "imdbRating": 62.0,
-      "genres": [
-        "Action",
-        "Adventure",
-        "Fantasy"
-      ],
-      "rated": "PG-13",
-      "director": "Chloé Zhao",
-      "actors": [
-        "Gemma Chan",
-        "Richard Madden",
-        "Angelina Jolie"
-      ],
-      "language": "English, American Sign , Marathi, Assyrian Neo-Aramaic, Spanish, Sumerian, Latin, Sanskrit, Greek, Ancient (to 1453), Arabic",
-      "country": "United States"
-    },
-    {
       "id": "movie_148",
       "title": "Crazy Rich Asians",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTYxNDMyOTAxN15BMl5BanBnXkFtZTgwMDg1ODYzNTM@._V1_SX300.jpg",
@@ -6305,47 +6708,91 @@
       "country": "United States, China"
     },
     {
-      "id": "movie_149",
-      "title": "Evan Almighty",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTUxMTEzODYxMV5BMl5BanBnXkFtZTcwNzQ4ODU0MQ@@._V1_SX300.jpg",
+      "id": "movie_147",
+      "title": "Eternals",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZTBiZjI2M2UtZTNiNy00NmU4LWJiMjYtZjk4MDIzMzhlMjFlXkEyXkFqcGc@._V1_SX300.jpg",
       "releaseDate": "",
-      "genre": "Comedy, Family, Fantasy",
+      "genre": "Action, Adventure, Fantasy",
       "myRating": 6.9,
-      "imdbScore": 5.4,
-      "rottenTomatoesScore": 0.2,
+      "imdbScore": 6.2,
+      "rottenTomatoesScore": 0.5,
+      "protagonistRating": 6.5,
+      "antagonistRating": 8.3,
+      "soundtrackRating": 6.3,
+      "setDesignRating": 8.1,
+      "plotRating": 7.1,
+      "endingRating": 5.1,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 156,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.06999999999999999,
+        "rotten": 0.22000000000000003
+      },
+      "position": 148,
+      "imdbId": "tt9032400",
+      "plot": "The saga of the Eternals, a race of immortal beings who lived on Earth and shaped its history and civilizations.",
+      "imdbRating": 62.0,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Fantasy"
+      ],
+      "rated": "PG-13",
+      "director": "Chloé Zhao",
+      "actors": [
+        "Gemma Chan",
+        "Richard Madden",
+        "Angelina Jolie"
+      ],
+      "language": "English, American Sign , Marathi, Assyrian Neo-Aramaic, Spanish, Sumerian, Latin, Sanskrit, Greek, Ancient (to 1453), Arabic",
+      "country": "United States"
+    },
+    {
+      "id": "movie_159",
+      "title": "Bruce Almighty",
+      "releaseDate": "",
+      "genre": "Comedy, Fantasy",
+      "myRating": 6.9,
+      "imdbScore": 6.8,
+      "rottenTomatoesScore": 0.48,
       "protagonistRating": 8.6,
       "antagonistRating": 7.4,
       "soundtrackRating": 5.5,
       "setDesignRating": 4.8,
       "plotRating": 7.4,
       "endingRating": 7.5,
-      "year": "N/A",
+      "year": "2003",
       "watchedDate": "",
-      "runtime": 96,
-      "style": "Live Action",
-      "mediaType": "Movie",
+      "runtime": 101,
+      "style": "nan",
+      "mediaType": "Nan",
       "differences": {
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 150,
-      "imdbId": "tt0413099",
-      "plot": "God contacts Congressman Evan Baxter and tells him to build an ark in preparation for a great flood.",
-      "imdbRating": 54.0,
+      "position": 159,
+      "imdbId": "tt0315327",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZWM2ZjA2OTctZmRhMy00ZDIzLTkwZGQtYTRlNmQwZWZmMDBlXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "A whiny news reporter is given the chance to step into God's shoes.",
       "genres": [
         "Comedy",
-        "Family",
         "Fantasy"
       ],
-      "rated": "PG",
+      "rated": "PG-13",
       "director": "Tom Shadyac",
       "actors": [
-        "Steve Carell",
+        "Jim Carrey",
         "Morgan Freeman",
-        "Lauren Graham"
+        "Jennifer Aniston"
       ],
-      "language": "English",
-      "country": "United States"
+      "language": "English, Spanish",
+      "country": "United States",
+      "metascore": "46",
+      "awards": "7 wins & 9 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_150",
@@ -6391,29 +6838,49 @@
       "country": "United States, India, Singapore, Canada, United Kingdom, Japan, Australia"
     },
     {
-      "id": "movie_151",
-      "title": "The Divergent Series: Insurgent",
+      "id": "movie_161",
+      "title": "The Big Short",
       "releaseDate": "",
-      "genre": "Action, Adventure, Sci-Fi",
-      "myRating": 6.8,
-      "imdbScore": 6.2,
-      "rottenTomatoesScore": 0.29,
-      "protagonistRating": 7.6,
-      "antagonistRating": 7.3,
-      "soundtrackRating": 5.5,
-      "setDesignRating": 6.7,
-      "plotRating": 7.3,
-      "endingRating": 6.5,
-      "year": "N/A",
+      "genre": "Biography, Comedy, Drama",
+      "myRating": 6.9,
+      "imdbScore": 7.8,
+      "rottenTomatoesScore": 0.89,
+      "protagonistRating": 7.5,
+      "antagonistRating": 8.0,
+      "soundtrackRating": 5.3,
+      "setDesignRating": 5.9,
+      "plotRating": 7.1,
+      "endingRating": 7.3,
+      "year": "2015",
       "watchedDate": "",
-      "runtime": 119,
+      "runtime": 130,
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.06,
-        "rotten": 0.39
+        "imdb": 0.0,
+        "rotten": 0.0
       },
-      "position": 152
+      "position": 161,
+      "imdbId": "tt1596363",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDZkNDQ3YjktYjBlZC00YTY1LTgxOGYtY2RhMWFhZmNkZGY3XkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "In 2006-2007 a group of investors bet against the United States mortgage market. In their research, they discover how flawed and corrupt the market is.",
+      "genres": [
+        "Biography",
+        "Comedy",
+        "Drama"
+      ],
+      "rated": "R",
+      "director": "Adam McKay",
+      "actors": [
+        "Christian Bale",
+        "Steve Carell",
+        "Ryan Gosling"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "81",
+      "awards": "Won 1 Oscar. 37 wins & 81 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_152",
@@ -6499,6 +6966,31 @@
       ],
       "language": "English, Spanish, French",
       "country": "United States"
+    },
+    {
+      "id": "movie_151",
+      "title": "The Divergent Series: Insurgent",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Sci-Fi",
+      "myRating": 6.8,
+      "imdbScore": 6.2,
+      "rottenTomatoesScore": 0.29,
+      "protagonistRating": 7.6,
+      "antagonistRating": 7.3,
+      "soundtrackRating": 5.5,
+      "setDesignRating": 6.7,
+      "plotRating": 7.3,
+      "endingRating": 6.5,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 119,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.06,
+        "rotten": 0.39
+      },
+      "position": 152
     },
     {
       "id": "movie_154",
@@ -6845,49 +7337,6 @@
       "country": "United States"
     },
     {
-      "id": "movie_162",
-      "title": "Pacific Rim: Uprising",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI3Nzg0MTM5NF5BMl5BanBnXkFtZTgwOTE2MTgwNTM@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Adventure, Sci-Fi",
-      "myRating": 6.4,
-      "imdbScore": 5.6,
-      "rottenTomatoesScore": 0.4,
-      "protagonistRating": 6.7,
-      "antagonistRating": 5.9,
-      "soundtrackRating": 6.7,
-      "setDesignRating": 7.2,
-      "plotRating": 5.3,
-      "endingRating": 6.7,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 111,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.08,
-        "rotten": 0.22000000000000003
-      },
-      "position": 163,
-      "imdbId": "tt2557478",
-      "plot": "Jake Pentecost, son of Stacker Pentecost, reunites with Mako Mori to lead a new generation of Jaeger pilots, including rival Lambert and 15-year-old hacker Amara, against a new Kaiju threat.",
-      "imdbRating": 56.0,
-      "genres": [
-        "Action",
-        "Adventure",
-        "Sci-Fi"
-      ],
-      "rated": "PG-13",
-      "director": "Steven S. DeKnight",
-      "actors": [
-        "John Boyega",
-        "Scott Eastwood",
-        "Cailee Spaeny"
-      ],
-      "language": "English, Mandarin, Russian",
-      "country": "United Kingdom, China, Japan, United States, Mexico, Australia"
-    },
-    {
       "id": "movie_163",
       "title": "Thor: Love and Thunder",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZjRiMDhiZjQtNjk5Yi00ZDcwLTkyYTEtMDc1NjdmNjFhNGIzXkEyXkFqcGc@._V1_SX300.jpg",
@@ -7015,6 +7464,49 @@
       ],
       "language": "English, Japanese, Vietnamese",
       "country": "United States"
+    },
+    {
+      "id": "movie_162",
+      "title": "Pacific Rim: Uprising",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI3Nzg0MTM5NF5BMl5BanBnXkFtZTgwOTE2MTgwNTM@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Sci-Fi",
+      "myRating": 6.3,
+      "imdbScore": 5.6,
+      "rottenTomatoesScore": 0.4,
+      "protagonistRating": 6.7,
+      "antagonistRating": 5.9,
+      "soundtrackRating": 6.7,
+      "setDesignRating": 7.2,
+      "plotRating": 5.3,
+      "endingRating": 6.7,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 111,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.08,
+        "rotten": 0.22000000000000003
+      },
+      "position": 163,
+      "imdbId": "tt2557478",
+      "plot": "Jake Pentecost, son of Stacker Pentecost, reunites with Mako Mori to lead a new generation of Jaeger pilots, including rival Lambert and 15-year-old hacker Amara, against a new Kaiju threat.",
+      "imdbRating": 56.0,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Sci-Fi"
+      ],
+      "rated": "PG-13",
+      "director": "Steven S. DeKnight",
+      "actors": [
+        "John Boyega",
+        "Scott Eastwood",
+        "Cailee Spaeny"
+      ],
+      "language": "English, Mandarin, Russian",
+      "country": "United Kingdom, China, Japan, United States, Mexico, Australia"
     },
     {
       "id": "movie_166",
@@ -7316,48 +7808,6 @@
       "country": "United Kingdom, United States"
     },
     {
-      "id": "movie_173",
-      "title": "Thor",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjRhNGZjZjEtYTQzYS00OWUxLThjNGEtMTIwMTE2ZDFlZTZkXkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Fantasy",
-      "myRating": 6.1,
-      "imdbScore": 7.0,
-      "rottenTomatoesScore": 0.8,
-      "protagonistRating": 7.5,
-      "antagonistRating": 7.5,
-      "soundtrackRating": 5.0,
-      "setDesignRating": 5.5,
-      "plotRating": 6.0,
-      "endingRating": 5.4,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 115,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.09,
-        "rotten": 0.16
-      },
-      "position": 174,
-      "imdbId": "tt0800369",
-      "plot": "The powerful but arrogant god Thor is cast out of Asgard to live amongst humans in Midgard (Earth), where he soon becomes one of their finest defenders.",
-      "imdbRating": 70.0,
-      "genres": [
-        "Action",
-        "Fantasy"
-      ],
-      "rated": "PG-13",
-      "director": "Kenneth Branagh",
-      "actors": [
-        "Chris Hemsworth",
-        "Anthony Hopkins",
-        "Natalie Portman"
-      ],
-      "language": "English",
-      "country": "United States, France"
-    },
-    {
       "id": "movie_174",
       "title": "Mickey 17",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGQwYmEzMzktYzBmMy00NmVmLTkyYTUtOTYyZjliZDNhZGVkXkEyXkFqcGc@._V1_SX300.jpg",
@@ -7399,6 +7849,48 @@
       ],
       "language": "English",
       "country": "United States, South Korea"
+    },
+    {
+      "id": "movie_173",
+      "title": "Thor",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjRhNGZjZjEtYTQzYS00OWUxLThjNGEtMTIwMTE2ZDFlZTZkXkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Fantasy",
+      "myRating": 6.1,
+      "imdbScore": 7.0,
+      "rottenTomatoesScore": 0.8,
+      "protagonistRating": 7.5,
+      "antagonistRating": 7.5,
+      "soundtrackRating": 5.0,
+      "setDesignRating": 5.5,
+      "plotRating": 6.0,
+      "endingRating": 5.4,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 115,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.09,
+        "rotten": 0.16
+      },
+      "position": 174,
+      "imdbId": "tt0800369",
+      "plot": "The powerful but arrogant god Thor is cast out of Asgard to live amongst humans in Midgard (Earth), where he soon becomes one of their finest defenders.",
+      "imdbRating": 70.0,
+      "genres": [
+        "Action",
+        "Fantasy"
+      ],
+      "rated": "PG-13",
+      "director": "Kenneth Branagh",
+      "actors": [
+        "Chris Hemsworth",
+        "Anthony Hopkins",
+        "Natalie Portman"
+      ],
+      "language": "English",
+      "country": "United States, France"
     },
     {
       "id": "movie_175",
@@ -7487,49 +7979,6 @@
       "country": "United States"
     },
     {
-      "id": "movie_177",
-      "title": "Venom: The Last Dance",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDMyYWU4NzItZDY0MC00ODE2LTkyYTMtMzNkNDdmYmFhZDg0XkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Adventure, Sci-Fi",
-      "myRating": 6.1,
-      "imdbScore": 6.0,
-      "rottenTomatoesScore": 0.4,
-      "protagonistRating": 6.2,
-      "antagonistRating": 5.4,
-      "soundtrackRating": 6.1,
-      "setDesignRating": 8.2,
-      "plotRating": 4.8,
-      "endingRating": 5.7,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 110,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.01,
-        "rotten": 0.21000000000000002
-      },
-      "position": 178,
-      "imdbId": "tt16366836",
-      "plot": "Eddie Brock and Venom must make a devastating decision as they're pursued by a mysterious military man and alien monsters from Venom's home world.",
-      "imdbRating": 60.0,
-      "genres": [
-        "Action",
-        "Adventure",
-        "Sci-Fi"
-      ],
-      "rated": "PG-13",
-      "director": "Kelly Marcel",
-      "actors": [
-        "Tom Hardy",
-        "Chiwetel Ejiofor",
-        "Juno Temple"
-      ],
-      "language": "English",
-      "country": "United States, United Kingdom, Canada"
-    },
-    {
       "id": "movie_178",
       "title": "Novocaine",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWU4MmUxODktMWUwYy00YzM0LTg1ZmItNzVlMTZhOWVlNWFjXkEyXkFqcGc@._V1_SX300.jpg",
@@ -7571,6 +8020,49 @@
       ],
       "language": "English",
       "country": "United States, Canada, South Africa"
+    },
+    {
+      "id": "movie_177",
+      "title": "Venom: The Last Dance",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDMyYWU4NzItZDY0MC00ODE2LTkyYTMtMzNkNDdmYmFhZDg0XkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Sci-Fi",
+      "myRating": 6.1,
+      "imdbScore": 6.0,
+      "rottenTomatoesScore": 0.4,
+      "protagonistRating": 6.2,
+      "antagonistRating": 5.4,
+      "soundtrackRating": 6.1,
+      "setDesignRating": 8.2,
+      "plotRating": 4.8,
+      "endingRating": 5.7,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 110,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.01,
+        "rotten": 0.21000000000000002
+      },
+      "position": 178,
+      "imdbId": "tt16366836",
+      "plot": "Eddie Brock and Venom must make a devastating decision as they're pursued by a mysterious military man and alien monsters from Venom's home world.",
+      "imdbRating": 60.0,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Sci-Fi"
+      ],
+      "rated": "PG-13",
+      "director": "Kelly Marcel",
+      "actors": [
+        "Tom Hardy",
+        "Chiwetel Ejiofor",
+        "Juno Temple"
+      ],
+      "language": "English",
+      "country": "United States, United Kingdom, Canada"
     },
     {
       "id": "movie_179",
@@ -7959,6 +8451,91 @@
       "country": "United States, Australia, Canada"
     },
     {
+      "id": "movie_149",
+      "title": "Evan Almighty",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTUxMTEzODYxMV5BMl5BanBnXkFtZTcwNzQ4ODU0MQ@@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Comedy, Family, Fantasy",
+      "myRating": 5.5,
+      "imdbScore": 5.4,
+      "rottenTomatoesScore": 0.2,
+      "protagonistRating": 8.6,
+      "antagonistRating": 7.4,
+      "soundtrackRating": 5.5,
+      "setDesignRating": 4.8,
+      "plotRating": 7.4,
+      "endingRating": 7.5,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 96,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 150,
+      "imdbId": "tt0413099",
+      "plot": "God contacts Congressman Evan Baxter and tells him to build an ark in preparation for a great flood.",
+      "imdbRating": 54.0,
+      "genres": [
+        "Comedy",
+        "Family",
+        "Fantasy"
+      ],
+      "rated": "PG",
+      "director": "Tom Shadyac",
+      "actors": [
+        "Steve Carell",
+        "Morgan Freeman",
+        "Lauren Graham"
+      ],
+      "language": "English",
+      "country": "United States"
+    },
+    {
+      "id": "movie_200",
+      "title": "How to Train Your Dragon: Snoggletog Log",
+      "releaseDate": "",
+      "genre": "Animation, Short",
+      "myRating": 5.5,
+      "imdbScore": 4.4,
+      "rottenTomatoesScore": 0.77,
+      "protagonistRating": 5.5,
+      "antagonistRating": 3.5,
+      "soundtrackRating": 7.0,
+      "setDesignRating": 7.1,
+      "plotRating": 5.0,
+      "endingRating": 5.1,
+      "year": "2019",
+      "watchedDate": "",
+      "runtime": 28,
+      "style": "Animated",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 200,
+      "imdbId": "tt11409576",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjU5NmNiN2UtZDRmNi00NWY3LWFkYTItMDJhMzU4ZWFlZTVjXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Come settle by the warmth of a roaring fire in Hiccup and Astrid's home. You never know who is going to stop by for a sip of Yak Nog.",
+      "genres": [
+        "Animation",
+        "Short"
+      ],
+      "rated": "N/A",
+      "director": "Tim Johnson",
+      "actors": [
+        "N/A"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "N/A",
+      "awards": "N/A",
+      "production": "N/A"
+    },
+    {
       "id": "movie_188",
       "title": "The Ridiculous 6",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzM2NWQzMzAtYzdiNi00YTk0LWEyNjQtOTJkMTk4YTdlYmY2XkEyXkFqcGc@._V1_SX300.jpg",
@@ -8205,6 +8782,96 @@
       "country": "United States, China, United Kingdom, Canada, Hong Kong"
     },
     {
+      "id": "movie_207",
+      "title": "Lake Jesup: Bonecrusher's Revenge",
+      "releaseDate": "",
+      "genre": "Adventure, Comedy, Horror",
+      "myRating": 4.9,
+      "imdbScore": 3.7,
+      "rottenTomatoesScore": 0.0,
+      "protagonistRating": 6.1,
+      "antagonistRating": 4.5,
+      "soundtrackRating": 5.0,
+      "setDesignRating": 4.4,
+      "plotRating": 4.7,
+      "endingRating": 4.8,
+      "year": "2026",
+      "watchedDate": "",
+      "runtime": 0,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 207,
+      "imdbId": "tt30782197",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BY2UzYTkyYzEtZDliMi00ZmRlLTk4ZGUtYjZkYTIxMzgyYTJiXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Florida's Lake Jesup is the most densely infested alligator lake in the entire United States - known by locals as \"the place to take your mother-in-law to water ski.\" This is the story of 13 hellish days on the lake in 2003.",
+      "genres": [
+        "Adventure",
+        "Comedy",
+        "Horror"
+      ],
+      "rated": "N/A",
+      "director": "Michael Houston King",
+      "actors": [
+        "Danny Nucci",
+        "Derek Russo",
+        "Kent Shocknek"
+      ],
+      "language": "N/A",
+      "country": "United States",
+      "metascore": "N/A",
+      "awards": "2 wins & 2 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_208",
+      "title": "Tron: Ares",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Sci-Fi",
+      "myRating": 4.8,
+      "imdbScore": 6.5,
+      "rottenTomatoesScore": 0.53,
+      "protagonistRating": 4.0,
+      "antagonistRating": 4.2,
+      "soundtrackRating": 5.0,
+      "setDesignRating": 7.9,
+      "plotRating": 4.3,
+      "endingRating": 3.5,
+      "year": "2025",
+      "watchedDate": "",
+      "runtime": 119,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 208,
+      "imdbId": "tt6604188",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzk0NjE4NzYtZjc5Ni00MTkxLTgyY2QtZjliOTA5N2U2YzM1XkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "A highly sophisticated program, Ares, is sent from the digital world into the real world on a dangerous mission.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Sci-Fi"
+      ],
+      "rated": "PG-13",
+      "director": "Joachim Rønning",
+      "actors": [
+        "Jared Leto",
+        "Greta Lee",
+        "Jeff Bridges"
+      ],
+      "language": "English",
+      "country": "United States, Canada, New Zealand",
+      "metascore": "48",
+      "awards": "1 nomination total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_194",
       "title": "Morbius",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BY2UzYzFiZWUtOGU5ZC00YTIxLWFlNGUtMGU1YmI4OWUzN2FmXkEyXkFqcGc@._V1_SX300.jpg",
@@ -8376,6 +9043,51 @@
       "country": "United States, Sweden, New Zealand, Canada"
     },
     {
+      "id": "movie_213",
+      "title": "Jurassic World Rebirth",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Sci-Fi",
+      "myRating": 4.4,
+      "imdbScore": 5.9,
+      "rottenTomatoesScore": 0.5,
+      "protagonistRating": 3.5,
+      "antagonistRating": 4.6,
+      "soundtrackRating": 5.6,
+      "setDesignRating": 5.4,
+      "plotRating": 3.0,
+      "endingRating": 4.4,
+      "year": "2025",
+      "watchedDate": "",
+      "runtime": 133,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 213,
+      "imdbId": "tt31036941",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMGM3ZmI3NzQtNzU5Yi00ZWI1LTg3YTAtNmNmNWIyMWFjZTBkXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Five years post-Jurassic World: Dominion (2022), an expedition braves isolated equatorial regions to extract DNA from three massive prehistoric creatures for a groundbreaking medical breakthrough.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Sci-Fi"
+      ],
+      "rated": "PG-13",
+      "director": "Gareth Edwards",
+      "actors": [
+        "Scarlett Johansson",
+        "Mahershala Ali",
+        "Jonathan Bailey"
+      ],
+      "language": "English, French, Spanish",
+      "country": "United States, United Kingdom, Malta, India, Taiwan, Japan",
+      "metascore": "50",
+      "awards": "2 wins & 2 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_198",
       "title": "Flight Risk",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BOGZlZjAyYTItMDdjYy00OGZlLWI3NDAtYzM5ZjAwNjg0NWUxXkEyXkFqcGc@._V1_SX300.jpg",
@@ -8462,6 +9174,50 @@
       "country": "United States, Canada, France"
     },
     {
+      "id": "movie_216",
+      "title": "House",
+      "releaseDate": "",
+      "genre": "Horror, Fantasy",
+      "myRating": 3.4,
+      "imdbScore": 7.2,
+      "rottenTomatoesScore": 0.9,
+      "protagonistRating": 3.4,
+      "antagonistRating": 4.5,
+      "soundtrackRating": 4.3,
+      "setDesignRating": 7.3,
+      "plotRating": 0.5,
+      "endingRating": 0.5,
+      "year": "1977",
+      "watchedDate": "",
+      "runtime": 87,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 216,
+      "imdbId": "tt0076162",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTEwMTUyODgtYzlhYS00OGM4LWJjOTAtMjk2ZjU3YzU5MzNlXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "A schoolgirl and six of her classmates travel to her aunt's country home, which turns out to be haunted.",
+      "genres": [
+        "Horror",
+        "Fantasy"
+      ],
+      "rated": "Not Rated",
+      "director": "Nobuhiko Ôbayashi",
+      "actors": [
+        "Kimiko Ikegami",
+        "Miki Jinbo",
+        "Kumiko Ôba"
+      ],
+      "language": "Japanese",
+      "country": "Japan",
+      "metascore": "75",
+      "awards": "1 win total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_200",
       "title": "The Night Time World",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGQ2OTJiNjUtNTc5My00OGE3LTkwODItYTUxZmE4MDNiZWFmXkEyXkFqcGc@._V1_SX300.jpg",
@@ -8546,6 +9302,49 @@
       ],
       "language": "English",
       "country": "United States"
+    },
+    {
+      "id": "movie_219",
+      "title": "War of the Worlds",
+      "releaseDate": "",
+      "genre": "Thriller",
+      "myRating": 0.8,
+      "imdbScore": 2.5,
+      "rottenTomatoesScore": 0.04,
+      "protagonistRating": 2.9,
+      "antagonistRating": 0.5,
+      "soundtrackRating": 0.0,
+      "setDesignRating": 0.5,
+      "plotRating": 0.5,
+      "endingRating": 0.1,
+      "year": "2005",
+      "watchedDate": "",
+      "runtime": 89,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 219,
+      "imdbId": "tt0407304",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDUyODAzNDI1Nl5BMl5BanBnXkFtZTcwMDA2NDAzMw@@._V1_SX300.jpg",
+      "plot": "An alien invasion threatens the future of humanity. The catastrophic nightmare is depicted through the eyes of one American family fighting for survival.",
+      "genres": [
+        "Thriller"
+      ],
+      "rated": "PG-13",
+      "director": "Steven Spielberg",
+      "actors": [
+        "Tom Cruise",
+        "Dakota Fanning",
+        "Tim Robbins"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "73",
+      "awards": "Nominated for 3 Oscars. 16 wins & 49 nominations total",
+      "production": "N/A"
     }
   ]
 }
