@@ -658,17 +658,31 @@ export default function ArgentinaGallery() {
         )}
 
         {currentView === 'drone' && (
-          <div className="w-full flex justify-center items-center min-h-screen py-16">
-            <div className="w-full max-w-6xl px-4 flex flex-col items-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Argentina 2025 Recap</h2>
-              <div className="w-full max-w-6xl">
-                <YouTubePlayer 
-                  videoId="UBHQtwZpIk0"
-                  title="Argentina 2025 Travel Recap"
-                  className="rounded-lg shadow-xl"
-                />
+          <div className="w-full flex justify-center items-center py-16">
+            <div className="w-full max-w-6xl px-4 flex flex-col items-center space-y-16">
+              <div className="w-full flex flex-col items-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center w-full">Northern Argentina in 30 Seconds</h2>
+                <div className="w-full max-w-6xl">
+                  <YouTubePlayer 
+                    videoId="bCW9drnRvZ8"
+                    title="Northern Argentina in 30 Seconds"
+                    className="rounded-lg shadow-xl"
+                  />
+                </div>
               </div>
-              <div className="h-16 w-full"></div>
+              
+              <div className="w-full flex flex-col items-center">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center w-full">Argentina 2025 Full Recap</h2>
+                <div className="w-full max-w-6xl">
+                  <YouTubePlayer 
+                    videoId="UBHQtwZpIk0"
+                    title="Argentina 2025 Travel Recap"
+                    className="rounded-lg shadow-xl"
+                  />
+                </div>
+              </div>
+              
+              <div className="h-8 w-full"></div>
             </div>
           </div>
         )}
