@@ -10,6 +10,8 @@ import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
+import { BackToTop } from '@/components/ui/BackToTop';
+
 interface GalleryImage {
   id: number;
   src: string;
@@ -435,6 +437,8 @@ export default function FranceGallery() {
           </div>
         </div>
       )}
+    
+            <BackToTop />
     </div>
   );
 }

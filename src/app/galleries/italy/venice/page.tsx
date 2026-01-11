@@ -10,6 +10,8 @@ import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
+import { BackToTop } from '@/components/ui/BackToTop';
+
 /*
 For updating this gallery, update all things in steps 1-4
 1 - Image path for gallery
@@ -287,6 +289,8 @@ export default function VeniceGallery() {
           </div>
         </div>
       )}
+    
+            <BackToTop />
     </div>
   );
 }

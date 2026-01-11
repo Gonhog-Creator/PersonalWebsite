@@ -9,6 +9,8 @@ import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 
+import { BackToTop } from '@/components/ui/BackToTop';
+
 interface GalleryImage {
   id: number;
   src: string;
@@ -435,6 +437,8 @@ export default function AustraliaGallery() {
           </div>
         </div>
       )}
+    
+            <BackToTop />
     </div>
   );
 }

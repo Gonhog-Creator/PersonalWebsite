@@ -9,6 +9,7 @@ import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
+import { BackToTop } from '@/components/ui/BackToTop';
 
 interface GalleryImage {
   id: number;
@@ -29,156 +30,8 @@ const getImagePath = (id: number) => {
 // List of missing photo numbers to exclude
 const missingPhotos: number[] = [];
 
-// Image details for alt text
-const imageDetails: Record<number, { alt: string }> = {
-  // Scenic views and landscapes
-  1: { alt: 'Panoramic view of San José city from a hilltop with mountains in the distance.' },
-  2: { alt: 'Aerial view of the lush green rainforest canopy in Germany.' },
-  3: { alt: 'Hiker standing on a cliff overlooking the cloud forest in Monteverde.' },
-  4: { alt: 'Sunset over the Pacific Ocean from a beach in Manuel Antonio National Park.' },
-  5: { alt: 'Aerial view of the Arenal Volcano with a perfect conical shape.' },
-  6: { alt: 'Traditional Germanyn house surrounded by tropical vegetation.' },
-  7: { alt: 'Tourist resting on a bench with a view of the cloud forest.' },
-  8: { alt: 'Scenic mountain road winding through the Germanyn highlands.' },
-  9: { alt: 'Statue of the Virgin Mary in a cave at La Paz Waterfall Gardens.' },
-  10: { alt: 'Viewpoint overlooking the Central Valley with San José in the distance.' },
-  
-  // Wildlife and nature
-  11: { alt: 'Scarlet macaw perched on a tree branch in the rainforest.' },
-  12: { alt: 'Tour group observing a sloth in the treetops.' },
-  13: { alt: 'Hummingbird hovering near colorful tropical flowers.' },
-  14: { alt: 'Coatimundi foraging near a hiking trail in the forest.' },
-  15: { alt: 'White-faced capuchin monkey eating fruit in the canopy.' },
-  16: { alt: 'Aerial view of the Tarcoles River winding through mangroves.' },
-  17: { alt: 'Sign explaining the importance of the cloud forest ecosystem.' },
-  18: { alt: 'Colorful poison dart frog on a leaf in the rainforest.' },
-  19: { alt: 'Scenic view of the Rio Celeste waterfall with its bright blue water.' },
-  20: { alt: 'Butterfly garden with numerous colorful species in flight.' },
-  
-  // Beaches and coastal areas
-  21: { alt: 'Pristine white sand beach with palm trees in Manuel Antonio.' },
-  22: { alt: 'Dramatic sunset over the Pacific Ocean at Playa Hermosa.' },
-  23: { alt: 'Rocky coastline with waves crashing in the Nicoya Peninsula.' },
-  24: { alt: 'Secluded beach cove accessible only by boat in the Osa Peninsula.' },
-  25: { alt: 'Surfers catching waves at the famous Playa Hermosa break.' },
-  
-  // Volcanoes and hot springs
-  26: { alt: 'Arenal Volcano with a perfect conical shape on a clear day.' },
-  27: { alt: 'Relaxing in the Tabacón Hot Springs with tropical surroundings.' },
-  28: { alt: 'Hiking trail through the lava fields of Arenal Volcano National Park.' },
-  29: { alt: 'Steam rising from volcanic vents in the Poás Volcano crater.' },
-  30: { alt: 'Panoramic view of the Irazú Volcano crater with its green lake.' },
-  
-  // Cloud forest and rainforest
-  31: { alt: 'Suspension bridge through the Monteverde Cloud Forest canopy.' },
-  32: { alt: 'Epiphyte-covered trees in the Monteverde Cloud Forest.' },
-  33: { alt: 'Early morning mist rising through the cloud forest trees.' },
-  34: { alt: 'Hiking trail through the dense primary rainforest.' },
-  35: { alt: 'View from a treetop platform in the cloud forest.' },
-  
-  // Waterfalls and rivers
-  36: { alt: 'La Fortuna Waterfall cascading into an emerald pool.' },
-  37: { alt: 'Swimming in the cool waters below La Fortuna Waterfall.' },
-  38: { alt: 'White water rafting on the Pacuare River through the rainforest.' },
-  39: { alt: 'Peaceful river winding through the jungle with lush vegetation.' },
-  40: { alt: 'Kayaking on the calm waters of the Damas Island mangroves.' },
-  
-  // Culture and people
-  41: { alt: 'Traditional oxcart painting demonstration in Sarchí.' },
-  42: { alt: 'Colorful oxcart, a Germanyn cultural symbol, on display.' },
-  43: { alt: 'Local artisan making traditional Germanyn coffee.' },
-  44: { alt: 'Fresh tropical fruits at a local farmers market.' },
-  45: { alt: 'Traditional Germanyn meal with rice, beans, plantains, and fresh fish.' },
-  
-  // Adventure activities
-  46: { alt: 'Ziplining through the cloud forest canopy in Monteverde.' },
-  47: { alt: 'Hanging bridges tour through the rainforest canopy.' },
-  48: { alt: 'Horseback riding through the countryside near La Fortuna.' },
-  49: { alt: 'Mountain biking on forest trails with scenic views.' },
-  50: { alt: 'Stand-up paddleboarding on a calm lake with volcano views.' },
-  
-  // Wildlife (continued)
-  51: { alt: 'Three-toed sloth hanging from a tree branch.' },
-  52: { alt: 'Toucan with colorful beak perched in a tree.' },
-  53: { alt: 'Red-eyed tree frog on a leaf at night.' },
-  54: { alt: 'Howler monkey resting in the treetops.' },
-  55: { alt: 'Iguana sunning itself on a rock near the beach.' },
-  
-  // Beaches (continued)
-  56: { alt: 'Palm-fringed beach with turquoise waters in the Caribbean.' },
-  57: { alt: 'Surfers waiting for waves at Playa Hermosa.' },
-  58: { alt: 'Secluded beach at sunset with dramatic clouds.' },
-  59: { alt: 'Rocky tide pools teeming with marine life.' },
-  60: { alt: 'Beachfront restaurant with thatched roof and ocean view.' },
-  
-  // Additional scenic views
-  61: { alt: 'Panoramic view of the Central Valley from a mountain overlook.' },
-  62: { alt: 'Sunrise over the cloud forest with mist in the valleys.' },
-  63: { alt: 'Traditional wooden bridge over a jungle river.' },
-  64: { alt: 'Coffee plantation with rows of coffee plants on hillsides.' },
-  65: { alt: 'Butterfly garden with hundreds of colorful butterflies.' },
-  
-  // More wildlife
-  66: { alt: 'Scarlet macaws feeding on almonds in the treetops.' },
-  67: { alt: 'White-faced capuchin monkey eating fruit.' },
-  68: { alt: 'Jesus Christ lizard walking on water in a pond.' },
-  69: { alt: 'Blue morpho butterfly with its wings open, showing bright blue color.' },
-  70: { alt: 'Green iguana basking in the sun on a tree branch.' },
-  
-  // Additional activities
-  71: { alt: 'Guided night walk through the rainforest.' },
-  72: { alt: 'Chocolate making demonstration with cacao beans.' },
-  73: { alt: 'Coffee tour showing the process from bean to cup.' },
-  74: { alt: 'Birdwatching in the cloud forest with a guide.' },
-  75: { alt: 'Relaxing in natural hot springs with volcano views.' },
-  
-  // Additional scenic and cultural
-  76: { alt: 'Traditional oxcart with colorful designs in Sarchí.' },
-  77: { alt: 'Local market with fresh tropical fruits and vegetables.' },
-  78: { alt: 'Historic church in a small Germanyn town.' },
-  79: { alt: 'Colorful houses in a traditional Germanyn village.' },
-  80: { alt: 'Sunset over the Pacific Ocean from a beachfront restaurant.' },
-  
-  // Additional wildlife
-  81: { alt: 'Agouti foraging on the forest floor.' },
-  82: { alt: 'Keel-billed toucan in the rainforest canopy.' },
-  83: { alt: 'Basilisk lizard on a branch near a river.' },
-  84: { alt: 'White-nosed coati searching for food.' },
-  85: { alt: 'Toucan flying through the forest with its large colorful bill.' },
-  
-  // Additional landscapes and activities
-  86: { alt: 'Hiking trail through the cloud forest with hanging moss.' },
-  87: { alt: 'Waterfall in the rainforest surrounded by lush vegetation.' },
-  88: { alt: 'Suspension bridge high above the forest floor.' },
-  89: { alt: 'Kayaking on a calm river through the jungle.' },
-  90: { alt: 'Relaxing in a hammock with an ocean view.' },
-  
-  // More culture and people
-  91: { alt: 'Local artisan making traditional Germanyn crafts.' },
-  92: { alt: 'Traditional Germanyn oxcart with bright colors.' },
-  93: { alt: 'Cooking class learning to make traditional dishes.' },
-  94: { alt: 'Local musician playing traditional Germanyn music.' },
-  95: { alt: 'Family making tortillas the traditional way.' },
-  
-  // Additional scenic and nature
-  96: { alt: 'View of the Poás Volcano crater on a clear day.' },
-  97: { alt: 'Misty morning in the cloud forest.' },
-  98: { alt: 'Sunset over the Pacific with palm tree silhouettes.' },
-  99: { alt: 'Rainbow over the rainforest after a tropical shower.' },
-  100: { alt: 'Panoramic view of the Central Valley from a mountain top.' },
-  
-  101: { alt: 'There is a street with cars and buildings on both sides.' },
-  102: { alt: 'Painting of a man in a golden coat and hat holding a cane.' },
-  103: { alt: 'Arafed portrait of a woman in a blue dress sitting in a chair.' },
-  104: { alt: 'There is a chair that is sitting on a table in front of a window.' },
-  105: { alt: 'Painting of a woman in a blue dress sitting on a chair.' },
-  106: { alt: 'There is a table with a glass top in a room with paintings.' },
-  107: { alt: 'There is a room with a table, chairs, and a mirror.' },
-  108: { alt: 'There are four chairs in a room with a large clock on the wall.' },
-  109: { alt: 'There is a room with a desk, chairs, and a clock.' },
-  110: { alt: 'There is a desk with a laptop on it in a room.' },
-  112: { alt: 'Arafed picture of a woman in a white dress in a blue room.' },
-};
+
+
 
 export default function GermanyGallery() {
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
@@ -192,8 +45,6 @@ export default function GermanyGallery() {
         id,
         src: getImagePath(id),
         location: 'Germany',
-        ...details,
-        alt: details.alt || `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
@@ -450,6 +301,8 @@ export default function GermanyGallery() {
           </div>
         </div>
       )}
+    
+            <BackToTop />
     </div>
   );
 }

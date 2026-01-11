@@ -427,6 +427,7 @@ export default function GreeceGallery() {
           </div>
         </div>
       )}
+            <BackToTop />
     </div>
   );
 }

@@ -348,6 +348,7 @@ export default function ScotlandGallery() {
           </div>
         </div>
       )}
+            <BackToTop />
     </div>
   );
 }

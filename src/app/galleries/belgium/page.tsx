@@ -9,6 +9,7 @@ import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
+import { BackToTop } from '@/components/ui/BackToTop';
 
 
 interface GalleryImage {
@@ -29,111 +30,6 @@ const getImagePath = (id: number) => {
 // List of missing photo numbers to exclude
 const missingPhotos = [36, 47];
 
-// Image details for alt text
-const imageDetails: Record<number, { alt: string }> = {
-  1: { alt: 'Arafed man with a backpack and a backpack on his back.' },
-  2: { alt: 'There is a man riding a bike down a cobblestone street.' },
-  3: { alt: 'Baskets of doughnuts and other pastries are on display in a store window.' },
-  4: { alt: 'There are many people waiting at the train station for the train.' },
-  5: { alt: 'There is a long hallway with a bunch of stairs and a sign.' },
-  6: { alt: 'There is a statue of a man riding a horse in a park.' },
-  7: { alt: 'There is a glass of beer sitting on a table.' },
-  8: { alt: 'Arafed view of a tall building with a clock tower.' },
-  9: { alt: 'There is a river running through a city with buildings on both sides.' },
-  10: { alt: 'There is a large building with statues on the top of it.' },
-  11: { alt: 'Several people riding bikes down a cobblestone street in a city.' },
-  12: { alt: 'There are many chairs and tables on the street in the city.' },
-  13: { alt: 'There is a bar with a lot of bottles of wine on the shelves.' },
-  14: { alt: 'There is a table with a bowl of soup on it.' },
-  15: { alt: 'Painting of a painting of a ship in a harbor with people on the shore.' },
-  16: { alt: 'There is a man standing in a church with a large painting on the wall.' },
-  17: { alt: 'There is a doorway with a clock above it in a building.' },
-  18: { alt: 'There are many flags flying in front of a building.' },
-  19: { alt: 'People walking around a plaza in front of a tall building.' },
-  20: { alt: 'Arafed church with a colorful altar and stained glass windows.' },
-  21: { alt: 'There is a wooden door with a lion on it.' },
-  22: { alt: 'There is a windmill in the distance with a fence in the foreground.' },
-  23: { alt: 'Arafed windmill in a field with a cloudy sky in the background.' },
-  24: { alt: 'There is a tall tower with a clock on it and a flag on top.' },
-  25: { alt: 'Flags flying in the wind on top of a building with a clock tower.' },
-  26: { alt: 'There is a large building with a clock on the top of it.' },
-  27: { alt: 'There is a clock tower with a steeple on top of it.' },
-  28: { alt: 'Arafed view of a full moon in a blue sky.' },
-  29: { alt: 'Arafed view of a city with a sunset in the background.' },
-  30: { alt: 'Arafed view of a city with a clock tower and a sunset.' },
-  31: { alt: 'Someone standing on a tile floor with a piece of paper on it.' },
-  32: { alt: 'Arafed man sitting on the ground in front of a windmill.' },
-  33: { alt: 'Three men sitting on a bench next to a wall with graffiti.' },
-  34: { alt: 'Arafed view of a canal with buildings and trees along it.' },
-  35: { alt: 'People walking on a cobblestone street in front of a large building.' },
-  37: { alt: 'People walking on a cobblestone street in front of a cathedral.' },
-  38: { alt: 'People walking on a sidewalk in front of a large cathedral.' },
-  39: { alt: 'Araffes are walking on the street in front of a church.' },
-  40: { alt: 'There is a man riding a bike in front of a building.' },
-  41: { alt: 'There are many people walking down the sidewalk of a market.' },
-  42: { alt: 'There is a room with a lot of books and liquor bottles.' },
-  43: { alt: 'There is a room filled with books and liquor bottles.' },
-  44: { alt: 'Arafed man walking down a narrow alley way in a city.' },
-  45: { alt: 'Boats are traveling down a canal in a city with tall buildings.' },
-  46: { alt: 'There is a tunnel with a stone floor and a brick ceiling.' },
-  48: { alt: 'Arafed view of a city with a river and a bridge.' },
-  49: { alt: 'Arafed view of a city through a window in a stone wall.' },
-  50: { alt: 'There is a flag flying high above a city with a clock tower.' },
-  51: { alt: 'There is a man sitting on a bench in front of a window.' },
-  52: { alt: 'There is a man sitting in front of a window with a light on.' },
-  53: { alt: 'Arafed man sitting in front of a window talking on a cell phone.' },
-  54: { alt: 'There is a man sitting in front of a window talking on a cell phone.' },
-  55: { alt: 'Arafed man standing in a jail cell with a gun.' },
-  56: { alt: 'Arafed man sitting in a stone wall with a backpack on his back.' },
-  57: { alt: 'Drawing of a man sitting on a chair with a group of people.' },
-  58: { alt: 'There are people standing in a room with stone walls and wooden floors.' },
-  59: { alt: 'There is a large brick building with a clock on top.' },
-  60: { alt: 'There are many people on a boat going down the river.' },
-  61: { alt: 'Arafed building with a clock tower on the top of it.' },
-  62: { alt: 'People walking on the sidewalk in front of a red building.' },
-  63: { alt: 'Cars parked in front of a large building with a statue on top.' },
-  64: { alt: 'Arafed cathedral with a clock tower and a clock on the front.' },
-  65: { alt: 'There is a room with a lot of books and a lamp.' },
-  66: { alt: 'Arafed tower with a flag on top of it with a clock.' },
-  67: { alt: 'Arafed tower with a flag on top of it with a clock.' },
-  68: { alt: 'Arafed tower with a clock on the top of it.' },
-  69: { alt: 'Arafed stone angel on a building with a clock on it.' },
-  70: { alt: 'There is a statue of an angel on a pedestal in front of a building.' },
-  71: { alt: 'There is a statue of a man on the top of a building.' },
-  72: { alt: 'There is a street light that is on a pole in front of a building.' },
-  73: { alt: 'Graffiti on a wall of a building with a man walking by.' },
-  74: { alt: 'Graffiti covered wall with people walking down it in a narrow alley.' },
-  75: { alt: 'Three baskets of food are sitting on a table with a person.' },
-  76: { alt: 'There is a man wearing a helmet and a helmet on his head.' },
-  77: { alt: 'There are many different types of swords displayed on display.' },
-  78: { alt: 'There are many guns in the glass case on display.' },
-  79: { alt: 'There are two guns in a glass case on display.' },
-  80: { alt: 'There are two men that are standing in a tunnel.' },
-  81: { alt: 'There is a man that is standing next to a pole.' },
-  82: { alt: 'A close up of a pole with stickers on it.' },
-  83: { alt: 'Arafed man sitting in front of a window with a glass window.' },
-  84: { alt: 'Arafed man sitting in front of a window with a cell phone.' },
-  85: { alt: 'Arafed view of a full moon in a blue sky.' },
-  87: { alt: 'Nighttime view of a city with a bridge and a clock tower.' },
-  88: { alt: 'There are two people sitting on the steps of a building.' },
-  89: { alt: 'There is a statue of Jesus on a wall in a window.' },
-};
-
-// Panorama locations data - currently not used in the component
-// const panoramaLocations = [
-//   { id: 1, location: 'Brussels' },
-//   { id: 2, location: 'Bruges' },
-//   { id: 3, location: 'Ghent' },
-//   { id: 4, location: 'Antwerp' },
-//   { id: 5, location: 'Leuven' },
-//   { id: 6, location: 'Mechelen' },
-//   { id: 7, location: 'Ypres' },
-//   { id: 8, location: 'Dinant' },
-//   { id: 9, location: 'Durbuy' }
-// ];
-
-
-
 export default function BelgiumGallery() {
   // State declarations
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
@@ -150,13 +46,10 @@ export default function BelgiumGallery() {
     if (currentView === 'photos' && !loadedTabs.has('photos')) {
       const images = Array.from({ length: 89 }, (_, i) => {
         const id = i + 1;
-        const details = imageDetails[id] || {};
         return {
           id,
           src: getImagePath(id),
-          location: 'Belgium',
-          ...details,
-          alt: details.alt || `Photo ${id}`
+          location: 'Belgium'
         };
       }).filter(image => !missingPhotos.includes(image.id));
       
@@ -435,6 +328,7 @@ export default function BelgiumGallery() {
           </div>
         </div>
       )}
+            <BackToTop />
     </div>
   );
 }

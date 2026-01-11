@@ -10,6 +10,8 @@ import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { VideoPlayer } from '@/components/gallery/VideoPlayer';
 
+import { BackToTop } from '@/components/ui/BackToTop';
+
 interface GalleryImage {
   id: number;
   src: string;
@@ -364,6 +366,8 @@ export default function SwitzerlandGallery() {
           </div>
         </div>
       )}
+    
+            <BackToTop />
     </div>
   );
 }
