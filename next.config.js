@@ -92,7 +92,12 @@ module.exports = {
   },
   
   // Webpack configuration
-  webpack: (config, { isServer, dev }) => {
+  webpack(config, { isServer, dev }) {
+    // Add chart.js alias if needed
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'chart.js': 'chart.js/auto',
+    };
     // Enable webpack's filesystem cache in production
     if (!dev) {
       config.cache = {
