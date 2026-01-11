@@ -98,7 +98,7 @@ const GradientButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gradien
     const buttonClasses = cn(
       baseStyles,
       variantStyles[variant],
-      'group transition-all duration-300',
+      'group transition-all duration-500 ease-out',
       variant === 'default' && 'hover:shadow-lg hover:shadow-purple-500/20',
       props.disabled && 'opacity-50 cursor-not-allowed',
       className
@@ -106,9 +106,10 @@ const GradientButton = forwardRef<HTMLButtonElement | HTMLAnchorElement, Gradien
 
     const innerClasses = cn(
       'relative z-10 flex items-center justify-center rounded-full w-full h-full',
-      'transition-all duration-300',
+      'transition-all duration-500 ease-out',
       variant === 'default' ? 'bg-gray-900 group-hover:bg-gray-800' : 'bg-transparent',
-      sizeStyles[size]
+      sizeStyles[size],
+      'overflow-hidden' // Ensure the gradient doesn't overflow
     );
 
     // Render as Link if href is provided
@@ -182,6 +183,21 @@ const GradientBorder = () => (
         mask-composite: exclude;
         pointer-events: none;
         z-index: 0;
+        transition: background 0.5s ease-out, transform 0.3s ease-out;
+        will-change: background, transform;
+      }
+      
+      button:hover .gradient-border,
+      a:hover .gradient-border {
+        transform: scale(1.02);
+        background: conic-gradient(
+          from var(--gradient-angle, 0deg),
+          #60a5fa,
+          #a78bfa,
+          #f472b6,
+          #a78bfa,
+          #60a5fa
+        );
       }
     `}</style>
   </span>

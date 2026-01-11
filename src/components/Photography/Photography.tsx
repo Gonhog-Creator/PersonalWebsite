@@ -18,71 +18,6 @@ type GalleryItem = {
   aspectRatio?: string;
 };
 
-// Gallery data is used in the component
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const galleries: GalleryItem[] = [
-  {
-    id: 'united-states',
-    title: 'United States',
-    image: '/img/USA/usa-1.jpg',
-    count: 64,
-    category: 'Travel',
-    location: 'Various Locations',
-    date: '2020-2023',
-    aspectRatio: 'aspect-square'
-  },
-  {
-    id: 'united-kingdom',
-    title: 'United Kingdom',
-    image: '/img/United Kingdom/uk-1.jpg',
-    count: 24,
-    category: 'Urban',
-    location: 'London, England',
-    date: 'Summer 2022',
-    aspectRatio: 'aspect-video'
-  },
-  {
-    id: 'germany',
-    title: 'Germany',
-    image: '/img/Germany/germany-1.jpg',
-    count: 18,
-    category: 'Architecture',
-    location: 'Berlin, Germany',
-    date: 'Spring 2022',
-    aspectRatio: 'aspect-square'
-  },
-  {
-    id: 'nature',
-    title: 'Nature & Landscapes',
-    image: '/img/Austria/nature-1.jpg',
-    count: 32,
-    category: 'Nature',
-    location: 'Various Locations',
-    date: '2019-2023',
-    aspectRatio: 'aspect-video'
-  },
-  {
-    id: 'portraits',
-    title: 'Portrait Series',
-    image: '/img/profile.png',
-    count: 15,
-    category: 'Portrait',
-    location: 'New York, NY',
-    date: '2021-2023',
-    aspectRatio: 'aspect-square'
-  },
-  {
-    id: 'street',
-    title: 'Street Photography',
-    image: '/img/United Kingdom/street-1.jpg',
-    count: 28,
-    category: 'Street',
-    location: 'Various Cities',
-    date: '2020-2023',
-    aspectRatio: 'aspect-video'
-  },
-];
-
 
 const Photography = () => {
   // Initialize AOS
@@ -96,6 +31,7 @@ const Photography = () => {
   return (
     <section className="py-16 md:py-24 bg-gray-900" id="photography">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+
         {/* World Map Section */}
         <div className="w-full flex flex-col items-center mb-32" data-aos="fade-up">
           <div className="w-full max-w-4xl px-4">
@@ -121,6 +57,39 @@ const Photography = () => {
                 className="text-base mx-auto"
               >
                 View Map
+              </SilverBorderButton>
+            </div>
+          </div>
+        </div>
+
+        {/* Spacing between sections */}
+        <div className="h-24"></div>
+
+        {/* Best of Section */}
+        <div className="w-full flex flex-col items-center mb-32" data-aos="fade-up">
+          <div className="w-full max-w-4xl px-4">
+            <h3 className="text-2xl font-bold text-white mb-6 text-center">The Bests</h3>
+            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+              <div className="w-full h-[500px] relative">
+                <Image
+                  src="/img/Best/Sunsets/sunsets (18).jpg"
+                  alt="Best"
+                  fill
+                  className="object-cover"
+                  priority
+                  style={{ objectPosition: 'center' }}
+                />
+              </div>
+            </div>
+            <div className="mt-8 mb-12 flex justify-center">
+              <SilverBorderButton
+                as="a"
+                href="/galleries/bests"
+                width="220px"
+                height="50px"
+                className="text-base mx-auto"
+              >
+                View My Favorite Photos
               </SilverBorderButton>
             </div>
           </div>
