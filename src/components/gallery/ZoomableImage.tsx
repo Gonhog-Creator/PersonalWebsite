@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import Image, { ImageProps } from 'next/image';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import Image, { type ImageProps } from 'next/image';
 
 interface ZoomableImageProps extends Omit<ImageProps, 'onMouseDown' | 'onWheel' | 'onDoubleClick'> {
   className?: string;
@@ -23,6 +23,63 @@ export function ZoomableImage({
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
+  // Handle wheel events for zooming and prevent page scroll
+  const handleWheel = useCallback((e: WheelEvent) => {
+    if (!isOverImage) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Calculate new scale (no upper limit, small lower limit)
+    const delta = -e.deltaY * 0.002;
+    setScale(prevScale => {
+      const newScale = Math.max(0.1, prevScale + delta * prevScale);
+      
+      // Calculate the position to zoom toward cursor
+      if (containerRef.current) {
+        const container = containerRef.current.getBoundingClientRect();
+        const x = e.clientX - container.left;
+        const y = e.clientY - container.top;
+        
+        // Calculate the position relative to the image
+        const imgX = x - container.width / 2 - position.x;
+        const imgY = y - container.height / 2 - position.y;
+        
+        // Calculate the new position to zoom toward cursor
+        const newX = (imgX * newScale) / prevScale - imgX;
+        const newY = (imgY * newScale) / prevScale - imgY;
+        
+        setPosition({
+          x: newX,
+          y: newY
+        });
+      }
+      
+      return newScale;
+    });
+  }, [isOverImage, position.x, position.y]);
+
+  // Add/remove wheel event listener with debounce
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Debounce wheel event for better performance
+    let timeoutId: NodeJS.Timeout;
+    const debouncedWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => handleWheel(e), 16); // ~60fps
+    };
+
+    container.addEventListener('wheel', debouncedWheel, { passive: false });
+    
+    return () => {
+      clearTimeout(timeoutId);
+      container.removeEventListener('wheel', debouncedWheel);
+    };
+  }, [handleWheel]);
+
   // Reset zoom and position when image changes
   useEffect(() => {
     setScale(1);
@@ -39,6 +96,7 @@ export function ZoomableImage({
       y: e.clientY - position.y,
     });
     
+    document.body.style.overflow = 'hidden';
     document.body.style.cursor = 'grabbing';
   };
 
@@ -58,36 +116,34 @@ export function ZoomableImage({
     document.body.style.cursor = isOverImage && scale > 1 ? 'grab' : 'default';
   }, [isOverImage, scale]);
 
-  // Handle wheel for zooming
-  const handleWheel = (e: React.WheelEvent) => {
+  // Handle React wheel event (optimized)
+  const handleReactWheel = useCallback((e: React.WheelEvent) => {
+    if (!isOverImage) return;
+    
     e.preventDefault();
+    e.stopPropagation();
     
-    // Calculate new scale (no upper limit, small lower limit)
-    const delta = -e.deltaY * 0.002;
-    const newScale = Math.max(0.1, scale + delta * scale);
-    
-    if (containerRef.current) {
-      const container = containerRef.current.getBoundingClientRect();
-      
-      // Get cursor position relative to container
-      const x = e.clientX - container.left;
-      const y = e.clientY - container.top;
-      
-      // Calculate the position relative to the image
-      const imgX = x - container.width / 2 - position.x;
-      const imgY = y - container.height / 2 - position.y;
-      
-      // Calculate the new position to zoom toward cursor
-      const newX = (imgX * newScale) / scale - imgX;
-      const newY = (imgY * newScale) / scale - imgY;
-      
-      setScale(newScale);
-      setPosition(prev => ({
-        x: prev.x - newX,
-        y: prev.y - newY,
-      }));
-    }
-  };
+    // Optimize by using requestAnimationFrame
+    requestAnimationFrame(() => {
+      const newScale = scale + (-e.deltaY * 0.002) * scale;
+      if (containerRef.current) {
+        const container = containerRef.current.getBoundingClientRect();
+        const x = e.clientX - container.left;
+        const y = e.clientY - container.top;
+        const imgX = x - container.width / 2 - position.x;
+        const imgY = y - container.height / 2 - position.y;
+        const newX = (imgX * newScale) / scale - imgX;
+        const newY = (imgY * newScale) / scale - imgY;
+        
+        // Batch state updates
+        setScale(Math.max(0.1, newScale));
+        setPosition(prev => ({
+          x: prev.x - newX,
+          y: prev.y - newY,
+        }));
+      }
+    });
+  }, [isOverImage, position.x, position.y, scale]);
 
   // Handle double click to reset zoom
   const handleDoubleClick = () => {
@@ -114,95 +170,82 @@ export function ZoomableImage({
     };
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  // Update cursor style when hovering over the image
-  const handleMouseEnter = () => {
+  // Memoize mouse handlers to prevent unnecessary re-renders
+  const handleMouseEnter = useCallback(() => {
     setIsOverImage(true);
     if (scale > 1) {
       document.body.style.cursor = 'grab';
     }
-  };
+  }, [scale]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setIsOverImage(false);
-    if (!isDragging) {
-      document.body.style.cursor = '';
-    }
-  };
+    document.body.style.cursor = '';
+    document.body.style.overflow = 'unset';
+  }, []);
+
+  // Extract fill from props and memoize to avoid unnecessary re-renders
+  const { fill, priority = false, ...restProps } = props;
+  const hasFill = fill !== false; // Default to true if not specified
+  
+  // Memoize the image style to prevent unnecessary recalculations
+  const imageStyle = useMemo(() => ({
+    objectFit: 'contain',
+    pointerEvents: 'none',
+    width: '100%',
+    height: '100%',
+  }), []);
+  
+  // Memoize the container style
+  const containerStyle = useMemo(() => ({
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: `translate3d(calc(-50% + ${position.x}px), calc(-50% + ${position.y}px), 0) scale(${scale})`,
+    transformOrigin: 'center',
+    willChange: 'transform',
+    width: hasFill ? '100%' : width || 'auto',
+    height: hasFill ? '100%' : height || 'auto',
+    maxWidth: 'none',
+    maxHeight: 'none',
+    minWidth: '100%',
+    minHeight: '100%',
+  }), [hasFill, height, position.x, position.y, scale, width]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
-      className={`relative w-full h-full overflow-hidden ${className}`}
-      onMouseEnter={handleMouseEnter}
+      className={`relative ${className}`}
+      style={{
+        width: '100%',
+        height: '100%',
+        cursor: scale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'default',
+        overflow: 'visible',
+        position: 'relative',
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseEnter={() => setIsOverImage(true)}
       onMouseLeave={handleMouseLeave}
-      onWheel={handleWheel}
+      onWheel={handleReactWheel}
       onDoubleClick={handleDoubleClick}
     >
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px) scale(${scale})`,
-          transformOrigin: 'center',
-          willChange: 'transform',
-          width: width || '100%',
-          height: height || '100%',
-        }}
-        onMouseDown={handleMouseDown}
-      >
+      <div style={containerStyle}>
         <Image
           ref={imageRef}
           src={src}
           alt={alt}
-          width={width}
-          height={height}
-          className="block max-w-none"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            pointerEvents: 'none',
-          }}
+          fill={hasFill}
+          priority={priority}
+          {...(hasFill ? {} : { width, height })}
+          className="select-none touch-none"
+          style={imageStyle}
           draggable={false}
-          {...props}
+          loading={priority ? 'eager' : 'lazy'}
+          {...restProps}
         />
       </div>
-      
-      {/* Zoom controls */}
-      {scale > 1 && (
-        <div className="absolute bottom-4 right-4 flex items-center space-x-2">
-          <button 
-            onClick={() => setScale(prev => Math.max(0.1, prev - 0.5))}
-            className="w-8 h-8 flex items-center justify-center text-white text-xl font-bold bg-black/50 rounded-full hover:bg-black/70 transition-colors"
-            aria-label="Zoom out"
-          >
-            −
-          </button>
-          <span className="text-white text-sm bg-black/50 px-2 py-1 rounded">
-            {Math.round(scale * 100)}%
-          </span>
-          <button 
-            onClick={() => setScale(prev => prev + 0.5)}
-            className="w-8 h-8 flex items-center justify-center text-white text-xl font-bold bg-black/50 rounded-full hover:bg-black/70 transition-colors"
-            aria-label="Zoom in"
-          >
-            +
-          </button>
-          {scale > 1 && (
-            <button 
-              onClick={() => {
-                setScale(1);
-                setPosition({ x: 0, y: 0 });
-              }}
-              className="w-8 h-8 flex items-center justify-center text-white text-xs font-bold bg-black/50 rounded-full hover:bg-black/70 transition-colors"
-              aria-label="Reset zoom"
-            >
-              1:1
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }
+
+export default ZoomableImage;

@@ -322,9 +322,6 @@ export default function BelgiumGallery() {
               className="object-contain"
               priority
             />
-            <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-4 text-white text-center">
-              <p className="font-medium">{selectedImage.alt}</p>
-            </div>
           </div>
         </div>
       )}
