@@ -44,7 +44,8 @@ const countryToGalleryMap: Record<string, string> = {
   'BE': 'belgium',
   'GR': 'greece',
   'IT': 'italy',
-  'GB-SCT': 'scotland'  // Special case for Scotland
+  'GB-SCT': 'scotland',  // Special case for Scotland
+  'UY': 'uruguay'
 } as const;
 
 // Countries with galleries (using the keys from the mapping above)

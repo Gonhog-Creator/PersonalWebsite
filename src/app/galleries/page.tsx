@@ -105,7 +105,15 @@ const galleries = [
     image: '/img/Italy/Trieste/trieste-panorama (6).jpg',
     count: 355,
     location: 'Europe'
+  },
+  {
+    id: 'uruguay',
+    title: 'Uruguay',
+    image: '/img/Uruguay/uruguay_panorama (3).jpg',
+    count: 87,
+    location: 'South America'
   }
+
 ];
 
 export default function GalleriesPage() {
