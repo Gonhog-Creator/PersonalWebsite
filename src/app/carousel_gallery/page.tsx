@@ -1628,11 +1628,22 @@ const Screensaver = () => {
       <ImageGalleryScreensaver 
         images={images} 
         isLoading={isLoading}
-        isLoadingMore={isLoadingMore}
+        isLoadingMore={isLoadingMore || isRetrying}
         loadedCount={loadedCount}
         totalImages={totalImages}
         initialLayoutType={layoutType}
       />
+      
+      {/* Retry overlay */}
+      {isRetrying && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="text-center p-6 bg-black/80 rounded-lg">
+            <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-white text-lg mb-2">Reloading images...</p>
+            <p className="text-gray-300 text-sm">Some images failed to load, retrying...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
