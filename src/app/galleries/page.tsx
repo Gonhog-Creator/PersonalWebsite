@@ -112,6 +112,13 @@ const galleries = [
     image: '/img/Uruguay/uruguay_panorama (3).jpg',
     count: 87,
     location: 'South America'
+  },
+  {
+    id: 'czech-republic',
+    title: 'Czech Republic',
+    image: '/img/Czech Republic/czech-republic-panorama (4).jpg',
+    count: 162,
+    location: 'Europe'
   }
 
 ];
