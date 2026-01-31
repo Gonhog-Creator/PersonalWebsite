@@ -50,7 +50,6 @@ const ROASim = () => {
     weaponsCalibration: 1,
     metalurgy: 1,
     medicine: 1,
-    rapidDeployment: 1,
     dragonry: 1,
   });
   
@@ -68,7 +67,12 @@ const ROASim = () => {
   
   const [result, setResult] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showDebug, setShowDebug] = useState(false);
   const [seed, setSeed] = useState<number>(Math.floor(Math.random() * 1000000));
+  const [rngOverride, setRngOverride] = useState<string>('');
+  const [selectedTroopType, setSelectedTroopType] = useState<string>('swiftStrikeDragon');
+  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [optimizationResult, setOptimizationResult] = useState<string | null>(null);
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, dataset } = e.target;
@@ -118,7 +122,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -203,7 +207,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         health: modifiedStats.health,
         range: modifiedStats.range,
         rangedAttack: modifiedStats.rangedAttack || 0, // Ensure rangedAttack is defined
-        speed: baseStats.speed, // Speed isn't modified by research
+        speed: modifiedStats.speed, // Use modified speed (includes dragonry bonus)
         position: 0, // Start at attacker's side (position 0)
         isAttacker: true,
         hasMoved: false,
@@ -246,13 +250,13 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
 
   // Sort units by speed (highest first)
   const sortedUnits = [...battleUnits].sort((a, b) => {
-    return TROOP_STATS[b.type].speed - TROOP_STATS[a.type].speed;
+    return b.speed - a.speed;
   });
 
   // Add initial battle setup to the log
   battleLog.push("Battle Setup:");
   battleLog.push(`- Battlefield length: ${battlefieldRange}`);
-  battleLog.push(`- Random seed: ${seed}`);
+  battleLog.push(`- Random seed: ${battleSeed || seed}`);
   
   // Add attacker's army composition
   const attackerArmy = Object.entries(attackers)
@@ -270,6 +274,23 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     
   battleLog.push(`- Defender's Army: ${defenderArmy}`);
   
+  // Add active special items if any
+  const activeSpecialItems = Object.entries(specialItems)
+    .filter(([_, isActive]) => isActive)
+    .map(([itemName]) => {
+      switch(itemName) {
+        case 'crimsonBull': return 'Crimson Bull (+20% Dragon Attack)';
+        case 'glowingShields': return 'Glowing Shields (+20% Troop Defense)';
+        case 'purpleBones': return 'Purple Bones (+100% Dragon Defense)';
+        case 'dragonHeart': return 'Dragon Heart (+20% Troop Attack)';
+        default: return itemName;
+      }
+    });
+    
+  if (activeSpecialItems.length > 0) {
+    battleLog.push(`- Active Special Items: ${activeSpecialItems.join(', ')}`);
+  }
+  
   // Show attacker's modified stats
   battleLog.push("\nAttacker's Modified Stats:");
   const research = researchState; // Use the research state from the component
@@ -281,6 +302,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       battleLog.push(`  Attack: ${baseStats.attack} → ${modifiedStats.attack}`);
       battleLog.push(`  Defense: ${baseStats.defense} → ${modifiedStats.defense}`);
       battleLog.push(`  Health: ${baseStats.health} → ${modifiedStats.health}`);
+      battleLog.push(`  Speed: ${baseStats.speed} → ${modifiedStats.speed}`);
       if (baseStats.range > 0) {
         battleLog.push(`  Range: ${baseStats.range} → ${modifiedStats.range}`);
       }
@@ -321,7 +343,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     // Sort units by speed (fastest first) for this round
     const sortedUnits = [...battleUnits]
       .filter(unit => unit.count > 0) // Only living units
-      .sort((a, b) => TROOP_STATS[b.type].speed - TROOP_STATS[a.type].speed);
+      .sort((a, b) => b.speed - a.speed);
     
     // Process each unit's turn
     for (const unit of sortedUnits) {
@@ -445,21 +467,64 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         // Keep track of attacks this turn and damage used
         let attacksThisTurn = 0;
         let damageUsedThisTurn = 0;
-        const maxAttacks = 10; // Prevent infinite loops
+        const maxAttacks = 50; // Prevent infinite loops
         const maxDamagePotential = unit.count * (unit.rangedAttack || unit.attack) * 2.1 * 1.2;
         
         while (attacksThisTurn < maxAttacks && 
                unit.count > 0 && 
-               potentialTargets.length > 0 &&
-               damageUsedThisTurn < maxDamagePotential * 0.2) {
+               potentialTargets.length > 0) {
           
           attacksThisTurn++;
           
-          // Sort targets by lowest health percentage first
+          // Tactical Targeting Logic
           potentialTargets.sort((a, b) => {
-            const aHealthPercent = (a.count * a.health) / (TROOP_STATS[a.type].health * Math.max(1, a.count));
-            const bHealthPercent = (b.count * b.health) / (TROOP_STATS[b.type].health * Math.max(1, b.count));
-            return aHealthPercent - bHealthPercent;
+            const isRanged = !!unit.rangedAttack;
+            
+            if (isRanged) {
+              // Ranged Troops (Snipers) - prioritize highest threat
+              // 1. Distance (closest first)
+              const distA = Math.abs(unit.position - a.position);
+              const distB = Math.abs(unit.position - b.position);
+              if (distA !== distB) return distA - distB;
+              
+              // 2. Threat Level (highest Total Attack)
+              const attackA = a.count * a.attack;
+              const attackB = b.count * b.attack;
+              if (attackA !== attackB) return attackB - attackA;
+              
+              // 3. Speed (highest Speed)
+              if (a.speed !== b.speed) return b.speed - a.speed;
+              
+              // 4. Defense (highest Total Defense)
+              const defenseA = a.count * a.defense;
+              const defenseB = b.count * b.defense;
+              if (defenseA !== defenseB) return defenseB - defenseA;
+              
+              // 5. Durability (highest HP)
+              return (b.count * b.health) - (a.count * a.health);
+            } else {
+              // Melee Troops (Close Combat) - prioritize weakest targets
+              // 1. Distance (closest first)
+              const distA = Math.abs(unit.position - a.position);
+              const distB = Math.abs(unit.position - b.position);
+              if (distA !== distB) return distA - distB;
+              
+              // 2. Stat Efficiency (smallest Attack-Defense difference)
+              const efficiencyA = Math.abs(unit.attack - a.defense);
+              const efficiencyB = Math.abs(unit.attack - b.defense);
+              if (efficiencyA !== efficiencyB) return efficiencyA - efficiencyB;
+              
+              // 3. Speed (lowest Speed)
+              if (a.speed !== b.speed) return a.speed - b.speed;
+              
+              // 4. Total Attack (lowest Total Attack)
+              const attackA = a.count * a.attack;
+              const attackB = b.count * b.attack;
+              if (attackA !== attackB) return attackA - attackB;
+              
+              // 5. Fragility (lowest HP)
+              return (a.count * a.health) - (b.count * b.health);
+            }
           });
 
           const target = potentialTargets[0];
@@ -476,8 +541,15 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const baseDamage = attackPower * unit.count;
           
           // Calculate RNG factor (0.8 to 1.2)
-          const rngSeed = seed + (round * 10) + (turnCounter);
-          const rng = 0.8 + (0.4 * ((rngSeed * 9301 + 49297) % 233280) / 233280);
+          let rng: number;
+          if (rngOverride && rngOverride.trim() !== '') {
+            // Use overridden RNG value
+            rng = Math.max(0.8, Math.min(1.2, parseFloat(rngOverride) || 1.0));
+          } else {
+            // Use random RNG
+            const rngSeed = (battleSeed || seed) + (round * 10) + (turnCounter);
+            rng = 0.8 + (0.4 * ((rngSeed * 9301 + 49297) % 233280) / 233280);
+          }
           
           // Calculate final damage with all factors
           const rawDamage = Math.round(baseDamage * attackDefenseRatio * rng);
@@ -491,6 +563,14 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           // Calculate actual damage done (capped by remaining unit health)
           const maxDamagePossible = maxPossibleKills * healthPerUnit;
           const actualDamage = Math.min(rawDamage, maxDamagePossible);
+          
+          // Debug: Log RNG and damage values
+          if (showDebug && turnCounter <= 10) {
+            const minPossibleDamage = Math.round(baseDamage * attackDefenseRatio * 0.8); // RNG 0.8
+            const maxPossibleDamage = Math.round(baseDamage * attackDefenseRatio * 1.2); // RNG 1.2
+            const debugPercentage = (actualDamage / maxPossibleDamage) * 100;
+            battleLog.push(`DEBUG: ${TROOP_STATS[unit.type].name} RNG=${rng.toFixed(3)}, Min=${minPossibleDamage.toLocaleString()}, Max=${maxPossibleDamage.toLocaleString()}, Actual=${actualDamage.toLocaleString()}, Pct=${debugPercentage.toFixed(2)}%`);
+          }
           
           // Calculate units killed based on actual damage
           const unitsKilled = Math.min(
@@ -510,8 +590,12 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           // Apply damage
           target.count = Math.max(0, target.count - effectiveUnitsKilled);
           
-          // Calculate damage percentage for this attack only
-          const damagePercentage = (actualDamage / maxPossibleDamage) * 100;
+          // Update damage used this turn
+          damageUsedThisTurn += actualDamage;
+          
+          // Calculate damage percentage based on actual damage vs maximum possible damage
+          const maxPossibleDamageWithRng = attackPower * unit.count * attackDefenseRatio * 1.2; // Max RNG factor
+          const damagePercentage = (actualDamage / maxPossibleDamageWithRng) * 100;
           
           // Increment turn counter for RNG
           turnCounter++;
@@ -524,16 +608,18 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             `${effectiveUnitsKilled.toLocaleString()} were killed, ${remainingTargets.toLocaleString()} remaining (${damagePercentage.toFixed(2)}%)`
           );
           
-          // Check if this attack used less than 20% of potential damage
+          // Check if this attack used less than 20% of potential damage - if so, attack again
           if (damagePercentage < 20) {
+            // Continue attacking - refresh potential targets
             potentialTargets = battleUnits.filter(t => 
               t.count > 0 && 
               t.isAttacker !== unit.isAttacker &&
               (Math.abs(unit.position - t.position) <= (unit.range || 0) || 
                Math.abs(unit.position - t.position) <= 1)
             );
-            
-            // Removed the 'Attacking again...' log message
+          } else {
+            // Stop attacking - last attack was efficient enough (20%+ damage)
+            break;
           }
         }        
       }
@@ -702,7 +788,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     // Get the current research state from formData
     const currentResearch = {
       metalurgy: formData.metalurgy,
-      rapidDeployment: formData.rapidDeployment,
       dragonry: formData.dragonry,
       medicine: formData.medicine,
       weaponsCalibration: formData.weaponsCalibration
@@ -717,8 +802,188 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     };
 
     // Call the battle simulation with the current research state
-    const battleResult = simulateBattle(attackers, defenderTroops, currentResearch);
+    const battleResult = simulateBattle(attackers, defenderTroops, currentResearch, showDebug, rngOverride, seed);
     setResult(battleResult);
+  };
+
+  const findMinimumTroops = async () => {
+    setIsOptimizing(true);
+    setOptimizationResult(null);
+    
+    const optimizationLog: string[] = [];
+    optimizationLog.push(`=== OPTIMIZATION START ===`);
+    optimizationLog.push(`Finding minimum ${TROOP_STATS[selectedTroopType].name} count for zero losses...`);
+    optimizationLog.push(`Target: ${defender.terrain.charAt(0).toUpperCase() + defender.terrain.slice(1)} Level ${defender.level}`);
+    optimizationLog.push(`RNG Override: ${rngOverride || 'Random'}`);
+    optimizationLog.push(`Seed: ${seed}`);
+    optimizationLog.push("");
+
+    // Get current research and special items
+    const currentResearch = {
+      metalurgy: formData.metalurgy,
+      dragonry: formData.dragonry,
+      medicine: formData.medicine,
+      weaponsCalibration: formData.weaponsCalibration
+    };
+    
+    const currentSpecialItems = {
+      crimsonBull: specialItems.crimsonBull,
+      glowingShields: specialItems.glowingShields,
+      purpleBones: specialItems.purpleBones,
+      dragonHeart: specialItems.dragonHeart
+    };
+
+    // Get defender troops
+    let defenderTroops: EnemyTroops | null = null;
+    if (defender.terrain === 'enemy') {
+      defenderTroops = {
+        porter: 0, conscript: 0, spy: 0, halberdier: 0, minotaur: 0,
+        longbowMan: 0, swiftStrikeDragon: 0, armoredTransport: 0,
+        giant: 0, fireMirror: 0, battleDragon: 0
+      };
+    } else {
+      const terrainTroops = ENEMY_COMPOSITIONS[defender.terrain];
+      if (terrainTroops) {
+        defenderTroops = terrainTroops[defender.level.toString()];
+      }
+    }
+
+    if (!defenderTroops) {
+      optimizationLog.push("ERROR: Could not determine defender troops");
+      setOptimizationResult(optimizationLog.join("\n"));
+      setIsOptimizing(false);
+      return;
+    }
+
+    // Binary search setup
+    let low = 1;
+    let high = 100000; // Start with a reasonable upper bound
+    let result = -1;
+    let testCount = 0;
+    const maxTests = 20; // Prevent infinite loops
+
+    optimizationLog.push("Starting binary search...");
+    optimizationLog.push(`Initial range: ${low} - ${high}`);
+    optimizationLog.push("");
+
+    // First, find an upper bound that works
+    let foundWorkingHigh = false;
+    while (high <= 10000000 && !foundWorkingHigh) {
+      testCount++;
+      const testAttackers = { ...attackers };
+      Object.keys(testAttackers).forEach(key => {
+        testAttackers[key as keyof Attackers] = 0;
+      });
+      testAttackers[selectedTroopType as keyof Attackers] = high;
+
+      const battleResult = simulateBattle(testAttackers, defenderTroops, currentResearch, false, rngOverride, seed);
+      
+      // Debug: Show what we're looking for in the battle result
+      if (testCount <= 3) {
+        const expectedFormat = `Attacker: ${high.toLocaleString()}x ${TROOP_STATS[selectedTroopType].name}`;
+        const actualFormat = `Attacker: ${high}x ${TROOP_STATS[selectedTroopType].name}`;
+        
+        optimizationLog.push(`DEBUG: Battle result contains "The attackers have won": ${battleResult.includes("The attackers have won the battle")}`);
+        optimizationLog.push(`DEBUG: Expected format: ${expectedFormat}`);
+        optimizationLog.push(`DEBUG: Actual format: ${actualFormat}`);
+        optimizationLog.push(`DEBUG: Battle result contains expected format: ${battleResult.includes(expectedFormat)}`);
+        optimizationLog.push(`DEBUG: Battle result contains actual format: ${battleResult.includes(actualFormat)}`);
+        
+        // Show the actual final forces section
+        const finalForcesStart = battleResult.indexOf("=== FINAL FORCES ===");
+        if (finalForcesStart !== -1) {
+          const finalForcesSection = battleResult.substring(finalForcesStart);
+          optimizationLog.push(`DEBUG: Final forces section:`);
+          optimizationLog.push(finalForcesSection);
+        }
+      }
+      
+      // Check if we won with zero losses
+      const hasZeroLosses = battleResult.includes("The attackers have won the battle") && 
+                           battleResult.includes(`Attacker: ${high}x ${TROOP_STATS[selectedTroopType].name}`) &&
+                           !battleResult.includes(`Attacker: 0x`) &&
+                           !battleResult.includes(`${TROOP_STATS[selectedTroopType].name} 0`);
+
+      if (hasZeroLosses) {
+        foundWorkingHigh = true;
+        optimizationLog.push(`✓ Found working upper bound: ${high} troops`);
+      } else {
+        high *= 2;
+        if (testCount >= 5) {
+          optimizationLog.push("⚠ Could not find working upper bound, using maximum");
+          high = 10000000;
+          foundWorkingHigh = true;
+        }
+      }
+    }
+
+    if (!foundWorkingHigh) {
+      optimizationLog.push("ERROR: Could not find any troop count that wins");
+      setOptimizationResult(optimizationLog.join("\n"));
+      setIsOptimizing(false);
+      return;
+    }
+
+    // Binary search for minimum
+    while (low <= high && testCount < maxTests) {
+      testCount++;
+      const mid = Math.floor((low + high) / 2);
+      
+      optimizationLog.push(`Test ${testCount}: Testing ${mid.toLocaleString()} troops...`);
+
+      const testAttackers = { ...attackers };
+      Object.keys(testAttackers).forEach(key => {
+        testAttackers[key as keyof Attackers] = 0;
+      });
+      testAttackers[selectedTroopType as keyof Attackers] = mid;
+
+      const battleResult = simulateBattle(testAttackers, defenderTroops, currentResearch, false, rngOverride, seed);
+      
+      // Check if we won with zero losses
+      const hasZeroLosses = battleResult.includes("The attackers have won the battle") && 
+                           battleResult.includes(`Attacker: ${mid}x ${TROOP_STATS[selectedTroopType].name}`) &&
+                           !battleResult.includes(`Attacker: 0x`) &&
+                           !battleResult.includes(`${TROOP_STATS[selectedTroopType].name} 0`);
+
+      if (hasZeroLosses) {
+        result = mid;
+        high = mid - 1;
+        optimizationLog.push(`✓ SUCCESS: ${mid.toLocaleString()} troops work, searching lower...`);
+      } else {
+        low = mid + 1;
+        optimizationLog.push(`✗ FAILED: ${mid.toLocaleString()} troops insufficient, searching higher...`);
+      }
+
+      // Add small delay for UI responsiveness
+      await new Promise(resolve => setTimeout(resolve, 10));
+    }
+
+    optimizationLog.push("");
+    optimizationLog.push("=== OPTIMIZATION COMPLETE ===");
+    
+    if (result > 0) {
+      optimizationLog.push(`🎯 MINIMUM FOUND: ${result.toLocaleString()}x ${TROOP_STATS[selectedTroopType].name}`);
+      optimizationLog.push(`Total tests performed: ${testCount}`);
+      
+      // Apply the result to the attackers
+      setAttackers(prev => {
+        const newAttackers = { ...prev };
+        Object.keys(newAttackers).forEach(key => {
+          newAttackers[key as keyof Attackers] = 0;
+        });
+        newAttackers[selectedTroopType as keyof Attackers] = result;
+        return newAttackers;
+      });
+      
+      optimizationLog.push("");
+      optimizationLog.push("✅ Troop count has been applied to your army!");
+    } else {
+      optimizationLog.push(`❌ No minimum found within reasonable limits`);
+      optimizationLog.push(`Try increasing the upper bound or using different troops/research`);
+    }
+
+    setOptimizationResult(optimizationLog.join("\n"));
+    setIsOptimizing(false);
   };
 
   return (
@@ -756,12 +1021,36 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             </div>
             <div className="h-10" />
             <h2 className="text-2xl font-semibold text-center">Research Levels</h2>
+            
+            {/* Set All To Section */}
+            <div className="mb-6">
+              <div className="text-center mb-4">
+                <h3 className="text-lg font-medium">Set All Research To:</h3>
+              </div>
+              <div className="grid grid-cols-5 gap-2 w-full">
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    onClick={() => setFormData({
+                      weaponsCalibration: level,
+                      metalurgy: level,
+                      medicine: level,
+                      dragonry: level
+                    })}
+                    className="py-2 px-1 rounded-md text-sm font-medium transition-colors bg-gray-600 text-gray-200 hover:bg-gray-500"
+                  >
+                    {level}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="h-8" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
                 { id: 'weaponsCalibration', label: 'Weapons Calibration' },
                 { id: 'metalurgy', label: 'Metalurgy' },
                 { id: 'medicine', label: 'Medicine' },
-                { id: 'rapidDeployment', label: 'Rapid Deployment' },
                 { id: 'dragonry', label: 'Dragonry' },
               ].map(({ id, label }) => (
                 <div key={id} className="space-y-2">
@@ -909,6 +1198,74 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       placeholder="Random seed for battle RNG"
                     />
                   </div>
+                  <div>
+                    <label htmlFor="rng" className="block text-sm font-medium mb-1">
+                      RNG Override (0.8-1.2):
+                    </label>
+                    <input
+                      type="text"
+                      id="rng"
+                      value={rngOverride}
+                      onChange={(e) => setRngOverride(e.target.value)}
+                      className="w-full p-2 rounded bg-gray-600 border border-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      placeholder="e.g., 1.0 (leave empty for random RNG)"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">If set, uses this RNG value for every attack</p>
+                  </div>
+                  <div>
+                    <label htmlFor="debug" className="flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="debug"
+                        checked={showDebug}
+                        onChange={() => setShowDebug(!showDebug)}
+                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm font-medium">Show Debug Info</span>
+                    </label>
+                  </div>
+                  <div>
+                    <label htmlFor="troopType" className="block text-sm font-medium mb-1">
+                      Optimization Troop Type:
+                    </label>
+                    <select
+                      id="troopType"
+                      value={selectedTroopType}
+                      onChange={(e) => setSelectedTroopType(e.target.value)}
+                      className="w-full p-2 rounded bg-gray-600 border border-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    >
+                      {[
+                        { id: 'porter', label: 'Porter' },
+                        { id: 'conscript', label: 'Conscript' },
+                        { id: 'spy', label: 'Spy' },
+                        { id: 'halberdier', label: 'Halberdier' },
+                        { id: 'minotaur', label: 'Minotaur' },
+                        { id: 'longbowMan', label: 'Longbow Man' },
+                        { id: 'swiftStrikeDragon', label: 'Swift Strike Dragon' },
+                        { id: 'armoredTransport', label: 'Armored Transport' },
+                        { id: 'giant', label: 'Giant' },
+                        { id: 'fireMirror', label: 'Fire Mirror' },
+                        { id: 'battleDragon', label: 'Battle Dragon' },
+                      ].map(({ id, label }) => (
+                        <option key={id} value={id}>{label}</option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-gray-400 mt-1">Troop type to optimize for minimum count</p>
+                  </div>
+                  <div>
+                    <button
+                      onClick={findMinimumTroops}
+                      disabled={isOptimizing}
+                      className={`w-full py-2 px-4 rounded font-medium transition-colors ${
+                        isOptimizing 
+                          ? 'bg-gray-500 text-gray-300 cursor-not-allowed' 
+                          : 'bg-green-600 hover:bg-green-700 text-white'
+                      }`}
+                    >
+                      {isOptimizing ? 'Optimizing...' : 'Find Minimum Troops'}
+                    </button>
+                    <p className="text-xs text-gray-400 mt-1">Find minimum troops needed for zero losses</p>
+                  </div>
                 </div>
               )}
             </div>
@@ -923,10 +1280,29 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             </div>
             <div className="h-6" />
             {/* Fixed height container to prevent layout shift */}
-            <div className="mt-6 min-h-[200px]">
+            <div className="mt-6 space-y-4">
+              {optimizationResult && (
+                <div className="p-4 bg-green-900 rounded-lg border border-green-700">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-semibold text-green-100">Optimization Results:</h3>
+                    <button
+                      onClick={() => setOptimizationResult(null)}
+                      className="text-green-300 hover:text-green-100 transition-colors"
+                      title="Close optimization results"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="font-mono bg-green-950 p-3 rounded whitespace-pre-wrap text-green-100 text-sm">
+                    {optimizationResult}
+                  </div>
+                </div>
+              )}
               {result && (
                 <div className="p-4 bg-gray-700 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2">Results:</h3>
+                  <h3 className="text-lg font-semibold mb-2">Battle Results:</h3>
                   <div className="font-mono bg-gray-800 p-3 rounded whitespace-pre-wrap">
                     {result}
                   </div>
@@ -1086,7 +1462,6 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
   // Calculate research bonuses
   const metalurgyBonus = research.metalurgy * 0.05;
   const medicineBonus = research.medicine * 0.05;
-  const rapidDeploymentBonus = research.rapidDeployment * 0.05;
   const weaponsCalibrationBonus = research.weaponsCalibration * 0.05;
   
   // Dragon-specific bonuses
@@ -1098,26 +1473,31 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
   const rangeBonus = isRanged ? weaponsCalibrationBonus : 0;
 
   // Calculate attack with all bonuses
-  let attackBonus = metalurgyBonus + rapidDeploymentBonus + dragonryBonus;
+  let attackBonus = metalurgyBonus; // Removed dragonryBonus from attack
   
   // Apply special items
-  if (specialItems.crimsonBull) attackBonus += 0.10; // +10% attack
-  if (specialItems.glowingShields) attackBonus += 0.05; // +5% attack (from glowing shields)
+  if (specialItems.dragonHeart) attackBonus += 0.20; // +20% attack for all troops
   
   // Apply attack bonuses
   attack = Math.round(attack * (1 + attackBonus));
   
   // Calculate defense with all bonuses
   let defenseBonus = metalurgyBonus;
-  if (specialItems.glowingShields) defenseBonus += 0.10; // +10% defense
+  if (specialItems.glowingShields) defenseBonus += 0.20; // +20% defense for all troops
+  if (specialItems.purpleBones && isDragon) defenseBonus += 1.00; // +100% defense for dragons only
   
   defense = Math.round(defense * (1 + defenseBonus));
   
   // Calculate health with all bonuses
   let healthBonus = medicineBonus;
-  if (specialItems.purpleBones) healthBonus += 0.10; // +10% health
   
   health = Math.round(health * (1 + healthBonus));
+  
+  // Calculate speed with dragonry bonus for dragons
+  let speedBonus = 0;
+  if (isDragon) speedBonus = research.dragonry * 0.10; // +10% speed per level for dragons
+  
+  const speed = Math.round(unit.speed * (1 + speedBonus));
   
   // Calculate range bonus for ranged units
   const range = isRanged ? Math.round(unit.range * (1 + rangeBonus)) : 0;
@@ -1127,6 +1507,14 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
   if (isRanged) {
     rangedAttack = Math.round(unit.rangedAttack * (1 + attackBonus));
   }
+  
+  // Apply Crimson Bull bonus to dragon attack (both melee and ranged)
+  if (specialItems.crimsonBull && isDragon) {
+    attack = Math.round(attack * 1.20); // +20% attack for dragons
+    if (isRanged) {
+      rangedAttack = Math.round(rangedAttack * 1.20); // +20% ranged attack for dragons
+    }
+  }
 
   return {
     attack,
@@ -1134,7 +1522,7 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
     health,
     range: isRanged ? range : undefined,
     rangedAttack: isRanged ? rangedAttack : undefined,
-    speed: unit.speed, // Speed is not modified by research/items in current spec
+    speed: speed, // Speed now includes dragonry bonus for dragons
     load: unit.load    // Load capacity is not modified by research/items in current spec
   };
 };
