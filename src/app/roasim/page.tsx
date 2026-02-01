@@ -1401,7 +1401,7 @@ interface EnemyComposition {
 }
 
 const CAMP_TROOPS: EnemyComposition = {
-  '1': { porter: 1500, conscript: 500,},
+  '1': { porter: 1500, conscript: 500 },
   '2': { porter: 3000, conscript: 1500, spy: 500, halberdier: 1000 },
   '3': { porter: 6000, conscript: 2000, spy: 1000, halberdier: 2000, minotaur: 1000 },
   '4': { porter: 15000, conscript: 5000, spy: 2000, halberdier: 4000, minotaur: 2000, longbowMan: 1500 },
@@ -1414,17 +1414,17 @@ const CAMP_TROOPS: EnemyComposition = {
 };
 
 const WILDS_TROOPS: EnemyComposition = {
-  '1': { porter: 5000, conscript: 2500, spy: 1000, halberdier: 500, minotaur: 250, longbowMan: 100, swiftStrikeDragon: 50, armoredTransport: 25, giant: 12, fireMirror: 5, battleDragon: 2 },
-  '2': { porter: 10000, conscript: 5000, spy: 2000, halberdier: 1000, minotaur: 500, longbowMan: 200, swiftStrikeDragon: 100, armoredTransport: 50, giant: 25, fireMirror: 10, battleDragon: 5 },
-  '3': { porter: 20000, conscript: 10000, spy: 4000, halberdier: 2000, minotaur: 1000, longbowMan: 400, swiftStrikeDragon: 200, armoredTransport: 100, giant: 50, fireMirror: 20, battleDragon: 10 },
-  '4': { porter: 40000, conscript: 20000, spy: 8000, halberdier: 4000, minotaur: 2000, longbowMan: 800, swiftStrikeDragon: 400, armoredTransport: 200, giant: 100, fireMirror: 40, battleDragon: 20 },
-  '5': { porter: 80000, conscript: 40000, spy: 16000, halberdier: 8000, minotaur: 4000, longbowMan: 1600, swiftStrikeDragon: 800, armoredTransport: 400, giant: 200, fireMirror: 80, battleDragon: 40 },
-  '6': { porter: 120000, conscript: 60000, spy: 24000, halberdier: 12000, minotaur: 6000, longbowMan: 2400, swiftStrikeDragon: 1200, armoredTransport: 600, giant: 300, fireMirror: 120, battleDragon: 60 },
-  '7': { porter: 180000, conscript: 90000, spy: 36000, halberdier: 18000, minotaur: 9000, longbowMan: 3600, swiftStrikeDragon: 1800, armoredTransport: 900, giant: 450, fireMirror: 180, battleDragon: 90 },
-  '8': { porter: 270000, conscript: 135000, spy: 54000, halberdier: 27000, minotaur: 13500, longbowMan: 5400, swiftStrikeDragon: 2700, armoredTransport: 1350, giant: 675, fireMirror: 270, battleDragon: 135 },
-  '9': { porter: 400000, conscript: 200000, spy: 80000, halberdier: 40000, minotaur: 20000, longbowMan: 8000, swiftStrikeDragon: 4000, armoredTransport: 2000, giant: 1000, fireMirror: 400, battleDragon: 200 },
-  '10': { porter: 600000, conscript: 300000, spy: 120000, halberdier: 60000, minotaur: 30000, longbowMan: 12000, swiftStrikeDragon: 6000, armoredTransport: 3000, giant: 1500, fireMirror: 600, battleDragon: 300 }
-};
+  '1': { porter: 50 },
+  '2': { porter: 100, conscript: 50 },
+  '3': { porter: 200, conscript: 100, spy: 100 },
+  '4': { porter: 500, conscript: 200, spy: 100, halberdier: 100 },
+  '5': { porter: 1000, conscript: 500, spy: 200, halberdier: 200, minotaur: 150 },
+  '6': { porter: 2000, conscript: 1000, spy: 1000, halberdier: 400, minotaur: 300, longbowMan: 200 },
+  '7': { porter: 3500, conscript: 1250, spy: 1250, halberdier: 600, minotaur: 400, longbowMan: 250 },
+  '8': { porter: 5000, conscript: 2000, spy: 2000, halberdier: 1000, minotaur: 600, longbowMan: 200, swiftStrikeDragon: 100 },
+  '9': { porter: 10000, conscript: 5000, spy: 4000, halberdier: 2000, minotaur: 1500, longbowMan: 800, swiftStrikeDragon: 400, armoredTransport: 250 },
+  '10': { porter: 20000, conscript: 10000, spy: 10000, halberdier: 4000, minotaur: 3000, longbowMan: 2000, swiftStrikeDragon: 800, armoredTransport: 500, giant: 500 }
+  };
 
 const ENEMY_COMPOSITIONS = {
   // Camp has unique troops per level
