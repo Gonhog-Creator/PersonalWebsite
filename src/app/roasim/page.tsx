@@ -201,8 +201,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           baseStats.defense = Math.round(baseStats.defense * (1 + wallBonus));
         }
         
-        // Apply health reduction for camps only (not wilds or enemy cities)
-        if (defender.terrain === 'camp') {
+        // Apply health reduction for camps and wilds (not enemy cities)
+        if (defender.terrain === 'camp' || defender.terrain !== 'city') {
           baseStats.health = Math.round(baseStats.health * ENEMY_HEALTH_REDUCTION_FACTOR);
         }
         
@@ -722,10 +722,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           // Update damage used this turn
           damageUsedThisTurn += actualDamage;
           
-          // Calculate damage percentage based on actual damage vs maximum possible damage
-          // Use max RNG (1.2) for consistency with debug calculation
-          const maxPossibleDamageWithRng = baseDamage * attackDefenseRatio * 1.2;
-          const damagePercentage = maxPossibleDamageWithRng > 0 ? (actualDamage / maxPossibleDamageWithRng) * 100 : 0;
+          // Calculate damage percentage based on actual damage vs raw damage
+          const damagePercentage = rawDamage > 0 ? (actualDamage / rawDamage) * 100 : 0;
           
           // Cap percentage at 100% to prevent impossible values in display
           const cappedDamagePercentage = Math.min(damagePercentage, 100);
