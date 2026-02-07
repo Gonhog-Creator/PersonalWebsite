@@ -31,6 +31,16 @@ interface DefenderState {
   level: number;
 }
 
+interface EnemyResearch {
+  weaponsCalibration: number;
+  metalurgy: number;
+  medicine: number;
+  dragonry: number;
+  rapidDeployment: number;
+}
+
+type ResearchState = EnemyResearch;
+
 const ROASim = () => {
   const [attackers, setAttackers] = useState<Attackers>({
     porter: 0,
@@ -47,10 +57,11 @@ const ROASim = () => {
   });
 
   const [formData, setFormData] = useState({
-    weaponsCalibration: 1,
-    metalurgy: 1,
-    medicine: 1,
-    dragonry: 1,
+    weaponsCalibration: 0,
+    metalurgy: 0,
+    medicine: 0,
+    dragonry: 0,
+    rapidDeployment: 0,
   });
   
   const [specialItems, setSpecialItems] = useState<SpecialItems>({
@@ -64,6 +75,30 @@ const ROASim = () => {
     terrain: 'camp',
     level: 1
   });
+  
+  const [enemyTroops, setEnemyTroops] = useState<Attackers>({
+    porter: 0,
+    conscript: 0,
+    spy: 0,
+    halberdier: 0,
+    minotaur: 0,
+    longbowMan: 0,
+    swiftStrikeDragon: 0,
+    armoredTransport: 0,
+    giant: 0,
+    fireMirror: 0,
+    battleDragon: 0,
+  });
+  
+  const [enemyResearch, setEnemyResearch] = useState<EnemyResearch>({
+    weaponsCalibration: 0,
+    metalurgy: 0,
+    medicine: 0,
+    dragonry: 0,
+    rapidDeployment: 0,
+  });
+  
+  const [enemyWallLevel, setEnemyWallLevel] = useState<number>(1);
   
   const [result, setResult] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -87,6 +122,18 @@ const ROASim = () => {
         ...prev,
         [name]: parseInt(value) || 0
       }));
+    } else if (dataset?.section === 'enemyTroops') {
+      setEnemyTroops(prev => ({
+        ...prev,
+        [name]: parseInt(value) || 0
+      }));
+    } else if (dataset?.section === 'enemyResearch') {
+      setEnemyResearch(prev => ({
+        ...prev,
+        [name]: parseFloat(value) || 0
+      }));
+    } else if (name === 'enemyWallLevel') {
+      setEnemyWallLevel(Math.min(Math.max(parseInt(value) || 1, 1), 10)); // Ensure wall level is between 1-10
     } else if (name === 'terrain') {
       setDefender(prev => ({
         ...prev,
@@ -122,7 +169,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -132,15 +179,42 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       .filter(([_, count]) => count > 0)
       .map(([unitType]) => [
         unitType, 
-        calculateAttackerStats(unitType, formData, specialItems)
+        calculateAttackerStats(unitType, researchState, specialItems)
       ])
+  );
+
+  // Calculate modified stats for defender units
+  const defenderModifiedStats = Object.fromEntries(
+    Object.entries(defenders)
+      .filter(([_, count]) => count > 0)
+      .map(([unitType]) => {
+        const baseStats = enemyResearchState ? calculateAttackerStats(unitType, enemyResearchState, {
+          crimsonBull: false,
+          glowingShields: false,
+          purpleBones: false,
+          dragonHeart: false
+        }) : { ...TROOP_STATS[unitType] }; // Create a copy of base stats
+        
+        // Apply wall bonus to defense if wall level is provided
+        if (enemyWallLevel !== undefined) {
+          const wallBonus = 0.75 + (0.05 * enemyWallLevel);
+          baseStats.defense = Math.round(baseStats.defense * (1 + wallBonus));
+        }
+        
+        // Apply health reduction for camps only (not wilds or enemy cities)
+        if (defender.terrain === 'camp') {
+          baseStats.health = Math.round(baseStats.health * ENEMY_HEALTH_REDUCTION_FACTOR);
+        }
+        
+        return [unitType, baseStats];
+      })
   );
 
   // Helper function to safely get range
   const getUnitRange = (unitType: string, isAttacker: boolean = false): number => {
     const stats = isAttacker 
       ? attackerModifiedStats[unitType] || TROOP_STATS[unitType]
-      : TROOP_STATS[unitType];
+      : (defenderModifiedStats[unitType] || TROOP_STATS[unitType]);
     return stats?.range || 0;
   };
 
@@ -221,17 +295,18 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   // Add defenders with proper stats
   Object.entries(defenders).forEach(([unitType, count]) => {
     if (count > 0) {
-      const unit = TROOP_STATS[unitType];
+      const baseStats = TROOP_STATS[unitType];
+      const modifiedStats = defenderModifiedStats[unitType] || baseStats;
       const battleUnit: BattleUnit = {
         id: `${unitType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: unitType,
         count,
-        attack: unit.attack,
-        defense: unit.defense,
-        health: unit.health,
-        range: unit.range || 0,
-        rangedAttack: unit.rangedAttack || 0,
-        speed: unit.speed,
+        attack: modifiedStats.attack,
+        defense: modifiedStats.defense,
+        health: modifiedStats.health,
+        range: modifiedStats.range || 0,
+        rangedAttack: modifiedStats.rangedAttack || 0,
+        speed: modifiedStats.speed,
         position: battlefieldRange,
         isAttacker: false,
         hasMoved: false,
@@ -261,7 +336,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   // Add attacker's army composition
   const attackerArmy = Object.entries(attackers)
     .filter(([_, count]) => count > 0)
-    .map(([unitType, count]) => `${count.toLocaleString()}x ${TROOP_STATS[unitType].name}`)
+    .map(([unitType, count]) => `${count.toLocaleString()}x <span class="text-green-400">${TROOP_STATS[unitType].name}</span>`)
     .join(', ');
   
   battleLog.push(`- Attacker's Army: ${attackerArmy}`);
@@ -269,7 +344,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   // Add defender's army composition
   const defenderArmy = Object.entries(defenders)
     .filter(([_, count]) => count > 0)
-    .map(([unitType, count]) => `${count.toLocaleString()}x ${TROOP_STATS[unitType].name}`)
+    .map(([unitType, count]) => `${count.toLocaleString()}x <span class="text-red-400">${TROOP_STATS[unitType].name}</span>`)
     .join(', ');
     
   battleLog.push(`- Defender's Army: ${defenderArmy}`);
@@ -292,13 +367,13 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   }
   
   // Show attacker's modified stats
-  battleLog.push("\nAttacker's Modified Stats:");
+  battleLog.push("\n<span class=\"text-green-400\">Attacker's Modified Stats:</span>");
   const research = researchState; // Use the research state from the component
   Object.entries(attackers).forEach(([unitType, count]) => {
     if (count > 0) {
       const baseStats = TROOP_STATS[unitType];
       const modifiedStats = calculateAttackerStats(unitType, research, specialItems);
-      battleLog.push(`- ${baseStats.name}:`);
+      battleLog.push(`- <span class="text-green-400">${baseStats.name}:</span>`);
       battleLog.push(`  Attack: ${baseStats.attack} → ${modifiedStats.attack}`);
       battleLog.push(`  Defense: ${baseStats.defense} → ${modifiedStats.defense}`);
       battleLog.push(`  Health: ${baseStats.health} → ${modifiedStats.health}`);
@@ -311,6 +386,44 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       }
     }
   });
+
+  // Show defender's modified stats if enemy research is provided
+  if (enemyResearchState) {
+    battleLog.push("\n<span class=\"text-red-400\">Defender's Modified Stats:</span>");
+    if (enemyWallLevel !== undefined) {
+      battleLog.push(`  Wall Level: ${enemyWallLevel} (+${(0.75 + 0.05 * enemyWallLevel).toFixed(2)} defense bonus)`);
+    }
+    Object.entries(defenders).forEach(([unitType, count]) => {
+      if (count > 0) {
+        const baseStats = TROOP_STATS[unitType];
+        const modifiedStats = calculateAttackerStats(unitType, enemyResearchState, {
+          crimsonBull: false,
+          glowingShields: false,
+          purpleBones: false,
+          dragonHeart: false
+        });
+        
+        // Apply wall bonus to defense for display
+        let finalDefense = modifiedStats.defense;
+        if (enemyWallLevel !== undefined) {
+          const wallBonus = 0.75 + (0.05 * enemyWallLevel);
+          finalDefense = Math.round(modifiedStats.defense * (1 + wallBonus));
+        }
+        
+        battleLog.push(`- <span class="text-red-400">${baseStats.name}:</span>`);
+        battleLog.push(`  Attack: ${baseStats.attack} → ${modifiedStats.attack}`);
+        battleLog.push(`  Defense: ${baseStats.defense} → ${finalDefense}${enemyWallLevel !== undefined ? ` (with wall bonus)` : ''}`);
+        battleLog.push(`  Health: ${baseStats.health} → ${modifiedStats.health}`);
+        battleLog.push(`  Speed: ${baseStats.speed} → ${modifiedStats.speed}`);
+        if (baseStats.range > 0) {
+          battleLog.push(`  Range: ${baseStats.range} → ${modifiedStats.range}`);
+        }
+        if (baseStats.rangedAttack > 0) {
+          battleLog.push(`  Ranged Attack: ${baseStats.rangedAttack} → ${modifiedStats.rangedAttack}`);
+        }
+      }
+    });
+  }
   
   // Log which units set the battlefield length
   if (battlefieldRange > 0) {
@@ -327,7 +440,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   // Initialize round counter and turn counter for RNG
   let round = 0;
   let turnCounter = 0;
-  const maxRounds = 20; // Prevent infinite loops
+  const maxRounds = 50; // Prevent infinite loops
   
   // Main battle loop
   while (round < maxRounds) {
@@ -443,7 +556,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           
           // Only move if the position changes and we have movement speed
           if (newPosition !== currentPos && unit.speed > 0) {
-            battleLog.push(`${unit.count}x ${TROOP_STATS[unit.type].name} moves from ${currentPos} to ${newPosition}`);
+            battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> moves from ${currentPos} to ${newPosition}`);
             unit.position = newPosition;
             
             // Recalculate potential targets after moving
@@ -462,7 +575,22 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         }
       }
       
-      // Attack phase - only if unit is still alive after movement and has targets
+      // Attack phase - only if unit is still alive and has targets (recalculate after movement)
+      // Recalculate potential targets in case movement brought us in range
+      potentialTargets = battleUnits.filter(target => {
+        if (target.count <= 0) return false; // Skip dead units
+        if (unit.isAttacker === target.isAttacker) return false; // Skip same side
+        
+        const distance = Math.abs(unit.position - target.position);
+        
+        // Check melee range (1) for all units, regardless of battlefield range
+        if (distance <= 1) return true;
+        
+        // For ranged units, check their attack range
+        const attackRange = unit.range || 0;
+        return distance <= attackRange;
+      });
+      
       if (unit.count > 0 && potentialTargets.length > 0) {
         // Keep track of attacks this turn and damage used
         let attacksThisTurn = 0;
@@ -555,21 +683,22 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const rawDamage = Math.round(baseDamage * attackDefenseRatio * rng);
           
           // Calculate max possible damage for this attack
-          const maxPossibleDamage = attackPower * unit.count * 2.1 * 1.2;
+          const maxPossibleDamage = attackPower * unit.count * attackDefenseRatio * 1.2;
           
-          const healthPerUnit = targetStats.health;
+          const healthPerUnit = target.health;
           const maxPossibleKills = target.count;
           
           // Calculate actual damage done (capped by remaining unit health)
           const maxDamagePossible = maxPossibleKills * healthPerUnit;
           const actualDamage = Math.min(rawDamage, maxDamagePossible);
+          const debugPercentage = (actualDamage / rawDamage) * 100;
           
           // Debug: Log RNG and damage values
           if (showDebug && turnCounter <= 10) {
             const minPossibleDamage = Math.round(baseDamage * attackDefenseRatio * 0.8); // RNG 0.8
             const maxPossibleDamage = Math.round(baseDamage * attackDefenseRatio * 1.2); // RNG 1.2
-            const debugPercentage = (actualDamage / maxPossibleDamage) * 100;
-            battleLog.push(`DEBUG: ${TROOP_STATS[unit.type].name} RNG=${rng.toFixed(3)}, Min=${minPossibleDamage.toLocaleString()}, Max=${maxPossibleDamage.toLocaleString()}, Actual=${actualDamage.toLocaleString()}, Pct=${debugPercentage.toFixed(2)}%`);
+            const originalHealthPool = target.count * TROOP_STATS[target.type].health;
+            battleLog.push(`DEBUG: <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> → <span class="${target.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[target.type].name}</span> RNG=${rng.toFixed(3)}, Raw=${rawDamage.toLocaleString()}, HealthPool=${maxDamagePossible.toLocaleString()}/${originalHealthPool.toLocaleString()}, Actual=${actualDamage.toLocaleString()}, Pct=${debugPercentage.toFixed(2)}%`);
           }
           
           // Calculate units killed based on actual damage
@@ -594,8 +723,12 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           damageUsedThisTurn += actualDamage;
           
           // Calculate damage percentage based on actual damage vs maximum possible damage
-          const maxPossibleDamageWithRng = attackPower * unit.count * attackDefenseRatio * 1.2; // Max RNG factor
-          const damagePercentage = (actualDamage / maxPossibleDamageWithRng) * 100;
+          // Use max RNG (1.2) for consistency with debug calculation
+          const maxPossibleDamageWithRng = baseDamage * attackDefenseRatio * 1.2;
+          const damagePercentage = maxPossibleDamageWithRng > 0 ? (actualDamage / maxPossibleDamageWithRng) * 100 : 0;
+          
+          // Cap percentage at 100% to prevent impossible values in display
+          const cappedDamagePercentage = Math.min(damagePercentage, 100);
           
           // Increment turn counter for RNG
           turnCounter++;
@@ -603,23 +736,39 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const remainingTargets = target.count > 0 ? target.count : 0;
           
           battleLog.push(
-            `${TROOP_STATS[unit.type].name} attacks ${TROOP_STATS[target.type].name} ` +
+            `<span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> attacks <span class="${target.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[target.type].name}</span> ` +
             `using ${isRangedAttack ? 'Ranged' : 'Melee'} attack. ` +
-            `${effectiveUnitsKilled.toLocaleString()} were killed, ${remainingTargets.toLocaleString()} remaining (${damagePercentage.toFixed(2)}%)`
+            `${effectiveUnitsKilled.toLocaleString()} were killed, ${remainingTargets.toLocaleString()} remaining (${debugPercentage.toFixed(2)}%)`
           );
           
           // Check if this attack used less than 20% of potential damage - if so, attack again
-          if (damagePercentage < 20) {
+          // Use the UNCAPPED percentage for the decision logic
+          if (showDebug) {
+            battleLog.push(`DEBUG MULTI-ATTACK: Damage=${damagePercentage.toFixed(4)}%, Targets=${potentialTargets.length}, ShouldAttack=${damagePercentage < 20}`);
+          }
+          
+          if (damagePercentage >= 20) {
+            // Stop attacking - last attack was efficient enough (20%+ damage)
+            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Stopping - damage >= 20%`);
+            break;
+          } else if (damagePercentage <= 0.001) {
+            // Stop attacking - no meaningful damage being done (changed from 0.1% to 0.001%)
+            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Stopping - damage <= 0.001%`);
+            break;
+          } else if (effectiveUnitsKilled === 0 && actualDamage === 0) {
+            // Stop attacking - no damage at all being done
+            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Stopping - no damage`);
+            break;
+          } else {
             // Continue attacking - refresh potential targets
+            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Continuing - refreshing targets`);
             potentialTargets = battleUnits.filter(t => 
               t.count > 0 && 
               t.isAttacker !== unit.isAttacker &&
               (Math.abs(unit.position - t.position) <= (unit.range || 0) || 
                Math.abs(unit.position - t.position) <= 1)
             );
-          } else {
-            // Stop attacking - last attack was efficient enough (20%+ damage)
-            break;
+            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Found ${potentialTargets.length} targets after refresh`);
           }
         }        
       }
@@ -652,7 +801,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         .filter(u => u.isAttacker && u.count > 0)
         .sort((a, b) => TROOP_STATS[b.type].power - TROOP_STATS[a.type].power)
         .forEach(unit => {
-          battleLog.push(`Attacker: ${unit.count}x ${TROOP_STATS[unit.type].name}`);
+          battleLog.push(`<span class="text-green-400">Attacker</span>: ${unit.count}x ${TROOP_STATS[unit.type].name}`);
         });
       
       // Then show defenders
@@ -660,7 +809,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         .filter(u => !u.isAttacker && u.count > 0)
         .sort((a, b) => TROOP_STATS[b.type].power - TROOP_STATS[a.type].power)
         .forEach(unit => {
-          battleLog.push(`Defender: ${unit.count}x ${TROOP_STATS[unit.type].name}`);
+          battleLog.push(`<span class="text-red-400">Defender</span>: ${unit.count}x ${TROOP_STATS[unit.type].name}`);
         });
       
       break;
@@ -750,7 +899,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     `- Battlefield length: ${battlefieldRange}`,
     "- Units in battle:" + battleUnits
       .filter(u => u.count > 0)
-      .map(u => `\n  - ${u.count}x ${TROOP_STATS[u.type].name} (${u.position < battlefieldRange / 2 ? 'Attacker' : 'Defender'})`)
+      .map(u => `\n  - ${u.count}x <span class="${u.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[u.type].name}</span> (${u.position < battlefieldRange / 2 ? 'Attacker' : 'Defender'})`)
       .join('')
   );
   
@@ -766,12 +915,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     // Get the defender troops based on selected terrain and level
     let defenderTroops: EnemyTroops | null = null;
     if (defender.terrain === 'enemy') {
-      // Handle player vs player combat
-      defenderTroops = {
-        porter: 0, conscript: 0, spy: 0, halberdier: 0, minotaur: 0,
-        longbowMan: 0, swiftStrikeDragon: 0, armoredTransport: 0,
-        giant: 0, fireMirror: 0, battleDragon: 0
-      };
+      // Handle player vs player combat - use the custom enemy troops
+      defenderTroops = enemyTroops;
     } else {
       // Get troops for the selected terrain and level
       const terrainTroops = ENEMY_COMPOSITIONS[defender.terrain];
@@ -790,7 +935,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       metalurgy: formData.metalurgy,
       dragonry: formData.dragonry,
       medicine: formData.medicine,
-      weaponsCalibration: formData.weaponsCalibration
+      weaponsCalibration: formData.weaponsCalibration,
+      rapidDeployment: formData.rapidDeployment
     };
     
     // Also update the special items to match the component's state
@@ -801,8 +947,17 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       dragonHeart: specialItems.dragonHeart
     };
 
-    // Call the battle simulation with the current research state
-    const battleResult = simulateBattle(attackers, defenderTroops, currentResearch, showDebug, rngOverride, seed);
+    // Call the battle simulation with the current research state and enemy research/wall if applicable
+    const battleResult = simulateBattle(
+      attackers, 
+      defenderTroops, 
+      currentResearch, 
+      showDebug, 
+      rngOverride, 
+      seed, 
+      defender.terrain === 'enemy' ? enemyResearch : undefined,
+      defender.terrain === 'enemy' ? enemyWallLevel : undefined
+    );
     setResult(battleResult);
   };
 
@@ -836,11 +991,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     // Get defender troops
     let defenderTroops: EnemyTroops | null = null;
     if (defender.terrain === 'enemy') {
-      defenderTroops = {
-        porter: 0, conscript: 0, spy: 0, halberdier: 0, minotaur: 0,
-        longbowMan: 0, swiftStrikeDragon: 0, armoredTransport: 0,
-        giant: 0, fireMirror: 0, battleDragon: 0
-      };
+      // Handle player vs player combat - use the custom enemy troops
+      defenderTroops = enemyTroops;
     } else {
       const terrainTroops = ENEMY_COMPOSITIONS[defender.terrain];
       if (terrainTroops) {
@@ -876,12 +1028,21 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       });
       testAttackers[selectedTroopType as keyof Attackers] = high;
 
-      const battleResult = simulateBattle(testAttackers, defenderTroops, currentResearch, false, rngOverride, seed);
+      const battleResult = simulateBattle(
+        testAttackers, 
+        defenderTroops, 
+        currentResearch, 
+        false, 
+        rngOverride, 
+        seed, 
+        defender.terrain === 'enemy' ? enemyResearch : undefined,
+        defender.terrain === 'enemy' ? enemyWallLevel : undefined
+      );
       
       // Debug: Show what we're looking for in the battle result
       if (testCount <= 3) {
-        const expectedFormat = `Attacker: ${high.toLocaleString()}x ${TROOP_STATS[selectedTroopType].name}`;
-        const actualFormat = `Attacker: ${high}x ${TROOP_STATS[selectedTroopType].name}`;
+        const expectedFormat = `<span class="text-green-400">Attacker</span>: ${high}x ${TROOP_STATS[selectedTroopType].name}`;
+        const actualFormat = `<span class="text-green-400">Attacker</span>: ${high}x ${TROOP_STATS[selectedTroopType].name}`;
         
         optimizationLog.push(`DEBUG: Battle result contains "The attackers have won": ${battleResult.includes("The attackers have won the battle")}`);
         optimizationLog.push(`DEBUG: Expected format: ${expectedFormat}`);
@@ -900,8 +1061,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       
       // Check if we won with zero losses
       const hasZeroLosses = battleResult.includes("The attackers have won the battle") && 
-                           battleResult.includes(`Attacker: ${high}x ${TROOP_STATS[selectedTroopType].name}`) &&
-                           !battleResult.includes(`Attacker: 0x`) &&
+                           battleResult.includes(`<span class="text-green-400">Attacker</span>: ${high}x ${TROOP_STATS[selectedTroopType].name}`) &&
+                           !battleResult.includes(`<span class="text-green-400">Attacker</span>: 0x`) &&
                            !battleResult.includes(`${TROOP_STATS[selectedTroopType].name} 0`);
 
       if (hasZeroLosses) {
@@ -937,12 +1098,21 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       });
       testAttackers[selectedTroopType as keyof Attackers] = mid;
 
-      const battleResult = simulateBattle(testAttackers, defenderTroops, currentResearch, false, rngOverride, seed);
+      const battleResult = simulateBattle(
+        testAttackers, 
+        defenderTroops, 
+        currentResearch, 
+        false, 
+        rngOverride, 
+        seed, 
+        defender.terrain === 'enemy' ? enemyResearch : undefined,
+        defender.terrain === 'enemy' ? enemyWallLevel : undefined
+      );
       
       // Check if we won with zero losses
       const hasZeroLosses = battleResult.includes("The attackers have won the battle") && 
-                           battleResult.includes(`Attacker: ${mid}x ${TROOP_STATS[selectedTroopType].name}`) &&
-                           !battleResult.includes(`Attacker: 0x`) &&
+                           battleResult.includes(`<span class="text-green-400">Attacker</span>: ${mid}x ${TROOP_STATS[selectedTroopType].name}`) &&
+                           !battleResult.includes(`<span class="text-green-400">Attacker</span>: 0x`) &&
                            !battleResult.includes(`${TROOP_STATS[selectedTroopType].name} 0`);
 
       if (hasZeroLosses) {
@@ -993,7 +1163,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         <meta name="description" content="Research Calculator for ROA Sim" />
       </Head>
         <div className="h-8" />
-      <main className="w-full max-w-4xl mx-auto">
+      <main className="w-full max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center">ROASim</h1>
         <div className="h-10" />
         <div className="bg-gray-800 rounded-lg shadow-xl p-6">
@@ -1027,8 +1197,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
               <div className="text-center mb-4">
                 <h3 className="text-lg font-medium">Set All Research To:</h3>
               </div>
-              <div className="grid grid-cols-5 gap-2 w-full">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+              <div className="grid grid-cols-6 gap-2 w-full">
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
                   <button
                     key={level}
                     type="button"
@@ -1036,7 +1206,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       weaponsCalibration: level,
                       metalurgy: level,
                       medicine: level,
-                      dragonry: level
+                      dragonry: level,
+                      rapidDeployment: level
                     })}
                     className="py-2 px-1 rounded-md text-sm font-medium transition-colors bg-gray-600 text-gray-200 hover:bg-gray-500"
                   >
@@ -1052,6 +1223,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                 { id: 'metalurgy', label: 'Metalurgy' },
                 { id: 'medicine', label: 'Medicine' },
                 { id: 'dragonry', label: 'Dragonry' },
+                { id: 'rapidDeployment', label: 'Rapid Deployment' },
               ].map(({ id, label }) => (
                 <div key={id} className="space-y-2">
                   <label htmlFor={id} className="block text-sm font-medium">
@@ -1062,14 +1234,14 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       type="range"
                       id={id}
                       name={id}
-                      min="1"
+                      min="0"
                       max="10"
-                      value={formData[id as keyof typeof formData]}
+                      value={formData[id as keyof typeof formData] || 0}
                       onChange={handleInputChange}
                       className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
                     />
                     <span className="text-lg font-mono w-8 text-center">
-                      {formData[id as keyof typeof formData]}
+                      {formData[id as keyof typeof formData] || 0}
                     </span>
                   </div>
                 </div>
@@ -1107,7 +1279,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                 ))}
               </div>
                 <div className="h-6" />
-              {defender.terrain !== 'enemy' && (
+              {defender.terrain !== 'enemy' ? (
                 <div className="mt-8">
                   <div className="text-center mb-4">
                     <h3 className="text-xl font-semibold">
@@ -1129,6 +1301,129 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                         {level}
                       </button>
                     ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-8">
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-semibold">Enemy Troops</h3>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {[
+                      { id: 'porter', label: 'Porter' },
+                      { id: 'conscript', label: 'Conscript' },
+                      { id: 'spy', label: 'Spy' },
+                      { id: 'halberdier', label: 'Halberdier' },
+                      { id: 'minotaur', label: 'Minotaur' },
+                      { id: 'longbowMan', label: 'Longbow Man' },
+                      { id: 'swiftStrikeDragon', label: 'Swift Strike Dragon' },
+                      { id: 'armoredTransport', label: 'Armored Transport' },
+                      { id: 'giant', label: 'Giant' },
+                      { id: 'fireMirror', label: 'Fire Mirror' },
+                      { id: 'battleDragon', label: 'Battle Dragon' },
+                    ].map(({ id, label }) => (
+                      <div key={id} className="space-y-1">
+                        <label htmlFor={`enemy-${id}`} className="block text-sm font-medium">
+                          {label}
+                        </label>
+                        <input
+                          type="number"
+                          id={`enemy-${id}`}
+                          name={id}
+                          data-section="enemyTroops"
+                          value={enemyTroops[id as keyof Attackers]}
+                          onChange={handleInputChange}
+                          className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                          min="0"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="h-8" />
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-semibold">Enemy Research Levels</h3>
+                  </div>
+                  {/* Set All To Section for Enemy */}
+                  <div className="mb-6">
+                    <div className="text-center mb-4">
+                      <h4 className="text-lg font-medium">Set All Enemy Research To:</h4>
+                    </div>
+                    <div className="grid grid-cols-6 gap-2 w-full">
+                      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level) => (
+                        <button
+                          key={level}
+                          type="button"
+                          onClick={() => setEnemyResearch({
+                            weaponsCalibration: level,
+                            metalurgy: level,
+                            medicine: level,
+                            dragonry: level,
+                            rapidDeployment: level
+                          })}
+                          className="py-2 px-1 rounded-md text-sm font-medium transition-colors bg-gray-600 text-gray-200 hover:bg-gray-500"
+                        >
+                          {level}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {[
+                      { id: 'weaponsCalibration', label: 'Weapons Calibration' },
+                      { id: 'metalurgy', label: 'Metalurgy' },
+                      { id: 'medicine', label: 'Medicine' },
+                      { id: 'dragonry', label: 'Dragonry' },
+                      { id: 'rapidDeployment', label: 'Rapid Deployment' },
+                    ].map(({ id, label }) => (
+                      <div key={id} className="space-y-2">
+                        <label htmlFor={`enemy-${id}`} className="block text-sm font-medium">
+                          {label}
+                        </label>
+                        <div className="flex items-center space-x-4">
+                          <input
+                            type="range"
+                            id={`enemy-${id}`}
+                            name={id}
+                            min="0"
+                            max="10"
+                            value={enemyResearch[id as keyof EnemyResearch] || 0}
+                            onChange={handleInputChange}
+                            data-section="enemyResearch"
+                            className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                          />
+                          <span className="text-lg font-mono w-8 text-center">
+                            {enemyResearch[id as keyof EnemyResearch] || 0}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="h-6" />
+                  <div className="text-center mb-4">
+                    <h3 className="text-xl font-semibold">Enemy Wall Level</h3>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="enemyWallLevel" className="block text-sm font-medium">
+                      Wall Level: {enemyWallLevel}
+                    </label>
+                    <div className="flex items-center space-x-4">
+                      <input
+                        type="range"
+                        id="enemyWallLevel"
+                        name="enemyWallLevel"
+                        min="0"
+                        max="10"
+                        value={enemyWallLevel}
+                        onChange={handleInputChange}
+                        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <span className="text-lg font-mono w-8 text-center">
+                        {enemyWallLevel}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Wall provides +{(0.75 + 0.05 * enemyWallLevel).toFixed(2)} defense bonus to enemy troops
+                    </p>
                   </div>
                 </div>
               )}
@@ -1300,12 +1595,14 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                   </div>
                 </div>
               )}
+
               {result && (
                 <div className="p-4 bg-gray-700 rounded-lg">
                   <h3 className="text-lg font-semibold mb-2">Battle Results:</h3>
-                  <div className="font-mono bg-gray-800 p-3 rounded whitespace-pre-wrap">
-                    {result}
-                  </div>
+                  <div 
+                    className="font-mono bg-gray-800 p-3 rounded whitespace-pre-wrap text-sm"
+                    dangerouslySetInnerHTML={{ __html: result }}
+                  />
                 </div>
               )}
             </div>
@@ -1313,6 +1610,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         </div>
       </main>
     </div>
+
   );
 };
 
@@ -1332,7 +1630,10 @@ interface TroopStats {
   power: number;           // Overall power rating for quick comparison
 }
 
-const TROOP_STATS: Record<string, Troostats> = {
+// Enemy health reduction factor for camps and wilds
+const ENEMY_HEALTH_REDUCTION_FACTOR = 0.5;
+
+const TROOP_STATS: Record<string, TroopStats> = {
   // Tier 1
   porter: {
     name: 'Porter', tier: 1, type: 'infantry',
@@ -1463,13 +1764,14 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
   const metalurgyBonus = research.metalurgy * 0.05;
   const medicineBonus = research.medicine * 0.05;
   const weaponsCalibrationBonus = research.weaponsCalibration * 0.05;
+  const rapidDeploymentBonus = (research.rapidDeployment || 1) * 0.05;
   
   // Dragon-specific bonuses
   const isDragon = unit.type === 'dragon';
   const dragonryBonus = isDragon ? research.dragonry * 0.10 : 0;
   
-  // Ranged unit bonuses
-  const isRanged = unit.type === 'ranged';
+  // Ranged unit bonuses (include both ranged and siege units)
+  const isRanged = unit.type === 'ranged' || unit.type === 'siege';
   const rangeBonus = isRanged ? weaponsCalibrationBonus : 0;
 
   // Calculate attack with all bonuses
@@ -1493,9 +1795,9 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
   
   health = Math.round(health * (1 + healthBonus));
   
-  // Calculate speed with dragonry bonus for dragons
-  let speedBonus = 0;
-  if (isDragon) speedBonus = research.dragonry * 0.10; // +10% speed per level for dragons
+  // Calculate speed with dragonry bonus for dragons and rapid deployment for all units
+  let speedBonus = rapidDeploymentBonus; // +5% speed per level for all units
+  if (isDragon) speedBonus += research.dragonry * 0.10; // +10% speed per level for dragons
   
   const speed = Math.round(unit.speed * (1 + speedBonus));
   
