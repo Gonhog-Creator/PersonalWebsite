@@ -200,12 +200,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const wallBonus = 0.75 + (0.05 * enemyWallLevel);
           baseStats.defense = Math.round(baseStats.defense * (1 + wallBonus));
         }
-        
-        // Apply health reduction for camps and wilds (not enemy cities)
-        if (defender.terrain === 'camp' || defender.terrain !== 'city') {
-          baseStats.health = Math.round(baseStats.health * ENEMY_HEALTH_REDUCTION_FACTOR);
-        }
-        
         return [unitType, baseStats];
       })
   );
@@ -674,16 +668,13 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             // Use overridden RNG value
             rng = Math.max(0.8, Math.min(1.2, parseFloat(rngOverride) || 1.0));
           } else {
-            // Use random RNG
+            // Use random RNG with 0.01 precision
             const rngSeed = (battleSeed || seed) + (round * 10) + (turnCounter);
-            rng = 0.8 + (0.4 * ((rngSeed * 9301 + 49297) % 233280) / 233280);
+            rng = Math.round((0.8 + (0.4 * ((rngSeed * 9301 + 49297) % 233280) / 233280)) * 100) / 100;
           }
           
           // Calculate final damage with all factors
           const rawDamage = Math.round(baseDamage * attackDefenseRatio * rng);
-          
-          // Calculate max possible damage for this attack
-          const maxPossibleDamage = attackPower * unit.count * attackDefenseRatio * 1.2;
           
           const healthPerUnit = target.health;
           const maxPossibleKills = target.count;
@@ -691,14 +682,17 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           // Calculate actual damage done (capped by remaining unit health)
           const maxDamagePossible = maxPossibleKills * healthPerUnit;
           const actualDamage = Math.min(rawDamage, maxDamagePossible);
-          const debugPercentage = (actualDamage / rawDamage) * 100;
+          
+          // Calculate damage percentage for multi-attack decision (actual vs max possible with current RNG)
+          const maxPossibleDamageWithCurrentRng = baseDamage * attackDefenseRatio * rng;
+          const damagePercentage = maxPossibleDamageWithCurrentRng > 0 ? (actualDamage / maxPossibleDamageWithCurrentRng) * 100 : 0;
           
           // Debug: Log RNG and damage values
           if (showDebug && turnCounter <= 10) {
             const minPossibleDamage = Math.round(baseDamage * attackDefenseRatio * 0.8); // RNG 0.8
             const maxPossibleDamage = Math.round(baseDamage * attackDefenseRatio * 1.2); // RNG 1.2
             const originalHealthPool = target.count * TROOP_STATS[target.type].health;
-            battleLog.push(`DEBUG: <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> → <span class="${target.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[target.type].name}</span> RNG=${rng.toFixed(3)}, Raw=${rawDamage.toLocaleString()}, HealthPool=${maxDamagePossible.toLocaleString()}/${originalHealthPool.toLocaleString()}, Actual=${actualDamage.toLocaleString()}, Pct=${debugPercentage.toFixed(2)}%`);
+            battleLog.push(`<span class="text-orange-400">DEBUG</span>: <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> → <span class="${target.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[target.type].name}</span> RNG=${rng.toFixed(3)}, Raw=${rawDamage.toLocaleString()}, HealthPool=${maxDamagePossible.toLocaleString()}/${originalHealthPool.toLocaleString()}, Actual=${actualDamage.toLocaleString()}, Pct=${damagePercentage.toFixed(2)}%`);
           }
           
           // Calculate units killed based on actual damage
@@ -719,15 +713,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           // Apply damage
           target.count = Math.max(0, target.count - effectiveUnitsKilled);
           
-          // Update damage used this turn
-          damageUsedThisTurn += actualDamage;
-          
-          // Calculate damage percentage based on actual damage vs raw damage
-          const damagePercentage = rawDamage > 0 ? (actualDamage / rawDamage) * 100 : 0;
-          
-          // Cap percentage at 100% to prevent impossible values in display
-          const cappedDamagePercentage = Math.min(damagePercentage, 100);
-          
           // Increment turn counter for RNG
           turnCounter++;
           
@@ -736,37 +721,37 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           battleLog.push(
             `<span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> attacks <span class="${target.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[target.type].name}</span> ` +
             `using ${isRangedAttack ? 'Ranged' : 'Melee'} attack. ` +
-            `${effectiveUnitsKilled.toLocaleString()} were killed, ${remainingTargets.toLocaleString()} remaining (${debugPercentage.toFixed(2)}%)`
+            `${effectiveUnitsKilled.toLocaleString()} were killed, ${remainingTargets.toLocaleString()} remaining (${damagePercentage.toFixed(2)}%)`
           );
           
           // Check if this attack used less than 20% of potential damage - if so, attack again
           // Use the UNCAPPED percentage for the decision logic
           if (showDebug) {
-            battleLog.push(`DEBUG MULTI-ATTACK: Damage=${damagePercentage.toFixed(4)}%, Targets=${potentialTargets.length}, ShouldAttack=${damagePercentage < 20}`);
+            battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Damage=${damagePercentage.toFixed(4)}%, Targets=${potentialTargets.length}, ShouldAttack=${damagePercentage < 20}`);
           }
           
           if (damagePercentage >= 20) {
             // Stop attacking - last attack was efficient enough (20%+ damage)
-            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Stopping - damage >= 20%`);
+            // if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Stopping - damage >= 20%`);
             break;
           } else if (damagePercentage <= 0.001) {
             // Stop attacking - no meaningful damage being done (changed from 0.1% to 0.001%)
-            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Stopping - damage <= 0.001%`);
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage <= 0.001%`);
             break;
           } else if (effectiveUnitsKilled === 0 && actualDamage === 0) {
             // Stop attacking - no damage at all being done
-            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Stopping - no damage`);
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
             break;
           } else {
             // Continue attacking - refresh potential targets
-            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Continuing - refreshing targets`);
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - refreshing targets`);
             potentialTargets = battleUnits.filter(t => 
               t.count > 0 && 
               t.isAttacker !== unit.isAttacker &&
               (Math.abs(unit.position - t.position) <= (unit.range || 0) || 
                Math.abs(unit.position - t.position) <= 1)
             );
-            if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Found ${potentialTargets.length} targets after refresh`);
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Found ${potentialTargets.length} targets after refresh`);
           }
         }        
       }
@@ -1042,17 +1027,17 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         const expectedFormat = `<span class="text-green-400">Attacker</span>: ${high}x ${TROOP_STATS[selectedTroopType].name}`;
         const actualFormat = `<span class="text-green-400">Attacker</span>: ${high}x ${TROOP_STATS[selectedTroopType].name}`;
         
-        optimizationLog.push(`DEBUG: Battle result contains "The attackers have won": ${battleResult.includes("The attackers have won the battle")}`);
-        optimizationLog.push(`DEBUG: Expected format: ${expectedFormat}`);
-        optimizationLog.push(`DEBUG: Actual format: ${actualFormat}`);
-        optimizationLog.push(`DEBUG: Battle result contains expected format: ${battleResult.includes(expectedFormat)}`);
-        optimizationLog.push(`DEBUG: Battle result contains actual format: ${battleResult.includes(actualFormat)}`);
+        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Battle result contains "The attackers have won": ${battleResult.includes("The attackers have won the battle")}`);
+        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Expected format: ${expectedFormat}`);
+        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Actual format: ${actualFormat}`);
+        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Battle result contains expected format: ${battleResult.includes(expectedFormat)}`);
+        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Battle result contains actual format: ${battleResult.includes(actualFormat)}`);
         
         // Show the actual final forces section
         const finalForcesStart = battleResult.indexOf("=== FINAL FORCES ===");
         if (finalForcesStart !== -1) {
           const finalForcesSection = battleResult.substring(finalForcesStart);
-          optimizationLog.push(`DEBUG: Final forces section:`);
+          optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Final forces section:`);
           optimizationLog.push(finalForcesSection);
         }
       }
@@ -1628,9 +1613,6 @@ interface TroopStats {
   power: number;           // Overall power rating for quick comparison
 }
 
-// Enemy health reduction factor for camps and wilds
-const ENEMY_HEALTH_REDUCTION_FACTOR = 0.5;
-
 const TROOP_STATS: Record<string, TroopStats> = {
   // Tier 1
   porter: {
@@ -1773,7 +1755,7 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
   const rangeBonus = isRanged ? weaponsCalibrationBonus : 0;
 
   // Calculate attack with all bonuses
-  let attackBonus = metalurgyBonus; // Removed dragonryBonus from attack
+  let attackBonus = metalurgyBonus;
   
   // Apply special items
   if (specialItems.dragonHeart) attackBonus += 0.20; // +20% attack for all troops
