@@ -103,6 +103,8 @@ const ROASim = () => {
   const [result, setResult] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
+  const [showEnemyStats, setShowEnemyStats] = useState(false);
+  const [showAttackMath, setShowAttackMath] = useState(false);
   const [seed, setSeed] = useState<number>(Math.floor(Math.random() * 1000000));
   const [rngOverride, setRngOverride] = useState<string>('');
   const [selectedTroopType, setSelectedTroopType] = useState<string>('swiftStrikeDragon');
@@ -169,7 +171,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -414,6 +416,27 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         }
         if (baseStats.rangedAttack > 0) {
           battleLog.push(`  Ranged Attack: ${baseStats.rangedAttack} → ${modifiedStats.rangedAttack}`);
+        }
+      }
+    });
+  }
+  
+  // Show enemy base stats if requested
+  if (showEnemyStats && defender.terrain !== 'enemy') {
+    battleLog.push("\n<span class=\"text-red-400\">Enemy Base Stats:</span>");
+    Object.entries(defenders).forEach(([unitType, count]) => {
+      if (count > 0) {
+        const baseStats = TROOP_STATS[unitType];
+        battleLog.push(`- <span class="text-red-400">${baseStats.name}:</span>`);
+        battleLog.push(`  Attack: ${baseStats.attack}`);
+        battleLog.push(`  Defense: ${baseStats.defense}`);
+        battleLog.push(`  Health: ${baseStats.health}`);
+        battleLog.push(`  Speed: ${baseStats.speed}`);
+        if (baseStats.range > 0) {
+          battleLog.push(`  Range: ${baseStats.range}`);
+        }
+        if (baseStats.rangedAttack > 0) {
+          battleLog.push(`  Ranged Attack: ${baseStats.rangedAttack}`);
         }
       }
     });
@@ -675,6 +698,15 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           
           // Calculate final damage with all factors
           const rawDamage = Math.round(baseDamage * attackDefenseRatio * rng);
+          
+          // Show attack math if requested
+          if (showAttackMath && turnCounter <= 10) {
+            battleLog.push(`<span class="text-orange-400">ATTACK MATH</span>: ${unit.count}x ${TROOP_STATS[unit.type].name} → ${TROOP_STATS[target.type].name}`);
+            battleLog.push(`  Base Damage: ${baseDamage.toLocaleString()} (${attackPower.toLocaleString()} × ${unit.count.toLocaleString()})`);
+            battleLog.push(`  Attack/Defense Ratio: ${attackDefenseRatio.toFixed(3)} (${attackPower.toLocaleString()} ÷ ${target.defense.toLocaleString()})`);
+            battleLog.push(`  RNG: ${rng.toFixed(3)}`);
+            battleLog.push(`  Raw Damage: ${baseDamage.toLocaleString()} × ${attackDefenseRatio.toFixed(3)} × ${rng.toFixed(3)} = ${rawDamage.toLocaleString()}`);
+          }
           
           const healthPerUnit = target.health;
           const maxPossibleKills = target.count;
@@ -939,7 +971,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       rngOverride, 
       seed, 
       defender.terrain === 'enemy' ? enemyResearch : undefined,
-      defender.terrain === 'enemy' ? enemyWallLevel : undefined
+      defender.terrain === 'enemy' ? enemyWallLevel : undefined,
+      showEnemyStats,
+      showAttackMath
     );
     setResult(battleResult);
   };
@@ -1500,6 +1534,30 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                         className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                       />
                       <span className="ml-2 text-sm font-medium">Show Debug Info</span>
+                    </label>
+                  </div>
+                  <div>
+                    <label htmlFor="enemyStats" className="flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="enemyStats"
+                        checked={showEnemyStats}
+                        onChange={() => setShowEnemyStats(!showEnemyStats)}
+                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm font-medium">Show Enemy Base Stats</span>
+                    </label>
+                  </div>
+                  <div>
+                    <label htmlFor="attackMath" className="flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="attackMath"
+                        checked={showAttackMath}
+                        onChange={() => setShowAttackMath(!showAttackMath)}
+                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm font-medium">Show Attack Math</span>
                     </label>
                   </div>
                   <div>
