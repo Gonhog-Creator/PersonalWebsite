@@ -2,44 +2,8 @@
 
 import { useState } from 'react';
 import Head from 'next/head';
-
-interface SpecialItems {
-  crimsonBull: boolean;
-  glowingShields: boolean;
-  purpleBones: boolean;
-  dragonHeart: boolean;
-}
-
-interface Attackers {
-  porter: number;
-  conscript: number;
-  spy: number;
-  halberdier: number;
-  minotaur: number;
-  longbowMan: number;
-  swiftStrikeDragon: number;
-  armoredTransport: number;
-  giant: number;
-  fireMirror: number;
-  battleDragon: number;
-}
-
-type TerrainType = 'camp' | 'forest' | 'savanna' | 'lake' | 'mountain' | 'hills' | 'plains' | 'enemy';
-
-interface DefenderState {
-  terrain: TerrainType;
-  level: number;
-}
-
-interface EnemyResearch {
-  weaponsCalibration: number;
-  metalurgy: number;
-  medicine: number;
-  dragonry: number;
-  rapidDeployment: number;
-}
-
-type ResearchState = EnemyResearch;
+import { findMinimumTroops, calculateAllOptimizations, OptimizationConfig } from './optimization';
+import { SpecialItems, Attackers, TerrainType, DefenderState, EnemyResearch, ResearchState, EnemyTroops, TroopStats, EnemyComposition } from './types';
 
 const ROASim = () => {
   const [attackers, setAttackers] = useState<Attackers>({
@@ -105,6 +69,11 @@ const ROASim = () => {
   const [showDebug, setShowDebug] = useState(false);
   const [showEnemyStats, setShowEnemyStats] = useState(false);
   const [showAttackMath, setShowAttackMath] = useState(false);
+  const [showAdvancedCheckbox, setShowAdvancedCheckbox] = useState(false);
+  const [mode, setMode] = useState<'manual' | 'calculateAll'>('manual');
+  const [calculateAllResult, setCalculateAllResult] = useState<string | null>(null);
+  const [isCalculatingAll, setIsCalculatingAll] = useState(false);
+  const [zeroLossDetected, setZeroLossDetected] = useState(false);
   const [seed, setSeed] = useState<number>(Math.floor(Math.random() * 1000000));
   const [rngOverride, setRngOverride] = useState<string>('');
   const [selectedTroopType, setSelectedTroopType] = useState<string>('swiftStrikeDragon');
@@ -922,6 +891,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   };
 
   const calculate = () => {
+    setResult(null);
+    setZeroLossDetected(false);
+    
     // Generate a new random seed if advanced options are hidden
     if (!showAdvanced) {
       setSeed(Math.floor(Math.random() * 1000000));
@@ -975,27 +947,45 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       showEnemyStats,
       showAttackMath
     );
+    
+    // Detect zero losses from battle result
+    const wonBattle = battleResult.includes("The attackers have won the battle");
+    const finalForcesStart = battleResult.indexOf("=== FINAL FORCES ===");
+    let hasZeroLosses = false;
+    
+    if (wonBattle && finalForcesStart !== -1) {
+      const finalForcesSection = battleResult.substring(finalForcesStart);
+      const attackerLines = finalForcesSection.split('\n').filter(line => 
+        line.includes('text-green-400">Attacker</span>:')
+      );
+      
+      // Simple check: does final attacker count match initial count?
+      const initialCount = attackers[selectedTroopType as keyof Attackers] || 0;
+      hasZeroLosses = attackerLines.every(line => {
+        const match = line.match(/(\d+)x\s+(.+)/);
+        if (match) {
+          const finalCount = parseInt(match[1]);
+          return finalCount === initialCount;
+        }
+        return false;
+      });
+    }
+    
+    setZeroLossDetected(hasZeroLosses);
     setResult(battleResult);
   };
-
-  const findMinimumTroops = async () => {
+  
+  const handleFindMinimumTroops = async () => {
     setIsOptimizing(true);
     setOptimizationResult(null);
     
-    const optimizationLog: string[] = [];
-    optimizationLog.push(`=== OPTIMIZATION START ===`);
-    optimizationLog.push(`Finding minimum ${TROOP_STATS[selectedTroopType].name} count for zero losses...`);
-    optimizationLog.push(`Target: ${defender.terrain.charAt(0).toUpperCase() + defender.terrain.slice(1)} Level ${defender.level}`);
-    optimizationLog.push(`RNG Override: ${rngOverride || 'Random'}`);
-    optimizationLog.push(`Seed: ${seed}`);
-    optimizationLog.push("");
-
     // Get current research and special items
     const currentResearch = {
       metalurgy: formData.metalurgy,
       dragonry: formData.dragonry,
       medicine: formData.medicine,
-      weaponsCalibration: formData.weaponsCalibration
+      weaponsCalibration: formData.weaponsCalibration,
+      rapidDeployment: formData.rapidDeployment
     };
     
     const currentSpecialItems = {
@@ -1005,172 +995,88 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       dragonHeart: specialItems.dragonHeart
     };
 
-    // Get defender troops
-    let defenderTroops: EnemyTroops | null = null;
-    if (defender.terrain === 'enemy') {
-      // Handle player vs player combat - use the custom enemy troops
-      defenderTroops = enemyTroops;
-    } else {
-      const terrainTroops = ENEMY_COMPOSITIONS[defender.terrain];
-      if (terrainTroops) {
-        defenderTroops = terrainTroops[defender.level.toString()];
-      }
-    }
+    // Create optimization config
+    const config: OptimizationConfig = {
+      attackers,
+      defender,
+      enemyTroops,
+      research: currentResearch,
+      enemyResearch: defender.terrain === 'enemy' ? enemyResearch : undefined,
+      enemyWallLevel: defender.terrain === 'enemy' ? enemyWallLevel : undefined,
+      specialItems: currentSpecialItems,
+      selectedTroopType,
+      rngOverride,
+      seed
+    };
 
-    if (!defenderTroops) {
-      optimizationLog.push("ERROR: Could not determine defender troops");
-      setOptimizationResult(optimizationLog.join("\n"));
-      setIsOptimizing(false);
-      return;
-    }
+    // Set up global references for the optimization module
+    (globalThis as any).simulateBattle = simulateBattle;
+    (globalThis as any).ENEMY_COMPOSITIONS = ENEMY_COMPOSITIONS;
+    (globalThis as any).TROOP_STATS = TROOP_STATS;
 
-    // Binary search setup
-    let low = 1;
-    let high = 100000; // Start with a reasonable upper bound
-    let result = -1;
-    let testCount = 0;
-    const maxTests = 20; // Prevent infinite loops
+    // Call the optimization function
+    const result = await findMinimumTroops(config, (log) => {
+      setOptimizationResult(prev => prev ? prev + '\n' + log : log);
+    });
 
-    optimizationLog.push("Starting binary search...");
-    optimizationLog.push(`Initial range: ${low} - ${high}`);
-    optimizationLog.push("");
-
-    // First, find an upper bound that works
-    let foundWorkingHigh = false;
-    while (high <= 10000000 && !foundWorkingHigh) {
-      testCount++;
-      const testAttackers = { ...attackers };
-      Object.keys(testAttackers).forEach(key => {
-        testAttackers[key as keyof Attackers] = 0;
-      });
-      testAttackers[selectedTroopType as keyof Attackers] = high;
-
-      const battleResult = simulateBattle(
-        testAttackers, 
-        defenderTroops, 
-        currentResearch, 
-        false, 
-        rngOverride, 
-        seed, 
-        defender.terrain === 'enemy' ? enemyResearch : undefined,
-        defender.terrain === 'enemy' ? enemyWallLevel : undefined
-      );
-      
-      // Debug: Show what we're looking for in the battle result
-      if (testCount <= 3) {
-        const expectedFormat = `<span class="text-green-400">Attacker</span>: ${high}x ${TROOP_STATS[selectedTroopType].name}`;
-        const actualFormat = `<span class="text-green-400">Attacker</span>: ${high}x ${TROOP_STATS[selectedTroopType].name}`;
-        
-        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Battle result contains "The attackers have won": ${battleResult.includes("The attackers have won the battle")}`);
-        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Expected format: ${expectedFormat}`);
-        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Actual format: ${actualFormat}`);
-        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Battle result contains expected format: ${battleResult.includes(expectedFormat)}`);
-        optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Battle result contains actual format: ${battleResult.includes(actualFormat)}`);
-        
-        // Show the actual final forces section
-        const finalForcesStart = battleResult.indexOf("=== FINAL FORCES ===");
-        if (finalForcesStart !== -1) {
-          const finalForcesSection = battleResult.substring(finalForcesStart);
-          optimizationLog.push(`<span class="text-orange-400">DEBUG</span>: Final forces section:`);
-          optimizationLog.push(finalForcesSection);
-        }
-      }
-      
-      // Check if we won with zero losses
-      const hasZeroLosses = battleResult.includes("The attackers have won the battle") && 
-                           battleResult.includes(`<span class="text-green-400">Attacker</span>: ${high}x ${TROOP_STATS[selectedTroopType].name}`) &&
-                           !battleResult.includes(`<span class="text-green-400">Attacker</span>: 0x`) &&
-                           !battleResult.includes(`${TROOP_STATS[selectedTroopType].name} 0`);
-
-      if (hasZeroLosses) {
-        foundWorkingHigh = true;
-        optimizationLog.push(`✓ Found working upper bound: ${high} troops`);
-      } else {
-        high *= 2;
-        if (testCount >= 5) {
-          optimizationLog.push("⚠ Could not find working upper bound, using maximum");
-          high = 10000000;
-          foundWorkingHigh = true;
-        }
-      }
-    }
-
-    if (!foundWorkingHigh) {
-      optimizationLog.push("ERROR: Could not find any troop count that wins");
-      setOptimizationResult(optimizationLog.join("\n"));
-      setIsOptimizing(false);
-      return;
-    }
-
-    // Binary search for minimum
-    while (low <= high && testCount < maxTests) {
-      testCount++;
-      const mid = Math.floor((low + high) / 2);
-      
-      optimizationLog.push(`Test ${testCount}: Testing ${mid.toLocaleString()} troops...`);
-
-      const testAttackers = { ...attackers };
-      Object.keys(testAttackers).forEach(key => {
-        testAttackers[key as keyof Attackers] = 0;
-      });
-      testAttackers[selectedTroopType as keyof Attackers] = mid;
-
-      const battleResult = simulateBattle(
-        testAttackers, 
-        defenderTroops, 
-        currentResearch, 
-        false, 
-        rngOverride, 
-        seed, 
-        defender.terrain === 'enemy' ? enemyResearch : undefined,
-        defender.terrain === 'enemy' ? enemyWallLevel : undefined
-      );
-      
-      // Check if we won with zero losses
-      const hasZeroLosses = battleResult.includes("The attackers have won the battle") && 
-                           battleResult.includes(`<span class="text-green-400">Attacker</span>: ${mid}x ${TROOP_STATS[selectedTroopType].name}`) &&
-                           !battleResult.includes(`<span class="text-green-400">Attacker</span>: 0x`) &&
-                           !battleResult.includes(`${TROOP_STATS[selectedTroopType].name} 0`);
-
-      if (hasZeroLosses) {
-        result = mid;
-        high = mid - 1;
-        optimizationLog.push(`✓ SUCCESS: ${mid.toLocaleString()} troops work, searching lower...`);
-      } else {
-        low = mid + 1;
-        optimizationLog.push(`✗ FAILED: ${mid.toLocaleString()} troops insufficient, searching higher...`);
-      }
-
-      // Add small delay for UI responsiveness
-      await new Promise(resolve => setTimeout(resolve, 10));
-    }
-
-    optimizationLog.push("");
-    optimizationLog.push("=== OPTIMIZATION COMPLETE ===");
-    
-    if (result > 0) {
-      optimizationLog.push(`🎯 MINIMUM FOUND: ${result.toLocaleString()}x ${TROOP_STATS[selectedTroopType].name}`);
-      optimizationLog.push(`Total tests performed: ${testCount}`);
-      
-      // Apply the result to the attackers
+    // Apply the result if successful
+    if (result.success && result.minimumTroops) {
       setAttackers(prev => {
         const newAttackers = { ...prev };
         Object.keys(newAttackers).forEach(key => {
           newAttackers[key as keyof Attackers] = 0;
         });
-        newAttackers[selectedTroopType as keyof Attackers] = result;
+        newAttackers[selectedTroopType as keyof Attackers] = result.minimumTroops!;
         return newAttackers;
       });
       
-      optimizationLog.push("");
-      optimizationLog.push("✅ Troop count has been applied to your army!");
+      // Add success message to the log
+      const finalLog = result.log + '\n\n✅ Troop count has been applied to your army!';
+      setOptimizationResult(finalLog);
     } else {
-      optimizationLog.push(`❌ No minimum found within reasonable limits`);
-      optimizationLog.push(`Try increasing the upper bound or using different troops/research`);
+      setOptimizationResult(result.log);
     }
 
-    setOptimizationResult(optimizationLog.join("\n"));
     setIsOptimizing(false);
+  };
+
+  const calculateAll = async () => {
+    setIsCalculatingAll(true);
+    setCalculateAllResult(null);
+    
+    // Get current special items
+    const currentSpecialItems = {
+      crimsonBull: specialItems.crimsonBull,
+      glowingShields: specialItems.glowingShields,
+      purpleBones: specialItems.purpleBones,
+      dragonHeart: specialItems.dragonHeart
+    };
+
+    // Create optimization config (without research since calculateAllOptimizations handles it)
+    const config: Omit<OptimizationConfig, 'research'> = {
+      attackers,
+      defender,
+      enemyTroops,
+      enemyResearch: defender.terrain === 'enemy' ? enemyResearch : undefined,
+      enemyWallLevel: defender.terrain === 'enemy' ? enemyWallLevel : undefined,
+      specialItems: currentSpecialItems,
+      selectedTroopType,
+      rngOverride,
+      seed
+    };
+
+    // Set up global references for the optimization module
+    (globalThis as any).simulateBattle = simulateBattle;
+    (globalThis as any).ENEMY_COMPOSITIONS = ENEMY_COMPOSITIONS;
+    (globalThis as any).TROOP_STATS = TROOP_STATS;
+
+    // Call the calculate all optimization function
+    const htmlOutput = await calculateAllOptimizations(config, (message) => {
+      setCalculateAllResult(prev => prev ? prev + '<div class="text-yellow-400">' + message + '</div>' : '<div class="text-yellow-400">' + message + '</div>');
+    });
+
+    setCalculateAllResult(htmlOutput);
+    setIsCalculatingAll(false);
   };
 
   return (
@@ -1479,23 +1385,55 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
               ))}
             </div>
             <div className="h-10" />
-            {/* Advanced Options */}
+            {/* Advanced Options Checkbox */}
             <div className="mt-6 p-4 bg-gray-700 rounded-lg">
-              <div className="flex items-center mb-2">
+              <div className="flex items-center">
                 <input
                   type="checkbox"
-                  id="showAdvanced"
-                  checked={showAdvanced}
-                  onChange={() => setShowAdvanced(!showAdvanced)}
+                  id="showAdvancedCheckbox"
+                  checked={showAdvancedCheckbox}
+                  onChange={() => setShowAdvancedCheckbox(!showAdvancedCheckbox)}
                   className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                 />
-                <label htmlFor="showAdvanced" className="ml-2 text-sm font-medium cursor-pointer">
-                  Show Advanced Options
+                <label htmlFor="showAdvancedCheckbox" className="ml-2 text-sm font-medium cursor-pointer">
+                  Advanced Options
                 </label>
               </div>
               
-              {showAdvanced && (
-                <div className="mt-2 space-y-2">
+              {/* Mode Selection - Only show when checkbox is checked */}
+              {showAdvancedCheckbox && (
+                <div className="mt-4 space-y-2">
+                  <label className="block text-sm font-medium mb-2">Mode Selection:</label>
+                  <div className="space-y-2">
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="mode"
+                        value="manual"
+                        checked={mode === 'manual'}
+                        onChange={() => setMode('manual')}
+                        className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm font-medium">Manual</span>
+                    </label>
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="radio"
+                        name="mode"
+                        value="calculateAll"
+                        checked={mode === 'calculateAll'}
+                        onChange={() => setMode('calculateAll')}
+                        className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm font-medium">Calculate All</span>
+                    </label>
+                  </div>
+                </div>
+              )}
+              
+              {/* Manual Mode Options - Only show when checkbox is checked AND mode is manual */}
+              {showAdvancedCheckbox && mode === 'manual' && (
+                <div className="mt-4 space-y-2">
                   <div>
                     <label htmlFor="seed" className="block text-sm font-medium mb-1">
                       Seed:
@@ -1590,7 +1528,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                   </div>
                   <div>
                     <button
-                      onClick={findMinimumTroops}
+                      onClick={handleFindMinimumTroops}
                       disabled={isOptimizing}
                       className={`w-full py-2 px-4 rounded font-medium transition-colors ${
                         isOptimizing 
@@ -1606,17 +1544,67 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
               )}
             </div>
             <div className="h-10" />
-            <div className="pt-6">
-              <button
-                onClick={calculate}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium text-lg transition-colors"
-              >
-                Calculate
-              </button>
-            </div>
+            {!showAdvancedCheckbox && (
+              <div className="pt-6">
+                <button
+                  onClick={calculate}
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium text-lg transition-colors"
+                >
+                  Calculate
+                </button>
+              </div>
+            )}
+
+            {showAdvancedCheckbox && mode === 'manual' && (
+              <div className="pt-6">
+                <button
+                  onClick={calculate}
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium text-lg transition-colors"
+                >
+                  Calculate
+                </button>
+              </div>
+            )}
+
+            {mode === 'calculateAll' && (
+              <div className="pt-4">
+                <button
+                  onClick={calculateAll}
+                  disabled={isCalculatingAll}
+                  className={`w-full py-3 px-4 rounded font-medium text-lg transition-colors ${
+                    isCalculatingAll 
+                      ? 'bg-gray-500 text-gray-300 cursor-not-allowed' 
+                      : 'bg-purple-600 hover:bg-purple-700 text-white'
+                  }`}
+                >
+                  {isCalculatingAll ? 'Calculating All...' : 'Calculate All (Research 1-10 × Target 1-10)'}
+                </button>
+              </div>
+            )}
+
             <div className="h-6" />
             {/* Fixed height container to prevent layout shift */}
-            <div className="mt-6 space-y-4">
+            <div className="mt-6 space-y-4" style={{ minHeight: '200px' }}>
+              {calculateAllResult && (
+                <div className="p-4 bg-gray-700 rounded-lg">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-lg font-semibold text-white">Calculate All Results:</h3>
+                    <button
+                      onClick={() => setCalculateAllResult(null)}
+                      className="text-gray-400 hover:text-gray-200 transition-colors"
+                      title="Close calculate all results"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <div dangerouslySetInnerHTML={{ __html: calculateAllResult }} />
+                  </div>
+                </div>
+              )}
+
               {optimizationResult && (
                 <div className="p-4 bg-green-900 rounded-lg border border-green-700">
                   <div className="flex justify-between items-start mb-2">
@@ -1656,21 +1644,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
 };
 
 // Troop Stats Data
-interface TroopStats {
-  name: string;
-  tier: number;
-  type: 'infantry' | 'ranged' | 'cavalry' | 'dragon' | 'siege';
-  attack: number;
-  defense: number;
-  health: number;
-  speed: number;
-  load: number;
-  upkeep: number;
-  range: number;           // Attack range (0 for melee)
-  rangedAttack: number;    // Ranged attack power (0 for melee-only units)
-  power: number;           // Overall power rating for quick comparison
-}
-
 const TROOP_STATS: Record<string, TroopStats> = {
   // Tier 1
   porter: {
@@ -1721,24 +1694,6 @@ const TROOP_STATS: Record<string, TroopStats> = {
 };
 
 // Enemy Troop Compositions
-interface EnemyTroops {
-  porter: number;
-  conscript: number;
-  spy: number;
-  halberdier: number;
-  minotaur: number;
-  longbowMan: number;
-  swiftStrikeDragon: number;
-  armoredTransport: number;
-  giant: number;
-  fireMirror: number;
-  battleDragon: number;
-}
-
-interface EnemyComposition {
-  [level: string]: EnemyTroops;
-}
-
 const CAMP_TROOPS: EnemyComposition = {
   '1': { porter: 1500, conscript: 500 },
   '2': { porter: 3000, conscript: 1000, spy: 500, halberdier: 1000 },
