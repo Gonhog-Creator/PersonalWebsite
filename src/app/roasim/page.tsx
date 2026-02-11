@@ -995,7 +995,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       dragonHeart: specialItems.dragonHeart
     };
 
-    // Create optimization config
+    // Create optimization config with forced RNG of 0.8 for minimum optimization
     const config: OptimizationConfig = {
       attackers,
       defender,
@@ -1005,7 +1005,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       enemyWallLevel: defender.terrain === 'enemy' ? enemyWallLevel : undefined,
       specialItems: currentSpecialItems,
       selectedTroopType,
-      rngOverride,
+      rngOverride: '0.8', // Force RNG to 0.8 for minimum optimization
       seed
     };
 
@@ -1061,7 +1061,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       enemyWallLevel: defender.terrain === 'enemy' ? enemyWallLevel : undefined,
       specialItems: currentSpecialItems,
       selectedTroopType,
-      rngOverride,
+      rngOverride: '0.8', // Force RNG to 0.8 for calculate all optimization
       seed
     };
 
