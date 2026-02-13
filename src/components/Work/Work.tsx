@@ -35,6 +35,16 @@ const Work = () => {
       image: '/img/Wolfspeed/Wolfspeed Purple Logo.png',
       link: '/projects/wolfspeed',
       skills: ['Process Optimization', 'Data Analysis', 'Statistical Process Control', 'JMP']
+    },
+    {
+      id: 2,
+      title: 'NC State Liquid Rocketry Lab',
+      role: 'Advanced Projects Team Member',
+      period: 'Aug 2023 - May 2025',
+      description: 'As a member of the Advanced Projects Team, I contributed to the development of Rotating Detonation Engines (RDE) for next-generation propulsion systems. My work involved computational modeling, experimental testing, and data analysis to optimize engine performance and advance cutting-edge aerospace technology.',
+      image: '/img/projects/RDE/RDE_Cover.png',
+      link: '/side-quests/ncsu-rocketry',
+      skills: ['Rotating Detonation Engines', 'Computational Modeling', 'Experimental Testing', 'Data Analysis', 'Propulsion Systems']
     }
   ];
 

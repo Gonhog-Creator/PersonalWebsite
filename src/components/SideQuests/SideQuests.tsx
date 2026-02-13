@@ -35,13 +35,6 @@ const projects: ProjectItem[] = [
     image: '/img/projects/foodtree/foodtreetemp.png',
     description: 'Explore connections between ingredients and dishes in an interactive 3D graph',
     path: '/side-quests/foodtree'
-  },
-  {
-    id: 'rocketry-lab',
-    title: 'NC State Liquid Rocketry Lab',
-    image: '/img/projects/RDE/RDE_Cover.png',
-    description: 'Advanced Projects Team Member - Rotating Detonation Engine Development',
-    path: '/side-quests/ncsu-rocketry'
   }
 ];
 
