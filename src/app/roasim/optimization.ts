@@ -89,7 +89,8 @@ export const simulateBattleForOptimization = (
     config.defender.terrain === 'enemy' ? config.enemyResearch : undefined,
     config.defender.terrain === 'enemy' ? config.enemyWallLevel : undefined,
     false, // showEnemyStats
-    false  // showAttackMath
+    false, // showAttackMath
+    config.defender.terrain
   );
 
   if (!battleResult) {

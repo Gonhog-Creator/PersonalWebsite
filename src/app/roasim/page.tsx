@@ -140,7 +140,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -262,13 +262,20 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     if (count > 0) {
       const baseStats = TROOP_STATS[unitType];
       const modifiedStats = defenderModifiedStats[unitType] || baseStats;
+      
+      // Apply 50% health reduction for camps and wilds
+      let finalHealth = modifiedStats.health;
+      if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
+        finalHealth = Math.round(modifiedStats.health * 0.5);
+      }
+      
       const battleUnit: BattleUnit = {
         id: `${unitType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: unitType,
         count,
         attack: modifiedStats.attack,
         defense: modifiedStats.defense,
-        health: modifiedStats.health,
+        health: finalHealth,
         range: modifiedStats.range || 0,
         rangedAttack: modifiedStats.rangedAttack || 0,
         speed: modifiedStats.speed,
@@ -297,6 +304,11 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   battleLog.push("Battle Setup:");
   battleLog.push(`- Battlefield length: ${battlefieldRange}`);
   battleLog.push(`- Random seed: ${battleSeed || seed}`);
+  
+  // Log health reduction if applied
+  if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
+    battleLog.push(`- Enemy health reduced by 50% (${terrain})`);
+  }
   
   // Add attacker's army composition
   const attackerArmy = Object.entries(attackers)
@@ -601,10 +613,12 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
               const distB = Math.abs(unit.position - b.position);
               if (distA !== distB) return distA - distB;
               
-              // 2. Threat Level (highest Total Attack)
-              const attackA = a.count * a.attack;
-              const attackB = b.count * b.attack;
-              if (attackA !== attackB) return attackB - attackA;
+              // 2. Threat Level (highest Total Attack) - only use rangedAttack for ranged threat assessment
+              const attackPowerA = a.rangedAttack || 0;
+              const attackPowerB = b.rangedAttack || 0;
+              const totalAttackA = a.count * attackPowerA;
+              const totalAttackB = b.count * attackPowerB;
+              if (totalAttackA !== totalAttackB) return totalAttackB - totalAttackA;
               
               // 3. Speed (highest Speed)
               if (a.speed !== b.speed) return b.speed - a.speed;
@@ -644,12 +658,30 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const target = potentialTargets[0];
           if (target.count <= 0) break;
           
+          // Debug targeting decision for first few attacks
+          if (showDebug && turnCounter <= 5) {
+            const targetingDetails = potentialTargets.slice(0, 3).map(t => {
+              const dist = Math.abs(unit.position - t.position);
+              const rangedAttack = t.rangedAttack || 0;
+              const regularAttack = t.attack || 0;
+              const threatPower = unit.rangedAttack ? (t.rangedAttack || 0) : (t.rangedAttack || t.attack);
+              const totalThreat = t.count * threatPower;
+              return `${TROOP_STATS[t.type].name}(dist:${dist}, ranged:${rangedAttack}, regular:${regularAttack}, threat:${totalThreat})`;
+            }).join(', ');
+            battleLog.push(`<span class="text-orange-400">DEBUG TARGETING</span>: Selected ${TROOP_STATS[target.type].name} from [${targetingDetails}]`);
+          }
+          
           const targetStats = TROOP_STATS[target.type];
           const isRangedAttack = !!unit.rangedAttack;
           const attackPower = isRangedAttack ? unit.rangedAttack : unit.attack;
           
           // Calculate attack/defense ratio (clamped between 0.3 and 2.1)
           const attackDefenseRatio = Math.min(2.1, Math.max(0.3, attackPower / target.defense));
+          
+          // Debug: Show attack/defense calculation details
+          if (showDebug && turnCounter <= 5) {
+            battleLog.push(`<span class="text-orange-400">DEBUG ATTACK/DEFENSE</span>: Attack=${attackPower}, Defense=${target.defense}, Ratio=${attackDefenseRatio.toFixed(3)} (uncapped=${(attackPower / target.defense).toFixed(3)})`);
+          }
           
           // Calculate base damage and apply attack/defense ratio
           const baseDamage = attackPower * unit.count;
@@ -675,6 +707,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             battleLog.push(`  Attack/Defense Ratio: ${attackDefenseRatio.toFixed(3)} (${attackPower.toLocaleString()} ÷ ${target.defense.toLocaleString()})`);
             battleLog.push(`  RNG: ${rng.toFixed(3)}`);
             battleLog.push(`  Raw Damage: ${baseDamage.toLocaleString()} × ${attackDefenseRatio.toFixed(3)} × ${rng.toFixed(3)} = ${rawDamage.toLocaleString()}`);
+            battleLog.push(`  Target Health: ${target.health} per unit, ${target.count} units = ${(target.count * target.health).toLocaleString()} total health`);
           }
           
           const healthPerUnit = target.health;
@@ -945,7 +978,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       defender.terrain === 'enemy' ? enemyResearch : undefined,
       defender.terrain === 'enemy' ? enemyWallLevel : undefined,
       showEnemyStats,
-      showAttackMath
+      showAttackMath,
+      defender.terrain
     );
     
     // Detect zero losses from battle result
