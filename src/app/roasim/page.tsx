@@ -79,6 +79,7 @@ const ROASim = () => {
   const [selectedTroopType, setSelectedTroopType] = useState<string>('swiftStrikeDragon');
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizationResult, setOptimizationResult] = useState<string | null>(null);
+  const [enemyHealthFactor, setEnemyHealthFactor] = useState<number>(0.5);
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, dataset } = e.target;
@@ -140,7 +141,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -263,10 +264,10 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       const baseStats = TROOP_STATS[unitType];
       const modifiedStats = defenderModifiedStats[unitType] || baseStats;
       
-      // Apply 50% health reduction for camps and wilds
+      // Apply health factor for camps and wilds
       let finalHealth = modifiedStats.health;
       if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
-        finalHealth = Math.round(modifiedStats.health * 0.5);
+        finalHealth = Math.round(modifiedStats.health * enemyHealthFactor);
       }
       
       const battleUnit: BattleUnit = {
@@ -307,7 +308,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   
   // Log health reduction if applied
   if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
-    battleLog.push(`- Enemy health reduced by 50% (${terrain})`);
+    battleLog.push(`- Enemy health modified by ${enemyHealthFactor}x factor (${terrain})`);
   }
   
   // Add attacker's army composition
@@ -979,7 +980,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       defender.terrain === 'enemy' ? enemyWallLevel : undefined,
       showEnemyStats,
       showAttackMath,
-      defender.terrain
+      defender.terrain,
+      enemyHealthFactor
     );
     
     // Detect zero losses from battle result
@@ -1040,7 +1042,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       specialItems: currentSpecialItems,
       selectedTroopType,
       rngOverride: '0.8', // Force RNG to 0.8 for minimum optimization
-      seed
+      seed,
+      enemyHealthFactor
     };
 
     // Set up global references for the optimization module
@@ -1096,7 +1099,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       specialItems: currentSpecialItems,
       selectedTroopType,
       rngOverride: '0.8', // Force RNG to 0.8 for calculate all optimization
-      seed
+      seed,
+      enemyHealthFactor
     };
 
     // Set up global references for the optimization module
@@ -1559,6 +1563,25 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       ))}
                     </select>
                     <p className="text-xs text-gray-400 mt-1">Troop type to optimize for minimum count</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Enemy Health Factor:</label>
+                    <div className="space-y-2">
+                      {[0.25, 0.5, 1, 1.5, 2].map((factor) => (
+                        <label key={factor} className="flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            name="enemyHealthFactor"
+                            value={factor}
+                            checked={enemyHealthFactor === factor}
+                            onChange={() => setEnemyHealthFactor(factor)}
+                            className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                          />
+                          <span className="ml-2 text-sm font-medium">{factor}x</span>
+                        </label>
+                      ))}
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">Multiplier for enemy health (0.5x default)</p>
                   </div>
                   <div>
                     <button

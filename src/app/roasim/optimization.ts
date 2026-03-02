@@ -15,6 +15,7 @@ export interface OptimizationConfig {
   selectedTroopType: string;
   rngOverride: string;
   seed: number;
+  enemyHealthFactor?: number;
 }
 
 export interface OptimizationResult {
@@ -90,7 +91,8 @@ export const simulateBattleForOptimization = (
     config.defender.terrain === 'enemy' ? config.enemyWallLevel : undefined,
     false, // showEnemyStats
     false, // showAttackMath
-    config.defender.terrain
+    config.defender.terrain,
+    config.enemyHealthFactor
   );
 
   if (!battleResult) {
