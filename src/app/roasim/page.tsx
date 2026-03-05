@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { findMinimumTroops, calculateAllOptimizations, OptimizationConfig } from './optimization';
 import { SpecialItems, Attackers, TerrainType, DefenderState, EnemyResearch, ResearchState, EnemyTroops, TroopStats, EnemyComposition } from './types';
@@ -1076,6 +1076,60 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
 
     setIsOptimizing(false);
   };
+
+  // Copy Excel table function
+  const copyExcelTable = async (researchLevel: number) => {
+    const textarea = document.getElementById(`excel-data-${researchLevel}`) as HTMLTextAreaElement;
+    if (textarea) {
+      try {
+        // Select all text
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        
+        // Copy to clipboard
+        await navigator.clipboard.writeText(textarea.value);
+        
+        // Show feedback
+        const button = document.querySelector(`[onclick="copyExcelTable(${researchLevel})"]`) as HTMLButtonElement;
+        if (button) {
+          const originalText = button.innerHTML;
+          button.innerHTML = '✅ Copied!';
+          button.classList.add('bg-green-600');
+          button.classList.remove('bg-blue-600');
+          
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('bg-green-600');
+            button.classList.add('bg-blue-600');
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+        // Fallback
+        textarea.select();
+        document.execCommand('copy');
+        
+        const button = document.querySelector(`[onclick="copyExcelTable(${researchLevel})"]`) as HTMLButtonElement;
+        if (button) {
+          const originalText = button.innerHTML;
+          button.innerHTML = '✅ Copied!';
+          button.classList.add('bg-green-600');
+          button.classList.remove('bg-blue-600');
+          
+          setTimeout(() => {
+            button.innerHTML = originalText;
+            button.classList.remove('bg-green-600');
+            button.classList.add('bg-blue-600');
+          }, 2000);
+        }
+      }
+    }
+  };
+
+  // Make copyExcelTable globally available
+  useEffect(() => {
+    (window as any).copyExcelTable = copyExcelTable;
+  }, []);
 
   const calculateAll = async () => {
     setIsCalculatingAll(true);

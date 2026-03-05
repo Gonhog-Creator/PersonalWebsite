@@ -368,6 +368,7 @@ export const calculateAllOptimizations = async (
       <h3 class="text-xl font-bold text-white mb-2">Calculate All Results</h3>
       <p class="text-gray-400">Target: ${config.defender.terrain.charAt(0).toUpperCase() + config.defender.terrain.slice(1)} (Levels 1-10)</p>
       <p class="text-gray-400">RNG Override: ${config.rngOverride || 'Random'} | Seed: ${config.seed}</p>
+      <p class="text-gray-400 text-sm mt-2">💡 Click "Copy Table" to copy Excel-friendly data</p>
     </div>
   `;
 
@@ -375,11 +376,31 @@ export const calculateAllOptimizations = async (
   for (let researchLevel = 1; researchLevel <= 10; researchLevel++) {
     onProgress?.(`Calculating for research level ${researchLevel}...`);
     
+    // Store the raw data for Excel-friendly copy
+    const excelData: string[][] = [];
+    
+    // Add header row to Excel data
+    const headerRow = ['Level'];
+    troopTypes.forEach((troopType: string) => {
+      const troopName = (globalThis as any).TROOP_STATS[troopType]?.name || troopType;
+      headerRow.push(troopName);
+    });
+    excelData.push(headerRow);
+
     htmlOutput += `
       <div class="mb-8">
-        <h4 class="text-lg font-semibold text-white mb-3">Research Level ${researchLevel}</h4>
+        <div class="flex justify-between items-center mb-3">
+          <h4 class="text-lg font-semibold text-white">Research Level ${researchLevel}</h4>
+          <button 
+            onclick="copyExcelTable(${researchLevel})" 
+            class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+            title="Copy this table for Excel"
+          >
+            📋 Copy Table
+          </button>
+        </div>
         <div class="overflow-x-auto">
-          <table class="w-full border-collapse text-sm">
+          <table class="w-full border-collapse text-sm" id="table-research-${researchLevel}">
             <thead>
               <tr class="bg-gray-600">
                 <th class="border border-gray-500 px-3 py-2 text-left font-medium">Level</th>
@@ -402,6 +423,8 @@ export const calculateAllOptimizations = async (
       const defenderTroops = terrainTroops[targetLevel.toString()];
       if (!defenderTroops) continue;
 
+      const rowData = [targetLevel.toString()];
+      
       htmlOutput += `<tr class="${targetLevel % 2 === 0 ? 'bg-gray-750' : 'bg-gray-800'}">`;
       htmlOutput += `<td class="border border-gray-500 px-3 py-2 font-medium">${targetLevel}</td>`;
       
@@ -466,6 +489,9 @@ export const calculateAllOptimizations = async (
           }
         }
 
+        // Add to Excel data (use raw number without formatting)
+        rowData.push(minTroops === "Not Possible" ? "Not Possible" : minTroops.replace(/,/g, ''));
+
         // Style the cell based on the value
         let cellClass = "border border-gray-500 px-3 py-2 text-center ";
         if (minTroops === "Not Possible") {
@@ -484,6 +510,7 @@ export const calculateAllOptimizations = async (
         htmlOutput += `<td class="${cellClass}">${minTroops}</td>`;
       }
       
+      excelData.push(rowData);
       htmlOutput += '</tr>';
     }
 
@@ -493,12 +520,23 @@ export const calculateAllOptimizations = async (
         </div>
       </div>
     `;
+    
+    // Add Excel data as a hidden textarea for copying
+    const excelText = excelData.map(row => row.join('\t')).join('\n');
+    htmlOutput += `
+      <textarea 
+        id="excel-data-${researchLevel}" 
+        style="display: none; position: absolute; left: -9999px;"
+        readonly
+      >${excelText}</textarea>
+    `;
   }
 
   htmlOutput += `
     <div class="text-center mt-8 text-gray-400">
       <p>✅ All calculations completed!</p>
-      <p class="text-sm">💡 Tip: Use this data to plan your research progression and troop requirements.</p>
+      <p class="text-sm">💡 Tip: Click "Copy Table" to copy data in Excel-friendly format (tab-separated values).</p>
+      <p class="text-sm">📋 Paste directly into Excel - data will align properly in columns.</p>
     </div>
   </div>
     `;
