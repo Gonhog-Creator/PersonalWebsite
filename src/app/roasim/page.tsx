@@ -160,12 +160,18 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     Object.entries(defenders)
       .filter(([_, count]) => count > 0)
       .map(([unitType]) => {
-        const baseStats = enemyResearchState ? calculateAttackerStats(unitType, enemyResearchState, {
+        // For camps/wilds (no enemy research), use base stats only
+        if (!enemyResearchState) {
+          return [unitType, { ...TROOP_STATS[unitType] }];
+        }
+        
+        // For player vs player (with enemy research), apply research bonuses
+        const baseStats = calculateAttackerStats(unitType, enemyResearchState, {
           crimsonBull: false,
           glowingShields: false,
           purpleBones: false,
           dragonHeart: false
-        }) : { ...TROOP_STATS[unitType] }; // Create a copy of base stats
+        });
         
         // Apply wall bonus to defense if wall level is provided
         if (enemyWallLevel !== undefined) {
@@ -176,7 +182,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       })
   );
 
-  // Helper function to safely get range
   const getUnitRange = (unitType: string, isAttacker: boolean = false): number => {
     const stats = isAttacker 
       ? attackerModifiedStats[unitType] || TROOP_STATS[unitType]
@@ -248,7 +253,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         range: modifiedStats.range,
         rangedAttack: modifiedStats.rangedAttack || 0, // Ensure rangedAttack is defined
         speed: modifiedStats.speed, // Use modified speed (includes dragonry bonus)
-        position: 0, // Start at attacker's side (position 0)
+        position: battlefieldRange, // Start at attacker's side (position battlefieldRange)
         isAttacker: true,
         hasMoved: false,
         hasAttacked: false
@@ -280,7 +285,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         range: modifiedStats.range || 0,
         rangedAttack: modifiedStats.rangedAttack || 0,
         speed: modifiedStats.speed,
-        position: battlefieldRange,
+        position: 0, // Start at defender's side (position 0)
         isAttacker: false,
         hasMoved: false,
         hasAttacked: false
@@ -501,10 +506,10 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const enemyPos = Number.isFinite(closestEnemy.position) ? closestEnemy.position : 0;
           
           // Determine movement direction based on relative positions
-          let moveDirection = unit.isAttacker ? 1 : -1;
+          let moveDirection = unit.isAttacker ? -1 : 1;
           
-          // If we're an attacker and have passed the enemy, or a defender and the enemy is to our right
-          if ((unit.isAttacker && currentPos > enemyPos) || (!unit.isAttacker && currentPos < enemyPos)) {
+          // If we're an attacker and have passed the enemy, or a defender and the enemy is to our left
+          if ((unit.isAttacker && currentPos < enemyPos) || (!unit.isAttacker && currentPos > enemyPos)) {
             moveDirection *= -1;
           }
           
@@ -529,27 +534,27 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             // Prevent moving past friendly units
             if (unit.isAttacker) {
               const blockingUnit = friendlyUnits
-                .filter(u => u.position > currentPos && u.position <= newPosition)
-                .sort((a, b) => a.position - b.position)[0];
-                
-              if (blockingUnit) {
-                newPosition = blockingUnit.position - 1; // Stop 1 unit before the friendly unit
-              }
-            } else {
-              const blockingUnit = friendlyUnits
                 .filter(u => u.position < currentPos && u.position >= newPosition)
                 .sort((a, b) => b.position - a.position)[0];
                 
               if (blockingUnit) {
                 newPosition = blockingUnit.position + 1; // Stop 1 unit after the friendly unit
               }
+            } else {
+              const blockingUnit = friendlyUnits
+                .filter(u => u.position > currentPos && u.position <= newPosition)
+                .sort((a, b) => a.position - b.position)[0];
+                
+              if (blockingUnit) {
+                newPosition = blockingUnit.position - 1; // Stop 1 unit before the friendly unit
+              }
             }
             
             // Ensure we don't overshoot the enemy
             if (unit.isAttacker) {
-              newPosition = Math.min(newPosition, Math.max(0, enemyPos - 1));
-            } else {
               newPosition = Math.max(newPosition, Math.min(battlefieldRange, enemyPos + 1));
+            } else {
+              newPosition = Math.min(newPosition, Math.max(0, enemyPos - 1));
             }
           }
           

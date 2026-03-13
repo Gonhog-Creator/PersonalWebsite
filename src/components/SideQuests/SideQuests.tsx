@@ -35,6 +35,13 @@ const projects: ProjectItem[] = [
     image: '/img/projects/foodtree/foodtreetemp.png',
     description: 'Explore connections between ingredients and dishes in an interactive 3D graph',
     path: '/side-quests/foodtree'
+  },
+  {
+    id: 'fractals',
+    title: 'Deep Dive Into Fractals',
+    image: '/img/projects/fractals/fractalcover.jpg',
+    description: 'Exploring chaos theory and fractals through interactive visualizations',
+    path: '/projects/fractals'
   }
 ];
 
