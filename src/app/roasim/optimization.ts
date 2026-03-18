@@ -16,6 +16,7 @@ export interface OptimizationConfig {
   rngOverride: string;
   seed: number;
   enemyHealthFactor?: number;
+  rounded?: boolean;
 }
 
 export interface OptimizationResult {
@@ -241,11 +242,26 @@ export const findMinimumTroops = async (
   log("");
   
   if (result > 0) {
-    log(`🎯 MINIMUM FOUND: ${result.toLocaleString()}x ${(globalThis as any).TROOP_STATS?.[config.selectedTroopType]?.name || config.selectedTroopType}`);
+    // Apply rounding logic if enabled
+    let roundedResult = result;
+    if (config.rounded) {
+      if (result < 500) {
+        // Round to nearest 10
+        roundedResult = Math.round(result / 10) * 10;
+      } else if (result >= 500 && result < 10000) {
+        // Round to nearest 100
+        roundedResult = Math.round(result / 100) * 100;
+      } else {
+        // Round to nearest 1000
+        roundedResult = Math.round(result / 1000) * 1000;
+      }
+    }
+    
+    log(`🎯 MINIMUM FOUND: ${roundedResult.toLocaleString()}x ${(globalThis as any).TROOP_STATS?.[config.selectedTroopType]?.name || config.selectedTroopType}`);
     return {
       success: true,
-      minimumTroops: result,
-      message: `Found minimum: ${result.toLocaleString()} troops`,
+      minimumTroops: roundedResult,
+      message: `Found minimum: ${roundedResult.toLocaleString()} troops`,
       log: optimizationLog
     };
   } else {
@@ -485,7 +501,21 @@ export const calculateAllOptimizations = async (
           }
 
           if (result > 0) {
-            minTroops = result.toLocaleString();
+            // Apply rounding logic if enabled
+            let roundedResult = result;
+            if (config.rounded) {
+              if (result < 500) {
+                // Round to nearest 10
+                roundedResult = Math.round(result / 10) * 10;
+              } else if (result >= 500 && result < 10000) {
+                // Round to nearest 100
+                roundedResult = Math.round(result / 100) * 100;
+              } else {
+                // Round to nearest 1000
+                roundedResult = Math.round(result / 1000) * 1000;
+              }
+            }
+            minTroops = roundedResult.toLocaleString();
           }
         }
 

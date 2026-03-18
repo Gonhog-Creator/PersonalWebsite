@@ -80,6 +80,7 @@ const ROASim = () => {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizationResult, setOptimizationResult] = useState<string | null>(null);
   const [enemyHealthFactor, setEnemyHealthFactor] = useState<number>(0.5);
+  const [rounded, setRounded] = useState<boolean>(false);
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, dataset } = e.target;
@@ -1159,7 +1160,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       selectedTroopType,
       rngOverride: '0.8', // Force RNG to 0.8 for calculate all optimization
       seed,
-      enemyHealthFactor
+      enemyHealthFactor,
+      rounded
     };
 
     // Set up global references for the optimization module
@@ -1525,6 +1527,25 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       <span className="ml-2 text-sm font-medium">Calculate All</span>
                     </label>
                   </div>
+                </div>
+              )}
+              
+              {/* Rounded Checkbox - Only show when calculateAll mode is selected */}
+              {showAdvancedCheckbox && mode === 'calculateAll' && (
+                <div className="mt-4">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      id="rounded"
+                      checked={rounded}
+                      onChange={() => setRounded(!rounded)}
+                      className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                    />
+                    <span className="ml-2 text-sm font-medium">Rounded</span>
+                  </label>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Rounds output numbers: &lt;500→nearest 10, 500-9999→nearest 100, &gt;9999→nearest 1000
+                  </p>
                 </div>
               )}
               
