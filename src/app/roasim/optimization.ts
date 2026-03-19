@@ -505,14 +505,14 @@ export const calculateAllOptimizations = async (
             let roundedResult = result;
             if (config.rounded) {
               if (result < 500) {
-                // Round to nearest 10
-                roundedResult = Math.round(result / 10) * 10;
+                // Round up to nearest 10
+                roundedResult = Math.ceil(result / 10) * 10;
               } else if (result >= 500 && result < 10000) {
-                // Round to nearest 100
-                roundedResult = Math.round(result / 100) * 100;
+                // Round up to nearest 100
+                roundedResult = Math.ceil(result / 100) * 100;
               } else {
-                // Round to nearest 1000
-                roundedResult = Math.round(result / 1000) * 1000;
+                // Round up to nearest 1000
+                roundedResult = Math.ceil(result / 1000) * 1000;
               }
             }
             minTroops = roundedResult.toLocaleString();
