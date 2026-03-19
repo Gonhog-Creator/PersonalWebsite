@@ -17,6 +17,8 @@ export interface Attackers {
   giant: number;
   fireMirror: number;
   battleDragon: number;
+  fangtooth: number;
+  silverSerpent: number;
 }
 
 export type TerrainType = 'camp' | 'forest' | 'savanna' | 'lake' | 'mountain' | 'hills' | 'plains' | 'enemy';
@@ -48,6 +50,8 @@ export interface EnemyTroops {
   giant: number;
   fireMirror: number;
   battleDragon: number;
+  fangtooth: number;
+  silverSerpent: number;
 }
 
 export interface TroopStats {

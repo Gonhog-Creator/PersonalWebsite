@@ -54,6 +54,8 @@ export const simulateBattleForOptimization = (
     giant: 0,
     fireMirror: 0,
     battleDragon: 0,
+    fangtooth: 0,
+    silverSerpent: 0,
   };
   testAttackers[config.selectedTroopType as keyof Attackers] = testTroopCount;
 

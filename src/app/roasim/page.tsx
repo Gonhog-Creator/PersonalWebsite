@@ -18,6 +18,8 @@ const ROASim = () => {
     giant: 0,
     fireMirror: 0,
     battleDragon: 0,
+    fangtooth: 0,
+    silverSerpent: 0,
   });
 
   const [formData, setFormData] = useState({
@@ -52,6 +54,8 @@ const ROASim = () => {
     giant: 0,
     fireMirror: 0,
     battleDragon: 0,
+    fangtooth: 0,
+    silverSerpent: 0,
   });
   
   const [enemyResearch, setEnemyResearch] = useState<EnemyResearch>({
@@ -1343,6 +1347,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       { id: 'giant', label: 'Giant' },
                       { id: 'fireMirror', label: 'Fire Mirror' },
                       { id: 'battleDragon', label: 'Battle Dragon' },
+                      { id: 'fangtooth', label: 'Fangtooth' },
+                      { id: 'silverSerpent', label: 'Silver Serpent' },
                     ].map(({ id, label }) => (
                       <div key={id} className="space-y-1">
                         <label htmlFor={`enemy-${id}`} className="block text-sm font-medium">
@@ -1465,6 +1471,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                 { id: 'giant', label: 'Giant' },
                 { id: 'fireMirror', label: 'Fire Mirror' },
                 { id: 'battleDragon', label: 'Battle Dragon' },
+                { id: 'fangtooth', label: 'Fangtooth' },
+                { id: 'silverSerpent', label: 'Silver Serpent' },
               ].map(({ id, label }) => (
                 <div key={id} className="space-y-1">
                   <label htmlFor={id} className="block text-sm font-medium">
@@ -1638,6 +1646,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                         { id: 'giant', label: 'Giant' },
                         { id: 'fireMirror', label: 'Fire Mirror' },
                         { id: 'battleDragon', label: 'Battle Dragon' },
+                        { id: 'fangtooth', label: 'Fangtooth' },
+                        { id: 'silverSerpent', label: 'Silver Serpent' },
                       ].map(({ id, label }) => (
                         <option key={id} value={id}>{label}</option>
                       ))}
@@ -1826,6 +1836,14 @@ const TROOP_STATS: Record<string, TroopStats> = {
   battleDragon: {
     name: 'Battle Dragon', tier: 4, type: 'dragon',
     attack: 300, rangedAttack: 0, health: 1500, defense: 300, speed: 750, range: 0, load: 80, upkeep: 35, power: 7
+  },
+  fangtooth: {
+    name: 'Fangtooth', tier: 4, type: 'infantry',
+    attack: 1600, rangedAttack: 800, health: 3000, defense: 300, speed: 500, range: 600, load: 45, upkeep: 125, power: 10
+  },
+  silverSerpent: {
+    name: 'Silver Serpent', tier: 3, type: 'infantry',
+    attack: 100, rangedAttack: 0, health: 450, defense: 65, speed: 200, range: 0, load: 20, upkeep: 10, power: 4
   },
   // Add more troops as needed
 };
