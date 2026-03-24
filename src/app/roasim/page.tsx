@@ -798,15 +798,105 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
             break;
           } else {
-            // Continue attacking - refresh potential targets
-            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - refreshing targets`);
+            // Hybrid behavior: check for targets, move if none found, then continue
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - checking for targets before movement`);
+            
+            // Check for potential targets again
             potentialTargets = battleUnits.filter(t => 
               t.count > 0 && 
               t.isAttacker !== unit.isAttacker &&
               (Math.abs(unit.position - t.position) <= (unit.range || 0) || 
                Math.abs(unit.position - t.position) <= 1)
             );
-            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Found ${potentialTargets.length} targets after refresh`);
+            
+            if (potentialTargets.length === 0 && unit.speed > 0) {
+              // No targets in range, try to move forward
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: No targets found, attempting movement`);
+              
+              // Find closest enemy to determine movement direction
+              const closestEnemy = battleUnits
+                .filter(target => target.count > 0 && target.isAttacker !== unit.isAttacker)
+                .sort((a, b) => {
+                  const posA = Number.isFinite(a.position) ? a.position : 0;
+                  const posB = Number.isFinite(b.position) ? b.position : 0;
+                  const unitPos = Number.isFinite(unit.position) ? unit.position : 0;
+                  const distA = Math.abs(unitPos - posA);
+                  const distB = Math.abs(unitPos - posB);
+                  return distA - distB;
+                })[0];
+                
+              if (closestEnemy) {
+                const currentPos = Number.isFinite(unit.position) ? unit.position : 0;
+                const enemyPos = Number.isFinite(closestEnemy.position) ? closestEnemy.position : 0;
+                
+                // Determine movement direction based on relative positions
+                let moveDirection = unit.isAttacker ? -1 : 1;
+                
+                // If we're an attacker and have passed the enemy, or a defender and the enemy is to our left
+                if ((unit.isAttacker && currentPos < enemyPos) || (!unit.isAttacker && currentPos > enemyPos)) {
+                  moveDirection *= -1;
+                }
+                
+                // Calculate new position (don't move past battlefield bounds)
+                let newPosition = currentPos + (unit.speed * moveDirection);
+                
+                // Clamp position to battlefield bounds
+                newPosition = Math.max(0, Math.min(newPosition, battlefieldRange));
+                
+                // Find friendly units that might be in the way
+                const friendlyUnits = battleUnits.filter(u => 
+                  u.count > 0 && 
+                  u.isAttacker === unit.isAttacker && 
+                  u.id !== unit.id
+                );
+                
+                // Prevent moving past friendly units
+                if (unit.isAttacker) {
+                  const blockingUnit = friendlyUnits
+                    .filter(u => u.position < currentPos && u.position >= newPosition)
+                    .sort((a, b) => b.position - a.position)[0];
+                    
+                  if (blockingUnit) {
+                    newPosition = blockingUnit.position + 1; // Stop 1 unit after the friendly unit
+                  }
+                } else {
+                  const blockingUnit = friendlyUnits
+                    .filter(u => u.position > currentPos && u.position <= newPosition)
+                    .sort((a, b) => a.position - b.position)[0];
+                    
+                  if (blockingUnit) {
+                    newPosition = blockingUnit.position - 1; // Stop 1 unit before the friendly unit
+                  }
+                }
+                
+                // Ensure we don't overshoot the enemy
+                if (unit.isAttacker) {
+                  newPosition = Math.max(newPosition, Math.min(battlefieldRange, enemyPos + 1));
+                } else {
+                  newPosition = Math.min(newPosition, Math.max(0, enemyPos - 1));
+                }
+                
+                // Only move if the position changes and we have movement speed
+                if (newPosition !== currentPos && unit.speed > 0) {
+                  battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances from ${currentPos} to ${newPosition} (multi-attack movement)`);
+                  unit.position = newPosition;
+                  
+                  // Recalculate potential targets after moving
+                  potentialTargets = battleUnits.filter(target => {
+                    if (target.count <= 0) return false;
+                    if (unit.isAttacker === target.isAttacker) return false;
+                    const distance = Math.abs(unit.position - target.position);
+                    return distance <= (unit.range || 0) || distance <= 1; // Can attack if in range or adjacent
+                  });
+                  
+                  if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: After movement, found ${potentialTargets.length} targets`);
+                } else {
+                  if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: No movement possible`);
+                }
+              }
+            } else {
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Found ${potentialTargets.length} targets, no movement needed`);
+            }
           }
         }        
       }
