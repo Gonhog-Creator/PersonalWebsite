@@ -306,9 +306,13 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     }
   });
 
-  // Sort units by speed (highest first)
+  // Sort units by speed (highest first), defenders win ties
   const sortedUnits = [...battleUnits].sort((a, b) => {
-    return b.speed - a.speed;
+    if (b.speed !== a.speed) {
+      return b.speed - a.speed;
+    }
+    // If speeds are equal, defenders attack first
+    return a.isAttacker ? 1 : -1;
   });
 
   // Add initial battle setup to the log
@@ -462,10 +466,16 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       unit.hasAttacked = false;
     });
     
-    // Sort units by speed (fastest first) for this round
+    // Sort units by speed (fastest first) for this round, defenders win ties
     const sortedUnits = [...battleUnits]
       .filter(unit => unit.count > 0) // Only living units
-      .sort((a, b) => b.speed - a.speed);
+      .sort((a, b) => {
+        if (b.speed !== a.speed) {
+          return b.speed - a.speed;
+        }
+        // If speeds are equal, defenders attack first
+        return a.isAttacker ? 1 : -1;
+      });
     
     // Process each unit's turn
     for (const unit of sortedUnits) {
@@ -1918,8 +1928,8 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
   const isDragon = unit.type === 'dragon';
   const dragonryBonus = isDragon ? research.dragonry * 0.10 : 0;
   
-  // Ranged unit bonuses (include both ranged and siege units)
-  const isRanged = unit.type === 'ranged' || unit.type === 'siege';
+  // Ranged unit bonuses (include both ranged and siege units, plus any unit with range/ranged attack)
+  const isRanged = unit.type === 'ranged' || unit.type === 'siege' || unit.range > 0 || unit.rangedAttack > 0;
   const rangeBonus = isRanged ? weaponsCalibrationBonus : 0;
 
   // Calculate attack with all bonuses
