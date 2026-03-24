@@ -78,7 +78,7 @@ const ROASim = () => {
   const [calculateAllResult, setCalculateAllResult] = useState<string | null>(null);
   const [isCalculatingAll, setIsCalculatingAll] = useState(false);
   const [zeroLossDetected, setZeroLossDetected] = useState(false);
-  const [seed, setSeed] = useState<number>(Math.floor(Math.random() * 1000000));
+  const [seed, setSeed] = useState<string>('');
   const [rngOverride, setRngOverride] = useState<string>('');
   const [selectedTroopType, setSelectedTroopType] = useState<string>('swiftStrikeDragon');
   const [isOptimizing, setIsOptimizing] = useState(false);
@@ -948,10 +948,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     setResult(null);
     setZeroLossDetected(false);
     
-    // Generate a new random seed if advanced options are hidden
-    if (!showAdvanced) {
-      setSeed(Math.floor(Math.random() * 1000000));
-    }
+    // Generate a new random seed if not provided
+    let battleSeed = seed.trim() === '' ? Math.floor(Math.random() * 1000000) : parseInt(seed);
     
     // Get the defender troops based on selected terrain and level
     let defenderTroops: EnemyTroops | null = null;
@@ -995,7 +993,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       currentResearch, 
       showDebug, 
       rngOverride, 
-      seed, 
+      battleSeed, 
       defender.terrain === 'enemy' ? enemyResearch : undefined,
       defender.terrain === 'enemy' ? enemyWallLevel : undefined,
       showEnemyStats,
@@ -1578,10 +1576,10 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       type="number"
                       id="seed"
                       value={seed}
-                      onChange={(e) => setSeed(parseInt(e.target.value) || 0)}
+                      onChange={(e) => setSeed(e.target.value)}
                       className="w-full p-2 rounded bg-gray-600 border border-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       min="0"
-                      placeholder="Random seed for battle RNG"
+                      placeholder="Enter for fixed seed (blank = random)"
                     />
                   </div>
                   <div>
