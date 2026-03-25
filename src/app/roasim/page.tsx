@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { findMinimumTroops, calculateAllOptimizations, OptimizationConfig } from './optimization';
 import { SpecialItems, Attackers, TerrainType, DefenderState, EnemyResearch, ResearchState, EnemyTroops, TroopStats, EnemyComposition } from './types';
+import { getPotentialTargets, checkHybridMeleePriority, standardMovement, multiAttackMovement } from './movement';
 
 const ROASim = () => {
   const [attackers, setAttackers] = useState<Attackers>({
@@ -78,7 +79,7 @@ const ROASim = () => {
   const [calculateAllResult, setCalculateAllResult] = useState<string | null>(null);
   const [isCalculatingAll, setIsCalculatingAll] = useState(false);
   const [zeroLossDetected, setZeroLossDetected] = useState(false);
-  const [seed, setSeed] = useState<number>(Math.floor(Math.random() * 1000000));
+  const [seed, setSeed] = useState<string>('');
   const [rngOverride, setRngOverride] = useState<string>('');
   const [selectedTroopType, setSelectedTroopType] = useState<string>('swiftStrikeDragon');
   const [isOptimizing, setIsOptimizing] = useState(false);
@@ -306,9 +307,13 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     }
   });
 
-  // Sort units by speed (highest first)
+  // Sort units by speed (highest first), defenders win ties
   const sortedUnits = [...battleUnits].sort((a, b) => {
-    return b.speed - a.speed;
+    if (b.speed !== a.speed) {
+      return b.speed - a.speed;
+    }
+    // If speeds are equal, defenders attack first
+    return a.isAttacker ? 1 : -1;
   });
 
   // Add initial battle setup to the log
@@ -462,10 +467,16 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       unit.hasAttacked = false;
     });
     
-    // Sort units by speed (fastest first) for this round
+    // Sort units by speed (fastest first) for this round, defenders win ties
     const sortedUnits = [...battleUnits]
       .filter(unit => unit.count > 0) // Only living units
-      .sort((a, b) => b.speed - a.speed);
+      .sort((a, b) => {
+        if (b.speed !== a.speed) {
+          return b.speed - a.speed;
+        }
+        // If speeds are equal, defenders attack first
+        return a.isAttacker ? 1 : -1;
+      });
     
     // Process each unit's turn
     for (const unit of sortedUnits) {
@@ -478,127 +489,54 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       const unitStats = TROOP_STATS[unit.type];
       
       // Find potential targets using the unit's actual range
-      let potentialTargets = battleUnits.filter(target => {
-        if (target.count <= 0) return false; // Skip dead units
-        if (unit.isAttacker === target.isAttacker) return false; // Skip same side
-        
-        const distance = Math.abs(unit.position - target.position);
-        
-        // Check melee range (1) for all units, regardless of battlefield range
-        if (distance <= 1) return true;
-        
-        // For ranged units, check their attack range
-        const attackRange = unit.range || 0;
-        return distance <= attackRange;
-      });
+      let potentialTargets = getPotentialTargets(unit, battleUnits).targets;
       
       // Movement phase - only move if there are no potential targets in range
+      let hasInitiallyMoved = false;
       if (potentialTargets.length === 0 && unit.speed > 0) {
-        // Find closest enemy to determine movement direction
-        const closestEnemy = battleUnits
-          .filter(target => target.count > 0 && target.isAttacker !== unit.isAttacker)
-          .sort((a, b) => {
-            const posA = Number.isFinite(a.position) ? a.position : 0;
-            const posB = Number.isFinite(b.position) ? b.position : 0;
-            const unitPos = Number.isFinite(unit.position) ? unit.position : 0;
-            const distA = Math.abs(unitPos - posA);
-            const distB = Math.abs(unitPos - posB);
-            return distA - distB;
-          })[0];
+        const movementResult = standardMovement(unit, battleUnits, battlefieldRange);
+        
+        if (movementResult.moved) {
+          battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> moves from ${unit.position} to ${movementResult.newPosition}`);
+          unit.position = movementResult.newPosition;
+          hasInitiallyMoved = true;
           
-        if (closestEnemy) {
-          const currentPos = Number.isFinite(unit.position) ? unit.position : 0;
-          const enemyPos = Number.isFinite(closestEnemy.position) ? closestEnemy.position : 0;
+          // Recalculate potential targets after moving
+          potentialTargets = getPotentialTargets(unit, battleUnits).targets;
           
-          // Determine movement direction based on relative positions
-          let moveDirection = unit.isAttacker ? -1 : 1;
-          
-          // If we're an attacker and have passed the enemy, or a defender and the enemy is to our left
-          if ((unit.isAttacker && currentPos < enemyPos) || (!unit.isAttacker && currentPos > enemyPos)) {
-            moveDirection *= -1;
-          }
-          
-          // Calculate new position (don't move past battlefield bounds)
-          let newPosition = currentPos + (unit.speed * moveDirection);
-          
-          // For melee combat, move towards the enemy
-          if (battlefieldRange === 1) {
-            // Move towards position 1 if attacker, position 0 if defender
-            newPosition = unit.isAttacker ? 1 : 0;
-          } else {
-            // Clamp position to battlefield bounds
-            newPosition = Math.max(0, Math.min(newPosition, battlefieldRange));
-            
-            // Find friendly units that might be in the way
-            const friendlyUnits = battleUnits.filter(u => 
-              u.count > 0 && 
-              u.isAttacker === unit.isAttacker && 
-              u.id !== unit.id
-            );
-            
-            // Prevent moving past friendly units
-            if (unit.isAttacker) {
-              const blockingUnit = friendlyUnits
-                .filter(u => u.position < currentPos && u.position >= newPosition)
-                .sort((a, b) => b.position - a.position)[0];
-                
-              if (blockingUnit) {
-                newPosition = blockingUnit.position + 1; // Stop 1 unit after the friendly unit
-              }
-            } else {
-              const blockingUnit = friendlyUnits
-                .filter(u => u.position > currentPos && u.position <= newPosition)
-                .sort((a, b) => a.position - b.position)[0];
-                
-              if (blockingUnit) {
-                newPosition = blockingUnit.position - 1; // Stop 1 unit before the friendly unit
-              }
-            }
-            
-            // Ensure we don't overshoot the enemy
-            if (unit.isAttacker) {
-              newPosition = Math.max(newPosition, Math.min(battlefieldRange, enemyPos + 1));
-            } else {
-              newPosition = Math.min(newPosition, Math.max(0, enemyPos - 1));
-            }
-          }
-          
-          // Only move if the position changes and we have movement speed
-          if (newPosition !== currentPos && unit.speed > 0) {
-            battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> moves from ${currentPos} to ${newPosition}`);
-            unit.position = newPosition;
-            
-            // Recalculate potential targets after moving
-            potentialTargets = battleUnits.filter(target => {
-              if (target.count <= 0) return false;
-              if (unit.isAttacker === target.isAttacker) return false;
-              const distance = Math.abs(unit.position - target.position);
-              return distance <= (unit.range || 0) || distance <= 1; // Can attack if in range or adjacent
-            });
-            
-            // If we have targets after moving, mark as not moved so we can attack
-            if (potentialTargets.length > 0) {
-              unit.hasMoved = false;
-            }
+          // If we have targets after moving, mark as not moved so we can attack
+          if (potentialTargets.length > 0) {
+            unit.hasMoved = false;
           }
         }
       }
       
+      // Hybrid troop melee priority check
+      const isHybrid = unit.range > 0 && unit.rangedAttack > 0 && unit.attack > 0;
+      let prioritizedMelee = false;
+      
+      if (isHybrid && !hasInitiallyMoved) {
+        const meleePriorityResult = checkHybridMeleePriority(unit, battleUnits, battlefieldRange);
+        
+        if (meleePriorityResult.shouldMoveToMelee && meleePriorityResult.movementResult?.moved) {
+          const currentPos = unit.position;
+          unit.position = meleePriorityResult.movementResult.newPosition;
+          prioritizedMelee = true;
+          battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position}`);
+        } else if (meleePriorityResult.shouldMoveToMelee === false) {
+          // Check if we're already in melee range
+          const { meleeTargets } = getPotentialTargets(unit, battleUnits, true);
+          prioritizedMelee = meleeTargets.length > 0;
+        }
+      } else if (isHybrid) {
+        // Unit already moved, just check if we're in melee range
+        const { meleeTargets } = getPotentialTargets(unit, battleUnits, true);
+        prioritizedMelee = meleeTargets.length > 0;
+      }
+      
       // Attack phase - only if unit is still alive and has targets (recalculate after movement)
       // Recalculate potential targets in case movement brought us in range
-      potentialTargets = battleUnits.filter(target => {
-        if (target.count <= 0) return false; // Skip dead units
-        if (unit.isAttacker === target.isAttacker) return false; // Skip same side
-        
-        const distance = Math.abs(unit.position - target.position);
-        
-        // Check melee range (1) for all units, regardless of battlefield range
-        if (distance <= 1) return true;
-        
-        // For ranged units, check their attack range
-        const attackRange = unit.range || 0;
-        return distance <= attackRange;
-      });
+      potentialTargets = getPotentialTargets(unit, battleUnits, prioritizedMelee).targets;
       
       if (unit.count > 0 && potentialTargets.length > 0) {
         // Keep track of attacks this turn and damage used
@@ -683,7 +621,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           }
           
           const targetStats = TROOP_STATS[target.type];
-          const isRangedAttack = !!unit.rangedAttack;
+          const isRangedAttack = !!unit.rangedAttack && !(isHybrid && prioritizedMelee);
           const attackPower = isRangedAttack ? unit.rangedAttack : unit.attack;
           
           // Calculate attack/defense ratio (clamped between 0.3 and 2.1)
@@ -724,6 +662,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const healthPerUnit = target.health;
           const maxPossibleKills = target.count;
           
+          // Store target count before damage is applied
+          const targetCountBefore = target.count;
+          
           // Calculate actual damage done (capped by remaining unit health)
           const maxDamagePossible = maxPossibleKills * healthPerUnit;
           const actualDamage = Math.min(rawDamage, maxDamagePossible);
@@ -751,9 +692,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             target.count,
             Math.max(1, unitsKilled)
           );
-          
-          // Store target count before damage is applied
-          const targetCountBefore = target.count;
           
           // Apply damage
           target.count = Math.max(0, target.count - effectiveUnitsKilled);
@@ -788,15 +726,43 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
             break;
           } else {
-            // Continue attacking - refresh potential targets
-            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - refreshing targets`);
-            potentialTargets = battleUnits.filter(t => 
-              t.count > 0 && 
-              t.isAttacker !== unit.isAttacker &&
-              (Math.abs(unit.position - t.position) <= (unit.range || 0) || 
-               Math.abs(unit.position - t.position) <= 1)
-            );
-            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Found ${potentialTargets.length} targets after refresh`);
+            // Hybrid behavior: check for targets, move if none found, then continue
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - checking for targets before movement`);
+            
+            // For hybrid troops, re-evaluate melee priority after each attack
+            if (isHybrid) {
+              const meleePriorityResult = checkHybridMeleePriority(unit, battleUnits, battlefieldRange);
+              
+              if (meleePriorityResult.shouldMoveToMelee && meleePriorityResult.movementResult?.moved) {
+                const currentPos = unit.position;
+                unit.position = meleePriorityResult.movementResult.newPosition;
+                prioritizedMelee = true;
+                battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position} (multi-attack)`);
+              } else {
+                // Check if we're already in melee range
+                const { meleeTargets } = getPotentialTargets(unit, battleUnits, true);
+                prioritizedMelee = meleeTargets.length > 0;
+                if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Hybrid melee priority updated: ${prioritizedMelee ? 'MELEE' : 'RANGED'} (${meleeTargets.length} melee targets)`);
+              }
+            }
+            
+            // Recalculate potential targets with updated melee priority
+            potentialTargets = getPotentialTargets(unit, battleUnits, prioritizedMelee).targets;
+            
+            // Use multi-attack movement logic only if no targets available
+            const movementResult = multiAttackMovement(unit, battleUnits, battlefieldRange);
+            
+            if (movementResult.moved) {
+              battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances from ${unit.position} to ${movementResult.newPosition} (multi-attack movement)`);
+              unit.position = movementResult.newPosition;
+              
+              // Recalculate potential targets after moving
+              potentialTargets = getPotentialTargets(unit, battleUnits, prioritizedMelee).targets;
+              
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: After movement, found ${potentialTargets.length} targets`);
+            } else {
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: ${movementResult.reason}`);
+            }
           }
         }        
       }
@@ -938,10 +904,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     setResult(null);
     setZeroLossDetected(false);
     
-    // Generate a new random seed if advanced options are hidden
-    if (!showAdvanced) {
-      setSeed(Math.floor(Math.random() * 1000000));
-    }
+    // Generate a new random seed if not provided
+    let battleSeed = seed.trim() === '' ? Math.floor(Math.random() * 1000000) : parseInt(seed);
     
     // Get the defender troops based on selected terrain and level
     let defenderTroops: EnemyTroops | null = null;
@@ -985,7 +949,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       currentResearch, 
       showDebug, 
       rngOverride, 
-      seed, 
+      battleSeed, 
       defender.terrain === 'enemy' ? enemyResearch : undefined,
       defender.terrain === 'enemy' ? enemyWallLevel : undefined,
       showEnemyStats,
@@ -1568,10 +1532,10 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       type="number"
                       id="seed"
                       value={seed}
-                      onChange={(e) => setSeed(parseInt(e.target.value) || 0)}
+                      onChange={(e) => setSeed(e.target.value)}
                       className="w-full p-2 rounded bg-gray-600 border border-gray-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                       min="0"
-                      placeholder="Random seed for battle RNG"
+                      placeholder="Enter for fixed seed (blank = random)"
                     />
                   </div>
                   <div>
@@ -1918,8 +1882,8 @@ const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ty
   const isDragon = unit.type === 'dragon';
   const dragonryBonus = isDragon ? research.dragonry * 0.10 : 0;
   
-  // Ranged unit bonuses (include both ranged and siege units)
-  const isRanged = unit.type === 'ranged' || unit.type === 'siege';
+  // Ranged unit bonuses (include both ranged and siege units, plus any unit with range/ranged attack)
+  const isRanged = unit.type === 'ranged' || unit.type === 'siege' || unit.range > 0 || unit.rangedAttack > 0;
   const rangeBonus = isRanged ? weaponsCalibrationBonus : 0;
 
   // Calculate attack with all bonuses
