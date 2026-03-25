@@ -27,6 +27,14 @@ const modules: ModuleItem[] = [
     icon: 'mdi:pendulum',
     path: '/projects/fractals/pendulums',
     color: 'from-purple-600 to-blue-600'
+  },
+  {
+    id: 'multiple-pendulums',
+    title: 'Multiple Pendulums',
+    description: 'Chaos theory demonstration with 5 double pendulums',
+    icon: 'mdi:pendulum',
+    path: '/projects/fractals/pendulums/multiple',
+    color: 'from-orange-600 to-red-600'
   }
 ];
 
@@ -126,7 +134,13 @@ export default function FractalsPage() {
                 <Link href={module.path} className="block w-full h-full">
                   <div className="relative aspect-square overflow-hidden">
                     <Image
-                      src="/img/projects/fractals/pendulumscover.jpg"
+                      src={
+                        module.id === 'pendulums' 
+                          ? '/img/projects/fractals/pendulumscover.jpg'
+                          : module.id === 'multiple-pendulums'
+                          ? '/img/projects/fractals/multiplependulums.png'
+                          : '/img/projects/fractals/pendulumscover.jpg'
+                      }
                       alt={module.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
