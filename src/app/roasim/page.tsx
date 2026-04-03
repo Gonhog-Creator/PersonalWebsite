@@ -1686,12 +1686,12 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                     type="range"
                     min="0"
                     max="3"
-                    step="0.1"
+                    step="0.01"
                     value={enemyHealthFactor}
                     onChange={(e) => setEnemyHealthFactor(parseFloat(e.target.value))}
                     className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <span className="text-sm font-medium w-12 text-right">{enemyHealthFactor.toFixed(1)}x</span>
+                  <span className="text-sm font-medium w-12 text-right">{enemyHealthFactor.toFixed(2)}x</span>
                 </div>
                 <p className="text-xs text-gray-400 mt-1">Multiplier for enemy health ({defender.terrain === 'camp' ? '0.5x default for camps' : '1.0x default for wilderness'})</p>
               </div>
@@ -1702,12 +1702,12 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                     type="range"
                     min="0"
                     max="3"
-                    step="0.1"
+                    step="0.01"
                     value={enemyDefenseFactor}
                     onChange={(e) => setEnemyDefenseFactor(parseFloat(e.target.value))}
                     className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
                   />
-                  <span className="text-sm font-medium w-12 text-right">{enemyDefenseFactor.toFixed(1)}x</span>
+                  <span className="text-sm font-medium w-12 text-right">{enemyDefenseFactor.toFixed(2)}x</span>
                 </div>
                 <p className="text-xs text-gray-400 mt-1">Multiplier for enemy defense (1.0x default for all terrain types)</p>
               </div>
