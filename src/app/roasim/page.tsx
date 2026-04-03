@@ -58,6 +58,7 @@ const ROASim = () => {
   const [enemyHealthFactor, setEnemyHealthFactor] = useState<number>(initialFactors.health);
   const [enemyDefenseFactor, setEnemyDefenseFactor] = useState<number>(initialFactors.defense);
   const [attackerDamageBoost, setAttackerDamageBoost] = useState<number>(0);
+  const [defenderRangeNerf, setDefenderRangeNerf] = useState<number>(0);
   
   const [enemyTroops, setEnemyTroops] = useState<Attackers>({
     porter: 0,
@@ -168,7 +169,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1, attackerDamageBoost: number = 0) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1, attackerDamageBoost: number = 0, defenderRangeNerf: number = 0) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -313,6 +314,12 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         finalHealth = Math.round(modifiedStats.health * enemyHealthFactor);
       }
       
+      // Apply range nerf to defender units
+      let finalRange = modifiedStats.range || 0;
+      if (finalRange > 0 && defenderRangeNerf > 0) {
+        finalRange = Math.max(1, Math.round(finalRange * (1 - defenderRangeNerf / 100)));
+      }
+      
       const battleUnit: BattleUnit = {
         id: `${unitType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: unitType,
@@ -320,7 +327,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         attack: modifiedStats.attack,
         defense: modifiedStats.defense,
         health: finalHealth,
-        range: modifiedStats.range || 0,
+        range: finalRange,
         rangedAttack: modifiedStats.rangedAttack || 0,
         speed: modifiedStats.speed,
         position: 0, // Start at defender's side (position 0)
@@ -362,6 +369,11 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   // Log attacker damage boost if applied
   if (attackerDamageBoost > 0) {
     battleLog.push(`- Attacker damage boosted by ${(attackerDamageBoost * 100).toFixed(0)}%`);
+  }
+  
+  // Log defender range nerf if applied
+  if (defenderRangeNerf > 0) {
+    battleLog.push(`- Defender range nerfed by ${defenderRangeNerf.toFixed(0)}%`);
   }
   
   // Add attacker's army composition
@@ -1001,7 +1013,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       defender.terrain,
       enemyHealthFactor,
       enemyDefenseFactor,
-      attackerDamageBoost
+      attackerDamageBoost,
+      defenderRangeNerf
     );
     
     // Detect zero losses from battle result
@@ -1065,7 +1078,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       seed,
       enemyHealthFactor,
       enemyDefenseFactor,
-      attackerDamageBoost
+      attackerDamageBoost,
+      defenderRangeNerf
     };
 
     // Set up global references for the optimization module
@@ -1179,6 +1193,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       enemyHealthFactor,
       enemyDefenseFactor,
       attackerDamageBoost,
+      defenderRangeNerf,
       rounded
     };
 
@@ -1735,6 +1750,22 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                   <span className="text-sm font-medium w-12 text-right">{attackerDamageBoost.toFixed(2)}x</span>
                 </div>
                 <p className="text-xs text-gray-400 mt-1">Damage boost for attackers (0.0x default)</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Defender Range Nerf:</label>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={defenderRangeNerf}
+                    onChange={(e) => setDefenderRangeNerf(parseFloat(e.target.value))}
+                    className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <span className="text-sm font-medium w-12 text-right">{defenderRangeNerf.toFixed(0)}%</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">Range reduction for defenders (0% default)</p>
               </div>
             </div>
             
