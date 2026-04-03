@@ -129,39 +129,92 @@ export const calculateMovementTowardsEnemy = (
   return { newPosition, moved, reason };
 };
 
-// Hybrid troop melee priority logic
-export const checkHybridMeleePriority = (
+// Calculate damage potential for different attack approaches
+export const calculateDamagePotential = (
+  unit: BattleUnit,
+  target: BattleUnit,
+  approach: 'melee' | 'ranged'
+): { potentialDamage: number; attackPower: number; distance: number } => {
+  const attackPower = approach === 'melee' ? unit.attack : unit.rangedAttack;
+  const distance = Math.abs(unit.position - target.position);
+  
+  // Calculate attack/defense ratio (clamped between 0.3 and 2.1)
+  const attackDefenseRatio = Math.min(2.1, Math.max(0.3, attackPower / target.defense));
+  
+  // Calculate potential damage using average RNG (1.0)
+  const baseDamage = attackPower * unit.count;
+  const potentialDamage = Math.round(baseDamage * attackDefenseRatio * 1.0);
+  
+  return { potentialDamage, attackPower, distance };
+};
+
+// Compare melee vs ranged damage potential for hybrid troops
+export const compareAttackApproaches = (
   unit: BattleUnit,
   battleUnits: BattleUnit[],
   battlefieldRange: number
-): { shouldMoveToMelee: boolean; movementResult?: MovementResult } => {
+): { bestApproach: 'melee' | 'ranged' | 'stay'; movementResult?: MovementResult; reason: string } => {
   const isHybrid = unit.range > 0 && unit.rangedAttack > 0 && unit.attack > 0;
   
   if (!isHybrid) {
-    return { shouldMoveToMelee: false };
+    return { bestApproach: 'stay', reason: 'Not a hybrid unit' };
   }
 
-  // Check for enemies in melee range
-  const { meleeTargets } = getPotentialTargets(unit, battleUnits, true);
+  // Get all potential targets
+  const { targets, meleeTargets, rangedTargets } = getPotentialTargets(unit, battleUnits);
   
-  if (meleeTargets.length > 0) {
-    return { shouldMoveToMelee: false }; // Already in melee range
+  if (targets.length === 0) {
+    return { bestApproach: 'stay', reason: 'No targets available' };
   }
 
-  // Check if we could reach melee with movement
-  const potentialMeleeTargets = battleUnits.filter(target => {
-    if (target.count <= 0) return false;
-    if (unit.isAttacker === target.isAttacker) return false;
-    const distance = Math.abs(unit.position - target.position);
-    return distance <= (unit.speed + 1); // Can reach with movement + melee range
+  let bestMeleeDamage = 0;
+  let bestRangedDamage = 0;
+  let bestMeleeTarget: BattleUnit | null = null;
+  let bestRangedTarget: BattleUnit | null = null;
+
+  // Calculate current ranged damage potential
+  rangedTargets.forEach(target => {
+    const { potentialDamage } = calculateDamagePotential(unit, target, 'ranged');
+    if (potentialDamage > bestRangedDamage) {
+      bestRangedDamage = potentialDamage;
+      bestRangedTarget = target;
+    }
   });
 
-  if (potentialMeleeTargets.length > 0 && unit.speed > 0) {
-    const movementResult = calculateMovementTowardsEnemy(unit, battleUnits, battlefieldRange, 1);
-    return { shouldMoveToMelee: true, movementResult };
+  // Calculate potential melee damage (if we can reach melee)
+  if (unit.speed > 0) {
+    const potentialMeleeTargets = battleUnits.filter(target => {
+      if (target.count <= 0) return false;
+      if (unit.isAttacker === target.isAttacker) return false;
+      const distance = Math.abs(unit.position - target.position);
+      return distance <= (unit.speed + 1); // Can reach with movement + melee range
+    });
+
+    potentialMeleeTargets.forEach(target => {
+      const { potentialDamage } = calculateDamagePotential(unit, target, 'melee');
+      if (potentialDamage > bestMeleeDamage) {
+        bestMeleeDamage = potentialDamage;
+        bestMeleeTarget = target;
+      }
+    });
   }
 
-  return { shouldMoveToMelee: false };
+  // Compare approaches
+  if (bestMeleeDamage > bestRangedDamage * 1.1) { // 10% threshold to prefer melee
+    const movementResult = calculateMovementTowardsEnemy(unit, battleUnits, battlefieldRange, 1);
+    return { 
+      bestApproach: 'melee', 
+      movementResult, 
+      reason: `Melee damage (${bestMeleeDamage.toLocaleString()}) > Ranged damage (${bestRangedDamage.toLocaleString()})` 
+    };
+  } else if (bestRangedDamage > 0) {
+    return { 
+      bestApproach: 'ranged', 
+      reason: `Ranged damage (${bestRangedDamage.toLocaleString()}) >= Melee damage (${bestMeleeDamage.toLocaleString()})` 
+    };
+  }
+
+  return { bestApproach: 'stay', reason: 'No significant damage advantage' };
 };
 
 // Standard movement logic for when no targets are in range

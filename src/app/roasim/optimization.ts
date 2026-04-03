@@ -16,6 +16,7 @@ export interface OptimizationConfig {
   rngOverride: string;
   seed: number;
   enemyHealthFactor?: number;
+  enemyDefenseFactor?: number;
   rounded?: boolean;
 }
 
@@ -95,7 +96,8 @@ export const simulateBattleForOptimization = (
     false, // showEnemyStats
     false, // showAttackMath
     config.defender.terrain,
-    config.enemyHealthFactor
+    config.enemyHealthFactor,
+    config.enemyDefenseFactor
   );
 
   if (!battleResult) {

@@ -4,9 +4,19 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { findMinimumTroops, calculateAllOptimizations, OptimizationConfig } from './optimization';
 import { SpecialItems, Attackers, TerrainType, DefenderState, EnemyResearch, ResearchState, EnemyTroops, TroopStats, EnemyComposition } from './types';
-import { getPotentialTargets, checkHybridMeleePriority, standardMovement, multiAttackMovement } from './movement';
+import { getPotentialTargets, checkHybridMeleePriority, compareAttackApproaches, standardMovement, multiAttackMovement } from './movement';
 
 const ROASim = () => {
+  // Function to get default stat factors based on terrain
+  const getDefaultStatFactors = (terrain: TerrainType) => {
+    if (terrain === 'camp') {
+      return { health: 0.5, defense: 1.0 };
+    } else {
+      // All wilderness types (forest, savanna, lake, mountain, hills, plains)
+      return { health: 1.0, defense: 1.0 };
+    }
+  };
+
   const [attackers, setAttackers] = useState<Attackers>({
     porter: 0,
     conscript: 0,
@@ -42,6 +52,11 @@ const ROASim = () => {
     terrain: 'camp',
     level: 1
   });
+  
+  // Initialize stat factors based on initial terrain
+  const initialFactors = getDefaultStatFactors('camp');
+  const [enemyHealthFactor, setEnemyHealthFactor] = useState<number>(initialFactors.health);
+  const [enemyDefenseFactor, setEnemyDefenseFactor] = useState<number>(initialFactors.defense);
   
   const [enemyTroops, setEnemyTroops] = useState<Attackers>({
     porter: 0,
@@ -84,7 +99,6 @@ const ROASim = () => {
   const [selectedTroopType, setSelectedTroopType] = useState<string>('swiftStrikeDragon');
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizationResult, setOptimizationResult] = useState<string | null>(null);
-  const [enemyHealthFactor, setEnemyHealthFactor] = useState<number>(0.5);
   const [rounded, setRounded] = useState<boolean>(false);
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,11 +127,17 @@ const ROASim = () => {
     } else if (name === 'enemyWallLevel') {
       setEnemyWallLevel(Math.min(Math.max(parseInt(value) || 1, 1), 10)); // Ensure wall level is between 1-10
     } else if (name === 'terrain') {
+      const newTerrain = value as TerrainType;
       setDefender(prev => ({
         ...prev,
-        terrain: value as TerrainType,
+        terrain: newTerrain,
         level: value === 'enemy' ? 0 : (prev.terrain === 'enemy' ? 1 : prev.level) // Keep current level unless switching to/from enemy
       }));
+      
+      // Update stat factors based on new terrain
+      const newFactors = getDefaultStatFactors(newTerrain);
+      setEnemyHealthFactor(newFactors.health);
+      setEnemyDefenseFactor(newFactors.defense);
     } else if (name === 'defenderLevel') {
       setDefender(prev => ({
         ...prev,
@@ -147,7 +167,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -166,9 +186,14 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     Object.entries(defenders)
       .filter(([_, count]) => count > 0)
       .map(([unitType]) => {
-        // For camps/wilds (no enemy research), use base stats only
+        // For camps/wilds (no enemy research), use base stats only with defense factor
         if (!enemyResearchState) {
-          return [unitType, { ...TROOP_STATS[unitType] }];
+          const baseStats = { ...TROOP_STATS[unitType] };
+          // Apply defense factor for camps and wilds
+          if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
+            baseStats.defense = Math.round(baseStats.defense * enemyDefenseFactor);
+          }
+          return [unitType, baseStats];
         }
         
         // For player vs player (with enemy research), apply research bonuses
@@ -184,6 +209,12 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const wallBonus = 0.75 + (0.05 * enemyWallLevel);
           baseStats.defense = Math.round(baseStats.defense * (1 + wallBonus));
         }
+        
+        // Apply defense factor for camps and wilds
+        if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
+          baseStats.defense = Math.round(baseStats.defense * enemyDefenseFactor);
+        }
+        
         return [unitType, baseStats];
       })
   );
@@ -324,6 +355,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   // Log health reduction if applied
   if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
     battleLog.push(`- Enemy health modified by ${enemyHealthFactor}x factor (${terrain})`);
+    battleLog.push(`- Enemy defense modified by ${enemyDefenseFactor}x factor (${terrain})`);
   }
   
   // Add attacker's army composition
@@ -516,17 +548,19 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       let prioritizedMelee = false;
       
       if (isHybrid && !hasInitiallyMoved) {
-        const meleePriorityResult = checkHybridMeleePriority(unit, battleUnits, battlefieldRange);
+        const attackComparison = compareAttackApproaches(unit, battleUnits, battlefieldRange);
         
-        if (meleePriorityResult.shouldMoveToMelee && meleePriorityResult.movementResult?.moved) {
+        if (attackComparison.bestApproach === 'melee' && attackComparison.movementResult?.moved) {
           const currentPos = unit.position;
-          unit.position = meleePriorityResult.movementResult.newPosition;
+          unit.position = attackComparison.movementResult.newPosition;
           prioritizedMelee = true;
-          battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position}`);
-        } else if (meleePriorityResult.shouldMoveToMelee === false) {
-          // Check if we're already in melee range
-          const { meleeTargets } = getPotentialTargets(unit, battleUnits, true);
-          prioritizedMelee = meleeTargets.length > 0;
+          battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position} (${attackComparison.reason})`);
+        } else if (attackComparison.bestApproach === 'ranged') {
+          // Stay at range and use ranged attacks
+          prioritizedMelee = false;
+          if (showDebug && turnCounter <= 5) {
+            battleLog.push(`<span class="text-orange-400">HYBRID DECISION</span>: ${TROOP_STATS[unit.type].name} stays at range (${attackComparison.reason})`);
+          }
         }
       } else if (isHybrid) {
         // Unit already moved, just check if we're in melee range
@@ -729,15 +763,19 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             // Hybrid behavior: check for targets, move if none found, then continue
             if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - checking for targets before movement`);
             
-            // For hybrid troops, re-evaluate melee priority after each attack
+            // For hybrid troops, re-evaluate attack approach after each attack
             if (isHybrid) {
-              const meleePriorityResult = checkHybridMeleePriority(unit, battleUnits, battlefieldRange);
+              const attackComparison = compareAttackApproaches(unit, battleUnits, battlefieldRange);
               
-              if (meleePriorityResult.shouldMoveToMelee && meleePriorityResult.movementResult?.moved) {
+              if (attackComparison.bestApproach === 'melee' && attackComparison.movementResult?.moved) {
                 const currentPos = unit.position;
-                unit.position = meleePriorityResult.movementResult.newPosition;
+                unit.position = attackComparison.movementResult.newPosition;
                 prioritizedMelee = true;
-                battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position} (multi-attack)`);
+                battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position} (multi-attack: ${attackComparison.reason})`);
+              } else if (attackComparison.bestApproach === 'ranged') {
+                // Stay at range and use ranged attacks
+                prioritizedMelee = false;
+                if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Hybrid stays at range (${attackComparison.reason})`);
               } else {
                 // Check if we're already in melee range
                 const { meleeTargets } = getPotentialTargets(unit, battleUnits, true);
@@ -955,7 +993,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       showEnemyStats,
       showAttackMath,
       defender.terrain,
-      enemyHealthFactor
+      enemyHealthFactor,
+      enemyDefenseFactor
     );
     
     // Detect zero losses from battle result
@@ -1017,7 +1056,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       selectedTroopType,
       rngOverride: '0.8', // Force RNG to 0.8 for minimum optimization
       seed,
-      enemyHealthFactor
+      enemyHealthFactor,
+      enemyDefenseFactor
     };
 
     // Set up global references for the optimization module
@@ -1129,6 +1169,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       rngOverride: '0.8', // Force RNG to 0.8 for calculate all optimization
       seed,
       enemyHealthFactor,
+      enemyDefenseFactor,
       rounded
     };
 
@@ -1619,25 +1660,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                     <p className="text-xs text-gray-400 mt-1">Troop type to optimize for minimum count</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Enemy Health Factor:</label>
-                    <div className="space-y-2">
-                      {[0.25, 0.5, 1, 1.5, 2].map((factor) => (
-                        <label key={factor} className="flex items-center cursor-pointer">
-                          <input
-                            type="radio"
-                            name="enemyHealthFactor"
-                            value={factor}
-                            checked={enemyHealthFactor === factor}
-                            onChange={() => setEnemyHealthFactor(factor)}
-                            className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                          />
-                          <span className="ml-2 text-sm font-medium">{factor}x</span>
-                        </label>
-                      ))}
-                    </div>
-                    <p className="text-xs text-gray-400 mt-1">Multiplier for enemy health (0.5x default)</p>
-                  </div>
-                  <div>
                     <button
                       onClick={handleFindMinimumTroops}
                       disabled={isOptimizing}
@@ -1654,6 +1676,43 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                 </div>
               )}
             </div>
+            
+            {/* Enemy Stat Modifiers - Available for both modes */}
+            <div className="mt-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Enemy Health Factor:</label>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="range"
+                    min="0"
+                    max="3"
+                    step="0.1"
+                    value={enemyHealthFactor}
+                    onChange={(e) => setEnemyHealthFactor(parseFloat(e.target.value))}
+                    className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <span className="text-sm font-medium w-12 text-right">{enemyHealthFactor.toFixed(1)}x</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">Multiplier for enemy health ({defender.terrain === 'camp' ? '0.5x default for camps' : '1.0x default for wilderness'})</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Enemy Defense Factor:</label>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="range"
+                    min="0"
+                    max="3"
+                    step="0.1"
+                    value={enemyDefenseFactor}
+                    onChange={(e) => setEnemyDefenseFactor(parseFloat(e.target.value))}
+                    className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <span className="text-sm font-medium w-12 text-right">{enemyDefenseFactor.toFixed(1)}x</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">Multiplier for enemy defense (1.0x default for all terrain types)</p>
+              </div>
+            </div>
+            
             <div className="h-10" />
             {!showAdvancedCheckbox && (
               <div className="pt-6">
