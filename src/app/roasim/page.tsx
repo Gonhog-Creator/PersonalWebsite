@@ -57,6 +57,7 @@ const ROASim = () => {
   const initialFactors = getDefaultStatFactors('camp');
   const [enemyHealthFactor, setEnemyHealthFactor] = useState<number>(initialFactors.health);
   const [enemyDefenseFactor, setEnemyDefenseFactor] = useState<number>(initialFactors.defense);
+  const [attackerDamageBoost, setAttackerDamageBoost] = useState<number>(0);
   
   const [enemyTroops, setEnemyTroops] = useState<Attackers>({
     porter: 0,
@@ -167,7 +168,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1, attackerDamageBoost: number = 0) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -284,11 +285,11 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         id: `${unitType}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         type: unitType,
         count,
-        attack: modifiedStats.attack,
+        attack: Math.round(modifiedStats.attack * (1 + attackerDamageBoost)),
         defense: modifiedStats.defense,
         health: modifiedStats.health,
         range: modifiedStats.range,
-        rangedAttack: modifiedStats.rangedAttack || 0, // Ensure rangedAttack is defined
+        rangedAttack: Math.round((modifiedStats.rangedAttack || 0) * (1 + attackerDamageBoost)), // Ensure rangedAttack is defined
         speed: modifiedStats.speed, // Use modified speed (includes dragonry bonus)
         position: battlefieldRange, // Start at attacker's side (position battlefieldRange)
         isAttacker: true,
@@ -356,6 +357,11 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
     battleLog.push(`- Enemy health modified by ${enemyHealthFactor}x factor (${terrain})`);
     battleLog.push(`- Enemy defense modified by ${enemyDefenseFactor}x factor (${terrain})`);
+  }
+  
+  // Log attacker damage boost if applied
+  if (attackerDamageBoost > 0) {
+    battleLog.push(`- Attacker damage boosted by ${(attackerDamageBoost * 100).toFixed(0)}%`);
   }
   
   // Add attacker's army composition
@@ -994,7 +1000,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       showAttackMath,
       defender.terrain,
       enemyHealthFactor,
-      enemyDefenseFactor
+      enemyDefenseFactor,
+      attackerDamageBoost
     );
     
     // Detect zero losses from battle result
@@ -1057,7 +1064,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       rngOverride: '0.8', // Force RNG to 0.8 for minimum optimization
       seed,
       enemyHealthFactor,
-      enemyDefenseFactor
+      enemyDefenseFactor,
+      attackerDamageBoost
     };
 
     // Set up global references for the optimization module
@@ -1170,6 +1178,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       seed,
       enemyHealthFactor,
       enemyDefenseFactor,
+      attackerDamageBoost,
       rounded
     };
 
@@ -1710,6 +1719,22 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                   <span className="text-sm font-medium w-12 text-right">{enemyDefenseFactor.toFixed(2)}x</span>
                 </div>
                 <p className="text-xs text-gray-400 mt-1">Multiplier for enemy defense (1.0x default for all terrain types)</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Attacker Damage Boost:</label>
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="range"
+                    min="0"
+                    max="2"
+                    step="0.01"
+                    value={attackerDamageBoost}
+                    onChange={(e) => setAttackerDamageBoost(parseFloat(e.target.value))}
+                    className="flex-1 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <span className="text-sm font-medium w-12 text-right">{attackerDamageBoost.toFixed(2)}x</span>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">Damage boost for attackers (0.0x default)</p>
               </div>
             </div>
             

@@ -17,6 +17,7 @@ export interface OptimizationConfig {
   seed: number;
   enemyHealthFactor?: number;
   enemyDefenseFactor?: number;
+  attackerDamageBoost?: number;
   rounded?: boolean;
 }
 
@@ -97,7 +98,8 @@ export const simulateBattleForOptimization = (
     false, // showAttackMath
     config.defender.terrain,
     config.enemyHealthFactor,
-    config.enemyDefenseFactor
+    config.enemyDefenseFactor,
+    config.attackerDamageBoost
   );
 
   if (!battleResult) {
