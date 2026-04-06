@@ -102,6 +102,7 @@ const ROASim = () => {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizationResult, setOptimizationResult] = useState<string | null>(null);
   const [rounded, setRounded] = useState<boolean>(false);
+  const [disableAttackThreshold, setDisableAttackThreshold] = useState<boolean>(false);
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, dataset } = e.target;
@@ -169,7 +170,7 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1, attackerDamageBoost: number = 0, defenderRangeNerf: number = 0) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1, attackerDamageBoost: number = 0, defenderRangeNerf: number = 0, disableAttackThreshold: boolean = false) => {
   // Initialize battle log
   const battleLog: string[] = [];
   
@@ -357,6 +358,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
 
   // Add initial battle setup to the log
   battleLog.push("Battle Setup:");
+  battleLog.push(`- Shielding: ${disableAttackThreshold ? 'OFF' : 'ON (20% threshold)'}`);
   battleLog.push(`- Battlefield length: ${battlefieldRange}`);
   battleLog.push(`- Random seed: ${battleSeed || seed}`);
   
@@ -761,64 +763,81 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           
           // Check if this attack used less than 20% of potential damage - if so, attack again
           // Use the UNCAPPED percentage for the decision logic
-          if (showDebug) {
-            battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Damage=${damagePercentage.toFixed(4)}%, Targets=${potentialTargets.length}, ShouldAttack=${damagePercentage < 20}`);
+          
+          if (disableAttackThreshold) {
+            // When threshold is disabled, only stop if using 100% of attack potential AND enemies remain
+            if (damagePercentage >= 100 && potentialTargets.length > 0) {
+              // Stop attacking - used 100% of attack potential and enemies remain
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage >= 100% and enemies remain`);
+              break;
+            } else if (damagePercentage <= 0.001) {
+              // Stop attacking - no meaningful damage being done
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage <= 0.001%`);
+              break;
+            } else if (effectiveUnitsKilled === 0 && actualDamage === 0) {
+              // Stop attacking - no damage at all being done
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
+              break;
+            }
+            // Continue with hybrid behavior
+          } else {
+            // Original logic: stop if damage >= 20%
+            if (damagePercentage >= 20) {
+              // Stop attacking - last attack was efficient enough (20%+ damage)
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage >= 20%`);
+              break;
+            } else if (damagePercentage <= 0.001) {
+              // Stop attacking - no meaningful damage being done (changed from 0.1% to 0.001%)
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage <= 0.001%`);
+              break;
+            } else if (effectiveUnitsKilled === 0 && actualDamage === 0) {
+              // Stop attacking - no damage at all being done
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
+              break;
+            }
+            // Continue with hybrid behavior
           }
           
-          if (damagePercentage >= 20) {
-            // Stop attacking - last attack was efficient enough (20%+ damage)
-            // if (showDebug) battleLog.push(`DEBUG MULTI-ATTACK: Stopping - damage >= 20%`);
-            break;
-          } else if (damagePercentage <= 0.001) {
-            // Stop attacking - no meaningful damage being done (changed from 0.1% to 0.001%)
-            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage <= 0.001%`);
-            break;
-          } else if (effectiveUnitsKilled === 0 && actualDamage === 0) {
-            // Stop attacking - no damage at all being done
-            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
-            break;
-          } else {
-            // Hybrid behavior: check for targets, move if none found, then continue
-            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - checking for targets before movement`);
+          // Hybrid behavior: check for targets, move if none found, then continue
+          if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - checking for targets before movement`);
+          
+          // For hybrid troops, re-evaluate attack approach after each attack
+          if (isHybrid) {
+            const attackComparison = compareAttackApproaches(unit, battleUnits, battlefieldRange);
             
-            // For hybrid troops, re-evaluate attack approach after each attack
-            if (isHybrid) {
-              const attackComparison = compareAttackApproaches(unit, battleUnits, battlefieldRange);
-              
-              if (attackComparison.bestApproach === 'melee' && attackComparison.movementResult?.moved) {
-                const currentPos = unit.position;
-                unit.position = attackComparison.movementResult.newPosition;
-                prioritizedMelee = true;
-                battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position} (multi-attack: ${attackComparison.reason})`);
-              } else if (attackComparison.bestApproach === 'ranged') {
-                // Stay at range and use ranged attacks
-                prioritizedMelee = false;
-                if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Hybrid stays at range (${attackComparison.reason})`);
-              } else {
-                // Check if we're already in melee range
-                const { meleeTargets } = getPotentialTargets(unit, battleUnits, true);
-                prioritizedMelee = meleeTargets.length > 0;
-                if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Hybrid melee priority updated: ${prioritizedMelee ? 'MELEE' : 'RANGED'} (${meleeTargets.length} melee targets)`);
-              }
+            if (attackComparison.bestApproach === 'melee' && attackComparison.movementResult?.moved) {
+              const currentPos = unit.position;
+              unit.position = attackComparison.movementResult.newPosition;
+              prioritizedMelee = true;
+              battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position} (multi-attack: ${attackComparison.reason})`);
+            } else if (attackComparison.bestApproach === 'ranged') {
+              // Stay at range and use ranged attacks
+              prioritizedMelee = false;
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Hybrid stays at range (${attackComparison.reason})`);
+            } else {
+              // Check if we're already in melee range
+              const { meleeTargets } = getPotentialTargets(unit, battleUnits, true);
+              prioritizedMelee = meleeTargets.length > 0;
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Hybrid melee priority updated: ${prioritizedMelee ? 'MELEE' : 'RANGED'} (${meleeTargets.length} melee targets)`);
             }
+          }
+          
+          // Recalculate potential targets with updated melee priority
+          potentialTargets = getPotentialTargets(unit, battleUnits, prioritizedMelee).targets;
+          
+          // Use multi-attack movement logic only if no targets available
+          const movementResult = multiAttackMovement(unit, battleUnits, battlefieldRange);
+          
+          if (movementResult.moved) {
+            battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances from ${unit.position} to ${movementResult.newPosition} (multi-attack movement)`);
+            unit.position = movementResult.newPosition;
             
-            // Recalculate potential targets with updated melee priority
+            // Recalculate potential targets after moving
             potentialTargets = getPotentialTargets(unit, battleUnits, prioritizedMelee).targets;
             
-            // Use multi-attack movement logic only if no targets available
-            const movementResult = multiAttackMovement(unit, battleUnits, battlefieldRange);
-            
-            if (movementResult.moved) {
-              battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances from ${unit.position} to ${movementResult.newPosition} (multi-attack movement)`);
-              unit.position = movementResult.newPosition;
-              
-              // Recalculate potential targets after moving
-              potentialTargets = getPotentialTargets(unit, battleUnits, prioritizedMelee).targets;
-              
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: After movement, found ${potentialTargets.length} targets`);
-            } else {
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: ${movementResult.reason}`);
-            }
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: After movement, found ${potentialTargets.length} targets`);
+          } else {
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: ${movementResult.reason}`);
           }
         }        
       }
@@ -1014,7 +1033,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       enemyHealthFactor,
       enemyDefenseFactor,
       attackerDamageBoost,
-      defenderRangeNerf
+      defenderRangeNerf,
+      disableAttackThreshold
     );
     
     // Detect zero losses from battle result
@@ -1652,6 +1672,21 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       />
                       <span className="ml-2 text-sm font-medium">Show Attack Math</span>
                     </label>
+                  </div>
+                  <div>
+                    <label htmlFor="disableAttackThreshold" className="flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="disableAttackThreshold"
+                        checked={disableAttackThreshold}
+                        onChange={() => setDisableAttackThreshold(!disableAttackThreshold)}
+                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                      />
+                      <span className="ml-2 text-sm font-medium">Disable 20% Attack Threshold</span>
+                    </label>
+                    <p className="text-xs text-gray-400 mt-1">
+                      When disabled, attackers only stop when using 100% of their attack potential
+                    </p>
                   </div>
                   <div>
                     <label htmlFor="troopType" className="block text-sm font-medium mb-1">
