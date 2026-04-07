@@ -30,7 +30,6 @@ const ROASim = () => {
     fireMirror: 0,
     battleDragon: 0,
     fangtooth: 0,
-    silverSerpent: 0,
   });
 
   const [formData, setFormData] = useState({
@@ -73,7 +72,6 @@ const ROASim = () => {
     fireMirror: 0,
     battleDragon: 0,
     fangtooth: 0,
-    silverSerpent: 0,
   });
   
   const [enemyResearch, setEnemyResearch] = useState<EnemyResearch>({
@@ -1099,7 +1097,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       enemyHealthFactor,
       enemyDefenseFactor,
       attackerDamageBoost,
-      defenderRangeNerf
+      defenderRangeNerf,
+      disableAttackThreshold
     };
 
     // Set up global references for the optimization module
@@ -1214,7 +1213,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       enemyDefenseFactor,
       attackerDamageBoost,
       defenderRangeNerf,
-      rounded
+      rounded,
+      disableAttackThreshold
     };
 
     // Set up global references for the optimization module
@@ -1397,7 +1397,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                       { id: 'fireMirror', label: 'Fire Mirror' },
                       { id: 'battleDragon', label: 'Battle Dragon' },
                       { id: 'fangtooth', label: 'Fangtooth' },
-                      { id: 'silverSerpent', label: 'Silver Serpent' },
                     ].map(({ id, label }) => (
                       <div key={id} className="space-y-1">
                         <label htmlFor={`enemy-${id}`} className="block text-sm font-medium">
@@ -1521,7 +1520,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                 { id: 'fireMirror', label: 'Fire Mirror' },
                 { id: 'battleDragon', label: 'Battle Dragon' },
                 { id: 'fangtooth', label: 'Fangtooth' },
-                { id: 'silverSerpent', label: 'Silver Serpent' },
               ].map(({ id, label }) => (
                 <div key={id} className="space-y-1">
                   <label htmlFor={id} className="block text-sm font-medium">
@@ -1606,6 +1604,25 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                 </div>
               )}
               
+              {/* Disable Attack Threshold Checkbox - Available for both modes */}
+              {showAdvancedCheckbox && (
+                <div className="mt-4">
+                  <label className="flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      id="disableAttackThreshold"
+                      checked={disableAttackThreshold}
+                      onChange={() => setDisableAttackThreshold(!disableAttackThreshold)}
+                      className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                    />
+                    <span className="ml-2 text-sm font-medium">Disable 20% Attack Threshold</span>
+                  </label>
+                  <p className="text-xs text-gray-400 mt-1">
+                    When disabled, attackers only stop when using 100% of their attack potential
+                  </p>
+                </div>
+              )}
+              
               {/* Manual Mode Options - Only show when checkbox is checked AND mode is manual */}
               {showAdvancedCheckbox && mode === 'manual' && (
                 <div className="mt-4 space-y-2">
@@ -1674,21 +1691,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                     </label>
                   </div>
                   <div>
-                    <label htmlFor="disableAttackThreshold" className="flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        id="disableAttackThreshold"
-                        checked={disableAttackThreshold}
-                        onChange={() => setDisableAttackThreshold(!disableAttackThreshold)}
-                        className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                      />
-                      <span className="ml-2 text-sm font-medium">Disable 20% Attack Threshold</span>
-                    </label>
-                    <p className="text-xs text-gray-400 mt-1">
-                      When disabled, attackers only stop when using 100% of their attack potential
-                    </p>
-                  </div>
-                  <div>
                     <label htmlFor="troopType" className="block text-sm font-medium mb-1">
                       Optimization Troop Type:
                     </label>
@@ -1711,7 +1713,6 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                         { id: 'fireMirror', label: 'Fire Mirror' },
                         { id: 'battleDragon', label: 'Battle Dragon' },
                         { id: 'fangtooth', label: 'Fangtooth' },
-                        { id: 'silverSerpent', label: 'Silver Serpent' },
                       ].map(({ id, label }) => (
                         <option key={id} value={id}>{label}</option>
                       ))}
@@ -1736,8 +1737,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
               )}
             </div>
             
-            {/* Enemy Stat Modifiers - Available for both modes */}
-            <div className="mt-6 space-y-4">
+            {/* Enemy Stat Modifiers - Only show when advanced options are toggled */}
+            {showAdvancedCheckbox && (
+              <div className="mt-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Enemy Health Factor:</label>
                 <div className="flex items-center space-x-3">
@@ -1802,7 +1804,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
                 </div>
                 <p className="text-xs text-gray-400 mt-1">Range reduction for defenders (0% default)</p>
               </div>
-            </div>
+              </div>
+            )}
             
             <div className="h-10" />
             {!showAdvancedCheckbox && (
@@ -1954,10 +1957,6 @@ const TROOP_STATS: Record<string, TroopStats> = {
   fangtooth: {
     name: 'Fangtooth', tier: 4, type: 'infantry',
     attack: 1600, rangedAttack: 800, health: 3000, defense: 300, speed: 500, range: 600, load: 45, upkeep: 125, power: 10
-  },
-  silverSerpent: {
-    name: 'Silver Serpent', tier: 3, type: 'infantry',
-    attack: 100, rangedAttack: 0, health: 450, defense: 65, speed: 200, range: 0, load: 20, upkeep: 10, power: 4
   },
   // Add more troops as needed
 };

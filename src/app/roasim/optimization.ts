@@ -20,6 +20,7 @@ export interface OptimizationConfig {
   attackerDamageBoost?: number;
   defenderRangeNerf?: number;
   rounded?: boolean;
+  disableAttackThreshold?: boolean;
 }
 
 export interface OptimizationResult {
@@ -101,7 +102,8 @@ export const simulateBattleForOptimization = (
     config.enemyHealthFactor,
     config.enemyDefenseFactor,
     config.attackerDamageBoost,
-    config.defenderRangeNerf
+    config.defenderRangeNerf,
+    config.disableAttackThreshold
   );
 
   if (!battleResult) {
