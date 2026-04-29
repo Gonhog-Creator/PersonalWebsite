@@ -358,7 +358,18 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   battleLog.push("Battle Setup:");
   battleLog.push(`- Shielding: ${disableAttackThreshold ? 'OFF' : 'ON (20% threshold)'}`);
   battleLog.push(`- Battlefield length: ${battlefieldRange}`);
-  battleLog.push(`- Random seed: ${battleSeed || seed}`);
+  battleLog.push(`- RNG Override: ${rngOverride || 'None'}`);
+  
+  // Add attacker research levels
+  battleLog.push(`- Attacker Research: Weapons Calibration ${researchState.weaponsCalibration}, Metalurgy ${researchState.metalurgy}, Medicine ${researchState.medicine}, Dragonry ${researchState.dragonry}, Rapid Deployment ${researchState.rapidDeployment}`);
+  
+  // Add enemy research levels if applicable
+  if (enemyResearchState) {
+    battleLog.push(`- Enemy Research: Weapons Calibration ${enemyResearchState.weaponsCalibration}, Metalurgy ${enemyResearchState.metalurgy}, Medicine ${enemyResearchState.medicine}, Dragonry ${enemyResearchState.dragonry}, Rapid Deployment ${enemyResearchState.rapidDeployment}`);
+    if (enemyWallLevel !== undefined) {
+      battleLog.push(`- Enemy Wall Level: ${enemyWallLevel} (+${(0.75 + 0.05 * enemyWallLevel).toFixed(2)} defense bonus)`);
+    }
+  }
   
   // Log health reduction if applied
   if (terrain && (terrain === 'camp' || terrain === 'forest' || terrain === 'savanna' || terrain === 'lake' || terrain === 'mountain' || terrain === 'hills' || terrain === 'plains')) {
@@ -689,13 +700,19 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           
           // Calculate RNG factor (0.8 to 1.2)
           let rng: number;
-          if (rngOverride && rngOverride.trim() !== '') {
+          if (rngOverride && rngOverride !== '') {
             // Use overridden RNG value
-            rng = Math.max(0.8, Math.min(1.2, parseFloat(rngOverride) || 1.0));
+            rng = Math.max(0.8, Math.min(1.2, parseFloat(rngOverride) || 0.8));
+            if (showDebug && turnCounter <= 3) {
+              battleLog.push(`<span class="text-yellow-400">DEBUG RNG</span>: Using override value ${rngOverride} -> ${rng}`);
+            }
           } else {
             // Use random RNG with 0.01 precision
             const rngSeed = (battleSeed || seed) + (round * 10) + (turnCounter);
             rng = Math.round((0.8 + (0.4 * ((rngSeed * 9301 + 49297) % 233280) / 233280)) * 100) / 100;
+            if (showDebug && turnCounter <= 3) {
+              battleLog.push(`<span class="text-yellow-400">DEBUG RNG</span>: Using random seed ${rngSeed} -> ${rng}`);
+            }
           }
           
           // Calculate final damage with all factors
@@ -723,7 +740,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           
           // Calculate damage percentage for multi-attack decision (actual vs max possible with current RNG)
           const maxPossibleDamageWithCurrentRng = baseDamage * attackDefenseRatio * rng;
+          // Use actualDamage for percentage calculation - this shows how much of potential damage was actually used
           const damagePercentage = maxPossibleDamageWithCurrentRng > 0 ? (actualDamage / maxPossibleDamageWithCurrentRng) * 100 : 0;
+          
           
           // Debug: Log RNG and damage values
           if (showDebug && turnCounter <= 10) {
@@ -763,10 +782,10 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           // Use the UNCAPPED percentage for the decision logic
           
           if (disableAttackThreshold) {
-            // When threshold is disabled, only stop if using 100% of attack potential AND enemies remain
-            if (damagePercentage >= 100 && potentialTargets.length > 0) {
-              // Stop attacking - used 100% of attack potential and enemies remain
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage >= 100% and enemies remain`);
+            // When threshold is disabled, stop at 100% damage (no artificial limit)
+            if (damagePercentage >= 100 - 0.01) {
+              // Stop attacking - used 100% of attack potential
+              attacksThisTurn = maxAttacks; // Force exit from multi-attack loop
               break;
             } else if (damagePercentage <= 0.001) {
               // Stop attacking - no meaningful damage being done
@@ -1214,7 +1233,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       attackerDamageBoost,
       defenderRangeNerf,
       rounded,
-      disableAttackThreshold
+      disableAttackThreshold // Use UI setting for shielding option
     };
 
     // Set up global references for the optimization module

@@ -165,13 +165,7 @@ export const findMinimumTroops = async (
     onProgress?.(message);
   };
 
-  log(`=== OPTIMIZATION RESULTS ===`);
-  log(`Finding minimum ${(globalThis as any).TROOP_STATS?.[config.selectedTroopType]?.name || config.selectedTroopType} count for zero losses...`);
-  log(`Target: ${config.defender.terrain.charAt(0).toUpperCase() + config.defender.terrain.slice(1)} Level ${config.defender.level}`);
-  log(`RNG Override: ${config.rngOverride || 'Random'}`);
-  log(`Seed: ${config.seed}`);
-  log("");
-
+  
   // Binary search setup
   let low = 1;
   let high = 100000; // Start with a reasonable upper bound
@@ -186,31 +180,19 @@ export const findMinimumTroops = async (
     
     const battleResult = simulateBattleForOptimization(config, high);
     
-    // Debug output for first few tests
-    if (testCount <= 3) {
-      log(`DEBUG: Testing ${high} troops`);
-      log(`DEBUG: Won battle: ${battleResult.wonBattle}`);
-      log(`DEBUG: Has zero losses: ${battleResult.hasZeroLosses}`);
-      log(`DEBUG: Initial count: ${battleResult.initialAttackerCount}, Final count: ${battleResult.finalAttackerCount}`);
-      log(`DEBUG: Count system: ${battleResult.finalAttackerCount === battleResult.initialAttackerCount ? 'ZERO LOSSES' : 'HAS LOSSES'}`);
-    }
-
+    
     if (battleResult.hasZeroLosses) {
       foundWorkingHigh = true;
-      log(`Found working upper bound: ${high}`);
     } else {
       high *= 2;
       if (testCount >= 5) {
         high = 10000000;
         foundWorkingHigh = true;
-        log(`Using maximum upper bound: ${high}`);
       }
     }
   }
 
   if (!foundWorkingHigh) {
-    log("❌ No minimum found within reasonable limits");
-    log("Try increasing the upper bound or using different troops/research");
     return {
       success: false,
       message: "No minimum found within reasonable limits",
@@ -219,41 +201,28 @@ export const findMinimumTroops = async (
   }
 
   // Binary search for minimum
-  log(`Starting binary search between ${low} and ${high}`);
   while (low <= high && testCount < maxTests) {
     testCount++;
     const mid = Math.floor((low + high) / 2);
 
     const battleResult = simulateBattleForOptimization(config, mid);
-    
-    // Debug output for first few tests
-    if (testCount <= 6) {
-      log(`DEBUG: Binary search test ${testCount}: Testing ${mid} troops`);
-      log(`DEBUG: Won battle: ${battleResult.wonBattle}`);
-      log(`DEBUG: Has zero losses: ${battleResult.hasZeroLosses}`);
-      log(`DEBUG: Initial count: ${battleResult.initialAttackerCount}, Final count: ${battleResult.finalAttackerCount}`);
-      log(`DEBUG: Count system: ${battleResult.finalAttackerCount === battleResult.initialAttackerCount ? 'ZERO LOSSES' : 'HAS LOSSES'}`);
-      log(`DEBUG: Current range: ${low}-${high}`);
-    }
 
     if (battleResult.hasZeroLosses) {
       result = mid;
       high = mid - 1;
-      log(`Found zero losses at ${mid}, searching lower...`);
     } else {
       low = mid + 1;
-      log(`No zero losses at ${mid}, searching higher...`);
     }
 
     // Add small delay for UI responsiveness
     await new Promise(resolve => setTimeout(resolve, 10));
   }
 
-  log("");
-  
+    
   if (result > 0) {
     // Apply rounding logic if enabled
     let roundedResult = result;
+        
     if (config.rounded) {
       if (result < 500) {
         // Round to nearest 10
@@ -266,8 +235,6 @@ export const findMinimumTroops = async (
         roundedResult = Math.round(result / 1000) * 1000;
       }
     }
-    
-    log(`🎯 MINIMUM FOUND: ${roundedResult.toLocaleString()}x ${(globalThis as any).TROOP_STATS?.[config.selectedTroopType]?.name || config.selectedTroopType}`);
     return {
       success: true,
       minimumTroops: roundedResult,
@@ -275,8 +242,6 @@ export const findMinimumTroops = async (
       log: optimizationLog
     };
   } else {
-    log(`❌ No minimum found within reasonable limits`);
-    log(`Try increasing the upper bound or using different troops/research`);
     return {
       success: false,
       message: "No minimum found within reasonable limits",
@@ -502,6 +467,7 @@ export const calculateAllOptimizations = async (
             
             const battleResult = simulateBattleForOptimization(testConfig, mid, targetLevel);
 
+            
             if (battleResult.hasZeroLosses) {
               result = mid;
               high = mid - 1;
@@ -513,6 +479,7 @@ export const calculateAllOptimizations = async (
           if (result > 0) {
             // Apply rounding logic if enabled
             let roundedResult = result;
+                        
             if (config.rounded) {
               if (result < 500) {
                 // Round up to nearest 10
@@ -526,6 +493,7 @@ export const calculateAllOptimizations = async (
               }
             }
             minTroops = roundedResult.toLocaleString();
+            
           }
         }
 
