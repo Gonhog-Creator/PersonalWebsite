@@ -49,7 +49,8 @@ export default function BelgiumGallery() {
         return {
           id,
           src: getImagePath(id),
-          location: 'Belgium'
+          location: 'Belgium',
+          alt: `Photo ${id}`
         };
       }).filter(image => !missingPhotos.includes(image.id));
       
@@ -156,18 +157,20 @@ export default function BelgiumGallery() {
               >
                 Photos
               </GradientButton>
-              <GradientButton
-                variant={currentView === 'drone' ? 'variant' : 'default'}
-                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-                onClick={() => handleTabChange('drone')}
-                onMouseEnter={() => {
-                  if (!loadedTabs.has('drone')) {
-                    setLoadedTabs(prev => new Set([...prev, 'drone']));
-                  }
-                }}
-              >
-                Drone Videos
-              </GradientButton>
+              {true && (
+                <GradientButton
+                  variant={currentView === 'drone' ? 'variant' : 'default'}
+                  className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                  onClick={() => handleTabChange('drone')}
+                  onMouseEnter={() => {
+                    if (!loadedTabs.has('drone')) {
+                      setLoadedTabs(prev => new Set([...prev, 'drone']));
+                    }
+                  }}
+                >
+                  Drone Videos
+                </GradientButton>
+              )}
             </div>
           </div>
         </section>

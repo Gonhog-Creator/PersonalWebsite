@@ -141,13 +141,15 @@ export default function BassanoGallery() {
             >
               Photos
             </GradientButton>
-            <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
+            {PAGE_CONTENT.video.id && (
+              <GradientButton
+                variant={currentView === 'drone' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => setCurrentView('drone')}
+              >
+                Drone Videos
+              </GradientButton>
+            )}
           </div>
         </div>
       </section>
@@ -176,13 +178,19 @@ export default function BassanoGallery() {
                   <div className="relative w-full overflow-hidden rounded-lg">
                     <style jsx global>{`
                       .masonry-column {
-                        padding-left: 8px;
-                        padding-right: 8px;
+                        padding-left: 8px !important;
+                        padding-right: 8px !important;
                       }
                       .masonry-column > div {
-                        margin-bottom: 16px;
+                        margin-bottom: 16px !important;
                         border-radius: 0.5rem;
                         overflow: hidden;
+                      }
+                      .masonry-column:first-child {
+                        padding-left: 0 !important;
+                      }
+                      .masonry-column:last-child {
+                        padding-right: 0 !important;
                       }
                     `}</style>
                     <div className="relative w-full h-full">

@@ -45,12 +45,6 @@ const PAGE_CONTENT = {
   }
 };
 
-//STEP ThREE
-// Image details for alt text
-const imageDetails: Record<number, ImageDetails> = {
-  1: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
-};
 // Generate panorama images with default alt text
 const getPanoramaPath = (id: number) => {
   return `/img/Italy/Trieste/trieste-panorama (${id}).jpg`;
@@ -61,11 +55,10 @@ export default function TriesteGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 203 }, (_, i) => {
-      const details = imageDetails[i + 1] || { alt: `Photo ${i + 1}` };
       const image: GalleryImage = {
         id: i + 1,
         src: getImagePath(i + 1),
-        alt: details.alt
+        alt: `Photo ${i + 1}`
       };
       return image;
     });
@@ -146,13 +139,15 @@ export default function TriesteGallery() {
             >
               Photos
             </GradientButton>
-            <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
+            {PAGE_CONTENT.video.id && (
+              <GradientButton
+                variant={currentView === 'drone' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => setCurrentView('drone')}
+              >
+                Drone Videos
+              </GradientButton>
+            )}
           </div>
         </div>
       </section>

@@ -8,130 +8,51 @@ import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
+import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 
 import { BackToTop } from '@/components/ui/BackToTop';
 
-interface GalleryImage {
-  id: number;
-  src: string;
-  alt: string;
-  location: string;
-}
+/*
+For updating this gallery, update all things in steps 1-4
+1 - Image path for gallery
+2 - Page content
+3 - Image details for alt text
+4 - Export Name
+*/
 
-type GalleryView = 'photos' | 'panoramas' | 'drone';
 
-// Helper function to generate image paths
+//STEP ONE
 const getImagePath = (id: number) => {
   const basePath = '/img/Australia/australia';
   return `${basePath} (${id}).jpg`;
 };
 
-// Image details for alt text
-const imageDetails: Record<number, { alt: string }> = {
-  1: { alt: 'Adelaide Central Market' },
-  2: { alt: 'Smoked meats' },
-  3: { alt: 'Outback' },
-  4: { alt: 'Sunset in Alice Springs' },
-  5: { alt: 'Red-capped Robin' },
-  6: { alt: 'Australia Zebra Finches kissing' },
-  7: { alt: 'Curious Ground Bird' },
-  8: { alt: 'Red-tailed Black Cockatoo' },
-  9: { alt: 'Asutralian Numbat' },
-  10: { alt: 'Pink Flower' },
-  11: { alt: 'Kangaroo' },
-  12: { alt: 'Ostritch' },
-  13: { alt: 'Dingo' },
-  14: { alt: 'Biking through the outback' },
-  15: { alt: 'Biking through the outback' },
-  16: { alt: 'Simpsons Gap - Alice Springs' },
-  17: { alt: 'Water droplets' },
-  18: { alt: 'Knobbly fruit' },
-  19: { alt: 'Sailboat' },
-  20: { alt: 'Little Boat' },
-  21: { alt: 'Underground Hotel - Cooper Pedy' },
-  22: { alt: 'Snorkling (from above)' },
-  23: { alt: 'Green flashes in opal' },
-  24: { alt: 'Mining equipment - Cooper Pedy' },
-  25: { alt: 'Bynoe\'s gecko' },
-  26: { alt: 'Sunset - Coober Pedy' },
-  27: { alt: 'Sunset - Coober Pedy' },
-  28: { alt: 'Mining equipment - Cooper Pedy' },
-  29: { alt: 'Tray of uncut opals' },
-  30: { alt: 'Standing on mining equipment' },
-  31: { alt: 'Bucket Truck - Cooper Pedy' },
-  32: { alt: 'Cruiser' },
-  33: { alt: 'Beach Estuary' },
-  34: { alt: 'Egret on sand' },
-  35: { alt: 'Sunlight through trees' },
-  36: { alt: 'Australian flag' },
-  37: { alt: 'Trees on rocks' },
-  38: { alt: 'Yellow cockroach' },
-  39: { alt: 'Dingo Footprint' },
-  40: { alt: 'Sand Dunes - Fraser Island' },
-  41: { alt: 'Sand Dunes - Fraser Island' },
-  42: { alt: 'Sunset - Fraser Island' },
-  43: { alt: 'Rollout - Fraser Island' },
-  44: { alt: 'Camera selfie' },
-  45: { alt: 'Outcropping' },
-  46: { alt: 'An eye for an eye' },
-  47: { alt: 'Lace Monitor' },
-  48: { alt: 'Lace Monitor' },
-  49: { alt: 'Lace Monitor' },
-  50: { alt: 'S.S. Maheno Wreck - Fraser Island' },
-  51: { alt: 'S.S. Maheno Wreck - Fraser Island' },
-  52: { alt: 'Sailboats' },
-  53: { alt: 'Lighthouse' },
-  54: { alt: 'Bee on flower' },
-  55: { alt: 'Flower' },
-  56: { alt: 'Common Blackbird' },
-  57: { alt: 'Rainbow lorikeets' },
-  58: { alt: 'Walkway - Sydney' },
-  59: { alt: 'Street musician' },
-  60: { alt: 'St. Mary\'s Cathedral - Sydney' },
-  61: { alt: 'The one and only' },
-  62: { alt: 'Sydney Skyline' },
-  63: { alt: 'Cocklebay Warf fountain' },
-  64: { alt: 'Mall stop' },
-  65: { alt: 'Marcus Who?' },
-  66: { alt: 'Root Tangle' },
-  67: { alt: 'Opera at night' },
-  68: { alt: 'Skyline at night' },
-  69: { alt: 'Blue-faced Honeyeater' },
-  70: { alt: 'Sailboat' },
-  71: { alt: 'Me on sailboat' },
-  72: { alt: 'Sailboat Group' },
-  73: { alt: 'Sunset - Whitsundays' },
-  74: { alt: 'More sailboats' },
-  75: { alt: 'Jet ski fun' },
-  76: { alt: 'Lace Monitor' },
-  77: { alt: 'Golden Orb Weaver Spider' },
-  78: { alt: 'Sand balls' },
-  79: { alt: 'White Whitsunday Beach sand' },
-  80: { alt: 'Lil crab' },
-  81: { alt: 'Me' },
-  82: { alt: 'Coral Reef from the sky' },
-  83: { alt: 'Big Fish' },
-  84: { alt: 'Bigger Fish' },
-  85: { alt: 'Zak, the captain' },
-  86: { alt: 'Sunset - Whitsundays' },
-  87: { alt: 'Squid' },
-  88: { alt: 'Squid' },
-  89: { alt: 'Yellow-bellied Sunbird' },
-  90: { alt: 'Spiny Orbweaver Spider' },
-  91: { alt: 'Bird' },
-  92: { alt: 'Adelaide Airport' },
-  93: { alt: 'Grey-headed FLying Fox' },
-  94: { alt: 'Flower' },
-  95: { alt: 'Flower' },
-  96: { alt: 'Lily (you thought it was going to be flower didn\'t you)' },
-  97: { alt: 'Flying out' },
-  98: { alt: 'Whitsunday\'s island and reef from above' },
-  99: { alt: 'Sunset at Alice Springs' },
+//STEP TWO
+const PAGE_CONTENT = {
+  title: 'Australia',
+  description: 'Dusty bus rides through the Australian outback and sail-driven adventures on the eastern coast. Scuba diving through the Great Barrier Reef and walking through beautiful cities. The land down under is a magnificent place.',
+  header: {
+    backgroundImage: '/img/Australia/panorama-australia (14).jpg',
+    altText: 'Australia Panorama'
+  },
+  panoramas: {
+    description: 'Pictures large enough to capture the outback.',
+    imagePath: '/img/Australia/panorama-australia'
+  },
+  video: {
+    id: 'CXbFRmoTbJo',
+    title: 'Australia Drone Footage'
+  }
 };
 
-// Masonry breakpoints
+//STEP THREE
 
+// Generate panorama images with default alt text
+const getPanoramaPath = (id: number) => {
+  return `/img/Australia/panorama-australia (${id}).jpg`;
+};
 
+//STEP FOUR - change image number and panorama size below
 export default function AustraliaGallery() {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
@@ -139,14 +60,12 @@ export default function AustraliaGallery() {
   // Generate gallery images with useMemo
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 99 }, (_, i) => {
-      const id = i + 1;
-      const details = imageDetails[id] || { alt: `Australia Photo ${id}` };
-      return {
-        id,
-        src: getImagePath(id),
-        alt: details.alt,
-        location: 'Australia' // Default location, can be updated if needed
+      const image: GalleryImage = {
+        id: i + 1,
+        src: getImagePath(i + 1),
+        alt: `Photo ${i + 1}`
       };
+      return image;
     });
   }, []);
 
@@ -199,8 +118,8 @@ export default function AustraliaGallery() {
       <div className="relative h-[60vh] min-h-[400px]">
         <div className="absolute inset-0">
           <Image
-            src="/img/Argentina/argentina_panorama (8).jpg"
-            alt="Argentina Panorama"
+            src="/img/Australia/panorama-australia (14).jpg"
+            alt="Australia Panorama"
             fill
             className="object-cover object-center"
             priority
@@ -238,13 +157,15 @@ export default function AustraliaGallery() {
             >
               Photos
             </GradientButton>
-            <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
+            {PAGE_CONTENT.video.id && (
+              <GradientButton
+                variant={currentView === 'drone' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => setCurrentView('drone')}
+              >
+                Drone Videos
+              </GradientButton>
+            )}
           </div>
         </div>
       </section>
@@ -322,7 +243,7 @@ export default function AustraliaGallery() {
                 <div className="w-full max-w-4xl px-4">
                   <div className="w-full text-center">
                     <h2 className="text-2xl md:text-3xl font-bold text-white">
-                      Pictures large enough to capture the outback.
+                      {PAGE_CONTENT.panoramas.description}
                     </h2>
                   </div>
                 </div>
@@ -330,40 +251,12 @@ export default function AustraliaGallery() {
             </div>
             <div className="w-full max-w-full overflow-hidden">
               <div className="w-full py-8">
-                {[
-                  { id: 1, location: 'Whitsunday\'s island and reef from above' },
-                  { id: 2, location: 'Sunset at Alice Springs' },
-                  { id: 3, location: 'Sunset over the Whitsundays' },
-                  { id: 4, location: 'Brisbane' },
-                  { id: 5, location: 'Fraser Island Sand Dunes' },
-                  { id: 6, location: 'Adelaide' },
-                  { id: 7, location: 'Bondi Beach Cliffs - Sydney' },
-                  { id: 8, location: 'Great Barrier Reef Scuba Diving' },
-                  { id: 9, location: 'S.S. Maheno Wreck - Fraser Island' },
-                  { id: 10, location: 'Ridgeline in Alice Springs' },
-                  { id: 11, location: 'Coastline' },
-                  { id: 12, location: 'Sunset at Alice Springs' },
-                  { id: 13, location: 'Melbourne' },
-                  { id: 14, location: 'Sunset at Alice Springs' },
-                  { id: 15, location: 'Fraser Island Sand Dunes' },
-                  { id: 16, location: 'Melbourne' },
-                  { id: 17, location: 'Coastline in Sydney' },
-                  { id: 18, location: 'Whitsunday Coastline' },
-                  { id: 19, location: 'Whitsunday Coastline' },
-                  { id: 20, location: 'Fraser Island Dunes' },
-                  { id: 21, location: 'Whitsunday Island' },
-                  { id: 22, location: 'Whitsunday Beach' },
-                  { id: 23, location: 'Sydney Opera House' },
-                  { id: 24, location: 'Coober Pedy' },
-                  { id: 25, location: 'Sydney Opera House' },
-                  { id: 26, location: 'Whitsunday Beach' }
-
-                ].map((item, index) => (
-                  <div key={item.id} className={`w-full ${index > 0 ? 'mt-12' : ''} mx-auto`} style={{ marginBottom: '40px' }}>
+                {Array.from({ length: 26 }, (_, i) => (
+                  <div key={i + 1} className="w-full mx-auto" style={{ marginBottom: '40px' }}>
                     <PanoramaViewer
-                      src={`/img/Australia/panorama-australia (${item.id}).jpg`}
-                      alt={`${item.location}`}
-                      priority={index <= 1}
+                      src={getPanoramaPath(i + 1)}
+                      alt={`${PAGE_CONTENT.title} Panorama ${i + 1}`}
+                      priority={i + 1 <= 3}
                     />
                   </div>
                 ))}
@@ -374,20 +267,17 @@ export default function AustraliaGallery() {
 
         {currentView === 'drone' && (
           <div className="w-full flex flex-col items-center py-16 px-4">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">Australia Drone Footage</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-12 text-center">{PAGE_CONTENT.video.title}</h2>
             
             {/* YouTube Video */}
             <div className="w-full max-w-6xl mb-16">
               <div className="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-xl shadow-2xl">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/CXbFRmoTbJo?autoplay=1&mute=1"
-                  title="Australia Drone Footage"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
+                <YouTubePlayer
+                  videoId={PAGE_CONTENT.video.id}
+                  title={PAGE_CONTENT.video.title}
                   className="w-full h-[500px] md:h-[600px] lg:h-[700px]"
-                ></iframe>
+                  autoPlay={true}
+                />
               </div>
             </div>
 
@@ -395,15 +285,12 @@ export default function AustraliaGallery() {
             <div className="w-full max-w-6xl mt-16">
               <h3 className="text-2xl font-bold text-white mb-6 text-center">Scuba Footage</h3>
               <div className="aspect-w-16 aspect-h-9 w-full overflow-hidden rounded-xl shadow-2xl">
-                <iframe
-                  width="100%"
-                  height="100%"
-                  src="https://www.youtube.com/embed/_Jaljdfbswc?autoplay=1&mute=1"
+                <YouTubePlayer
+                  videoId="_Jaljdfbswc"
                   title="Great Barrier Reef Scuba Diving"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
                   className="w-full h-[400px] md:h-[500px] lg:h-[600px]"
-                ></iframe>
+                  autoPlay={false}
+                />
               </div>
             </div>
           </div>
@@ -439,3 +326,15 @@ export default function AustraliaGallery() {
     </div>
   );
 }
+
+interface ImageDetails {
+  alt: string;
+}
+
+interface GalleryImage {
+  id: number;
+  src: string;
+  alt: string;
+}
+
+type GalleryView = 'photos' | 'panoramas' | 'drone';

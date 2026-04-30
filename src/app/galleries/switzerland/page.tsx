@@ -30,71 +30,17 @@ const getImagePath = (id: number) => {
 // List of missing photo numbers to exclude
 const missingPhotos: number[] = [];
 
-// Image details for alt text
-const imageDetails: Record<number, { alt: string }> = {
-  1: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
-  3: { alt: 'DescriptionComingSoon' },
-  4: { alt: 'DescriptionComingSoon' },
-  5: { alt: 'DescriptionComingSoon' },
-  6: { alt: 'DescriptionComingSoon' },
-  7: { alt: 'DescriptionComingSoon' },
-  8: { alt: 'DescriptionComingSoon' },
-  9: { alt: 'DescriptionComingSoon' },
-  10: { alt: 'DescriptionComingSoon' },
-  11: { alt: 'DescriptionComingSoon' },
-  12: { alt: 'DescriptionComingSoon' },
-  13: { alt: 'DescriptionComingSoon' },
-  14: { alt: 'DescriptionComingSoon' },
-  15: { alt: 'DescriptionComingSoon' },
-  16: { alt: 'DescriptionComingSoon' },
-  17: { alt: 'DescriptionComingSoon' },
-  18: { alt: 'DescriptionComingSoon' },
-  19: { alt: 'DescriptionComingSoon' },
-  20: { alt: 'DescriptionComingSoon' },
-  21: { alt: 'DescriptionComingSoon' },
-  22: { alt: 'DescriptionComingSoon' },
-  23: { alt: 'DescriptionComingSoon' },
-  24: { alt: 'DescriptionComingSoon' },
-  25: { alt: 'DescriptionComingSoon' },
-  26: { alt: 'DescriptionComingSoon' },
-  27: { alt: 'DescriptionComingSoon' },
-  28: { alt: 'DescriptionComingSoon' },
-  29: { alt: 'DescriptionComingSoon' },
-  30: { alt: 'DescriptionComingSoon' },
-  31: { alt: 'DescriptionComingSoon' },
-  32: { alt: 'DescriptionComingSoon' },
-  33: { alt: 'DescriptionComingSoon' },
-  34: { alt: 'DescriptionComingSoon' },
-  35: { alt: 'DescriptionComingSoon' },
-  36: { alt: 'DescriptionComingSoon' },
-  37: { alt: 'DescriptionComingSoon' },
-  38: { alt: 'DescriptionComingSoon' },
-  39: { alt: 'DescriptionComingSoon' },
-  40: { alt: 'DescriptionComingSoon' },
-  41: { alt: 'DescriptionComingSoon' },
-  42: { alt: 'DescriptionComingSoon' },
-  43: { alt: 'DescriptionComingSoon' },
-  44: { alt: 'DescriptionComingSoon' },
-  45: { alt: 'DescriptionComingSoon' },
-  46: { alt: 'DescriptionComingSoon' },
-  47: { alt: 'DescriptionComingSoon' },
-  48: { alt: 'DescriptionComingSoon' },
-  49: { alt: 'DescriptionComingSoon' },
-};
 
 export default function SwitzerlandGallery() {
   // Generate gallery images with useMemo, excluding missing photos
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 49 }, (_, i) => {
       const id = i + 1;
-      const details = imageDetails[id] || {};
       return {
         id,
         src: getImagePath(id),
-        location: 'France',
-        ...details,
-        alt: details.alt || `Photo ${id}`
+        location: 'Switzerland',
+        alt: `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
@@ -189,13 +135,15 @@ export default function SwitzerlandGallery() {
             >
               Photos
             </GradientButton>
-            <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
+            {true && (
+              <GradientButton
+                variant={currentView === 'drone' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => setCurrentView('drone')}
+              >
+                Drone Videos
+              </GradientButton>
+            )}
           </div>
         </div>
       </section>

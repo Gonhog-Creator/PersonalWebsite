@@ -151,13 +151,15 @@ export default function ArgentinaGallery() {
             >
               Photos
             </GradientButton>
-            <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
+            {PAGE_CONTENT.video && PAGE_CONTENT.video.length > 0 && (
+              <GradientButton
+                variant={currentView === 'drone' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => setCurrentView('drone')}
+              >
+                Drone Videos
+              </GradientButton>
+            )}
           </div>
         </div>
       </section>
@@ -260,7 +262,7 @@ export default function ArgentinaGallery() {
         {currentView === 'drone' && (
           <div className="w-full flex justify-center items-center py-16">
             <div className="w-full max-w-6xl px-4 flex flex-col items-center space-y-16">
-              {PAGE_CONTENT.videos.map((video, index) => (
+              {PAGE_CONTENT.video.map((video, index) => (
                 <div key={video.id} className="w-full flex flex-col items-center">
                   <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center w-full">
                     {video.title}
@@ -270,9 +272,10 @@ export default function ArgentinaGallery() {
                       videoId={video.id}
                       title={video.title}
                       className="rounded-lg shadow-xl"
+                      autoPlay={index === 0}
                     />
                   </div>
-                  {index < PAGE_CONTENT.videos.length - 1 && (
+                  {index < PAGE_CONTENT.video.length - 1 && (
                     <div className="h-16 w-full"></div>
                   )}
                 </div>

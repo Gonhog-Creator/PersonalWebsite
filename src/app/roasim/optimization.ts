@@ -1,4 +1,4 @@
-import { Attackers, EnemyTroops, ResearchState, SpecialItems } from './types';
+import { Attackers, EnemyTroops, ResearchState, SpecialItems, TroopStats } from './types';
 
 // Types for optimization
 export interface OptimizationConfig {
@@ -59,7 +59,6 @@ export const simulateBattleForOptimization = (
     fireMirror: 0,
     battleDragon: 0,
     fangtooth: 0,
-    silverSerpent: 0,
   };
   testAttackers[config.selectedTroopType as keyof Attackers] = testTroopCount;
 
@@ -125,12 +124,12 @@ export const simulateBattleForOptimization = (
   
   if (wonBattle && finalForcesStart !== -1) {
     const finalForcesSection = battleResult.substring(finalForcesStart);
-    const attackerLines = finalForcesSection.split('\n').filter(line => 
+    const attackerLines = finalForcesSection.split('\n').filter((line: string) => 
       line.includes('text-green-400">Attacker</span>:')
     );
     
     // Count the total remaining attackers using the new count system
-    finalAttackerCount = attackerLines.reduce((total, line) => {
+    finalAttackerCount = attackerLines.reduce((total: number, line: string) => {
       const match = line.match(/(\d+)x\s+(.+)/);
       if (match) {
         const count = parseInt(match[1]);
@@ -253,10 +252,10 @@ export const findMinimumTroops = async (
 // Calculate all optimization results for research levels 1-10 and target levels 1-10
 // Calculate modified stats for attacking units based on research and special items
 export const calculateAttackerStats = (
-  unitType: keyof any, 
+  unitType: string, 
   research: ResearchState, 
   specialItems: SpecialItems,
-  TROOP_STATS: Record<string, any>
+  TROOP_STATS: Record<string, TroopStats>
 ) => {
   const unit = TROOP_STATS[unitType];
   if (!unit) return { attack: 0, defense: 0, health: 0 };

@@ -30,106 +30,6 @@ const getImagePath = (id: number) => {
 // List of missing photo numbers to exclude
 const missingPhotos: number[] = [];
 
-// Image details for alt text
-const imageDetails: Record<number, { alt: string }> = {
-  1: { alt: 'DescriptionComingSoon' },
-  2: { alt: 'DescriptionComingSoon' },
-  3: { alt: 'DescriptionComingSoon' },
-  4: { alt: 'DescriptionComingSoon' },
-  5: { alt: 'DescriptionComingSoon' },
-  6: { alt: 'DescriptionComingSoon' },
-  7: { alt: 'DescriptionComingSoon' },
-  8: { alt: 'DescriptionComingSoon' },
-  9: { alt: 'DescriptionComingSoon' },
-  10: { alt: 'DescriptionComingSoon' },
-  11: { alt: 'DescriptionComingSoon' },
-  12: { alt: 'DescriptionComingSoon' },
-  13: { alt: 'DescriptionComingSoon' },
-  14: { alt: 'DescriptionComingSoon' },
-  15: { alt: 'DescriptionComingSoon' },
-  16: { alt: 'DescriptionComingSoon' },
-  17: { alt: 'DescriptionComingSoon' },
-  18: { alt: 'DescriptionComingSoon' },
-  19: { alt: 'DescriptionComingSoon' },
-  20: { alt: 'DescriptionComingSoon' },
-  21: { alt: 'DescriptionComingSoon' },
-  22: { alt: 'DescriptionComingSoon' },
-  23: { alt: 'DescriptionComingSoon' },
-  24: { alt: 'DescriptionComingSoon' },
-  25: { alt: 'DescriptionComingSoon' },
-  26: { alt: 'DescriptionComingSoon' },
-  27: { alt: 'DescriptionComingSoon' },
-  28: { alt: 'DescriptionComingSoon' },
-  29: { alt: 'DescriptionComingSoon' },
-  30: { alt: 'DescriptionComingSoon' },
-  31: { alt: 'DescriptionComingSoon' },
-  32: { alt: 'DescriptionComingSoon' },
-  33: { alt: 'DescriptionComingSoon' },
-  34: { alt: 'DescriptionComingSoon' },
-  35: { alt: 'DescriptionComingSoon' },
-  36: { alt: 'DescriptionComingSoon' },
-  37: { alt: 'DescriptionComingSoon' },
-  38: { alt: 'DescriptionComingSoon' },
-  39: { alt: 'DescriptionComingSoon' },
-  40: { alt: 'DescriptionComingSoon' },
-  41: { alt: 'DescriptionComingSoon' },
-  42: { alt: 'DescriptionComingSoon' },
-  43: { alt: 'DescriptionComingSoon' },
-  44: { alt: 'DescriptionComingSoon' },
-  45: { alt: 'DescriptionComingSoon' },
-  46: { alt: 'DescriptionComingSoon' },
-  47: { alt: 'DescriptionComingSoon' },
-  48: { alt: 'DescriptionComingSoon' },
-  49: { alt: 'DescriptionComingSoon' },
-  50: { alt: 'DescriptionComingSoon' },
-  51: { alt: 'DescriptionComingSoon' },
-  52: { alt: 'DescriptionComingSoon' },
-  53: { alt: 'DescriptionComingSoon' },
-  54: { alt: 'DescriptionComingSoon' },
-  55: { alt: 'DescriptionComingSoon' },
-  56: { alt: 'DescriptionComingSoon' },
-  57: { alt: 'DescriptionComingSoon' },
-  58: { alt: 'DescriptionComingSoon' },
-  59: { alt: 'DescriptionComingSoon' },
-  60: { alt: 'DescriptionComingSoon' },
-  61: { alt: 'DescriptionComingSoon' },
-  62: { alt: 'DescriptionComingSoon' },
-  63: { alt: 'DescriptionComingSoon' },
-  64: { alt: 'DescriptionComingSoon' },
-  65: { alt: 'DescriptionComingSoon' },
-  66: { alt: 'DescriptionComingSoon' },
-  67: { alt: 'DescriptionComingSoon' },
-  68: { alt: 'DescriptionComingSoon' },
-  69: { alt: 'DescriptionComingSoon' },
-  70: { alt: 'DescriptionComingSoon' },
-  71: { alt: 'DescriptionComingSoon' },
-  72: { alt: 'DescriptionComingSoon' },
-  73: { alt: 'DescriptionComingSoon' },
-  74: { alt: 'DescriptionComingSoon' },
-  75: { alt: 'DescriptionComingSoon' },
-  76: { alt: 'DescriptionComingSoon' },
-  77: { alt: 'DescriptionComingSoon' },
-  78: { alt: 'DescriptionComingSoon' },
-  79: { alt: 'DescriptionComingSoon' },
-  80: { alt: 'DescriptionComingSoon' },
-  81: { alt: 'DescriptionComingSoon' },
-  82: { alt: 'DescriptionComingSoon' },
-  83: { alt: 'DescriptionComingSoon' },
-  84: { alt: 'DescriptionComingSoon' },
-  85: { alt: 'DescriptionComingSoon' },
-  86: { alt: 'DescriptionComingSoon' },
-  87: { alt: 'DescriptionComingSoon' },
-  88: { alt: 'DescriptionComingSoon' },
-  89: { alt: 'DescriptionComingSoon' },
-  90: { alt: 'DescriptionComingSoon' },
-  91: { alt: 'DescriptionComingSoon' },
-  92: { alt: 'DescriptionComingSoon' },
-  93: { alt: 'DescriptionComingSoon' },
-  94: { alt: 'DescriptionComingSoon' },
-  95: { alt: 'DescriptionComingSoon' },
-  96: { alt: 'DescriptionComingSoon' },
-  97: { alt: 'DescriptionComingSoon' },
-};
 
 export default function UnitedKingdomGallery() {
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
@@ -138,13 +38,11 @@ export default function UnitedKingdomGallery() {
   const galleryImages = useMemo<GalleryImage[]>(() => {
     return Array.from({ length: 97 }, (_, i) => {
       const id = i + 1;
-      const details = imageDetails[id] || {};
       return {
         id,
         src: getImagePath(id),
         location: 'United Kingdom',
-        ...details,
-        alt: details.alt || `Photo ${id}`
+        alt: `Photo ${id}`
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
@@ -237,13 +135,15 @@ export default function UnitedKingdomGallery() {
             >
               Photos
             </GradientButton>
-            <GradientButton
-              variant={currentView === 'drone' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
-              onClick={() => setCurrentView('drone')}
-            >
-              Drone Videos
-            </GradientButton>
+            {true && (
+              <GradientButton
+                variant={currentView === 'drone' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => setCurrentView('drone')}
+              >
+                Drone Videos
+              </GradientButton>
+            )}
           </div>
         </div>
       </section>
