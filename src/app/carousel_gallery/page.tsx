@@ -147,6 +147,7 @@ const useImageLoader = () => {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isRetrying, setIsRetrying] = useState(false);
   const [loadedCount, setLoadedCount] = useState(0);
   const [totalImages, setTotalImages] = useState(0);
   const retryCount = useRef<Record<string, number>>({});
@@ -415,6 +416,7 @@ const useImageLoader = () => {
     images, 
     isLoading, 
     isLoadingMore,
+    isRetrying,
     loadedCount, 
     totalImages,
     refreshBatch
@@ -1567,6 +1569,7 @@ const Screensaver = () => {
     images, 
     isLoading, 
     isLoadingMore, 
+    isRetrying,
     loadedCount, 
     totalImages, 
     refreshBatch 
