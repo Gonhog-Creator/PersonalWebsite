@@ -77,6 +77,30 @@ export default function GreeceGallery() {
     <>
       <ProjectHeader />
 
+      {/* Header with title and navigation */}
+      <div className="relative h-[60vh] min-h-[400px]">
+        <div className="absolute inset-0">
+          <Image
+            src="/img/Greece/greece_panorama (1).jpg"
+            alt="Greece Panorama"
+            fill
+            className="object-cover object-center"
+            priority
+          />
+          <div className="absolute inset-0 bg-black/5"></div>
+        </div>
+
+        <div className="relative h-full flex items-center justify-center text-center px-4">
+          <div className="bg-black/50 p-8 rounded-lg max-w-4xl">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">Greece</h1>
+            <p className="text-lg md:text-xl text-gray-200 mt-4 max-w-3xl mx-auto">
+              Ancient history meets stunning Mediterranean beauty. From the iconic white-washed buildings of Santorini to the historic Acropolis, 
+              Greece offers a perfect blend of archaeological wonders and breathtaking island landscapes
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Navigation Section */}
       <section className="w-full bg-gray-900 py-12">
         <div className="w-full flex justify-center px-4">
