@@ -23,7 +23,7 @@ For updating this gallery, update all things in steps 1-4
 
 //STEP ONE
 const getImagePath = (id: number) => {
-  const basePath = '/img/Estonia/Estonia';
+  const basePath = '/img/Estonia/estonia';
   return `${basePath} (${id}).jpg`;
 };
 
