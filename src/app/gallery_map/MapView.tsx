@@ -46,7 +46,12 @@ const countryToGalleryMap: Record<string, string> = {
   'IT': 'italy',
   'GB-SCT': 'scotland',  // Special case for Scotland
   'UY': 'uruguay',
-  'CZ': 'czech-republic'
+  'CZ': 'czech-republic',
+  'DK': 'denmark',
+  'NO': 'norway',
+  'SE': 'sweden',
+  'FI': 'finland',
+  'EE': 'estonia'
 
 } as const;
 

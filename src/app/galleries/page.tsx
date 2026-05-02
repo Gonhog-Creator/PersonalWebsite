@@ -46,7 +46,7 @@ const galleries = [
   {
     id: 'belgium',
     title: 'Belgium',
-    image: '/img/Belgium/belgium_panorama (9).jpg',
+    image: '/img/Belgium/belgium-panorama (4).jpg',
     count: 96,
     location: 'Europe'
   },
@@ -119,6 +119,41 @@ const galleries = [
     image: '/img/Czech Republic/czech-republic-panorama (4).jpg',
     count: 162,
     location: 'Europe'
+  },
+  {
+    id: 'denmark',
+    title: 'Denmark',
+    image: '/img/Denmark/denmark-panorama (7).jpg',
+    count: 280,
+    location: 'Europe'
+  },
+  {
+    id: 'norway',
+    title: 'Norway',
+    image: '/img/Norway/norway-panorama (1).jpg',
+    count: 180,
+    location: 'Europe'
+  },
+  {
+    id: 'sweden',
+    title: 'Sweden',
+    image: '/img/Sweden/sweden-panorama (1).jpg',
+    count: 319,
+    location: 'Europe'
+  },
+  {
+    id: 'finland',
+    title: 'Finland',
+    image: '/img/Finland/finland-panorama (3).jpg',
+    count: 365,
+    location: 'Europe'
+  },
+  {
+    id: 'estonia',
+    title: 'Estonia',
+    image: '/img/Estonia/estonia-panorama (2).jpg',
+    count: 89,
+    location: 'Europe'
   }
 
 ];
@@ -163,7 +198,8 @@ export default function GalleriesPage() {
                     alt={`${gallery.title} panorama`}
                     fill
                     className="object-cover object-center brightness-90"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    quality={100}
+                    unoptimized
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
