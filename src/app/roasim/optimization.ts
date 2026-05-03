@@ -1,4 +1,6 @@
 import { Attackers, EnemyTroops, ResearchState, SpecialItems, TroopStats } from './types';
+import { TROOP_STATS } from './troop-data';
+import { ENEMY_COMPOSITIONS } from './enemy-compositions';
 
 // Types for optimization
 export interface OptimizationConfig {
@@ -69,7 +71,7 @@ export const simulateBattleForOptimization = (
   } else {
     // Get the specific level troops for calculate all
     const levelToUse = specificDefenderLevel !== undefined ? specificDefenderLevel : config.defender.level;
-    const terrainTroops = (globalThis as any).ENEMY_COMPOSITIONS?.[config.defender.terrain];
+    const terrainTroops = ENEMY_COMPOSITIONS?.[config.defender.terrain];
     if (terrainTroops) {
       defenderTroops = terrainTroops[levelToUse.toString()];
     }
@@ -340,12 +342,12 @@ export const calculateAllOptimizations = async (
   onProgress?: (message: string) => void
 ): Promise<string> => {
   // Get all troop types (exclude porter as it's not a combat unit)
-  const troopTypes = Object.keys((globalThis as any).TROOP_STATS || {}).filter((troop: string) => 
-    troop !== 'porter' && (globalThis as any).TROOP_STATS[troop]?.attack > 0
+  const troopTypes = Object.keys(TROOP_STATS || {}).filter((troop: string) => 
+    troop !== 'porter' && TROOP_STATS[troop]?.attack > 0
   );
 
   // Get defender compositions for all levels
-  const terrainTroops = (globalThis as any).ENEMY_COMPOSITIONS?.[config.defender.terrain];
+  const terrainTroops = ENEMY_COMPOSITIONS?.[config.defender.terrain];
   if (!terrainTroops) {
     return '<div class="text-red-400">❌ ERROR: Could not determine terrain compositions</div>';
   }
@@ -364,7 +366,10 @@ export const calculateAllOptimizations = async (
 
   // Create table for each research level (1-10)
   for (let researchLevel = 1; researchLevel <= 10; researchLevel++) {
-    onProgress?.(`Calculating for research level ${researchLevel}...`);
+    onProgress?.(`Research ${researchLevel}/10 - Preparing table...`);
+    
+    // Allow UI to update
+    await new Promise(resolve => setTimeout(resolve, 1));
     
     // Store the raw data for Excel-friendly copy
     const excelData: string[][] = [];
@@ -372,7 +377,7 @@ export const calculateAllOptimizations = async (
     // Add header row to Excel data
     const headerRow = ['Level'];
     troopTypes.forEach((troopType: string) => {
-      const troopName = (globalThis as any).TROOP_STATS[troopType]?.name || troopType;
+      const troopName = TROOP_STATS[troopType]?.name || troopType;
       headerRow.push(troopName);
     });
     excelData.push(headerRow);
@@ -398,7 +403,7 @@ export const calculateAllOptimizations = async (
     
     // Add troop type headers
     troopTypes.forEach((troopType: string) => {
-      const troopName = (globalThis as any).TROOP_STATS[troopType]?.name || troopType;
+      const troopName = TROOP_STATS[troopType]?.name || troopType;
       htmlOutput += `<th class="border border-gray-500 px-3 py-2 text-left font-medium">${troopName}</th>`;
     });
     
@@ -410,6 +415,13 @@ export const calculateAllOptimizations = async (
 
     // Calculate for each target level (1-10)
     for (let targetLevel = 1; targetLevel <= 10; targetLevel++) {
+      onProgress?.(`Research ${researchLevel}/10 - Target ${targetLevel}/10...`);
+      
+      // Allow UI to update every few targets
+      if (targetLevel % 3 === 0) {
+        await new Promise(resolve => setTimeout(resolve, 1));
+      }
+      
       const defenderTroops = terrainTroops[targetLevel.toString()];
       if (!defenderTroops) continue;
 
@@ -419,7 +431,8 @@ export const calculateAllOptimizations = async (
       htmlOutput += `<td class="border border-gray-500 px-3 py-2 font-medium">${targetLevel}</td>`;
       
       // Test each troop type
-      for (const troopType of troopTypes) {
+      for (let troopIndex = 0; troopIndex < troopTypes.length; troopIndex++) {
+        const troopType = troopTypes[troopIndex];
         const researchState = {
           metalurgy: researchLevel,
           dragonry: researchLevel,
@@ -455,8 +468,16 @@ export const calculateAllOptimizations = async (
         if (found) {
           // Binary search for minimum
           let result = -1;
-          while (low <= high) {
+          let iterations = 0;
+          while (low <= high && iterations < 25) { // Limit iterations to prevent infinite loops
+            iterations++;
             const mid = Math.floor((low + high) / 2);
+            
+            // Add progress update for complex searches
+            if (iterations % 8 === 0) {
+              onProgress?.(`Research ${researchLevel}/10 - Target ${targetLevel}/10 - ${TROOP_STATS[troopType]?.name || troopType} (searching...)`);
+              await new Promise(resolve => setTimeout(resolve, 1));
+            }
             
             const testConfig = {
               ...config,
@@ -537,6 +558,12 @@ export const calculateAllOptimizations = async (
         readonly
       >${excelText}</textarea>
     `;
+    
+    // Update progress with completion status
+    onProgress?.(`Research ${researchLevel}/10 - Complete! ✅`);
+    
+    // Allow UI to update before continuing
+    await new Promise(resolve => setTimeout(resolve, 5));
   }
 
   htmlOutput += `

@@ -199,8 +199,8 @@ export const compareAttackApproaches = (
     });
   }
 
-  // Compare approaches
-  if (bestMeleeDamage > bestRangedDamage * 1.1) { // 10% threshold to prefer melee
+  // Compare approaches - prefer melee when significantly better (matching in-game behavior)
+  if (bestMeleeDamage > bestRangedDamage * 1.05) { // 5% threshold to prefer melee
     const movementResult = calculateMovementTowardsEnemy(unit, battleUnits, battlefieldRange, 1);
     return { 
       bestApproach: 'melee', 

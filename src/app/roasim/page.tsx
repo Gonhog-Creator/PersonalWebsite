@@ -5,6 +5,8 @@ import Head from 'next/head';
 import { findMinimumTroops, calculateAllOptimizations, OptimizationConfig } from './optimization';
 import { SpecialItems, Attackers, TerrainType, DefenderState, EnemyResearch, ResearchState, EnemyTroops, TroopStats, EnemyComposition } from './types';
 import { getPotentialTargets, checkHybridMeleePriority, compareAttackApproaches, standardMovement, multiAttackMovement } from './movement';
+import { TROOP_STATS } from './troop-data';
+import { ENEMY_COMPOSITIONS, getCompositionString } from './enemy-compositions';
 
 const ROASim = () => {
   // Function to get default stat factors based on terrain
@@ -168,9 +170,17 @@ const ROASim = () => {
   hasAttacked: boolean;
 }
 
-const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1, attackerDamageBoost: number = 0, defenderRangeNerf: number = 0, disableAttackThreshold: boolean = false) => {
+const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1, attackerDamageBoost: number = 0, defenderRangeNerf: number = 0, disableAttackThreshold: boolean = false, specialItems?: SpecialItems) => {
   // Initialize battle log
   const battleLog: string[] = [];
+  
+  // Default special items if not provided
+  const items: SpecialItems = specialItems || {
+    crimsonBull: false,
+    glowingShields: false,
+    purpleBones: false,
+    dragonHeart: false
+  };
   
   // Calculate modified stats for all attacker units
   const attackerModifiedStats = Object.fromEntries(
@@ -178,7 +188,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       .filter(([_, count]) => count > 0)
       .map(([unitType]) => [
         unitType, 
-        calculateAttackerStats(unitType, researchState, specialItems)
+        calculateAttackerStats(unitType, researchState, items)
       ])
   );
 
@@ -404,7 +414,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   battleLog.push(`- Defender's Army: ${defenderArmy}`);
   
   // Add active special items if any
-  const activeSpecialItems = Object.entries(specialItems)
+  const activeSpecialItems = Object.entries(items)
     .filter(([_, isActive]) => isActive)
     .map(([itemName]) => {
       switch(itemName) {
@@ -426,7 +436,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   Object.entries(attackers).forEach(([unitType, count]) => {
     if (count > 0) {
       const baseStats = TROOP_STATS[unitType];
-      const modifiedStats = calculateAttackerStats(unitType, research, specialItems);
+      const modifiedStats = calculateAttackerStats(unitType, research, items);
       battleLog.push(`- <span class="text-green-400">${baseStats.name}:</span>`);
       battleLog.push(`  Attack: ${baseStats.attack} → ${modifiedStats.attack}`);
       battleLog.push(`  Defense: ${baseStats.defense} → ${modifiedStats.defense}`);
@@ -605,6 +615,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         // Keep track of attacks this turn and damage used
         let attacksThisTurn = 0;
         let damageUsedThisTurn = 0;
+        const damageByTargetType: Record<string, number> = {}; // Track damage per target type
         const maxAttacks = 50; // Prevent infinite loops
         const maxDamagePotential = unit.count * (unit.rangedAttack || unit.attack) * 2.1 * 1.2;
         
@@ -616,7 +627,21 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           
           // Tactical Targeting Logic
           potentialTargets.sort((a, b) => {
-            const isRanged = !!unit.rangedAttack;
+            // Check if unit is hybrid (has both melee and ranged attack)
+            const isHybrid = unit.range > 0 && unit.rangedAttack > 0 && unit.attack > 0;
+            
+            // For hybrid units, check if any target is in melee range
+            let useMeleeLogic = false;
+            if (isHybrid) {
+              const meleeTargets = potentialTargets.filter(target => {
+                if (target.count <= 0 || target.isAttacker === unit.isAttacker) return false;
+                const distance = Math.abs(unit.position - target.position);
+                return distance <= 1; // Melee range
+              });
+              useMeleeLogic = meleeTargets.length > 0;
+            }
+            
+            const isRanged = !!unit.rangedAttack && !useMeleeLogic;
             
             if (isRanged) {
               // Ranged Troops (Snipers) - prioritize highest threat
@@ -625,11 +650,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
               const distB = Math.abs(unit.position - b.position);
               if (distA !== distB) return distA - distB;
               
-              // 2. Threat Level (highest Total Attack) - only use rangedAttack for ranged threat assessment
-              const attackPowerA = a.rangedAttack || 0;
-              const attackPowerB = b.rangedAttack || 0;
-              const totalAttackA = a.count * attackPowerA;
-              const totalAttackB = b.count * attackPowerB;
+              // 2. Highest Total Attack (count × attack)
+              const totalAttackA = a.count * a.attack;
+              const totalAttackB = b.count * b.attack;
               if (totalAttackA !== totalAttackB) return totalAttackB - totalAttackA;
               
               // 3. Speed (highest Speed)
@@ -654,16 +677,16 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
               const efficiencyB = Math.abs(unit.attack - b.defense);
               if (efficiencyA !== efficiencyB) return efficiencyA - efficiencyB;
               
-              // 3. Speed (lowest Speed)
+              // 3. Lowest Speed
               if (a.speed !== b.speed) return a.speed - b.speed;
               
-              // 4. Total Attack (lowest Total Attack)
-              const attackA = a.count * a.attack;
-              const attackB = b.count * b.attack;
-              if (attackA !== attackB) return attackA - attackB;
+              // 4. Lowest Total Attack (count × attack)
+              const totalAttackA = a.count * a.attack;
+              const totalAttackB = b.count * b.attack;
+              if (totalAttackA !== totalAttackB) return totalAttackA - totalAttackB;
               
-              // 5. Fragility (lowest HP)
-              return (a.count * a.health) - (b.count * b.health);
+              // 5. Lowest HP
+              return a.health - b.health;
             }
           });
 
@@ -738,11 +761,19 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const maxDamagePossible = maxPossibleKills * healthPerUnit;
           const actualDamage = Math.min(rawDamage, maxDamagePossible);
           
-          // Calculate damage percentage for multi-attack decision (actual vs max possible with current RNG)
-          const maxPossibleDamageWithCurrentRng = baseDamage * attackDefenseRatio * rng;
-          // Use actualDamage for percentage calculation - this shows how much of potential damage was actually used
-          const damagePercentage = maxPossibleDamageWithCurrentRng > 0 ? (actualDamage / maxPossibleDamageWithCurrentRng) * 100 : 0;
+          // Calculate damage percentage for multi-attack decision (damage vs this target type only)
+          // Use the same calculation as the actual damage but with average RNG (1.0) to determine threshold
+          const baseAttackPower = unit.count * Math.max(unit.attack, unit.rangedAttack);
+          const thresholdAttackDefenseRatio = Math.min(2.1, Math.max(0.3, Math.max(unit.attack, unit.rangedAttack) / target.defense));
+          const maxUnitDamagePotential = baseAttackPower * thresholdAttackDefenseRatio * 1.0; // Expected damage with average RNG (1.0)
+          const currentTargetDamage = damageByTargetType[target.type] || 0;
+          const damageToThisTarget = currentTargetDamage + actualDamage;
+          const damagePercentage = maxUnitDamagePotential > 0 ? (damageToThisTarget / maxUnitDamagePotential) * 100 : 0;
           
+          // Debug: Shielding logic
+          if (showDebug && turnCounter <= 5) {
+            battleLog.push(`<span class="text-orange-400">DEBUG SHIELDING</span>: Target=${TROOP_STATS[target.type].name}, CurrentDamage=${currentTargetDamage.toLocaleString()}, ThisAttack=${actualDamage.toLocaleString()}, TotalToTarget=${damageToThisTarget.toLocaleString()}, MaxPotential=${maxUnitDamagePotential.toLocaleString()}, Percentage=${damagePercentage.toFixed(2)}%, Threshold=${disableAttackThreshold ? '100%' : '20%'}`);
+          }
           
           // Debug: Log RNG and damage values
           if (showDebug && turnCounter <= 10) {
@@ -766,6 +797,10 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           
           // Apply damage
           target.count = Math.max(0, target.count - effectiveUnitsKilled);
+          
+          // Track damage used this turn for multi-attack threshold (per target type)
+          damageByTargetType[target.type] = (damageByTargetType[target.type] || 0) + actualDamage;
+          damageUsedThisTurn += actualDamage; // Keep cumulative for display purposes
           
           // Increment turn counter for RNG
           turnCounter++;
@@ -801,7 +836,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             // Original logic: stop if damage >= 20%
             if (damagePercentage >= 20) {
               // Stop attacking - last attack was efficient enough (20%+ damage)
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage >= 20%`);
+              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage ${damagePercentage.toFixed(2)}% >= 20% for target ${TROOP_STATS[target.type].name}`);
               break;
             } else if (damagePercentage <= 0.001) {
               // Stop attacking - no meaningful damage being done (changed from 0.1% to 0.001%)
@@ -1051,7 +1086,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       enemyDefenseFactor,
       attackerDamageBoost,
       defenderRangeNerf,
-      disableAttackThreshold
+      disableAttackThreshold,
+      currentSpecialItems
     );
     
     // Detect zero losses from battle result
@@ -1142,10 +1178,10 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       });
       
       // Add success message to the log
-      const finalLog = result.log + '\n\n✅ Troop count has been applied to your army!';
+      const finalLog = result.log.join('\n') + '\n\n✅ Troop count has been applied to your army!';
       setOptimizationResult(finalLog);
     } else {
-      setOptimizationResult(result.log);
+      setOptimizationResult(result.log.join('\n'));
     }
 
     setIsOptimizing(false);
@@ -1209,6 +1245,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     setIsCalculatingAll(true);
     setCalculateAllResult(null);
     
+    // Capture current state to prevent changes during calculation
+    const currentDisableAttackThreshold = disableAttackThreshold;
+    
     // Get current special items
     const currentSpecialItems = {
       crimsonBull: specialItems.crimsonBull,
@@ -1227,13 +1266,13 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       specialItems: currentSpecialItems,
       selectedTroopType,
       rngOverride: '0.8', // Force RNG to 0.8 for calculate all optimization
-      seed,
+      seed: seed.trim() === '' ? Math.floor(Math.random() * 1000000) : parseInt(seed),
       enemyHealthFactor,
       enemyDefenseFactor,
       attackerDamageBoost,
       defenderRangeNerf,
       rounded,
-      disableAttackThreshold // Use UI setting for shielding option
+      disableAttackThreshold: currentDisableAttackThreshold // Use captured state
     };
 
     // Set up global references for the optimization module
@@ -1926,112 +1965,10 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
   );
 };
 
-// Troop Stats Data
-const TROOP_STATS: Record<string, TroopStats> = {
-  // Tier 1
-  porter: {
-    name: 'Porter', tier: 1, type: 'infantry',
-    attack: 1, rangedAttack: 0, health: 45, defense: 10, speed: 100, range: 0, load: 200, upkeep: 2, power: 1
-  },
-  conscript: {
-    name: 'Conscript', tier: 1, type: 'infantry',
-    attack: 10, rangedAttack: 0, health: 75, defense: 10, speed: 200, range: 0, load: 20, upkeep: 3, power: 1
-  },
-  spy: {
-    name: 'Spy', tier: 1, type: 'infantry',
-    attack: 5, rangedAttack: 0, health: 10, defense: 5, speed: 150, range: 0, load: 0, upkeep: 5, power: 2
-  },
-  halberdier: {
-    name: 'Halberdier', tier: 1, type: 'infantry',
-    attack: 40, rangedAttack: 0, health: 150, defense: 40, speed: 300, range: 0, load: 40, upkeep: 6, power: 2
-  },
-  minotaur: {
-    name: 'Minotaur', tier: 3, type: 'infantry',
-    attack: 70, rangedAttack: 0, health: 225, defense: 45, speed: 275, range: 0, load: 30, upkeep: 7, power: 3
-  },
-  longbowMan: {
-    name: 'Longbow Man', tier: 2, type: 'ranged',
-    attack: 5, rangedAttack: 80, health: 75, defense: 30, speed: 250, range: 1200, load: 25, upkeep: 9, power: 4
-  },
-  swiftStrikeDragon: {
-    name: 'Swift Strike Dragon', tier: 4, type: 'dragon',
-    attack: 150, rangedAttack: 0, health: 300, defense: 60, speed: 1000, range: 0, load: 100, upkeep: 18, power: 5
-  },
-  armoredTransport: {
-    name: 'Armored Transport', tier: 3, type: 'siege',
-    attack: 5, rangedAttack: 0, health: 750, defense: 200, speed: 150, range: 0, load: 5000, upkeep: 10, power: 6
-  },
-  giant: {
-    name: 'Giant', tier: 4, type: 'infantry',
-    attack: 1000, rangedAttack: 0, health: 4000, defense: 400, speed: 120, range: 0, load: 45, upkeep: 100, power: 9
-  },
-  fireMirror: {
-    name: 'Fire Mirror', tier: 4, type: 'siege',
-    attack: 20, rangedAttack: 1200, health: 1500, defense: 30, speed: 50, range: 1500, load: 75, upkeep: 250, power: 10
-  },
-  battleDragon: {
-    name: 'Battle Dragon', tier: 4, type: 'dragon',
-    attack: 300, rangedAttack: 0, health: 1500, defense: 300, speed: 750, range: 0, load: 80, upkeep: 35, power: 7
-  },
-  fangtooth: {
-    name: 'Fangtooth', tier: 4, type: 'infantry',
-    attack: 1600, rangedAttack: 800, health: 3000, defense: 300, speed: 500, range: 600, load: 45, upkeep: 125, power: 10
-  },
-  // Add more troops as needed
-};
 
-// Enemy Troop Compositions
-const CAMP_TROOPS: EnemyComposition = {
-  '1': { porter: 1500, conscript: 500 },
-  '2': { porter: 3000, conscript: 1000, spy: 500, halberdier: 1000 },
-  '3': { porter: 6000, conscript: 2000, spy: 1000, halberdier: 2000, minotaur: 1000 },
-  '4': { porter: 15000, conscript: 5000, spy: 2000, halberdier: 4000, minotaur: 2000, longbowMan: 1500 },
-  '5': { porter: 30000, conscript: 10000, spy: 5000, halberdier: 10000, minotaur: 4000, longbowMan: 3000, swiftStrikeDragon: 2000 },
-  '6': { porter: 45000, conscript: 15000, spy: 10000, halberdier: 20000, minotaur: 15000, longbowMan: 10000, swiftStrikeDragon: 4000 },
-  '7': { porter: 90000, conscript: 30000, spy: 15000, halberdier: 30000, minotaur: 20000, longbowMan: 15000, swiftStrikeDragon: 8000, battleDragon: 2000 },
-  '8': { porter: 180000, conscript: 60000, spy: 30000, halberdier: 60000, minotaur: 30000, longbowMan: 30000, swiftStrikeDragon: 20000, battleDragon: 4000 },
-  '9': { porter: 350000, conscript: 120000, spy: 60000, halberdier: 120000, minotaur: 60000, longbowMan: 45000, swiftStrikeDragon: 40000, battleDragon: 8000, giant: 5000 },
-  '10': { porter: 750000, conscript: 250000, spy: 120000, halberdier: 250000, minotaur: 120000, longbowMan: 90000, swiftStrikeDragon: 60000, battleDragon: 16000, giant: 10000, fireMirror: 10000 }
-};
-
-const WILDS_TROOPS: EnemyComposition = {
-  '1': { porter: 0, conscript: 50 },
-  '2': { porter: 0, conscript: 100, spy: 50 },
-  '3': { porter: 0, conscript: 200, spy: 100, halberdier: 100 },
-  '4': { porter: 0, conscript: 500, spy: 200, halberdier: 200, minotaur: 100 },
-  '5': { porter: 0, conscript: 1000, spy: 500, halberdier: 400, minotaur: 200, longbowMan: 150 },
-  '6': { porter: 0, conscript: 2000, spy: 1000, halberdier: 1000, minotaur: 400, longbowMan: 300, swiftStrikeDragon: 200 },
-  '7': { porter: 0, conscript: 3500, spy: 1250, halberdier: 1250, minotaur: 600, longbowMan: 400, swiftStrikeDragon: 250 },
-  '8': { porter: 0, conscript: 5000, spy: 2000, halberdier: 2000, minotaur: 1000, longbowMan: 600, swiftStrikeDragon: 400 },
-  '9': { porter: 0, conscript: 10000, spy: 5000, halberdier: 4000, minotaur: 2000, longbowMan: 1500, swiftStrikeDragon: 800, giant: 250 },
-  '10': { porter: 0, conscript: 20000, spy: 10000, halberdier: 10000, minotaur: 4000, longbowMan: 3000, swiftStrikeDragon: 2000, giant: 500, fireMirror: 500 }
-  };
-
-const ENEMY_COMPOSITIONS = {
-  // Camp has unique troops per level
-  camp: CAMP_TROOPS,
-  
-  // All wilds share the same troop counts but have different level progressions
-  forest: WILDS_TROOPS,
-  savanna: WILDS_TROOPS,
-  lake: WILDS_TROOPS,
-  mountain: WILDS_TROOPS,
-  hills: WILDS_TROOPS,
-  plains: WILDS_TROOPS,
-  
-  // Enemy is player-specific
-  enemy: null
-};
-
-// Helper function to get composition as formatted string
-const getCompositionString = (troops: EnemyTroops): string => {
-  return Object.entries(troops)
-    .map(([unit, count]) => `${count.toLocaleString()} ${unit}`)
-    .join(', ');
-};
 
 // Calculate modified stats for attacking units based on research and special items
-const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: typeof formData, specialItems: typeof specialItems) => {
+const calculateAttackerStats = (unitType: keyof typeof TROOP_STATS, research: ResearchState, specialItems: SpecialItems) => {
   const unit = TROOP_STATS[unitType];
   if (!unit) return { attack: 0, defense: 0, health: 0 };
 
