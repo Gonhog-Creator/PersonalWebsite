@@ -1,0 +1,470 @@
+Setup:
+Attacker - 50000 Longbowmen
+Defender - Level 8 Camp
+Research - All level 5
+
+
+Local Simulator
+
+Battle Setup:
+- Shielding: OFF
+- Battlefield length: 1500
+- RNG Override: None
+- Attacker Research: Weapons Calibration 5, Metalurgy 5, Medicine 5, Dragonry 5, Rapid Deployment 5
+- Enemy health modified by 0.5x factor (camp)
+- Enemy defense modified by 1x factor (camp)
+- Attacker's Army: 50,000x Longbow Man
+- Defender's Army: 180,000x Porter, 60,000x Conscript, 30,000x Spy, 60,000x Halberdier, 30,000x Minotaur, 30,000x Longbow Man, 20,000x Swift Strike Dragon, 4,000x Battle Dragon
+
+Attacker's Modified Stats:
+- Longbow Man:
+  Attack: 5 → 6
+  Defense: 30 → 38
+  Health: 75 → 94
+  Speed: 250 → 313
+  Range: 1200 → 1500
+  Ranged Attack: 80 → 100
+Battlefield length set to 1500 by Attackers (Longbow Man)
+
+=== ROUND 1 ===
+20000x Swift Strike Dragon moves from 0 to 1000
+4000x Battle Dragon moves from 0 to 750
+Longbow Man attacks Swift Strike Dragon using Ranged attack. 20,000 were killed, 0 remaining (36.00%)
+Longbow Man attacks Battle Dragon using Ranged attack. 1,822 were killed, 2,178 remaining (82.00%)
+Longbow Man attacks Battle Dragon using Ranged attack. 1,866 were killed, 312 remaining (166.00%)
+60000x Halberdier moves from 0 to 300
+30000x Minotaur moves from 0 to 275
+30000x Longbow Man moves from 0 to 250
+60000x Conscript moves from 0 to 200
+30000x Spy moves from 0 to 150
+180000x Porter moves from 0 to 100
+
+=== ROUND 2 ===
+312x Battle Dragon moves from 750 to 1500
+Battle Dragon attacks Longbow Man using Melee attack. 2,111 were killed, 47,889 remaining (101.00%)
+Longbow Man attacks Battle Dragon using Ranged attack. 312 were killed, 0 remaining (14.66%)
+Longbow Man attacks Halberdier using Ranged attack. 60,000 were killed, 0 remaining (44.75%)
+Longbow Man attacks Minotaur using Ranged attack. 30,000 were killed, 0 remaining (33.71%)
+Longbow Man attacks Longbow Man using Ranged attack. 30,000 were killed, 0 remaining (11.34%)
+Longbow Man attacks Conscript using Ranged attack. 60,000 were killed, 0 remaining (22.67%)
+Longbow Man attacks Spy using Ranged attack. 30,000 were killed, 0 remaining (1.49%)
+Longbow Man attacks Porter using Ranged attack. 180,000 were killed, 0 remaining (41.17%)
+
+=== BATTLE ENDED ===
+The attackers have won the battle!
+
+=== FINAL FORCES ===
+Attacker: 47889x Longbow Man
+
+Real Simulator
+
+Battle Analysis
+Attacker (Sim)
+Attacker (Sim)
+Attacker
+Total Power
+0
+Power Lost
+-200,000
+Troop Composition
+longbow_man
+Longbow Man
+Lvl 1
+Active Modifiers
+ Researches
+plain
+PvE Forces
+Defender
+Total Power
+0
+Power Lost
+-117,164
+Troop Composition
+porter
+Porter
+Lvl 1
+conscript
+Conscript
+Lvl 1
+spy
+Spy
+Lvl 1
+hallberdsman
+Hallberdsman
+Lvl 1
+minotaur
+Minotaur
+Lvl 1
+longbow_man
+Longbow Man
+Lvl 1
+swift_strike_dragon
+Swift Strike Dragon
+Lvl 1
+battle_dragon
+Battle Dragon
+Lvl 1
+Active Modifiers
+ Effects
+Detailed Battle History
+ROUND 0
+Forces This Round
+START_BATTLE
+ Engagement confirmed.
+Max Range: 1500
+Farthest unit: Longbow Man (attacker at pos 1500)
+ROUND 1
+Forces This Round
+
+Swift Strike Dragon
+20,000
+
+Battle Dragon
+4,000
+
+Longbow Man
+50,000
+
+Hallberdsman
+60,000
+
+Minotaur
+30,000
+
+Longbow Man
+30,000
+
+Conscript
+60,000
+
+Spy
+30,000
+
+Porter
+180,000
+MOVE
+Troop Swift Strike Dragon moved from 0  1000.
+MOVE
+Troop Battle Dragon moved from 0  750.
+ATTACK
+Longbow Man
+ 5
+Swift Strike Dragon
+ 20,000
+0
+( -20,000)
+Attacker	Stat	Target
+50,000
+ Units
+20,000  0
+7
+Melee Attack
+150
+100
+Range Attack
+0
+94
+Hp
+150
+38
+Defense
+60
+375
+Speed
+1,000
+1,500
+Range
+0
+25
+Load
+100
+1500
+Position
+1000
+Tactical Priority
+Closest target (dist: 500) with best profile: high threat (atk: 150, spd: 1000) and priority (def: 60, hp: 150)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+5,000,000
+TOTAL ATK
+100 × 50,000
+1.67
+MULTIPLIER
+ATK/DEF Ratio
+1.10
+RNG SEED
+Variance
+9,166,667
+FINAL DAMAGE
+Multiplier 1.67 is derived from raw ratio [100 ATK / 60 DEF] = 1.67
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Longbow Man
+ 5
+Battle Dragon
+ 4,000
+1,688
+( -2,312)
+Attacker	Stat	Target
+50,000
+ Units
+4,000  1,688
+7
+Melee Attack
+300
+100
+Range Attack
+0
+94
+Hp
+750
+38
+Defense
+300
+375
+Speed
+750
+1,500
+Range
+0
+25
+Load
+80
+1500
+Position
+750
+Tactical Priority
+Closest target (dist: 750) with best profile: high threat (atk: 300, spd: 750) and priority (def: 300, hp: 750)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+5,000,000
+TOTAL ATK
+100 × 50,000
+0.33
+MULTIPLIER
+ATK/DEF Ratio
+1.04
+RNG SEED
+Variance
+1,733,334
+FINAL DAMAGE
+Multiplier 0.33 is derived from raw ratio [100 ATK / 300 DEF] = 0.33
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+MOVE
+Troop Hallberdsman moved from 0  300.
+MOVE
+Troop Minotaur moved from 0  275.
+MOVE
+Troop Longbow Man moved from 0  250.
+MOVE
+Troop Conscript moved from 0  200.
+MOVE
+Troop Spy moved from 0  150.
+MOVE
+Troop Porter moved from 0  100.
+ROUND 2
+Forces This Round
+
+Battle Dragon
+1,688
+
+Longbow Man
+38,686
+
+Hallberdsman
+60,000
+
+Minotaur
+30,000
+
+Longbow Man
+30,000
+MOVE
+Troop Battle Dragon moved from 750  1500.
+ATTACK
+Battle Dragon
+ 300
+Longbow Man
+ 50,000
+38,686
+( -11,314)
+Attacker	Stat	Target
+1,688
+ Units
+50,000  38,686
+300
+Melee Attack
+7
+0
+Range Attack
+100
+750
+Hp
+94
+300
+Defense
+38
+750
+Speed
+375
+0
+Range
+1,500
+80
+Load
+25
+1500
+Position
+1500
+Tactical Priority
+Closest target (dist: 750) with best profile: low defense gap (262), high threat (atk: 100, spd: 375, hp: 94)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+506,400
+TOTAL ATK
+300 × 1,688
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+1.00
+RNG SEED
+Variance
+1,063,440
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [300 ATK / 38 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Longbow Man
+ 5
+Battle Dragon
+ 1,688
+1,548
+( -140)
+Attacker	Stat	Target
+38,686
+ Units
+1,688  1,548
+7
+Melee Attack
+300
+100
+Range Attack
+0
+94
+Hp
+750
+38
+Defense
+300
+375
+Speed
+750
+1,500
+Range
+0
+25
+Load
+80
+1500
+Position
+1500
+Tactical Priority
+Closest target (dist: 0) with best profile: high threat (atk: 300, spd: 750) and priority (def: 300, hp: 750)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+270,802
+TOTAL ATK
+7 × 38,686
+0.33
+MULTIPLIER
+ATK/DEF Ratio
+1.16
+RNG SEED
+Variance
+104,711
+FINAL DAMAGE
+Multiplier 0.33 is derived from raw ratio [7 ATK / 300 DEF] = 0.33
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+MOVE
+Troop Hallberdsman moved from 300  600.
+MOVE
+Troop Minotaur moved from 275  550.
+MOVE
+Troop Longbow Man moved from 250  300.
+ATTACK
+Longbow Man
+ 5
+Longbow Man
+ 38,686
+0
+( -38,686)
+Attacker	Stat	Target
+30,000
+ Units
+38,686  0
+5
+Melee Attack
+7
+80
+Range Attack
+100
+38
+Hp
+94
+30
+Defense
+38
+250
+Speed
+375
+1,200
+Range
+1,500
+25
+Load
+25
+300
+Position
+1500
+Tactical Priority
+Closest target (dist: 1250) with best profile: high threat (atk: 100, spd: 375) and priority (def: 38, hp: 94)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+2,400,000
+TOTAL ATK
+80 × 30,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+0.95
+RNG SEED
+Variance
+4,788,000
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [80 ATK / 38 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ROUND 3
+Forces This Round
+END_BATTLE
+ Combat concluded.
+Status:

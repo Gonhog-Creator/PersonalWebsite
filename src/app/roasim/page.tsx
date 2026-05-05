@@ -168,11 +168,15 @@ const ROASim = () => {
   isAttacker: boolean;
   hasMoved: boolean;
   hasAttacked: boolean;
+  movementUsedThisRound: number; // Track movement used in current round
 }
 
 const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchState: ResearchState, showDebug: boolean, rngOverride: string, battleSeed?: number, enemyResearchState?: ResearchState, enemyWallLevel?: number, showEnemyStats?: boolean, showAttackMath?: boolean, terrain?: TerrainType, enemyHealthFactor: number = 0.5, enemyDefenseFactor: number = 1, attackerDamageBoost: number = 0, defenderRangeNerf: number = 0, disableAttackThreshold: boolean = false, specialItems?: SpecialItems) => {
   // Initialize battle log
   const battleLog: string[] = [];
+  
+  // Initialize separate HP pools for each dragon type
+  const dragonHPPools: Record<string, { hp: number; totalHp: number; isAttacker: boolean }> = {};
   
   // Default special items if not provided
   const items: SpecialItems = specialItems || {
@@ -304,7 +308,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         position: battlefieldRange, // Start at attacker's side (position battlefieldRange)
         isAttacker: true,
         hasMoved: false,
-        hasAttacked: false
+        hasAttacked: false,
+        movementUsedThisRound: 0
       };
       battleUnits.push(battleUnit);
       attackerUnits.push(battleUnit);
@@ -342,7 +347,8 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         position: 0, // Start at defender's side (position 0)
         isAttacker: false,
         hasMoved: false,
-        hasAttacked: false
+        hasAttacked: false,
+        movementUsedThisRound: 0
       };
       
       // In melee combat, all units start at position 0
@@ -352,6 +358,20 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       
       battleUnits.push(battleUnit);
       defenderUnits.push(battleUnit);
+    }
+  });
+
+  // Initialize dragon HP pools based on dragon units
+  battleUnits.forEach(unit => {
+    const baseStats = TROOP_STATS[unit.type];
+    if (baseStats.type === 'dragon') {
+      // Use the same health calculation as damage calculation for consistency
+      const totalHP = unit.count * unit.health; // Use modified health
+      dragonHPPools[unit.type] = {
+        hp: totalHP,
+        totalHp: totalHP,
+        isAttacker: unit.isAttacker
+      };
     }
   });
 
@@ -536,6 +556,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
     battleUnits.forEach(unit => {
       unit.hasMoved = false;
       unit.hasAttacked = false;
+      unit.movementUsedThisRound = 0; // Reset movement tracking for new round
     });
     
     // Sort units by speed (fastest first) for this round, defenders win ties
@@ -568,7 +589,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         const movementResult = standardMovement(unit, battleUnits, battlefieldRange);
         
         if (movementResult.moved) {
-          battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> moves from ${unit.position} to ${movementResult.newPosition}`);
+          const actualMovement = Math.abs(movementResult.newPosition - unit.position);
+          unit.movementUsedThisRound += actualMovement;
+          battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> moves from ${unit.position} to ${movementResult.newPosition} (${actualMovement} speed used, ${unit.speed - unit.movementUsedThisRound} remaining)`);
           unit.position = movementResult.newPosition;
           hasInitiallyMoved = true;
           
@@ -619,27 +642,32 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
         const maxAttacks = 50; // Prevent infinite loops
         const maxDamagePotential = unit.count * (unit.rangedAttack || unit.attack) * 2.1 * 1.2;
         
+        // Check if unit is hybrid (has both melee and ranged attack)
+        const isHybrid = unit.range > 0 && unit.rangedAttack > 0 && unit.attack > 0;
+        
         while (attacksThisTurn < maxAttacks && 
                unit.count > 0 && 
-               potentialTargets.length > 0) {
+               potentialTargets.length > 0 && 
+               (isHybrid || attacksThisTurn === 1)) { // Only hybrid units can multi-attack
           
           attacksThisTurn++;
           
-          // Tactical Targeting Logic
-          potentialTargets.sort((a, b) => {
-            // Check if unit is hybrid (has both melee and ranged attack)
-            const isHybrid = unit.range > 0 && unit.rangedAttack > 0 && unit.attack > 0;
-            
-            // For hybrid units, check if any target is in melee range
-            let useMeleeLogic = false;
-            if (isHybrid) {
-              const meleeTargets = potentialTargets.filter(target => {
-                if (target.count <= 0 || target.isAttacker === unit.isAttacker) return false;
-                const distance = Math.abs(unit.position - target.position);
-                return distance <= 1; // Melee range
-              });
-              useMeleeLogic = meleeTargets.length > 0;
-            }
+          // Tactical Targeting Logic - only sort on first attack of the turn
+          if (attacksThisTurn === 1) {
+            potentialTargets.sort((a, b) => {
+              // Check if unit is hybrid (has both melee and ranged attack)
+              const isHybrid = unit.range > 0 && unit.rangedAttack > 0 && unit.attack > 0;
+              
+              // For hybrid units, check if any target is in melee range
+              let useMeleeLogic = false;
+              if (isHybrid) {
+                const meleeTargets = potentialTargets.filter(target => {
+                  if (target.count <= 0 || target.isAttacker === unit.isAttacker) return false;
+                  const distance = Math.abs(unit.position - target.position);
+                  return distance <= 1; // Melee range
+                });
+                useMeleeLogic = meleeTargets.length > 0;
+              }
             
             const isRanged = !!unit.rangedAttack && !useMeleeLogic;
             
@@ -689,6 +717,11 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
               return a.health - b.health;
             }
           });
+          } else {
+            // For subsequent attacks, recalculate potential targets from current battle state
+            potentialTargets = getPotentialTargets(unit, battleUnits, prioritizedMelee).targets;
+            potentialTargets = potentialTargets.filter(target => target.count > 0);
+          }
 
           const target = potentialTargets[0];
           if (target.count <= 0) break;
@@ -761,18 +794,20 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const maxDamagePossible = maxPossibleKills * healthPerUnit;
           const actualDamage = Math.min(rawDamage, maxDamagePossible);
           
-          // Calculate damage percentage for multi-attack decision (damage vs this target type only)
-          // Use the same calculation as the actual damage but with average RNG (1.0) to determine threshold
-          const baseAttackPower = unit.count * Math.max(unit.attack, unit.rangedAttack);
-          const thresholdAttackDefenseRatio = Math.min(2.1, Math.max(0.3, Math.max(unit.attack, unit.rangedAttack) / target.defense));
-          const maxUnitDamagePotential = baseAttackPower * thresholdAttackDefenseRatio * 1.0; // Expected damage with average RNG (1.0)
-          const currentTargetDamage = damageByTargetType[target.type] || 0;
-          const damageToThisTarget = currentTargetDamage + actualDamage;
-          const damagePercentage = maxUnitDamagePotential > 0 ? (damageToThisTarget / maxUnitDamagePotential) * 100 : 0;
+          // Track damage used this turn for multi-attack threshold (per target type)
+          damageByTargetType[target.type] = (damageByTargetType[target.type] || 0) + actualDamage;
+          damageUsedThisTurn += actualDamage; // Keep cumulative for display purposes
+          
+          // Calculate damage percentage for multi-attack decision (cumulative per target type)
+          // This is the percentage of the unit's attack potential used on this target type
+          const currentAttackPower = isRangedAttack ? unit.rangedAttack : unit.attack;
+          const baseAttackDamage = unit.count * currentAttackPower * attackDefenseRatio; // Base damage without RNG
+          const cumulativeDamageToTarget = damageByTargetType[target.type];
+          const damagePercentage = baseAttackDamage > 0 ? (cumulativeDamageToTarget / baseAttackDamage) * 100 : 0;
           
           // Debug: Shielding logic
           if (showDebug && turnCounter <= 5) {
-            battleLog.push(`<span class="text-orange-400">DEBUG SHIELDING</span>: Target=${TROOP_STATS[target.type].name}, CurrentDamage=${currentTargetDamage.toLocaleString()}, ThisAttack=${actualDamage.toLocaleString()}, TotalToTarget=${damageToThisTarget.toLocaleString()}, MaxPotential=${maxUnitDamagePotential.toLocaleString()}, Percentage=${damagePercentage.toFixed(2)}%, Threshold=${disableAttackThreshold ? '100%' : '20%'}`);
+            battleLog.push(`<span class="text-orange-400">DEBUG SHIELDING</span>: Target=${TROOP_STATS[target.type].name}, ThisAttack=${actualDamage.toLocaleString()}, BaseAttackDamage=${baseAttackDamage.toLocaleString()}, Percentage=${damagePercentage.toFixed(2)}%, Threshold=${disableAttackThreshold ? '100%' : '20%'}`);
           }
           
           // Debug: Log RNG and damage values
@@ -783,24 +818,59 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             battleLog.push(`<span class="text-orange-400">DEBUG</span>: <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> → <span class="${target.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[target.type].name}</span> RNG=${rng.toFixed(3)}, Raw=${rawDamage.toLocaleString()}, HealthPool=${maxDamagePossible.toLocaleString()}/${originalHealthPool.toLocaleString()}, Actual=${actualDamage.toLocaleString()}, Pct=${damagePercentage.toFixed(2)}%`);
           }
           
-          // Calculate units killed based on actual damage
-          const unitsKilled = Math.min(
-            target.count,
-            Math.floor(actualDamage / healthPerUnit) || (actualDamage > 0 ? 1 : 0)
-          );
+          // Check if target is a dragon (uses global HP pool)
+          const targetBaseStats = TROOP_STATS[target.type];
+          const isTargetDragon = targetBaseStats.type === 'dragon';
           
-          // Ensure at least 1 unit is killed if damage is positive and there are units left
-          const effectiveUnitsKilled = Math.min(
-            target.count,
-            Math.max(1, unitsKilled)
-          );
+          let effectiveUnitsKilled = 0;
           
-          // Apply damage
-          target.count = Math.max(0, target.count - effectiveUnitsKilled);
-          
-          // Track damage used this turn for multi-attack threshold (per target type)
-          damageByTargetType[target.type] = (damageByTargetType[target.type] || 0) + actualDamage;
-          damageUsedThisTurn += actualDamage; // Keep cumulative for display purposes
+          if (isTargetDragon) {
+            // Dragon HP pool logic - separate pool for each dragon type
+            const dragonPool = dragonHPPools[target.type];
+            if (dragonPool) {
+              const hpBeforeAttack = dragonPool.hp;
+              
+              // For dragons, use raw damage to check if HP pool is depleted
+              // Dragon HP pool should be based on raw damage, not capped damage
+              if (rawDamage >= dragonPool.totalHp) {
+                // Single attack damage exceeds total HP pool - all dragons die immediately
+                effectiveUnitsKilled = target.count;
+                target.count = 0;
+                dragonPool.hp = 0; // Deplete the pool
+              } else {
+                // Apply damage to HP pool
+                dragonPool.hp -= actualDamage;
+                
+                // Check if this attack depletes the HP pool
+                if (hpBeforeAttack > 0 && dragonPool.hp <= 0) {
+                  // HP pool depleted by this attack - all dragons of this type die
+                  effectiveUnitsKilled = target.count;
+                  target.count = 0;
+                } else {
+                  // HP pool not depleted - no dragons die yet
+                  effectiveUnitsKilled = 0;
+                }
+              }
+            } else {
+              // Fallback to normal calculation if no pool found
+              effectiveUnitsKilled = 0;
+            }
+          } else {
+            // Normal unit calculation
+            const unitsKilled = Math.min(
+              target.count,
+              Math.floor(actualDamage / healthPerUnit) || (actualDamage > 0 ? 1 : 0)
+            );
+            
+            // Ensure at least 1 unit is killed if damage is positive and there are units left
+            effectiveUnitsKilled = Math.min(
+              target.count,
+              Math.max(1, unitsKilled)
+            );
+            
+            // Apply damage
+            target.count = Math.max(0, target.count - effectiveUnitsKilled);
+          }
           
           // Increment turn counter for RNG
           turnCounter++;
@@ -813,42 +883,25 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             `${effectiveUnitsKilled.toLocaleString()} were killed, ${remainingTargets.toLocaleString()} remaining (${damagePercentage.toFixed(2)}%)`
           );
           
-          // Check if this attack used less than 20% of potential damage - if so, attack again
-          // Use the UNCAPPED percentage for the decision logic
+          // Check if this attack exceeded the threshold - if so, stop attacking
+          // According to BattleRules: PvP stops at 20%, PvE stops at 100%
+          const threshold = disableAttackThreshold ? 100 : 20;
           
-          if (disableAttackThreshold) {
-            // When threshold is disabled, stop at 100% damage (no artificial limit)
-            if (damagePercentage >= 100 - 0.01) {
-              // Stop attacking - used 100% of attack potential
-              attacksThisTurn = maxAttacks; // Force exit from multi-attack loop
-              break;
-            } else if (damagePercentage <= 0.001) {
-              // Stop attacking - no meaningful damage being done
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage <= 0.001%`);
-              break;
-            } else if (effectiveUnitsKilled === 0 && actualDamage === 0) {
-              // Stop attacking - no damage at all being done
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
-              break;
-            }
-            // Continue with hybrid behavior
-          } else {
-            // Original logic: stop if damage >= 20%
-            if (damagePercentage >= 20) {
-              // Stop attacking - last attack was efficient enough (20%+ damage)
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage ${damagePercentage.toFixed(2)}% >= 20% for target ${TROOP_STATS[target.type].name}`);
-              break;
-            } else if (damagePercentage <= 0.001) {
-              // Stop attacking - no meaningful damage being done (changed from 0.1% to 0.001%)
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage <= 0.001%`);
-              break;
-            } else if (effectiveUnitsKilled === 0 && actualDamage === 0) {
-              // Stop attacking - no damage at all being done
-              if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
-              break;
-            }
-            // Continue with hybrid behavior
+          if (damagePercentage >= threshold - 0.1) {
+            // Stop attacking - exceeded threshold
+            attacksThisTurn = maxAttacks; // Force exit from multi-attack loop
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage ${damagePercentage.toFixed(2)}% >= ${threshold}% (${disableAttackThreshold ? 'PvE' : 'PvP'} limit)`);
+            break;
+          } else if (damagePercentage <= 0.001) {
+            // Stop attacking - no meaningful damage being done
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - damage <= 0.001%`);
+            break;
+          } else if (effectiveUnitsKilled === 0 && actualDamage === 0) {
+            // Stop attacking - no damage at all being done
+            if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Stopping - no damage`);
+            break;
           }
+          // Continue with hybrid behavior (PvE allows multiple attacks until 100% damage used)
           
           // Hybrid behavior: check for targets, move if none found, then continue
           if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Continuing - checking for targets before movement`);
@@ -859,9 +912,17 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
             
             if (attackComparison.bestApproach === 'melee' && attackComparison.movementResult?.moved) {
               const currentPos = unit.position;
-              unit.position = attackComparison.movementResult.newPosition;
-              prioritizedMelee = true;
-              battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position} (multi-attack: ${attackComparison.reason})`);
+              // Only move if the new position is actually different and better
+              if (attackComparison.movementResult.newPosition !== currentPos) {
+                const actualMovement = Math.abs(attackComparison.movementResult.newPosition - currentPos);
+                unit.movementUsedThisRound += actualMovement;
+                unit.position = attackComparison.movementResult.newPosition;
+                prioritizedMelee = true;
+                battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances to melee range from ${currentPos} to ${unit.position} (multi-attack: ${attackComparison.reason})`);
+              } else {
+                prioritizedMelee = true;
+                if (showDebug) battleLog.push(`<span class="text-orange-400">DEBUG MULTI-ATTACK</span>: Hybrid stays in position (already optimal)`);
+              }
             } else if (attackComparison.bestApproach === 'ranged') {
               // Stay at range and use ranged attacks
               prioritizedMelee = false;
@@ -881,7 +942,9 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
           const movementResult = multiAttackMovement(unit, battleUnits, battlefieldRange);
           
           if (movementResult.moved) {
-            battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances from ${unit.position} to ${movementResult.newPosition} (multi-attack movement)`);
+            const actualMovement = Math.abs(movementResult.newPosition - unit.position);
+            unit.movementUsedThisRound += actualMovement;
+            battleLog.push(`${unit.count}x <span class="${unit.isAttacker ? 'text-green-400' : 'text-red-400'}">${TROOP_STATS[unit.type].name}</span> advances from ${unit.position} to ${movementResult.newPosition} (multi-attack movement: ${actualMovement} speed used, ${unit.speed - unit.movementUsedThisRound} remaining)`);
             unit.position = movementResult.newPosition;
             
             // Recalculate potential targets after moving
@@ -1148,7 +1211,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       specialItems: currentSpecialItems,
       selectedTroopType,
       rngOverride: '0.8', // Force RNG to 0.8 for minimum optimization
-      seed,
+      seed: '12345', // Fixed seed for deterministic optimization
       enemyHealthFactor,
       enemyDefenseFactor,
       attackerDamageBoost,
@@ -1266,7 +1329,7 @@ const simulateBattle = (attackers: Attackers, defenders: EnemyTroops, researchSt
       specialItems: currentSpecialItems,
       selectedTroopType,
       rngOverride: '0.8', // Force RNG to 0.8 for calculate all optimization
-      seed: seed.trim() === '' ? Math.floor(Math.random() * 1000000) : parseInt(seed),
+      seed: '12345', // Fixed seed for deterministic optimization
       enemyHealthFactor,
       enemyDefenseFactor,
       attackerDamageBoost,

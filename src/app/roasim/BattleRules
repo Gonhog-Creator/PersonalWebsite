@@ -1,0 +1,121 @@
+Stat Calculation
+Stats are calculated per stack at battle start. Modifiers apply in a specific order.
+
+Standard Formula (HP, Attack, Range)
+Final Stat = BaseValue × (1 + ResearchBonus + EffectBonus_1 + EffectBonus_2)
+Speed
+Final Speed = BaseSpeed × (1 + RapidDeploymentBonus + GodSpeedBonus + DragonryBonus)
+Dragonry applies to Battle/Swift Strike Dragons only.
+
+Defense (Three-Stage)
+Stage 1: BaseDefense × (1 + MetallurgyBonus)
+Stage 2: Add Shield Effect bonuses to result
+Stage 3: Multiply by (1 + WallBonus)
+Targeting Logic
+Units choose targets by priority; ties break on the next criteria.
+
+Melee
+Distance → Highest Speed → Highest Defense → Highest Attack → Highest HP
+
+Ranged
+Distance → Highest Range Attack → Highest Speed → Highest Defense → Highest HP
+
+Hybrid
+Uses Melee logic if a target is in reach; otherwise switches to Ranged logic.
+
+Damage
+Final Damage = ⌈ AttackStat × DamageMultiplier × DeterministicRNG ⌉
+Power ratio (Attack/Defense) clamped 0.3–2.1. RNG variance 0.80–1.20, seeded per attack.
+
+
+
+
+his guide provides the precise logic used by the battle engine to calculate troop stats and resolve targeting during combat.
+
+🏗️ 1. Precise Stat Calculation
+All stats are calculated per stack at the start of the battle. Modifiers follow a specific mathematical structure.
+
+📐 The Core Formulas
+The combat engine uses three primary calculation types depending on the stat:
+
+A. Standard Stat Formula (HP, Attack, Range)
+Stats are calculated by applying a sum of percentage bonuses to the base value:
+
+Final Stat = BaseValue × (1 + ResearchBonus + EffectBonus_1 + EffectBonus_2)
+
+B. Speed Formula (Includes Dragonry)
+Specifically for Battle Dragon and Swift Strike Dragon, the Dragonry bonus is added to the general multiplier:
+
+Final Speed = BaseSpeed × (1 + RapidDeploymentBonus + GodSpeedBonus + DragonryBonus)
+
+Note: Other units use the same formula but with a 0% DragonryBonus.
+C. Defense Formula (Two-Stage)
+Defense is the only stat where the bonus is compounded by the Wall:
+
+Base Modded Defense = (BaseDefense × (1 + MetallurgyBonus)) + ShieldEffectBonus_1 + ShieldEffectBonus_2
+Final Defense = Base Modded Defense × (1 + WallBonus)
+
+🔬 2. Specific Stat Modifiers
+Each modifier level equates to a specific percentage increase:
+
+Research (The 5% Rule): Most combat researches (Medicine, Metallurgy, Rapid Deployment, Weapons Calibration) provide +5% per level.
+Example: Level 10 Medicine = +50% HP modifier (0.50).
+Dragonry (The 10% Rule): Provides +10% per level (Battle/Swift Strike Dragons only).
+Wall Multiplier:
+For Level 1-30: +75% base bonus, plus +5% per level.
+Formula: 0.75 + (Wall Level * 0.05).
+Example: A Level 20 Wall provides a +1.75 (175%) multiplier to Defense.
+🎯 3. Tactical Targeting Logic
+Units choose their targets based on a strict priority list (tie-breaking system). If multiple targets share the same top priority, the engine moves down to the next criteria.
+
+Melee Troops (Close Combat)
+Distance: Always targets the closest unit.
+Stat Efficiency: Among closest units, targets the one where the difference between Attacker Attack and Target Defense is smallest (closest match).
+Speed: Targets the unit with the lowest Speed.
+Total Attack: Targets the unit with the lowest Total Attack.
+Fragility: Targets the unit with the lowest HP.
+Ranged Troops (Snipers)
+Distance: Always targets the closest unit.
+Threat Level: Among closest units, targets the one with the highest Total Attack.
+Speed: Targets the unit with the highest Speed.
+Defense: Targets the unit with the highest Total Defense.
+Durability: Targets the unit with the highest HP.
+� 4. Worked Examples
+To illustrate these formulas, let's look at a Battle Dragon in a high-level scenario.
+
+Scenario:
+Unit: Battle Dragon (Base Defense: 100, Base Speed: 50)
+Research: Metallurgy Lvl 10 (+50%), Rapid Deployment Lvl 10 (+50%), Dragonry Lvl 5 (+50%).
+Effects: Glowing Shields (+20), God Speed (+10%).
+Wall: Level 10.
+Example A: Defense Calculation (Two-Stage)
+Research Phase: 100 (Base) × 1.5 (Metallurgy) = 150
+Effect Phase: 150 + 20 (Shields) = 170
+Wall Multiplier Phase:
+Wall Bonus = 0.75 + (10 × 0.05) = 1.25 (125%)
+Final Defense = 170 × (1 + 1.25) = 382.5
+Final Result: 383 (Rounded up)
+Example B: Speed Calculation (Additive)
+Total Multiplier: 1 (Base) + 0.5 (Deployment) + 0.1 (God Speed) + 0.5 (Dragonry) = 2.1
+Final Speed: 50 × 2.1 = 105
+�💥 5. Damage & Casualty Mechanics
+The Damage Equation
+Final Damage = ⌈ AttackStat × DamageMultiplier × DeterministicRNG ⌉
+
+Power Ratio: The DamageMultiplier is Attack / Defense, clamped between 0.3 and 2.1.
+Luck (Deterministic RNG): A variance between 0.80 and 1.20 is applied in increments of 0.01 (the "RNG Step").
+Determinism: To ensure fair and reproducible results, the RNG is re-seeded at every attack action using a combination of the Battle Seed, the Round Number, and the Action Step. This ensures that any battle can be exactly simulated again with identical damage rolls.
+Casualty Types
+Standard Stacks: Damage is divided by the HP of a single unit. Total losses are rounded down.
+Dragons: All dragons share a global HP pool. Amount decreases only when a full entity's share of the pool is depleted.
+
+
+Shielding
+Shielding: If a troop utilizes more than 20% of their total attack power on any 1 enemy troop type, they end their turn after the attack. This only applied to PVP, not PVE. In PVE, the attacker ends their turn if 100% of their attack is used.
+
+Example:
+
+500k Swift Strike Dragon against defending army. Swift Strike Dragon attacks Minotaur using Melee attack. 100,000 were killed, 0 remaining (15.72%) Swift Strike Dragon attacks Longbowman using Melee attack. 100,000 were killed, 0 remaining (5.20%) Swift Strike Dragon attacks Battle Dragon using Melee attack. 10,000 were killed, 0 remaining (42.55%) Swift Strike Dragon ends it's turn.
+
+
+In this example, the Swift Strike Dragons kill the Minotaur's using only 15.72% of their max damage. Thus, they move on. After this, they kill the Longbowmen using 5.2%, then move on again Next, they kill the Battle Dragons utilizing 42.55% of their attack power. This is more than 20%, which forces them to end their turn. The shielding is NOT accumulative damage, it only activates if the 20% is used on a single troop type.

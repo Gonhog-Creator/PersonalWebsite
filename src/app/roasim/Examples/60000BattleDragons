@@ -1,0 +1,563 @@
+Setup:
+Attacker - 60000 BattleDragons
+Defender - Level 8 Camp
+Research - All level 5
+
+Local Simulator
+
+Battle Setup:
+- Shielding: OFF
+- Battlefield length: 1200
+- RNG Override: None
+- Attacker Research: Weapons Calibration 5, Metalurgy 5, Medicine 5, Dragonry 5, Rapid Deployment 5
+- Enemy health modified by 0.5x factor (camp)
+- Enemy defense modified by 1x factor (camp)
+- Attacker's Army: 60,000x Battle Dragon
+- Defender's Army: 180,000x Porter, 60,000x Conscript, 30,000x Spy, 60,000x Halberdier, 30,000x Minotaur, 30,000x Longbow Man, 20,000x Swift Strike Dragon, 4,000x Battle Dragon
+
+Attacker's Modified Stats:
+- Battle Dragon:
+  Attack: 300 → 375
+  Defense: 300 → 375
+  Health: 1500 → 1875
+  Speed: 750 → 1313
+Battlefield length set to 1200 by Defenders (Longbow Man)
+
+=== ROUND 1 ===
+60000x Battle Dragon moves from 1200 to 0
+Battle Dragon attacks Battle Dragon using Melee attack. 4,000 were killed, 0 remaining (10.67%)
+Battle Dragon attacks Swift Strike Dragon using Melee attack. 20,000 were killed, 0 remaining (6.35%)
+Battle Dragon attacks Minotaur using Melee attack. 30,000 were killed, 0 remaining (7.17%)
+Battle Dragon attacks Halberdier using Melee attack. 60,000 were killed, 0 remaining (9.52%)
+Battle Dragon attacks Longbow Man using Melee attack. 30,000 were killed, 0 remaining (2.41%)
+Battle Dragon attacks Porter using Melee attack. 180,000 were killed, 0 remaining (8.76%)
+Battle Dragon attacks Conscript using Melee attack. 60,000 were killed, 0 remaining (4.83%)
+Battle Dragon attacks Spy using Melee attack. 30,000 were killed, 0 remaining (0.32%)
+
+=== BATTLE ENDED ===
+The attackers have won the battle!
+
+=== FINAL FORCES ===
+Attacker: 60000x Battle Dragon
+
+
+
+Real Game Sim
+
+Battle Report Analysis
+Seed: ok8sALRz8Mt6TgipPxcOpU44oCmybSNr
+Battle Analysis
+Attacker (Sim)
+Attacker (Sim)
+Attacker
+Total Power
+0
+Power Lost
+-0
+Troop Composition
+battle_dragon
+Battle Dragon
+Lvl 1
+Active Modifiers
+ Researches
+plain
+PvE Forces
+Defender
+Total Power
+0
+Power Lost
+-758,000
+Troop Composition
+porter
+Porter
+Lvl 1
+conscript
+Conscript
+Lvl 1
+spy
+Spy
+Lvl 1
+hallberdsman
+Hallberdsman
+Lvl 1
+minotaur
+Minotaur
+Lvl 1
+longbow_man
+Longbow Man
+Lvl 1
+swift_strike_dragon
+Swift Strike Dragon
+Lvl 1
+battle_dragon
+Battle Dragon
+Lvl 1
+Active Modifiers
+ Effects
+Detailed Battle History
+ROUND 0
+Forces This Round
+START_BATTLE
+ Engagement confirmed.
+Max Range: 1200
+Farthest unit: Longbow Man (defender at pos 0)
+ROUND 1
+Forces This Round
+
+Battle Dragon
+60,000
+MOVE
+Troop Battle Dragon moved from 1200  0.
+ATTACK
+Battle Dragon
+ 300
+Battle Dragon
+ 4,000
+0
+( -4,000)
+Attacker	Stat	Target
+60,000
+ Units
+4,000  0
+375
+Melee Attack
+300
+0
+Range Attack
+0
+1,875
+Hp
+750
+375
+Defense
+300
+1,313
+Speed
+750
+0
+Range
+0
+80
+Load
+80
+0
+Position
+0
+Tactical Priority
+Closest target (dist: 1200) with best profile: low defense gap (75), high threat (atk: 300, spd: 750, hp: 750)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+22,500,000
+TOTAL ATK
+375 × 60,000
+1.25
+MULTIPLIER
+ATK/DEF Ratio
+0.94
+RNG SEED
+Variance
+26,437,500
+FINAL DAMAGE
+Multiplier 1.25 is derived from raw ratio [375 ATK / 300 DEF] = 1.25
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Battle Dragon
+ 300
+Swift Strike Dragon
+ 20,000
+0
+( -20,000)
+Attacker	Stat	Target
+60,000
+ Units
+20,000  0
+375
+Melee Attack
+150
+0
+Range Attack
+0
+1,875
+Hp
+150
+375
+Defense
+60
+1,313
+Speed
+1,000
+0
+Range
+0
+80
+Load
+100
+0
+Position
+0
+Tactical Priority
+Closest target (dist: 0) with best profile: low defense gap (315), high threat (atk: 150, spd: 1000, hp: 150)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+22,500,000
+TOTAL ATK
+375 × 60,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+1.10
+RNG SEED
+Variance
+51,975,001
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [375 ATK / 60 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Battle Dragon
+ 300
+Minotaur
+ 30,000
+0
+( -30,000)
+Attacker	Stat	Target
+60,000
+ Units
+30,000  0
+375
+Melee Attack
+70
+0
+Range Attack
+0
+1,875
+Hp
+113
+375
+Defense
+45
+1,313
+Speed
+275
+0
+Range
+0
+80
+Load
+30
+0
+Position
+0
+Tactical Priority
+Closest target (dist: 0) with best profile: low defense gap (330), high threat (atk: 70, spd: 275, hp: 113)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+22,500,000
+TOTAL ATK
+375 × 60,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+0.96
+RNG SEED
+Variance
+45,360,000
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [375 ATK / 45 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Battle Dragon
+ 300
+Hallberdsman
+ 60,000
+0
+( -60,000)
+Attacker	Stat	Target
+60,000
+ Units
+60,000  0
+375
+Melee Attack
+40
+0
+Range Attack
+0
+1,875
+Hp
+75
+375
+Defense
+40
+1,313
+Speed
+300
+0
+Range
+0
+80
+Load
+40
+0
+Position
+0
+Tactical Priority
+Closest target (dist: 0) with best profile: low defense gap (335), high threat (atk: 40, spd: 300, hp: 75)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+22,500,000
+TOTAL ATK
+375 × 60,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+1.20
+RNG SEED
+Variance
+56,700,000
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [375 ATK / 40 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Battle Dragon
+ 300
+Longbow Man
+ 30,000
+0
+( -30,000)
+Attacker	Stat	Target
+60,000
+ Units
+30,000  0
+375
+Melee Attack
+5
+0
+Range Attack
+80
+1,875
+Hp
+38
+375
+Defense
+30
+1,313
+Speed
+250
+0
+Range
+1,200
+80
+Load
+25
+0
+Position
+0
+Tactical Priority
+Closest target (dist: 0) with best profile: low defense gap (345), high threat (atk: 80, spd: 250, hp: 38)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+22,500,000
+TOTAL ATK
+375 × 60,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+0.80
+RNG SEED
+Variance
+37,800,000
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [375 ATK / 30 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Battle Dragon
+ 300
+Conscript
+ 60,000
+0
+( -60,000)
+Attacker	Stat	Target
+60,000
+ Units
+60,000  0
+375
+Melee Attack
+10
+0
+Range Attack
+0
+1,875
+Hp
+38
+375
+Defense
+10
+1,313
+Speed
+200
+0
+Range
+0
+80
+Load
+20
+0
+Position
+0
+Tactical Priority
+Closest target (dist: 0) with best profile: low defense gap (365), high threat (atk: 10, spd: 200, hp: 38)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+22,500,000
+TOTAL ATK
+375 × 60,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+1.09
+RNG SEED
+Variance
+51,502,501
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [375 ATK / 10 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Battle Dragon
+ 300
+Porter
+ 180,000
+0
+( -180,000)
+Attacker	Stat	Target
+60,000
+ Units
+180,000  0
+375
+Melee Attack
+1
+0
+Range Attack
+0
+1,875
+Hp
+23
+375
+Defense
+10
+1,313
+Speed
+100
+0
+Range
+0
+80
+Load
+200
+0
+Position
+0
+Tactical Priority
+Closest target (dist: 0) with best profile: low defense gap (365), high threat (atk: 1, spd: 100, hp: 23)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+22,500,000
+TOTAL ATK
+375 × 60,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+1.15
+RNG SEED
+Variance
+54,337,500
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [375 ATK / 10 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Battle Dragon
+ 300
+Spy
+ 30,000
+0
+( -30,000)
+Attacker	Stat	Target
+60,000
+ Units
+30,000  0
+375
+Melee Attack
+5
+0
+Range Attack
+0
+1,875
+Hp
+5
+375
+Defense
+5
+1,313
+Speed
+150
+0
+Range
+0
+80
+Load
+0
+0
+Position
+0
+Tactical Priority
+Closest target (dist: 0) with best profile: low defense gap (370), high threat (atk: 5, spd: 150, hp: 5)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+22,500,000
+TOTAL ATK
+375 × 60,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+0.92
+RNG SEED
+Variance
+43,470,000
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [375 ATK / 5 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ROUND 2
+Forces This Round
+END_BATTLE
+ Combat concluded.
+Status:

@@ -1,0 +1,400 @@
+Setup:
+Attacker - 5700x Fangtooth
+Defender - Level 10 Camp
+Research - All level 1
+
+Local Simulator Output:
+
+Battle Setup:
+- Shielding: OFF
+- Battlefield length: 1500
+- RNG Override: None
+- Attacker Research: Weapons Calibration 1, Metalurgy 1, Medicine 1, Dragonry 1, Rapid Deployment 1
+- Enemy health modified by 0.5x factor (camp)
+- Enemy defense modified by 1x factor (camp)
+- Attacker's Army: 5,700x Fangtooth
+- Defender's Army: 750,000x Porter, 250,000x Conscript, 120,000x Spy, 250,000x Halberdier, 120,000x Minotaur, 90,000x Longbow Man, 60,000x Swift Strike Dragon, 16,000x Battle Dragon, 10,000x Giant, 10,000x Fire Mirror
+
+Attacker's Modified Stats:
+- Fangtooth:
+  Attack: 1600 → 1680
+  Defense: 300 → 315
+  Health: 3000 → 3150
+  Speed: 500 → 525
+  Range: 600 → 630
+  Ranged Attack: 800 → 840
+Battlefield length set to 1500 by Defenders (Fire Mirror)
+
+=== ROUND 1 ===
+60000x Swift Strike Dragon moves from 0 to 1000
+16000x Battle Dragon moves from 0 to 750
+5700x Fangtooth advances to melee range from 1500 to 999 (Melee damage (20,109,600) > Ranged damage (10,054,800))
+Fangtooth attacks Swift Strike Dragon using Melee attack. 60,000 were killed, 0 remaining (44.75%)
+5700x Fangtooth advances to melee range from 999 to 749 (multi-attack: Melee damage (20,109,600) > Ranged damage (10,054,800))
+Fangtooth attacks Battle Dragon using Melee attack. 16,000 were killed, 0 remaining (59.67%)
+5700x Fangtooth advances from 749 to 224 (multi-attack movement)
+Fangtooth attacks Halberdier using Ranged attack. 130,042 were killed, 119,958 remaining (48.50%)
+5700x Fangtooth advances to melee range from 224 to 0 (multi-attack: Melee damage (20,109,600) > Ranged damage (10,054,800))
+Fangtooth attacks Giant using Melee attack. 9,954 were killed, 46 remaining (99.00%)
+Fangtooth attacks Giant using Melee attack. 46 were killed, 0 remaining (99.46%)
+Fangtooth attacks Minotaur using Melee attack. 120,000 were killed, 0 remaining (67.43%)
+Fangtooth attacks Halberdier using Melee attack. 119,958 were killed, 0 remaining (93.24%)
+Fangtooth attacks Fire Mirror using Melee attack. 10,000 were killed, 0 remaining (37.30%)
+Fangtooth attacks Longbow Man using Melee attack. 90,000 were killed, 0 remaining (17.01%)
+Fangtooth attacks Porter using Melee attack. 750,000 were killed, 0 remaining (85.78%)
+Fangtooth attacks Conscript using Melee attack. 250,000 were killed, 0 remaining (47.24%)
+Fangtooth attacks Spy using Melee attack. 120,000 were killed, 0 remaining (2.98%)
+
+=== BATTLE ENDED ===
+The attackers have won the battle!
+
+=== FINAL FORCES ===
+Attacker: 5700x Fangtooth
+
+Real Game Sim:
+
+Battle Report Analysis
+Seed: ys7xm1V7gGQKjzQpGAdX99HhoqqUn6mA
+Battle Analysis
+Attacker (Sim)
+Attacker (Sim)
+Attacker
+Total Power
+0
+Power Lost
+-57,000
+Troop Composition
+fangtooth
+Fangtooth
+Lvl 1
+Active Modifiers
+ Researches
+plain
+PvE Forces
+Defender
+Total Power
+0
+Power Lost
+-376,020
+Troop Composition
+porter
+Porter
+Lvl 1
+conscript
+Conscript
+Lvl 1
+spy
+Spy
+Lvl 1
+hallberdsman
+Hallberdsman
+Lvl 1
+minotaur
+Minotaur
+Lvl 1
+longbow_man
+Longbow Man
+Lvl 1
+swift_strike_dragon
+Swift Strike Dragon
+Lvl 1
+giant
+Giant
+Lvl 1
+fire_mirrors
+Fire Mirrors
+Lvl 1
+battle_dragon
+Battle Dragon
+Lvl 1
+Active Modifiers
+ Effects
+Detailed Battle History
+ROUND 0
+Forces This Round
+START_BATTLE
+ Engagement confirmed.
+Max Range: 1500
+Farthest unit: Fire Mirrors (defender at pos 0)
+ROUND 1
+Forces This Round
+
+Swift Strike Dragon
+60,000
+
+Battle Dragon
+16,000
+
+Fangtooth
+5,700
+
+Hallberdsman
+250,000
+
+Minotaur
+120,000
+
+Longbow Man
+90,000
+
+Conscript
+250,000
+
+Spy
+120,000
+
+Giant
+10,000
+
+Porter
+750,000
+
+Fire Mirrors
+10,000
+MOVE
+Troop Swift Strike Dragon moved from 0  1000.
+MOVE
+Troop Battle Dragon moved from 0  750.
+MOVE
+Troop Fangtooth moved from 1500  1000.
+ATTACK
+Fangtooth
+ 1,680
+Swift Strike Dragon
+ 60,000
+0
+( -60,000)
+Attacker	Stat	Target
+5,700
+ Units
+60,000  0
+1,680
+Melee Attack
+150
+840
+Range Attack
+0
+3,150
+Hp
+150
+315
+Defense
+60
+550
+Speed
+1,000
+630
+Range
+0
+45
+Load
+100
+1000
+Position
+1000
+Tactical Priority
+Closest target (dist: 500) with best profile: low defense gap (1620), high threat (atk: 150, spd: 1000, hp: 150)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+9,576,000
+TOTAL ATK
+1,680 × 5,700
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+1.16
+RNG SEED
+Variance
+23,327,136
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [1,680 ATK / 60 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ATTACK
+Fangtooth
+ 1,680
+Battle Dragon
+ 16,000
+5,140
+( -10,860)
+Attacker	Stat	Target
+5,700
+ Units
+16,000  5,140
+1,680
+Melee Attack
+300
+840
+Range Attack
+0
+3,150
+Hp
+750
+315
+Defense
+300
+550
+Speed
+750
+630
+Range
+0
+45
+Load
+80
+1000
+Position
+750
+Tactical Priority
+Closest target (dist: 250) with best profile: high threat (atk: 300, spd: 750) and priority (def: 300, hp: 750)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+4,788,000
+TOTAL ATK
+840 × 5,700
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+0.81
+RNG SEED
+Variance
+8,144,389
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [840 ATK / 300 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+MOVE
+Troop Hallberdsman moved from 0  300.
+MOVE
+Troop Minotaur moved from 0  275.
+ATTACK
+Longbow Man
+ 5
+Fangtooth
+ 5,700
+4,986
+( -714)
+Attacker	Stat	Target
+90,000
+ Units
+5,700  4,986
+5
+Melee Attack
+1,680
+80
+Range Attack
+840
+38
+Hp
+3,150
+30
+Defense
+315
+250
+Speed
+550
+1,200
+Range
+630
+25
+Load
+45
+0
+Position
+1000
+Tactical Priority
+Closest target (dist: 1000) with best profile: high threat (atk: 1680, spd: 550) and priority (def: 315, hp: 3150)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+7,200,000
+TOTAL ATK
+80 × 90,000
+0.30
+MULTIPLIER
+ATK/DEF Ratio
+1.04
+RNG SEED
+Variance
+2,246,400
+FINAL DAMAGE
+Multiplier 0.30 is derived from raw ratio [80 ATK / 315 DEF] = 0.30
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+MOVE
+Troop Conscript moved from 0  200.
+MOVE
+Troop Spy moved from 0  150.
+MOVE
+Troop Giant moved from 0  120.
+MOVE
+Troop Porter moved from 0  100.
+ATTACK
+Fire Mirrors
+ 20
+Fangtooth
+ 4,986
+0
+( -4,986)
+Attacker	Stat	Target
+10,000
+ Units
+4,986  0
+20
+Melee Attack
+1,680
+1,200
+Range Attack
+840
+750
+Hp
+3,150
+30
+Defense
+315
+50
+Speed
+550
+1,500
+Range
+630
+75
+Load
+45
+0
+Position
+1000
+Tactical Priority
+Closest target (dist: 1000) with best profile: high threat (atk: 1680, spd: 550) and priority (def: 315, hp: 3150)
+Dist:
+Atk:
+Spd:
+Def:
+Damage Calculation Breakdown
+⌈(UnitATK × Count) × Mult × RNG⌉
+12,000,000
+TOTAL ATK
+1,200 × 10,000
+2.10
+MULTIPLIER
+ATK/DEF Ratio
+0.92
+RNG SEED
+Variance
+23,184,000
+FINAL DAMAGE
+Multiplier 2.10 is derived from raw ratio [1,200 ATK / 315 DEF] = 2.10
+Clamped between 0.3 and 2.1 to prevent extreme variance.
+ROUND 2
+Forces This Round
+END_BATTLE
+ Combat concluded.
+Status:

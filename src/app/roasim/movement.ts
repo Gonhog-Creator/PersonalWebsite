@@ -68,6 +68,12 @@ export const calculateMovementTowardsEnemy = (
 ): MovementResult => {
   const currentPos = Number.isFinite(unit.position) ? unit.position : 0;
   
+  // Check if unit has movement remaining this round
+  const remainingSpeed = unit.speed - unit.movementUsedThisRound;
+  if (remainingSpeed <= 0) {
+    return { newPosition: currentPos, moved: false, reason: 'No movement remaining this round' };
+  }
+  
   // Find closest enemy
   const closestEnemy = battleUnits
     .filter(target => target.count > 0 && target.isAttacker !== unit.isAttacker)
@@ -91,8 +97,8 @@ export const calculateMovementTowardsEnemy = (
     moveDirection *= -1;
   }
 
-  // Calculate new position
-  let newPosition = currentPos + (unit.speed * moveDirection);
+  // Calculate new position using remaining speed
+  let newPosition = currentPos + (remainingSpeed * moveDirection);
 
   // For specific target distance (like melee range)
   if (targetDistance > 0) {
@@ -123,8 +129,9 @@ export const calculateMovementTowardsEnemy = (
     newPosition = unit.isAttacker ? blockingUnit.position + 1 : blockingUnit.position - 1;
   }
 
-  const moved = newPosition !== currentPos && unit.speed > 0;
-  const reason = moved ? `Moved towards enemy at position ${enemyPos}` : 'No movement possible';
+  const actualMovement = Math.abs(newPosition - currentPos);
+  const moved = actualMovement > 0 && remainingSpeed > 0;
+  const reason = moved ? `Moved towards enemy at position ${enemyPos} (used ${actualMovement} speed)` : 'No movement possible';
 
   return { newPosition, moved, reason };
 };
@@ -201,6 +208,22 @@ export const compareAttackApproaches = (
 
   // Compare approaches - prefer melee when significantly better (matching in-game behavior)
   if (bestMeleeDamage > bestRangedDamage * 1.05) { // 5% threshold to prefer melee
+    // Check if we're already at melee range (distance <= 1)
+    const currentPos = Number.isFinite(unit.position) ? unit.position : 0;
+    const hasMeleeTargets = battleUnits.some(target => {
+      if (target.count <= 0 || target.isAttacker === unit.isAttacker) return false;
+      const distance = Math.abs(currentPos - target.position);
+      return distance <= 1;
+    });
+    
+    if (hasMeleeTargets) {
+      // Already at melee range, no need to move
+      return { 
+        bestApproach: 'melee', 
+        reason: `Melee damage (${bestMeleeDamage.toLocaleString()}) > Ranged damage (${bestRangedDamage.toLocaleString()}) - already at melee range` 
+      };
+    }
+    
     const movementResult = calculateMovementTowardsEnemy(unit, battleUnits, battlefieldRange, 1);
     return { 
       bestApproach: 'melee', 
