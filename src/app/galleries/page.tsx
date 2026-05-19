@@ -46,7 +46,7 @@ const galleries = [
   {
     id: 'belgium',
     title: 'Belgium',
-    image: '/img/Belgium/belgium-panorama (4).jpg',
+    image: '/img/Belgium/belgium_panorama (4).jpg',
     count: 96,
     location: 'Europe'
   },
