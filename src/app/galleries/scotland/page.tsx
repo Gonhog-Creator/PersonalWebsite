@@ -4,12 +4,12 @@ import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
-import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 import { BackToTop } from '@/components/ui/BackToTop';
+import { ImageModal } from '@/components/gallery/ImageModal';
 
 interface GalleryImage {
   id: number;
@@ -43,36 +43,28 @@ export default function ScotlandGallery() {
       };
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
-  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [currentView, setCurrentView] = useState<GalleryView>('photos');
 
-
-  const openLightbox = (image: GalleryImage) => {
-    setSelectedImage(image);
+  const openLightbox = (index: number) => {
+    setSelectedIndex(index);
     document.body.style.overflow = 'hidden';
   };
 
   const closeLightbox = () => {
-    setSelectedImage(null);
+    setSelectedIndex(null);
     document.body.style.overflow = 'unset';
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeLightbox();
+  const navigateImage = (direction: 'next' | 'prev') => {
+    if (selectedIndex === null) return;
+    
+    if (direction === 'next') {
+      setSelectedIndex((prev) => (prev! + 1) % galleryImages.length);
+    } else {
+      setSelectedIndex((prev) => (prev! - 1 + galleryImages.length) % galleryImages.length);
     }
   };
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeLightbox();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   // Verify image paths in development only
   useEffect(() => {
@@ -162,11 +154,11 @@ export default function ScotlandGallery() {
               className="flex w-auto"
               columnClassName="masonry-column"
             >
-              {galleryImages.map((image) => (
+              {galleryImages.map((image, index) => (
                 <div
                   key={image.id}
                   className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
-                  onClick={() => openLightbox(image)}
+                  onClick={() => openLightbox(index)}
                 >
                   <div className="relative w-full overflow-hidden rounded-lg">
                     <style jsx global>{`
@@ -273,28 +265,13 @@ export default function ScotlandGallery() {
       </div>
 
       {/* Lightbox */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={handleBackdropClick}
-        >
-          <button
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
-            aria-label="Close lightbox"
-          >
-            <FaTimes size={24} />
-          </button>
-          <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
-            <ZoomableImage
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-        </div>
+      {selectedIndex !== null && (
+        <ImageModal
+          images={galleryImages}
+          currentIndex={selectedIndex}
+          onClose={closeLightbox}
+          onNavigate={navigateImage}
+        />
       )}
             <BackToTop />
     </div>

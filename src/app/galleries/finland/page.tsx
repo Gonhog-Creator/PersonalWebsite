@@ -4,13 +4,12 @@ import Image from 'next/image';
 import { useState, useEffect, useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
-import { FaTimes } from 'react-icons/fa';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
-
 import { BackToTop } from '@/components/ui/BackToTop';
+import { ImageModal } from '@/components/gallery/ImageModal';
 
 /*
 For updating this gallery, update all things in steps 1-4
@@ -68,23 +67,35 @@ export default function FinlandGallery() {
       return image;
     });
   }, []);
-  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [currentView, setCurrentView] = useState<GalleryView>('photos');
-  const openLightbox = (image: GalleryImage) => {setSelectedImage(image); document.body.style.overflow = 'hidden';};
-  const closeLightbox = () => {setSelectedImage(null); document.body.style.overflow = 'unset';};
 
-  const handleBackdropClick = (e: React.MouseEvent) => {if (e.target === e.currentTarget) {closeLightbox();}};
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeLightbox();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+  // Generate redbull images with useMemo
+  const redbullImages = useMemo<GalleryImage[]>(() => {
+    return Array.from({ length: 191 }, (_, i) => {
+      const image: GalleryImage = {
+        id: i + 1,
+        src: getRedbullPath(i + 1),
+        alt: `Redbull Photo ${i + 1}`
+      };
+      return image;
+    });
   }, []);
+
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
+  const openLightbox = (index: number) => {setSelectedIndex(index); document.body.style.overflow = 'hidden';};
+  const closeLightbox = () => {setSelectedIndex(null); document.body.style.overflow = 'unset';};
+
+  const navigateImage = (direction: 'next' | 'prev') => {
+    if (selectedIndex === null) return;
+    
+    const currentImages = currentView === 'redbull' ? redbullImages : galleryImages;
+    
+    if (direction === 'next') {
+      setSelectedIndex((prev) => (prev! + 1) % currentImages.length);
+    } else {
+      setSelectedIndex((prev) => (prev! - 1 + currentImages.length) % currentImages.length);
+    }
+  };
 
   // Verify image paths
   // Debug effect to verify image paths (development only)
@@ -179,11 +190,11 @@ export default function FinlandGallery() {
               className="flex w-auto"
               columnClassName="masonry-column"
             >
-              {galleryImages.map((image) => (
+              {galleryImages.map((image, index) => (
                 <div
                   key={image.id}
                   className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
-                  onClick={() => openLightbox(image)}
+                  onClick={() => openLightbox(index)}
                 >
                   <div className="relative w-full overflow-hidden rounded-lg">
                     <style jsx global>{`
@@ -299,15 +310,11 @@ export default function FinlandGallery() {
               className="flex w-auto"
               columnClassName="masonry-column"
             >
-              {Array.from({ length: 191 }, (_, i) => (
+              {redbullImages.map((image, index) => (
                 <div
-                  key={i + 1}
+                  key={image.id}
                   className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
-                  onClick={() => openLightbox({
-                    id: i + 1,
-                    src: getRedbullPath(i + 1),
-                    alt: `Redbull Photo ${i + 1}`
-                  })}
+                  onClick={() => openLightbox(index)}
                 >
                   <div className="relative w-full overflow-hidden rounded-lg">
                     <style jsx global>{`
@@ -329,8 +336,8 @@ export default function FinlandGallery() {
                     `}</style>
                     <div className="relative w-full h-full">
                       <Image
-                        src={getRedbullPath(i + 1)}
-                        alt={`Redbull Photo ${i + 1}`}
+                        src={image.src}
+                        alt={image.alt}
                         width={800}
                         height={600}
                         className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
@@ -348,28 +355,13 @@ export default function FinlandGallery() {
       </div>
 
       {/* Lightbox */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={handleBackdropClick}
-        >
-          <button
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
-            aria-label="Close lightbox"
-          >
-            <FaTimes size={24} />
-          </button>
-          <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
-            <ZoomableImage
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-        </div>
+      {selectedIndex !== null && (
+        <ImageModal
+          images={currentView === 'redbull' ? redbullImages : galleryImages}
+          currentIndex={selectedIndex}
+          onClose={closeLightbox}
+          onNavigate={navigateImage}
+        />
       )}
     
             <BackToTop />

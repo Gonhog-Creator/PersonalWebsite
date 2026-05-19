@@ -11,6 +11,7 @@ import { astroPhotos } from '@/data/astroPhotos';
 import { DSOImage, AstroPhoto, DSOType, CatalogueType } from '@/types/astro';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { GradientButton } from '@/components/ui/gradient-button';
+import { ImageModal } from '@/components/gallery/ImageModal';
 
 // Type for the YouTube player event
 interface YouTubePlayerEvent {
@@ -128,6 +129,7 @@ const allYears = Array.from(new Set(dsoImages.map(dso => dso.year))).sort((a, b)
 export default function AstrophotographyGallery() {
   const [currentView, setCurrentView] = useState<'dso' | 'timelapses' | 'normal'>('dso');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<DSOImage | AstroPhoto | null>(null);
   const [selectedDSO, setSelectedDSO] = useState<DSOImage | null>(null);
   // Advanced filters state
@@ -165,6 +167,7 @@ export default function AstrophotographyGallery() {
   // Close lightbox function
   const closeLightbox = () => {
     setSelectedImage(null);
+    setSelectedIndex(null);
     document.body.style.overflow = 'unset';
     document.documentElement.classList.remove('modal-open');
   };
@@ -174,6 +177,28 @@ export default function AstrophotographyGallery() {
     setSelectedImage(image);
     document.body.style.overflow = 'hidden';
     document.documentElement.classList.add('modal-open');
+  };
+
+  // Open lightbox with index for normal photos
+  const openLightboxByIndex = (index: number) => {
+    setSelectedIndex(index);
+    setSelectedImage(astroPhotos[index]);
+    document.body.style.overflow = 'hidden';
+    document.documentElement.classList.add('modal-open');
+  };
+
+  const navigateImage = (direction: 'next' | 'prev') => {
+    if (selectedIndex === null) return;
+    
+    if (direction === 'next') {
+      const newIndex = (selectedIndex + 1) % astroPhotos.length;
+      setSelectedIndex(newIndex);
+      setSelectedImage(astroPhotos[newIndex]);
+    } else {
+      const newIndex = (selectedIndex - 1 + astroPhotos.length) % astroPhotos.length;
+      setSelectedIndex(newIndex);
+      setSelectedImage(astroPhotos[newIndex]);
+    }
   };
   
   // YouTube IFrame API to handle video end
@@ -844,11 +869,11 @@ export default function AstrophotographyGallery() {
                 className="flex w-full"
                 columnClassName="masonry-column"
               >
-                {astroPhotos.map((photo) => (
+                {astroPhotos.map((photo, index) => (
                   <div
                     key={photo.id}
                     className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
-                    onClick={() => openLightbox(photo)}
+                    onClick={() => openLightboxByIndex(index)}
                   >
                     <div className="relative w-full overflow-hidden rounded-lg">
                       <div 
@@ -914,8 +939,18 @@ export default function AstrophotographyGallery() {
           display: none !important;
         }
       `}</style>
-      {/* Lightbox Modal */}
-      {selectedImage && (
+      {/* Lightbox Modal for normal photos */}
+      {selectedIndex !== null && selectedImage && 'src' in selectedImage && (
+        <ImageModal
+          images={astroPhotos.map(p => ({ id: p.id, src: p.src, alt: p.alt }))}
+          currentIndex={selectedIndex}
+          onClose={closeLightbox}
+          onNavigate={navigateImage}
+        />
+      )}
+
+      {/* Lightbox Modal for DSO images (keeps original behavior) */}
+      {selectedImage && 'imageUrl' in selectedImage && selectedIndex === null && (
         <div 
           className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
           onClick={handleBackdropClick}
@@ -929,8 +964,8 @@ export default function AstrophotographyGallery() {
           </button>
           <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
             <ZoomableImage
-              src={'src' in selectedImage ? selectedImage.src : selectedImage.imageUrl}
-              alt={'alt' in selectedImage ? selectedImage.alt : selectedImage.title}
+              src={selectedImage.imageUrl}
+              alt={selectedImage.title}
               fill
               className="object-contain"
               priority
