@@ -39,7 +39,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Finland/finland-panorama'
   },
   video: {
-    id: '',
+    id: 'Mk20OSy3i9E',
     title: 'Finland Travel Recap'
   }
 };

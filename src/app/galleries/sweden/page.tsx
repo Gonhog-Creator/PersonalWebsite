@@ -39,7 +39,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Sweden/sweden-panorama'
   },
   video: {
-    id: '',
+    id: 'MKmHMRPu6f0',
     title: 'Sweden Travel Recap'
   }
 };

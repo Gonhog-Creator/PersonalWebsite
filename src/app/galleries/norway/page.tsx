@@ -39,7 +39,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Norway/norway-panorama'
   },
   video: {
-    id: '',
+    id: 'EtAcLBGux0w',
     title: 'Norway Travel Recap'
   }
 };

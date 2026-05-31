@@ -39,7 +39,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Denmark/denmark-panorama'
   },
   video: {
-    id: '',
+    id: 'mmrYWXTVl7M',
     title: 'Denmark Travel Recap'
   }
 };

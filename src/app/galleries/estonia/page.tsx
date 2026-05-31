@@ -39,7 +39,7 @@ const PAGE_CONTENT = {
     imagePath: '/img/Estonia/estonia-panorama'
   },
   video: {
-    id: '',
+    id: 'vP6Tr5_gfuY',
     title: 'Estonia Travel Recap'
   }
 };
