@@ -254,7 +254,7 @@ export default function CostaRicaGallery() {
     }).filter(image => !missingPhotos.includes(image.id));
   }, []);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [currentView, setCurrentView] = useState<'photos' | 'panoramas' | 'drone'>('photos');
+  const [currentView, setCurrentView] = useState<GalleryView>('photos');
 
 
   const openLightbox = (index: number) => {
@@ -481,31 +481,29 @@ export default function CostaRicaGallery() {
       </div>
 
       {/* Lightbox */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
-          onClick={handleBackdropClick}
-        >
-          <button
-            onClick={closeLightbox}
-            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors bg-black/50 rounded-full p-2"
-            aria-label="Close lightbox"
-          >
-            <FaTimes size={24} />
-          </button>
-          <div className="relative w-full h-full max-w-6xl max-h-[90vh]">
-            <ZoomableImage
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              fill
-              className="object-contain"
-              priority
-            />
-          </div>
-        </div>
+      {selectedIndex !== null && (
+        <ImageModal
+          images={galleryImages}
+          currentIndex={selectedIndex}
+          onClose={closeLightbox}
+          onNavigate={navigateImage}
+        />
       )}
     
             <BackToTop />
     </div>
   );
 }
+
+interface ImageDetails {
+  alt: string;
+}
+
+interface GalleryImage {
+  id: number;
+  src: string;
+  alt: string;
+  location: string;
+}
+
+type GalleryView = 'photos' | 'panoramas' | 'drone';
