@@ -8,6 +8,7 @@ import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
 import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
+import { SplatViewer } from '@/components/gallery/SplatViewer';
 import { BackToTop } from '@/components/ui/BackToTop';
 import { ImageModal } from '@/components/gallery/ImageModal';
 
@@ -41,6 +42,11 @@ const PAGE_CONTENT = {
   video: {
     id: 'vDFjbGAT7wo',
     title: 'Bologna From Above'
+  },
+  splat: {
+    url: '/splats/bologna.splat',
+    fallbackUrl: 'https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/bonsai/bonsai-7k.splat',
+    title: 'Bologna 3D Tour'
   }
 };
 
@@ -145,6 +151,15 @@ export default function BolognaGallery() {
                 onClick={() => setCurrentView('drone')}
               >
                 Drone Videos
+              </GradientButton>
+            )}
+            {PAGE_CONTENT.splat.url && (
+              <GradientButton
+                variant={currentView === 'splat' ? 'variant' : 'default'}
+                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                onClick={() => setCurrentView('splat')}
+              >
+                Splat Tour
               </GradientButton>
             )}
           </div>
@@ -261,6 +276,26 @@ export default function BolognaGallery() {
             </div>
           </div>
         )}
+
+        {currentView === 'splat' && (
+          <div className="w-full flex flex-col items-center min-h-screen py-16">
+            <div className="w-full max-w-7xl px-4 flex flex-col items-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-center">{PAGE_CONTENT.splat.title}</h2>
+              <p className="text-gray-300 mb-8 text-center max-w-2xl">
+                Click and drag to look around. Scroll to zoom. Right-click and drag to pan.
+              </p>
+              <div className="w-full aspect-[16/9] rounded-lg shadow-xl overflow-hidden">
+                <SplatViewer
+                  url={PAGE_CONTENT.splat.url}
+                  cameraPosition={[0, -1, 3]}
+                  cameraTarget={[0, 0, 0]}
+                  fov={50}
+                />
+              </div>
+              <div className="h-16 w-full"></div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Lightbox */}
@@ -288,4 +323,4 @@ interface GalleryImage {
   alt: string;
 }
 
-type GalleryView = 'photos' | 'panoramas' | 'drone';
+type GalleryView = 'photos' | 'panoramas' | 'drone' | 'splat';

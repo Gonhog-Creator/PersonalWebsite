@@ -61,6 +61,7 @@
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.22",
     "gsap": "^3.13.0",
+    "gsplat": "^1.2.9",
     "imagesloaded": "^5.0.0",
     "jvectormap-next": "^3.1.2",
     "leaflet": "^1.9.4",
