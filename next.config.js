@@ -98,6 +98,19 @@ module.exports = {
       ...config.resolve.alias,
       'chart.js': 'chart.js/auto',
     };
+    // Polyfill Buffer for browser-only libraries such as jpeg-js
+    if (!isServer) {
+      const { ProvidePlugin } = require('webpack');
+      config.plugins.push(
+        new ProvidePlugin({
+          Buffer: ['buffer', 'Buffer'],
+        })
+      );
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        buffer: require.resolve('buffer/'),
+      };
+    }
     // Enable webpack's filesystem cache in production
     if (!dev) {
       config.cache = {

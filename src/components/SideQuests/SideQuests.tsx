@@ -11,6 +11,7 @@ type ProjectItem = {
   image: string;
   description: string;
   path: string;
+  external?: boolean;
 };
 
 const projects: ProjectItem[] = [
@@ -21,6 +22,13 @@ const projects: ProjectItem[] = [
     description: 'Contributing to scientific research by donating computing power',
     path: 'https://stats.foldingathome.org/donor/id/755263407',
     external: true
+  },
+  {
+    id: 'image-compressor',
+    title: 'Image Compressor',
+    image: '/img/projects/image-compressor/imagecompressionlogo.png',
+    description: 'Browser-based bulk image compression to JPEG, PNG, and WebP',
+    path: '/side-quests/image-compressor'
   },
   {
     id: 'my-movies',
