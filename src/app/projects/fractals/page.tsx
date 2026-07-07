@@ -35,6 +35,14 @@ const modules: ModuleItem[] = [
     icon: 'mdi:pendulum',
     path: '/projects/fractals/pendulums/multiple',
     color: 'from-orange-600 to-red-600'
+  },
+  {
+    id: 'fractal-explorer',
+    title: 'Fractal Explorer',
+    description: 'Explore Mandelbrot, Julia, and other fractals with interactive controls',
+    icon: 'mdi:fractal',
+    path: '/projects/fractals/explore',
+    color: 'from-emerald-600 to-teal-600'
   }
 ];
 

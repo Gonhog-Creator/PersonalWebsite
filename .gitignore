@@ -99,3 +99,4 @@ next-env.d.ts
 # typescript
 *.tsbuildinfo
 Old Files/next-env.d.ts
+/tempFractal/

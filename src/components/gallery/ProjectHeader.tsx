@@ -37,11 +37,11 @@ export function ProjectHeader() {
   return (
     <div className="fixed w-full z-50">
       <div className="relative">
-        <header 
-          className={`w-full transition-all duration-300 ease-in-out font-sans ${
-            isScrolled 
-              ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-3 shadow-sm' 
-              : 'bg-transparent dark:bg-transparent py-6'
+        <header
+          className={`w-full transition-all duration-300 ease-in-out font-sans py-4 shadow-sm ${
+            isScrolled
+              ? 'opacity-0 pointer-events-none'
+              : 'opacity-100 bg-gray-900/95 backdrop-blur-md'
           }`}
         >
           <div className="container mx-auto px-8">
@@ -58,7 +58,7 @@ export function ProjectHeader() {
               </Link>
 
               {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center justify-center w-full gap-16">
+              <nav className="hidden md:flex items-center justify-center flex-1 gap-16">
                 {navLinks.map((link) => (
                   <Link 
                     key={link.href}
