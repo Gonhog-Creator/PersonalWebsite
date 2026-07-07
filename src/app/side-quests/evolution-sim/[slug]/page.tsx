@@ -3,6 +3,12 @@ import { notFound } from 'next/navigation';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { Spacer } from '@/components/ui/Spacer';
 import { evolutionSimPosts, getPostBySlug } from '@/data/evolutionSimPosts';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import rehypeHighlight from 'rehype-highlight';
+import 'katex/dist/katex.min.css';
+import 'highlight.js/styles/github-dark.css';
 
 export function generateStaticParams() {
   return evolutionSimPosts.map((post) => ({ slug: post.slug }));
@@ -61,20 +67,25 @@ export default async function EvolutionSimPostPage({
             )}
           </header>
 
-          <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
-            {post.content.map((paragraph, index) => {
-              // Simple markdown link replacement: [text](url) -> <a href="url">text</a>
-              const processedParagraph = paragraph.replace(
-                /\[([^\]]+)\]\(([^)]+)\)/g,
-                '<a href="$2" class="text-emerald-400 hover:text-emerald-300 underline" target="_blank" rel="noopener noreferrer">$1</a>'
-              );
-              return (
-                <p
-                  key={index}
-                  dangerouslySetInnerHTML={{ __html: processedParagraph }}
-                />
-              );
-            })}
+          <div className="prose prose-invert prose-lg max-w-none [&>blockquote]:ml-6 [&>blockquote]:border-l-2 [&>blockquote]:border-emerald-500/30 [&>blockquote]:pl-4 [&>blockquote]:my-4 [&>blockquote]:text-gray-400">
+            <ReactMarkdown
+              remarkPlugins={[remarkMath]}
+              rehypePlugins={[rehypeKatex, rehypeHighlight]}
+              components={{
+                a: ({ href, children }) => (
+                  <a
+                    href={href}
+                    className="text-emerald-400 hover:text-emerald-300 underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {children}
+                  </a>
+                ),
+              }}
+            >
+              {post.content}
+            </ReactMarkdown>
           </div>
         </div>
       </article>

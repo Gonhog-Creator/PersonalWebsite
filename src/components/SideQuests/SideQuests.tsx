@@ -45,13 +45,6 @@ const projects: ProjectItem[] = [
     path: '/side-quests/foodtree'
   },
   {
-    id: 'evolution-sim',
-    title: 'Evolution Sim',
-    image: '/img/projects/evolution-sim/evolution-sim-cover.svg',
-    description: 'Devblog for a simulator where neural network creatures evolve over generations',
-    path: '/side-quests/evolution-sim'
-  },
-  {
     id: 'fractals',
     title: 'Deep Dive Into Fractals',
     image: '/img/projects/fractals/fractalcover.jpg',
