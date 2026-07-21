@@ -50,6 +50,13 @@ const projects: ProjectItem[] = [
     image: '/img/projects/fractals/fractalcover.jpg',
     description: 'Exploring chaos theory and fractals through interactive visualizations',
     path: '/projects/fractals'
+  },
+  {
+    id: 'flight-tracker',
+    title: 'Flight Tracker',
+    image: '/img/WorldMapImage.png',
+    description: 'Spin the globe and trace my flights across the years',
+    path: '/side-quests/flight-tracker'
   }
 ];
 
