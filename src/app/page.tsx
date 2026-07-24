@@ -136,14 +136,14 @@ export default function Home() {
         {/* Technical Skills Section */}
         <section id="technical-skills" className="relative py-8 overflow-hidden">
           <WavyBackground
-            className="max-w-7xl mx-auto h-[300px]"
+            className="max-w-7xl mx-auto h-[420px]"
             colors={getRandomPalette()}
             waveWidth={60}
             backgroundFill="#101828"
             blur={4}
             speed="fast"
             waveOpacity={0.5}
-            containerClassName="h-[300px]"
+            containerClassName="h-[420px]"
           >
             <div className="container mx-auto px-4 relative z-10">
               <div className="text-center mb-8">

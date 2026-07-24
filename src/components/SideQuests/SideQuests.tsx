@@ -54,7 +54,7 @@ const projects: ProjectItem[] = [
   {
     id: 'flight-tracker',
     title: 'Flight Tracker',
-    image: '/img/WorldMapImage.png',
+    image: '/img/FlightTrackerCover.png',
     description: 'Spin the globe and trace my flights across the years',
     path: '/side-quests/flight-tracker'
   }
