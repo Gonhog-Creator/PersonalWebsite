@@ -17,7 +17,7 @@ export default function NCSURocketryPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       <ProjectHeader />
       
       {/* Hero Section with Background Image */}
@@ -32,7 +32,7 @@ export default function NCSURocketryPage() {
             priority
             quality={90}
           />
-          <div className="absolute inset-0 bg-black/60 dark:bg-black/70" />
+          <div className="absolute inset-0 bg-black/60 bg-black/70" />
         </div>
         
         <div className="max-w-4xl w-full mx-auto relative z-10 text-center px-4">
@@ -119,18 +119,18 @@ export default function NCSURocketryPage() {
       </section>
 
       {/* What is an RDRE? */}
-      <section className="bg-gray-50 dark:bg-gray-800 py-20">
+      <section className="bg-gray-50 bg-gray-800 py-20">
         <div className="w-full flex flex-col items-center px-4 sm:px-6 lg:px-8">
           <div className="w-full max-w-4xl">
             <div className="text-center mb-12" data-aos="fade-up">
               <div className="flex items-center justify-center mb-4">
-                <FaRocket className="text-blue-600 dark:text-blue-400 text-3xl mr-3" />
+                <FaRocket className="text-blue-400 text-3xl mr-3" />
                 <h2 className="text-3xl font-bold">What is a Rotating Detonation Engine?</h2>
               </div>
             </div>
             
             <div className="flex flex-col md:flex-row items-center gap-12">
-              <div className="w-full md:w-1/2 space-y-6 text-gray-200 dark:text-gray-300" data-aos="fade-right">
+              <div className="w-full md:w-1/2 space-y-6 text-gray-200 text-gray-300" data-aos="fade-right">
                 <p>
                   A Rotating Detonation Engine (RDE) is a type of propulsion system that utilizes continuous detonation
                   waves to combust fuel and oxidizer. Unlike traditional rocket engines that rely on deflagration
@@ -160,7 +160,7 @@ export default function NCSURocketryPage() {
       </section>
 
       {/* Project Components */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
         <div className="w-full flex flex-col items-center">
           <div className="text-center w-full mb-12" data-aos="fade-up">
             <h2 className="text-4xl font-bold">Project Components</h2>
@@ -168,9 +168,9 @@ export default function NCSURocketryPage() {
           
           <div className="w-full max-w-4xl">
             <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="100">
+              <div className="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="100">
                 <div className="flex items-center mb-4">
-                  <FaCog className="text-blue-600 dark:text-blue-400 text-2xl mr-3" />
+                  <FaCog className="text-blue-400 text-2xl mr-3" />
                   <h3 className="text-xl font-semibold">Turbine Design</h3>
                 </div>
                 <p className="text-white">
@@ -179,9 +179,9 @@ export default function NCSURocketryPage() {
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="150">
+              <div className="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="150">
                 <div className="flex items-center mb-4">
-                  <FaTools className="text-blue-600 dark:text-blue-400 text-2xl mr-3" />
+                  <FaTools className="text-blue-400 text-2xl mr-3" />
                   <h3 className="text-xl font-semibold">Manufacturing</h3>
                 </div>
                 <p className="text-white">
@@ -190,9 +190,9 @@ export default function NCSURocketryPage() {
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="200">
+              <div className="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="200">
                 <div className="flex items-center mb-4">
-                  <FaWind className="text-blue-600 dark:text-blue-400 text-2xl mr-3" />
+                  <FaWind className="text-blue-400 text-2xl mr-3" />
                   <h3 className="text-xl font-semibold">CFD Analysis</h3>
                 </div>
                 <p className="text-white">
@@ -201,9 +201,9 @@ export default function NCSURocketryPage() {
                 </p>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="250">
+              <div className="bg-gray-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300" data-aos="fade-up" data-aos-delay="250">
                 <div className="flex items-center mb-4">
-                  <FaFlask className="text-blue-600 dark:text-blue-400 text-2xl mr-3" />
+                  <FaFlask className="text-blue-400 text-2xl mr-3" />
                   <h3 className="text-xl font-semibold">Validation, Verification, and Testing</h3>
                 </div>
                 <p className="text-white">
@@ -304,7 +304,7 @@ export default function NCSURocketryPage() {
       </section>
 
       {/* Gallery */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
         <div className="w-full flex flex-col items-center">
           <div className="text-center w-full mb-12">
             <h2 className="text-4xl font-bold" data-aos="fade-up">Project Gallery</h2>
@@ -338,7 +338,7 @@ export default function NCSURocketryPage() {
             className="opacity-30"
           />
         </div>
-        <div className="absolute bottom-0 left-0 right-0 py-2 bg-gray-800/80 dark:bg-gray-900/80 backdrop-blur-sm">
+        <div className="absolute bottom-0 left-0 right-0 py-2 bg-gray-800/80 bg-gray-900/80 backdrop-blur-sm">
           <div className="container mx-auto px-4 text-center">
             <p className="text-gray-300 text-sm md:text-base">© 2025 Jose Maria Barbeito. All rights reserved.</p>
           </div>

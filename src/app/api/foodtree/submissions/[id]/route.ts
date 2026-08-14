@@ -25,7 +25,7 @@ export const dynamic = 'force-dynamic';
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   // Handle CORS preflight
   if (request.method === 'OPTIONS') {
@@ -49,7 +49,7 @@ export async function DELETE(
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
     
     if (!id) {
       return new NextResponse(

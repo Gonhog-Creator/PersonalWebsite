@@ -28,7 +28,7 @@ export default function PendulumsPage() {
   const [trail2, setTrail2] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
 
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const trailRef = useRef<{x: number, y: number}[]>([]);
   const trail1Ref = useRef<{x: number, y: number}[]>([]);
   const trail2Ref = useRef<{x: number, y: number}[]>([]);

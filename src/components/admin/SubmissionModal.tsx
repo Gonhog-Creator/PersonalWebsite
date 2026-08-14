@@ -34,7 +34,7 @@ const Dialog = ({
         onClick={onClose}
         aria-hidden="true" 
       />
-      <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {children}
       </div>
     </div>
@@ -48,13 +48,13 @@ const DialogHeader = ({ children }: { children: React.ReactNode }) => (
 );
 
 const DialogTitle = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <h2 className={`text-xl font-semibold text-gray-900 dark:text-white ${className}`}>
+  <h2 className={`text-xl font-semibold text-white ${className}`}>
     {children}
   </h2>
 );
 
 const DialogContent = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <div className={`p-6 text-gray-700 dark:text-gray-300 ${className}`}>
+  <div className={`p-6 text-gray-300 ${className}`}>
     {children}
   </div>
 );
@@ -75,11 +75,11 @@ const Button = ({
 }: ButtonProps) => {
   const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none px-4 py-2';
   const variantStyles = {
-    default: 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800',
-    ghost: 'hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-white',
-    destructive: 'bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800',
-    outline: 'border border-gray-200 bg-transparent hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700',
-    link: 'underline-offset-4 hover:underline text-blue-600 dark:text-blue-400',
+    default: 'bg-blue-600 text-white hover:bg-blue-700 bg-blue-700 hover:bg-blue-800',
+    ghost: 'hover:bg-gray-100 hover:text-gray-900 hover:bg-gray-700 hover:text-white',
+    destructive: 'bg-red-600 text-white hover:bg-red-700 bg-red-700 hover:bg-red-800',
+    outline: 'border border-gray-200 bg-transparent hover:bg-gray-100 border-gray-600 text-gray-200 hover:bg-gray-700',
+    link: 'underline-offset-4 hover:underline text-blue-400',
   };
 
   return (
@@ -105,11 +105,11 @@ const Badge = ({
 }) => {
   const baseStyles = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors';
   const variantStyles = {
-    default: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
-    secondary: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
-    destructive: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
-    success: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    outline: 'border border-gray-200 bg-transparent dark:border-gray-600',
+    default: 'bg-gray-100 text-gray-800 bg-gray-700 text-gray-200',
+    secondary: 'bg-gray-100 text-gray-800 bg-gray-700 text-gray-200',
+    destructive: 'bg-red-100 text-red-800 bg-red-900/30 text-red-400',
+    success: 'bg-green-100 text-green-800 bg-green-900/30 text-green-400',
+    outline: 'border border-gray-200 bg-transparent border-gray-600',
   };
 
   return (
@@ -160,7 +160,7 @@ export function SubmissionModal({ submission, onClose, onStatusChange, onDelete 
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Submitted By</h3>
                 <p className="mt-1 text-gray-900">
-                  {submission.data?.submittedName || submission.submittedBy || 'Anonymous'}
+                  {(submission.data as { submittedName?: string })?.submittedName || submission.submittedBy || 'Anonymous'}
                 </p>
               </div>
               <div>

@@ -60,7 +60,7 @@ const ingredientSchema = z.object({
     .refine(val => !val || !containsProfanity(val), {
       message: 'Animal type contains inappropriate language',
     }),
-  isSourceAnimal: z.boolean().default(false),
+  isSourceAnimal: z.boolean(),
   preparationMethod: z.enum([...PREPARATION_METHODS])
     .optional()
     .refine(val => !val || !containsProfanity(val), {
@@ -98,7 +98,7 @@ export function AddIngredientForm() {
   const [parentIngredients, setParentIngredients] = useState<string[]>(['']);
   const [duplicateError, setDuplicateError] = useState<string | null>(null);
   const [userName, setUserName] = useLocalStorage<string>('foodtree-username', '');
-  const [animalProducts, setAnimalProducts] = useState<Array<{name: string, isSource: boolean}>>([]);
+  const [animalProducts, setAnimalProducts] = useState<Array<{id?: string, name: string, isSource: boolean}>>([]);
   const { addSubmission } = useSubmissions();
   
   const {
@@ -241,9 +241,6 @@ export function AddIngredientForm() {
           submissionData.animalType = data.animalType;
           submissionData.parentIngredients = [data.animalType];
         }
-      } else if (data.source === 'prepared') {
-        submissionData.preparationMethod = data.preparationMethod;
-        submissionData.parentIngredients = parentIngredients.filter(Boolean);
       }
 
       console.log('Prepared submission data:', submissionData);
@@ -414,7 +411,7 @@ export function AddIngredientForm() {
   return (
     <form onSubmit={handleFormSubmit} className="space-y-6">
       <div className="mb-6">
-        <label htmlFor="userName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label htmlFor="userName" className="block text-sm font-medium text-gray-300 mb-2">
           Your Name <span className="text-red-500">*</span>
         </label>
         <input
@@ -422,17 +419,17 @@ export function AddIngredientForm() {
           type="text"
           value={userName}
           onChange={(e) => setUserName(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
+          className="w-full px-4 py-2 border border-gray-300 border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-700 text-white"
           placeholder="Enter your name"
           required
         />
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mt-1 text-sm text-gray-500 text-gray-400">
           Your name will be saved locally and included with your submission.
         </p>
       </div>
       
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-300 mb-2">
           Ingredient Name <span className="text-red-500">*</span>
         </label>
         <div className="w-full">
@@ -451,7 +448,7 @@ export function AddIngredientForm() {
       
       {/* Source Section */}
       <div>
-        <label className="block text-2xl font-medium text-center text-gray-700 dark:text-gray-300 mb-3">
+        <label className="block text-2xl font-medium text-center text-gray-300 mb-3">
           Source
           <span className="text-red-500 ml-1">*</span>
         </label>
@@ -470,7 +467,7 @@ export function AddIngredientForm() {
                   className="h-6 w-6 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                   {...register('source')}
                 />
-                <span className="ml-2 text-2xl text-center text-gray-700 dark:text-gray-300">
+                <span className="ml-2 text-2xl text-center text-gray-300">
                   {option.label}
                 </span>
               </label>
@@ -486,7 +483,7 @@ export function AddIngredientForm() {
                 className="h-6 w-6 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                 {...register('source')}
               />
-              <span className="ml-2 text-2xl text-center text-gray-700 dark:text-gray-300">
+              <span className="ml-2 text-2xl text-center text-gray-300">
                 🍳 Prepared
               </span>
             </label>
@@ -498,8 +495,8 @@ export function AddIngredientForm() {
               <div className="text-center gap-4">
               </div>
               <div className="flex justify-center gap-4">
-                <div className={`flex-1 max-w-md p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors ${
-                  !isSourceAnimal ? 'bg-gray-100 dark:bg-gray-800' : ''
+                <div className={`flex-1 max-w-md p-4 rounded-lg hover:bg-gray-50 hover:bg-gray-800 cursor-pointer transition-colors ${
+                  !isSourceAnimal ? 'bg-gray-800' : ''
                 }`}>
                   <label className="flex items-center justify-center cursor-pointer">
                     <input
@@ -519,8 +516,8 @@ export function AddIngredientForm() {
                     <span className="ml-2 text-lg">Animal Product</span>
                   </label>
                 </div>
-                <div className={`flex-1 max-w-md p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors ${
-                  isSourceAnimal ? 'bg-gray-100 dark:bg-gray-800' : ''
+                <div className={`flex-1 max-w-md p-4 rounded-lg hover:bg-gray-50 hover:bg-gray-800 cursor-pointer transition-colors ${
+                  isSourceAnimal ? 'bg-gray-800' : ''
                 }`}>
                   <label className="flex items-center justify-center cursor-pointer">
                     <input
@@ -546,7 +543,7 @@ export function AddIngredientForm() {
               {source === 'animal' && !isSourceAnimal && (
                 <div className="mt-6">
                   <div className="text-center mb-4">
-                    <label className="block text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label className="block text-xl font-medium text-gray-300 mb-2">
                       Select Source Animal
                       <span className="text-red-500 ml-1">*</span>
                     </label>
@@ -558,7 +555,7 @@ export function AddIngredientForm() {
                         {animalProducts.map((animal) => (
                           <label 
                             key={animal.id} 
-                            className="w-full max-w-md flex items-center p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
+                            className="w-full max-w-md flex items-center p-3 rounded-lg hover:bg-gray-50 hover:bg-gray-800 cursor-pointer transition-colors"
                           >
                             <input
                               type="radio"
@@ -566,7 +563,7 @@ export function AddIngredientForm() {
                               className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                               {...register('animalType', { required: 'Please select a source animal' })}
                             />
-                            <span className="ml-3 text-gray-900 dark:text-gray-100">
+                            <span className="ml-3 text-gray-100">
                               {animal.name}
                             </span>
                           </label>
@@ -586,7 +583,7 @@ export function AddIngredientForm() {
           )}
         </div>
         {errors.source && (
-          <p className="mt-1 text-2xl text-center text-red-600 dark:text-red-400">
+          <p className="mt-1 text-2xl text-center text-red-600 text-red-400">
             {errors.source.message}
           </p>
         )}
@@ -598,7 +595,7 @@ export function AddIngredientForm() {
             <div>
               <div className="h-4"></div>
               <div className="text-center mb-4">
-                <label className="block text-2xl font-medium text-gray-700 dark:text-gray-300">
+                <label className="block text-2xl font-medium text-gray-300">
                   Preparation Method
                   <span className="text-red-500 ml-1">*</span>
                 </label>
@@ -612,14 +609,14 @@ export function AddIngredientForm() {
                       className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300"
                       {...register('preparationMethod')}
                     />
-                    <span className="ml-2 text-lg text-gray-700 dark:text-gray-300">
+                    <span className="ml-2 text-lg text-gray-300">
                       {method.charAt(0).toUpperCase() + method.slice(1)}
                     </span>
                   </label>
                 ))}
               </div>
               {errors.preparationMethod && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400 text-center">
+                <p className="mt-1 text-sm text-red-600 text-red-400 text-center">
                   {errors.preparationMethod.message}
                 </p>
               )}
@@ -627,10 +624,10 @@ export function AddIngredientForm() {
             <div className="h-4"></div>
             <div>
               <div className="text-center mb-4">
-                <h3 className="text-2xl font-medium text-gray-700 dark:text-gray-300">
+                <h3 className="text-2xl font-medium text-gray-300">
                   Parent Ingredients <span className="text-red-500">*</span>
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                <p className="text-sm text-gray-500 text-gray-400 mt-1">
                   Select 1-5 parent ingredients
                 </p>
               </div>
@@ -642,13 +639,13 @@ export function AddIngredientForm() {
                       {parentIngredients.filter(Boolean).map((ingredient, index) => (
                         <div 
                           key={index} 
-                          className="flex items-center bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full text-sm"
+                          className="flex items-center bg-gray-700 px-3 py-1 rounded-full text-sm"
                         >
                           <span className="mr-2">{ingredient}</span>
                           <button
                             type="button"
                             onClick={() => removeIngredient(parentIngredients.indexOf(ingredient))}
-                            className="text-gray-500 hover:text-red-500 dark:text-gray-300 dark:hover:text-red-400"
+                            className="text-gray-500 hover:text-red-500 text-gray-300 hover:text-red-400"
                             aria-label="Remove ingredient"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -725,7 +722,7 @@ export function AddIngredientForm() {
             }}
           />
           {duplicateError && (
-            <div className="text-center text-sm text-red-600 dark:text-red-400 transition-opacity duration-300">
+            <div className="text-center text-sm text-red-600 text-red-400 transition-opacity duration-300">
               {duplicateError}
             </div>
           )}

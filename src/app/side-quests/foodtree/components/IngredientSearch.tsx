@@ -115,11 +115,9 @@ export default function IngredientSearch({ onSelect, selectedIngredients, placeh
               ...base,
               minHeight: '44px',
               borderColor: state.isFocused ? '#4f46e5' : '#e5e7eb',
-              '&:hover': {
-                borderColor: state.isFocused ? '#4f46e5' : '#9ca3af',
-              },
               boxShadow: state.isFocused ? '0 0 0 1px #4f46e5' : 'none',
               '&:hover': {
+                borderColor: state.isFocused ? '#4f46e5' : '#9ca3af',
                 boxShadow: state.isFocused ? '0 0 0 1px #4f46e5' : 'none',
               },
             }),

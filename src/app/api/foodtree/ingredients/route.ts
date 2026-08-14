@@ -93,6 +93,7 @@ export async function GET(request: Request) {
           typeof item.data.name === 'string'
         )
         .map(item => ({
+          ...item.data,
           id: item.id,
           name: item.data.name.trim(),
           type: item.type || 'ingredient',
@@ -101,7 +102,6 @@ export async function GET(request: Request) {
           parentIngredients: Array.isArray(item.data.parentIngredients) 
             ? item.data.parentIngredients 
            : [],
-          ...item.data
         }));
       
       // Filter ingredients by search term if provided
@@ -150,7 +150,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating ingredient:', error);
     return NextResponse.json(
-      { error: 'Failed to create ingredient', details: error.message },
+      { error: 'Failed to create ingredient', details: (error as Error).message },
       { status: 500 }
     );
   }

@@ -114,7 +114,7 @@ const Photography = () => {
                 />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               <div className="relative w-full h-64">
                 <Image 
                   src="/img/Astro/astro-15.jpg"
@@ -159,7 +159,7 @@ const Photography = () => {
                 />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
               <div className="relative w-full h-64">
                 <Image 
                   src="/img/Costa Rica/costarica (124).jpg" 

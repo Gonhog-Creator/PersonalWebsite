@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
 import Image, { type ImageProps } from 'next/image';
 
 interface ZoomableImageProps extends Omit<ImageProps, 'onMouseDown' | 'onWheel' | 'onDoubleClick'> {
@@ -189,7 +189,7 @@ export function ZoomableImage({
   const hasFill = fill !== false; // Default to true if not specified
   
   // Memoize the image style to prevent unnecessary recalculations
-  const imageStyle = useMemo(() => ({
+  const imageStyle = useMemo((): CSSProperties => ({
     objectFit: 'contain',
     pointerEvents: 'none',
     width: '100%',
@@ -197,7 +197,7 @@ export function ZoomableImage({
   }), []);
   
   // Memoize the container style
-  const containerStyle = useMemo(() => ({
+  const containerStyle = useMemo((): CSSProperties => ({
     position: 'absolute',
     top: '50%',
     left: '50%',

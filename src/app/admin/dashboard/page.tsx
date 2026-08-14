@@ -28,7 +28,9 @@ const Button = ({
   size?: 'default' | 'sm' | 'lg' | 'icon';
   className?: string;
   type?: 'button' | 'submit' | 'reset';
-}) => {
+  title?: string;
+  disabled?: boolean;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) => {
   const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
   const sizeStyles = {
     default: 'h-10 py-2 px-4',
@@ -38,7 +40,7 @@ const Button = ({
   };
   const variantStyles = {
     default: 'bg-blue-600 text-white hover:bg-blue-700',
-    ghost: 'hover:bg-gray-100 hover:text-gray-900',
+    ghost: 'hover:bg-gray-100 hover:text-white',
     destructive: 'bg-red-600 text-white hover:bg-red-700',
     outline: 'border border-gray-200 bg-transparent hover:bg-gray-100',
     link: 'underline-offset-4 hover:underline text-blue-600',
@@ -98,7 +100,7 @@ const Select = ({
     <select
       value={value}
       onChange={(e) => onValueChange(e.target.value)}
-      className={`h-10 rounded-md border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${className}`}
+      className={`h-10 rounded-md border border-gray-200 bg-gray-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${className}`}
     >
       {children}
     </select>
@@ -131,12 +133,12 @@ const Table = ({ children, className = '' }: { children: React.ReactNode; classN
   </div>
 );
 
-const TableHeader = ({ children }: { children: React.ReactNode }) => (
-  <thead className="[&_tr]:border-b">{children}</thead>
+const TableHeader = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <thead className={`[&_tr]:border-b ${className}`}>{children}</thead>
 );
 
-const TableBody = ({ children }: { children: React.ReactNode }) => (
-  <tbody className="[&_tr:last-child]:border-0">{children}</tbody>
+const TableBody = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
+  <tbody className={`[&_tr:last-child]:border-0 ${className}`}>{children}</tbody>
 );
 
 const TableRow = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
@@ -173,7 +175,7 @@ const Input = ({
     value={value}
     onChange={onChange}
     placeholder={placeholder}
-    className={`flex h-10 w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+    className={`flex h-10 w-full rounded-md border border-gray-200 bg-gray-800 px-3 py-2 text-sm ring-offset-gray-900 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
     {...props}
   />
 );
@@ -291,14 +293,14 @@ export default function AdminDashboard() {
           </button>
           
           {isOpen && (
-            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 z-50">
-              <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Import Database</h4>
-              <p className="text-xs text-gray-600 dark:text-gray-300 mb-3">
+            <div className="absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-lg border border-gray-200 border-gray-700 p-4 z-50">
+              <h4 className="text-sm font-medium text-white mb-2">Import Database</h4>
+              <p className="text-xs text-gray-300 mb-3">
                 Upload a JSON file to reset the database. This will delete all existing data.
               </p>
               
               <div className="mt-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-gray-300 mb-1">
                   Select JSON File
                 </label>
                 <input
@@ -312,15 +314,15 @@ export default function AdminDashboard() {
                     file:text-sm file:font-semibold
                     file:bg-blue-50 file:text-blue-700
                     hover:file:bg-blue-100
-                    dark:file:bg-blue-900/30 dark:file:text-blue-300
-                    dark:hover:file:bg-blue-900/50"
+                    file:bg-blue-900/30 file:text-blue-300
+                    hover:file:bg-blue-900/50"
                   disabled={isLoading}
                 />
               </div>
               
-              <div className="mt-4 text-xs text-gray-500 dark:text-gray-400">
+              <div className="mt-4 text-xs text-gray-500 text-gray-400">
                 <p className="font-medium">File Format:</p>
-                <pre className="mt-1 p-2 bg-gray-100 dark:bg-gray-700 rounded text-xs overflow-x-auto">
+                <pre className="mt-1 p-2 bg-gray-700 rounded text-xs overflow-x-auto">
                   {`{
   "key1": { "name": "value1" },
   "key2": { "name": "value2" }
@@ -329,20 +331,20 @@ export default function AdminDashboard() {
               </div>
 
               {error && (
-                <div className="mt-3 text-sm text-red-600 dark:text-red-400">
+                <div className="mt-3 text-sm text-red-600 text-red-400">
                   {error}
                 </div>
               )}
               {success && (
-                <div className="mt-3 text-sm text-green-600 dark:text-green-400">
+                <div className="mt-3 text-sm text-green-600 text-green-400">
                   {success}
                 </div>
               )}
               
-              <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+              <div className="mt-4 pt-3 border-t border-gray-200 border-gray-700 flex justify-end">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md"
+                  className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 bg-gray-700 hover:bg-gray-600 rounded-md"
                   disabled={isLoading}
                 >
                   Close
@@ -377,7 +379,7 @@ export default function AdminDashboard() {
       // Search by name or ID
       const searchTerm = (filters.search || '').toLowerCase();
       const matchesSearch = !searchTerm || 
-        (submission.data?.name?.toLowerCase().includes(searchTerm)) || 
+        ((submission.data as { name?: string })?.name?.toLowerCase().includes(searchTerm)) || 
         submission.id.toLowerCase().includes(searchTerm) ||
         (submission.submittedBy && submission.submittedBy.toLowerCase().includes(searchTerm));
 
@@ -453,7 +455,7 @@ export default function AdminDashboard() {
         {/* Migration Result Banner */}
         {migrationResult && (
           <div className={`p-3 mb-4 rounded-md text-sm ${
-            migrationResult.success ? 'bg-green-50 dark:bg-green-900/20' : 'bg-yellow-50 dark:bg-yellow-900/20'
+            migrationResult.success ? 'bg-green-50 bg-green-900/20' : 'bg-yellow-50 bg-yellow-900/20'
           }`}>
             <div className="flex items-center justify-between">
               <div>
@@ -471,7 +473,7 @@ export default function AdminDashboard() {
               </div>
               <button
                 onClick={() => setMigrationResult(null)}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-300"
               >
                 ✕
               </button>
@@ -512,7 +514,7 @@ export default function AdminDashboard() {
                     type: e.target.value === 'all' ? undefined : e.target.value,
                   })
                 }
-                className="h-10 w-full rounded-md border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="h-10 w-full rounded-md border border-gray-200 border-gray-600 bg-gray-700 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 {typeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -557,13 +559,13 @@ export default function AdminDashboard() {
         </div>
 
         {error && (
-          <div className="rounded-md bg-red-50 dark:bg-red-900/30 p-4 mb-6 border border-red-200 dark:border-red-800">
+          <div className="rounded-md bg-red-50 bg-red-900/30 p-4 mb-6 border border-red-200 border-red-800">
             <div className="space-y-6">
               <div className="flex justify-between items-center">
                 <AlertCircle className="h-5 w-5 text-red-400" />
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-red-800 dark:text-red-200">
+                <p className="text-sm font-medium text-red-800 text-red-200">
                   {error}
                 </p>
               </div>
@@ -646,7 +648,7 @@ export default function AdminDashboard() {
                         </span>
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-300">
-                        {submission.data?.name || submission.submittedName || 'N/A'}
+                        {(submission.data as { name?: string })?.name || submission.submittedBy || 'N/A'}
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900/30 text-blue-300 border border-blue-800/50">
@@ -654,7 +656,7 @@ export default function AdminDashboard() {
                         </span>
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-300">
-                        {submission.data?.submittedName || submission.submittedBy || 'Anonymous'}
+                        {(submission.data as { submittedName?: string })?.submittedName || submission.submittedBy || 'Anonymous'}
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-400">
                         <time dateTime={submission.submittedAt}>

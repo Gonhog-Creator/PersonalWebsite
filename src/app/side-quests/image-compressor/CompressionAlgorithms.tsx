@@ -160,8 +160,8 @@ export default function CompressionAlgorithms() {
               <span className="w-3 h-3 rounded-sm bg-blue-500" />
               <span className="w-3 h-3 rounded-sm bg-blue-500" />
               <span className="w-3 h-3 rounded-sm bg-blue-500" />
-              <span className="w-3 h-3 rounded-sm bg-white" />
-              <span className="w-3 h-3 rounded-sm bg-white" />
+              <span className="w-3 h-3 rounded-sm bg-gray-800" />
+              <span className="w-3 h-3 rounded-sm bg-gray-800" />
               <span className="w-3 h-3 rounded-sm bg-blue-500" />
             </span>
             <span className="text-gray-500">→</span>
@@ -184,8 +184,8 @@ export default function CompressionAlgorithms() {
                   <div key={row} className="flex gap-0.5">
                     <span className="w-4 h-4 rounded-sm bg-blue-500" />
                     <span className="w-4 h-4 rounded-sm bg-blue-500" />
-                    <span className="w-4 h-4 rounded-sm bg-white" />
-                    <span className="w-4 h-4 rounded-sm bg-white" />
+                    <span className="w-4 h-4 rounded-sm bg-gray-800" />
+                    <span className="w-4 h-4 rounded-sm bg-gray-800" />
                   </div>
                 ))}
               </div>

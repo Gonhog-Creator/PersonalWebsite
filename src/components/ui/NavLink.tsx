@@ -18,7 +18,7 @@ interface NavLinkProps extends LinkProps {
 export function NavLink({
   children,
   className,
-  activeClassName = 'text-blue-600 dark:text-blue-400 font-medium',
+  activeClassName = 'text-blue-400 font-medium',
   exact = false,
   scroll = true,
   onClick,
@@ -57,7 +57,7 @@ export function NavLink({
     <Link
       {...props}
       className={cn(
-        'text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors',
+        'text-gray-200 hover:text-blue-600 hover:text-blue-400 transition-colors',
         className,
         isActive && activeClassName
       )}
@@ -74,13 +74,13 @@ export function NavLink({
 export function MobileNavLink({
   children,
   className,
-  activeClassName = 'bg-gray-100 dark:bg-gray-800 text-blue-600 dark:text-blue-400',
+  activeClassName = 'bg-gray-800 text-blue-400',
   ...props
 }: NavLinkProps) {
   return (
     <NavLink
       className={cn(
-        'block px-4 py-2 text-base rounded-md hover:bg-gray-100 dark:hover:bg-gray-800',
+        'block px-4 py-2 text-base rounded-md hover:bg-gray-800',
         className
       )}
       activeClassName={activeClassName}

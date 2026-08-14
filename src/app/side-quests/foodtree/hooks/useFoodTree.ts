@@ -14,9 +14,13 @@ export interface FoodNode {
   color: string;
   size: number;
   depth: number; // Degree of separation from the root
+  highlighted?: boolean;
+  foodType?: string;
+  category?: string;
+  [key: string]: unknown;
 }
 
-interface Edge {
+export interface Edge {
   sourceId: string;
   targetId: string;
   sourcePosition: [number, number, number];
@@ -98,7 +102,7 @@ export const useFoodTree = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const isMounted = useRef(true);
-  const simulationRef = useRef<number>();
+  const simulationRef = useRef<number>(0);
   
   // Cleanup function to prevent memory leaks
   useEffect(() => {
@@ -136,7 +140,7 @@ export const useFoodTree = () => {
       console.log('Raw API response:', apiIngredients);
       
       // Process each ingredient
-      return apiIngredients.map(item => {
+      const processedIngredients = apiIngredients.map(item => {
         // The API now returns properly formatted ingredient objects
         const name = item.name || '';
         const foodType = item.foodType || 'grown';
@@ -153,6 +157,11 @@ export const useFoodTree = () => {
           id: item.id || `ingredient-${Math.random().toString(36).substr(2, 9)}`,
           name: name.trim(),
           type: item.type === 'dish' ? 'dish' : 'ingredient',
+          children: [],
+          position: [0, 0, 0],
+          color: '#ffffff',
+          size: 1,
+          depth: 0,
           foodType,
           parentIngredients,
           category
@@ -275,7 +284,7 @@ export const useFoodTree = () => {
         const positionMap = new Map<string, [number, number, number]>();
         
         // Process all ingredients with their categories
-        const processIngredients = (ingredients: Ingredient[], positions: [number, number, number][], category: 'plant' | 'animal' | 'other') => {
+        const processIngredients = (ingredients: FoodNode[], positions: [number, number, number][], category: 'plant' | 'animal' | 'other') => {
     console.log(`Processing ${category} ingredients:`, ingredients);
     
     return ingredients.map((ingredient, index) => {
@@ -442,7 +451,7 @@ export const useFoodTree = () => {
         );
 
         // Connect parent-child relationships with improved hierarchical spacing
-        const processNode = (ingredient: Ingredient) => {
+        const processNode = (ingredient: FoodNode) => {
           const node = nodeMap.get(ingredient.id);
           if (!node || !ingredient.parentIngredients?.length) return;
 
@@ -608,7 +617,7 @@ export const useFoodTree = () => {
           setEdges(edges);
         }
       } catch (err) {
-        if (err.name !== 'AbortError' && isSubscribed && isMounted.current) {
+        if ((err as Error).name !== 'AbortError' && isSubscribed && isMounted.current) {
           console.error('Error loading food tree data:', err);
           setError('Failed to load food tree data. Please try again later.');
         }
@@ -632,7 +641,7 @@ export const useFoodTree = () => {
     return () => {
       if (simulationRef.current) {
         cancelAnimationFrame(simulationRef.current);
-        simulationRef.current = undefined;
+        simulationRef.current = 0;
       }
     };
   }, []);

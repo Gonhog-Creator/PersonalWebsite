@@ -108,6 +108,9 @@ export function FractalExplorer(): React.ReactElement {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [rightSidebarOpen, setRightSidebarOpen] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const currentFractal = getFractalModule(fractalIdState);
+
   const [openSections, setOpenSections] = useState({
     gettingStarted: true,
     settings: false,
@@ -117,8 +120,6 @@ export function FractalExplorer(): React.ReactElement {
     scale: true,
     debugInfo: false,
   });
-
-  const currentFractal = getFractalModule(fractalIdState);
 
   const updateUrl = useCallback(
     (id: string, p: FractalParams) => {

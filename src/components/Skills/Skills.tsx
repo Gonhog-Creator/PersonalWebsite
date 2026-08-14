@@ -28,7 +28,7 @@ export function Skills() {
         <CircularRevealHeading
           items={skills}
           centerText={
-            <div className="text-sm font-bold text-gray-900 dark:text-gray-100">
+            <div className="text-sm font-bold text-gray-100">
               JOSE BARBEITO
             </div>
           }

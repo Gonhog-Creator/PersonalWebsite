@@ -55,28 +55,6 @@ const getMovies = async (): Promise<MovieData> => {
         movie.year = '1984';
       }
     }
-    // Guy Ritchie's The Covenant (2023)
-    else if (normalizedTitle.includes('covenant') || movie.title.includes('Guy Ritchie')) {
-      movie.posterUrl = 'https://m.media-amazon.com/images/M/MV5BZTg4YTVmZjUtMzBmYi00YjYwLThkM2QtYjUyYzQ2YjE2ZTAzXkEyXkFqcGdeQXVyMTUzNTgzNzM0._V1_SX300.jpg';
-      movie.year = '2023';
-    }
-    // SWAT: Firefight (2011)
-    else if (normalizedTitle.includes('swat') && normalizedTitle.includes('firefight')) {
-      movie.posterUrl = 'https://m.media-amazon.com/images/M/MV5BMTM0NDIxMzE0Ml5BMl5BanBnXkFtZTcwMDY2MzY0NA@@._V1_SX300.jpg';
-      movie.year = '2011';
-    }
-    // The Divergent Series: Insurgent (2015)
-    else if ((normalizedTitle.includes('divergent') && normalizedTitle.includes('insurgent')) || 
-             movie.title === 'The Divergent Series: Insurgent') {
-      movie.posterUrl = 'https://m.media-amazon.com/images/M/MV5BMTgxMDAzNzMyN15BMl5BanBnXkFtZTgwNzE4MDQ3MzE@._V1_SX300.jpg';
-      movie.year = '2015';
-    }
-    // Divergent (2014) - Using provided Amazon image
-    else if (normalizedTitle === 'divergent' || (normalizedTitle.includes('divergent') && !normalizedTitle.includes('insurgent'))) {
-      movie.posterUrl = 'https://m.media-amazon.com/images/M/MV5BMTYxMzYwODE4OV5BMl5BanBnXkFtZTgwNDE5MzE2MDE@._V1_SX300.jpg';
-      movie.year = '2014';
-    }
-    
     // Ensure we have a poster URL
     if (!movie.posterUrl || movie.posterUrl.includes('placeholder')) {
       movie.posterUrl = '/img/projects/movies/placeholder-movie.svg';
@@ -138,10 +116,10 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
     return (
       <div className="mb-1">
         <div className="flex justify-between text-xs mb-0.5">
-          <span className="text-gray-700 dark:text-gray-300 font-medium">{label}</span>
-          <span className="font-semibold text-gray-900 dark:text-white">{score.toFixed(1)}</span>
+          <span className="text-gray-300 font-medium">{label}</span>
+          <span className="font-semibold text-white">{score.toFixed(1)}</span>
         </div>
-        <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="h-1.5 bg-gray-200 bg-gray-700 rounded-full overflow-hidden">
           <div 
             className="h-full bg-yellow-500" 
             style={{ width: `${(score / 10) * 100}%` }}
@@ -152,10 +130,10 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl flex flex-col h-full group relative">
+    <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-xl flex flex-col h-full group relative">
       {/* Image container with filled image and overlay */}
       <div 
-        className="relative aspect-[2/3] w-full overflow-hidden bg-gray-50 dark:bg-gray-800 cursor-pointer md:cursor-default"
+        className="relative aspect-[2/3] w-full overflow-hidden bg-gray-50 bg-gray-800 cursor-pointer md:cursor-default"
         onClick={toggleMobileOverlay}
       >
         {movie.posterUrl && !movie.posterUrl.includes('placeholder') ? (
@@ -174,8 +152,8 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
             }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-700">
-            <span className="text-gray-400 dark:text-gray-500 text-sm">No poster available</span>
+          <div className="w-full h-full flex items-center justify-center bg-gray-700">
+            <span className="text-gray-400 text-gray-500 text-sm">No poster available</span>
           </div>
         )}
         
@@ -226,7 +204,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
       <div className="p-2.5 flex-1 flex flex-col">
         {/* Title and rating at the top */}
         <div className="flex justify-between items-start gap-2">
-          <h3 className="text-base font-semibold text-gray-900 dark:text-white line-clamp-2 leading-tight">
+          <h3 className="text-base font-semibold text-white line-clamp-2 leading-tight">
             {movie.title}
           </h3>
           <div className="bg-yellow-400 text-gray-900 font-extrabold px-2 py-1 rounded-md text-sm sm:text-base whitespace-nowrap flex-shrink-0 shadow-md transform transition-transform hover:scale-105">
@@ -237,7 +215,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
         
         {/* Year below title */}
         {movie.releaseDate && (
-          <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          <div className="mt-1 text-xs text-gray-500 text-gray-400">
             {new Date(movie.releaseDate).getFullYear()}
           </div>
         )}
@@ -247,15 +225,15 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
         
         {/* Ratings at the bottom */}
         <div className="mt-2 flex justify-between items-center text-xs">
-          <div className="flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+          <div className="flex items-center bg-gray-700 px-2 py-1 rounded">
             <span className="text-orange-500 font-semibold">IMDb</span>
-            <span className="ml-1 text-gray-700 dark:text-gray-300">
+            <span className="ml-1 text-gray-300">
               {movie.imdbScore?.toFixed(1) || 'N/A'}
             </span>
           </div>
-          <div className="flex items-center bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+          <div className="flex items-center bg-gray-700 px-2 py-1 rounded">
             <span className="text-red-500 font-semibold">RT</span>
-            <span className="ml-1 text-gray-700 dark:text-gray-300">
+            <span className="ml-1 text-gray-300">
               {movie.rottenTomatoesScore ? `${Math.round(movie.rottenTomatoesScore * 100)}%` : 'N/A'}
             </span>
           </div>
@@ -437,10 +415,10 @@ export default function MyMoviesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading your movie collection...</p>
+          <p className="mt-4 text-gray-400">Loading your movie collection...</p>
         </div>
       </div>
     );
@@ -448,10 +426,10 @@ export default function MyMoviesPage() {
   
   if (error) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
         <div className="text-center">
           <div className="text-red-500 text-xl mb-4">Error loading movie data</div>
-          <p className="text-gray-600 dark:text-gray-400 mb-4">{error}</p>
+          <p className="text-gray-400 mb-4">{error}</p>
           <button 
             onClick={() => window.location.reload()} 
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
@@ -466,7 +444,7 @@ export default function MyMoviesPage() {
   // Film strip styles are defined at the top of the file
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 from-gray-900 to-gray-800">
       {/* Hero Section with Film Strip */}
       <div className="relative h-64 md:h-80 w-full overflow-hidden bg-gray-900">
         <style jsx>{filmStripStyles}</style>
@@ -551,7 +529,7 @@ export default function MyMoviesPage() {
               )}
               <input
                 type="text"
-                className="block w-full pl-20 pr-16 py-2.5 border-2 border-gray-300 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base font-['Alfa_Slab_One'] tracking-wide"
+                className="block w-full pl-20 pr-16 py-2.5 border-2 border-gray-300 rounded-xl bg-gray-800 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base font-['Alfa_Slab_One'] tracking-wide"
                 placeholder={searchTerm ? "" : "Search for a movie!"}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -564,7 +542,7 @@ export default function MyMoviesPage() {
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
-                  className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-gray-600 hover:text-gray-300"
                 >
                   <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -595,7 +573,7 @@ export default function MyMoviesPage() {
         <div className="mt-8">
           {filteredMovies.length > 0 ? (
             <>
-              <div className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+              <div className="mb-4 text-sm text-gray-500 text-gray-400">
                 {searchTerm 
                   ? `Found ${filteredMovies.length} ${filteredMovies.length === 1 ? 'movie' : 'movies'} matching "${searchTerm}"`
                   : `Showing all ${metrics.totalMovies} movies`
@@ -609,7 +587,7 @@ export default function MyMoviesPage() {
             </>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-gray-400">
                 {searchTerm 
                   ? `No movies found matching "${searchTerm}"`
                   : 'No movies available.'
@@ -622,7 +600,7 @@ export default function MyMoviesPage() {
         <div className="mt-12 text-center">
           <Link 
             href="/"
-            className="inline-flex items-center text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+            className="inline-flex items-center text-blue-600 hover:text-blue-800 text-blue-400 hover:text-blue-300 transition-colors"
           >
             <span>← Back to Home</span>
           </Link>

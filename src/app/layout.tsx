@@ -127,10 +127,7 @@ export const metadata: Metadata = {
     telephone: false,
     address: false,
   },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-  },
+  verification: {},
 };
 export default function RootLayout({
   children,
@@ -150,12 +147,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
-        {/* AOS CSS */}
-        <link
-          rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
-        />
-        
         {/* Favicon */}
         <link rel="icon" href="/img/favicon.ico" />
       </head>
@@ -168,11 +159,6 @@ export default function RootLayout({
           </GradientLayout>
         </ClientLayout>
         
-        <script
-          src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"
-          async
-          defer
-        />
       </body>
     </html>
   );

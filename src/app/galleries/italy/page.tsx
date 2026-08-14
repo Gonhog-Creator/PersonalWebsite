@@ -52,17 +52,17 @@ export default function ItalyMap() {
       <div className="absolute top-4 left-4 z-[1000] flex flex-col space-y-2">
         <button
           onClick={() => router.back()}
-          className="bg-white dark:bg-gray-800 text-gray-800 dark:text-white px-4 py-2 rounded-md shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+          className="bg-gray-800 text-white px-4 py-2 rounded-md shadow-lg hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
         >
           ← Back to World Map
         </button>
         
         <Menu as="div" className="relative w-full">
           <div className="w-full">
-            <Menu.Button className="inline-flex w-full justify-between items-center rounded-md bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-gray-800 dark:text-white shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
+            <Menu.Button className="inline-flex w-full justify-between items-center rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white shadow-lg hover:bg-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75">
               <span>Quick Links</span>
               <ChevronDownIcon
-                className="ml-2 h-5 w-5 text-gray-800 dark:text-white"
+                className="ml-2 h-5 w-5 text-white"
                 aria-hidden="true"
               />
             </Menu.Button>
@@ -76,7 +76,7 @@ export default function ItalyMap() {
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute left-0 mt-2 w-56 origin-top-left divide-y divide-gray-100 dark:divide-gray-700 rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black/5 focus:outline-none z-50">
+            <Menu.Items className="absolute left-0 mt-2 w-56 origin-top-left divide-y divide-gray-100 divide-gray-700 rounded-md bg-gray-800 shadow-lg ring-1 ring-black/5 focus:outline-none z-50">
               <div className="px-1 py-1 max-h-60 overflow-y-auto">
                 {italyRegions.features
                   .filter(feature => feature.properties.galleryPath)
@@ -85,7 +85,7 @@ export default function ItalyMap() {
                       {({ active }) => (
                         <button
                           className={`${
-                            active ? 'bg-blue-500 text-white' : 'text-gray-900 dark:text-white'
+                            active ? 'bg-blue-500 text-white' : 'text-white'
                           } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                           onClick={() => {
                             const path = feature.properties.galleryPath;
@@ -105,7 +105,7 @@ export default function ItalyMap() {
         </Menu>
       </div>
 
-      <div className="absolute top-4 right-4 z-10 bg-white/90 dark:bg-gray-800/90 p-3 rounded-lg shadow-lg">
+      <div className="absolute top-4 right-4 z-10 bg-white/90 bg-gray-800/90 p-3 rounded-lg shadow-lg">
         <h1 className="text-base font-semibold">Italy</h1>
       </div>
       

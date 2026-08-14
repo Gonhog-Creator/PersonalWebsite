@@ -1,5 +1,4 @@
 import UPNG from 'upng-js';
-import * as jpeg from 'jpeg-js';
 
 /*
   FULL COMPRESSION CONTROL ROADMAP
@@ -114,13 +113,10 @@ export async function encodeImage(
 
   switch (format) {
     case 'jpeg': {
-      const { quality } = options as JpegOptions;
-      const encoded = jpeg.encode(imageData, quality);
-      const bytes = encoded.data;
-      return bytes.buffer.slice(
-        bytes.byteOffset,
-        bytes.byteOffset + bytes.byteLength
-      ) as ArrayBuffer;
+      const { quality: jpegQuality } = options as JpegOptions;
+      mimeType = 'image/jpeg';
+      quality = Math.min(1, Math.max(0, jpegQuality / 100));
+      break;
     }
     case 'webp':
       mimeType = 'image/webp';

@@ -21,11 +21,37 @@ export default function MultiplePendulumsPage() {
   const [length2, setLength2] = useState(1.5);
   const [initialAngle1, setInitialAngle1] = useState(90);
   const [initialAngle2, setInitialAngle2] = useState(90);
+  const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number>(0);
   const trailsRef = useRef<{x: number, y: number}[][]>([]);
   const angleHistoryRef = useRef<{time: number, theta2: number[]}[]>([]);
   const simulationTimeRef = useRef(0);
+  const zoomRef = useRef(zoom);
+  const panOffsetRef = useRef(panOffset);
+  const showTrailsRef = useRef(showTrails);
+  const showInfoRef = useRef(showInfo);
+  const length1Ref = useRef(length1);
+  const length2Ref = useRef(length2);
+
+  useEffect(() => {
+    zoomRef.current = zoom;
+  }, [zoom]);
+  useEffect(() => {
+    panOffsetRef.current = panOffset;
+  }, [panOffset]);
+  useEffect(() => {
+    showTrailsRef.current = showTrails;
+  }, [showTrails]);
+  useEffect(() => {
+    showInfoRef.current = showInfo;
+  }, [showInfo]);
+  useEffect(() => {
+    length1Ref.current = length1;
+  }, [length1]);
+  useEffect(() => {
+    length2Ref.current = length2;
+  }, [length2]);
   
   // Animation state refs to persist during pause/resume
   const animationStateRef = useRef<{
@@ -60,14 +86,34 @@ export default function MultiplePendulumsPage() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const resizeCanvas = () => {
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        const w = Math.round(rect.width);
+        const h = Math.round(rect.height);
+        canvas.width = w;
+        canvas.height = h;
+        setCanvasSize({ width: w, height: h });
+      }
+    };
+
+    resizeCanvas();
+    const resizeObserver = new ResizeObserver(resizeCanvas);
+    resizeObserver.observe(canvas);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const centerX = canvas.width / 2 + panOffset.x;
-    const centerY = canvas.height / 2 + panOffset.y;
-    const scale = 100 * zoom;
-
     const drawStaticPendulums = () => {
+      const centerX = canvas.width / 2 + panOffsetRef.current.x;
+      const centerY = canvas.height / 2 + panOffsetRef.current.y;
+      const scale = 100 * zoomRef.current;
       ctx.fillStyle = 'white';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -77,13 +123,13 @@ export default function MultiplePendulumsPage() {
       // Draw grid
       const baseGridSize = 20;
       let fineGridSize, majorGridSize;
-      if (zoom < 0.5) {
+      if (zoomRef.current < 0.5) {
         fineGridSize = baseGridSize * 4;
         majorGridSize = baseGridSize * 8;
-      } else if (zoom < 1) {
+      } else if (zoomRef.current < 1) {
         fineGridSize = baseGridSize * 2;
         majorGridSize = baseGridSize * 4;
-      } else if (zoom < 2) {
+      } else if (zoomRef.current < 2) {
         fineGridSize = baseGridSize;
         majorGridSize = baseGridSize * 2;
       } else {
@@ -91,8 +137,8 @@ export default function MultiplePendulumsPage() {
         majorGridSize = baseGridSize;
       }
       
-      fineGridSize *= zoom;
-      majorGridSize *= zoom;
+      fineGridSize *= zoomRef.current;
+      majorGridSize *= zoomRef.current;
       
       const worldLeft = -centerX;
       const worldRight = canvas.width - centerX;
@@ -154,12 +200,12 @@ export default function MultiplePendulumsPage() {
         const theta2 = (initialAngle2 + i * separation) * Math.PI / 180;
         
         // First pendulum position (in screen coordinates)
-        const x1 = centerX + length1 * scale * Math.sin(theta1);
-        const y1 = centerY + length1 * scale * Math.cos(theta1);
+        const x1 = centerX + length1Ref.current * scale * Math.sin(theta1);
+        const y1 = centerY + length1Ref.current * scale * Math.cos(theta1);
         
         // Second pendulum position (in screen coordinates)
-        const x2 = x1 + length2 * scale * Math.sin(theta2);
-        const y2 = y1 + length2 * scale * Math.cos(theta2);
+        const x2 = x1 + length2Ref.current * scale * Math.sin(theta2);
+        const y2 = y1 + length2Ref.current * scale * Math.cos(theta2);
 
         const hue = (i * 360 / numPendulums);
         
@@ -208,8 +254,8 @@ export default function MultiplePendulumsPage() {
         const g = 9.81; // gravity
         const m1 = 1.0; // mass 1
         const m2 = 1.0; // mass 2
-        const L1 = length1; // length 1
-        const L2 = length2; // length 2
+        const L1 = length1Ref.current; // length 1
+        const L2 = length2Ref.current; // length 2
         const dt = 0.02; // timestep for 2x speed
         
         // Double pendulum equations for multiple pendulums
@@ -221,7 +267,7 @@ export default function MultiplePendulumsPage() {
           
           // John Allard's double pendulum equations - EXACT SAME AS SINGLE PENDULUM
           // Upper omega prime (angular acceleration for first pendulum)
-          const upperOmegaPrime = (theta1, theta2, omega1, omega2) => {
+          const upperOmegaPrime = (theta1: number, theta2: number, omega1: number, omega2: number): number => {
             const numerator = -g * (2*m1 + m2) * Math.sin(theta1) - g * m2 * Math.sin(theta1 - 2*theta2);
             const term1 = -2 * Math.sin(theta1 - theta2) * m2;
             const term2 = L2 * omega2 * omega2 + L1 * omega1 * omega1 * Math.cos(theta1 - theta2);
@@ -231,7 +277,7 @@ export default function MultiplePendulumsPage() {
           };
           
           // Lower omega prime (angular acceleration for second pendulum)
-          const lowerOmegaPrime = (theta1, theta2, omega1, omega2) => {
+          const lowerOmegaPrime = (theta1: number, theta2: number, omega1: number, omega2: number): number => {
             const numerator = 2 * Math.sin(theta1 - theta2);
             const term1 = L1 * omega1 * omega1 * (m1 + m2);
             const term2 = g * Math.cos(theta1) * (m1 + m2);
@@ -305,6 +351,9 @@ export default function MultiplePendulumsPage() {
       angleHistoryRef.current = angleHistoryRef.current.filter(point => point.time > tenSecondsAgo);
 
       // Clear and redraw
+      const centerX = canvas.width / 2 + panOffsetRef.current.x;
+      const centerY = canvas.height / 2 + panOffsetRef.current.y;
+      const scale = 100 * zoomRef.current;
       ctx.fillStyle = 'white';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -314,13 +363,13 @@ export default function MultiplePendulumsPage() {
       // Redraw grid (same as above)
       const baseGridSize = 20;
       let fineGridSize, majorGridSize;
-      if (zoom < 0.5) {
+      if (zoomRef.current < 0.5) {
         fineGridSize = baseGridSize * 4;
         majorGridSize = baseGridSize * 8;
-      } else if (zoom < 1) {
+      } else if (zoomRef.current < 1) {
         fineGridSize = baseGridSize * 2;
         majorGridSize = baseGridSize * 4;
-      } else if (zoom < 2) {
+      } else if (zoomRef.current < 2) {
         fineGridSize = baseGridSize;
         majorGridSize = baseGridSize * 2;
       } else {
@@ -328,8 +377,8 @@ export default function MultiplePendulumsPage() {
         majorGridSize = baseGridSize;
       }
       
-      fineGridSize *= zoom;
-      majorGridSize *= zoom;
+      fineGridSize *= zoomRef.current;
+      majorGridSize *= zoomRef.current;
       
       const worldLeft = -centerX;
       const worldRight = canvas.width - centerX;
@@ -386,7 +435,7 @@ export default function MultiplePendulumsPage() {
       ctx.restore();
 
       // Draw trails
-      if (showTrails && trailsRef.current.length > 0) {
+      if (showTrailsRef.current && trailsRef.current.length > 0) {
         for (let i = 0; i < numPendulums; i++) {
           const trail = trailsRef.current[i];
           if (trail && trail.length > 1) {
@@ -396,8 +445,8 @@ export default function MultiplePendulumsPage() {
             ctx.beginPath();
             trail.forEach((point, index) => {
               // Apply current panOffset when drawing - same as single pendulum
-              const screenX = point.x + panOffset.x;
-              const screenY = point.y + panOffset.y;
+              const screenX = point.x + panOffsetRef.current.x;
+              const screenY = point.y + panOffsetRef.current.y;
               if (index === 0) {
                 ctx.moveTo(screenX, screenY);
               } else {
@@ -415,22 +464,22 @@ export default function MultiplePendulumsPage() {
         const t2 = theta2[i];
         
         // First pendulum position (in screen coordinates)
-        const x1 = centerX + length1 * scale * Math.sin(t1);
-        const y1 = centerY + length1 * scale * Math.cos(t1);
+        const x1 = centerX + length1Ref.current * scale * Math.sin(t1);
+        const y1 = centerY + length1Ref.current * scale * Math.cos(t1);
         
         // Second pendulum position (in screen coordinates)
-        const x2 = x1 + length2 * scale * Math.sin(t2);
-        const y2 = y1 + length2 * scale * Math.cos(t2);
+        const x2 = x1 + length2Ref.current * scale * Math.sin(t2);
+        const y2 = y1 + length2Ref.current * scale * Math.cos(t2);
 
         // Update trails (track second pendulum end)
-        if (!isPaused && showTrails) {
+        if (!isPaused && showTrailsRef.current) {
           if (!trailsRef.current[i]) {
             trailsRef.current[i] = [];
           }
           // Store world coordinates (without panOffset) - same as single pendulum
           trailsRef.current[i].push({ 
-            x: x2 - panOffset.x, 
-            y: y2 - panOffset.y 
+            x: x2 - panOffsetRef.current.x, 
+            y: y2 - panOffsetRef.current.y 
           });
           
           // Limit trail length
@@ -483,7 +532,127 @@ export default function MultiplePendulumsPage() {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [isRunning, isPaused, separation, zoom, panOffset, showTrails, showInfo, length1, length2, initialAngle1, initialAngle2]);
+  }, [isRunning, isPaused, separation, initialAngle1, initialAngle2, canvasSize]);
+
+  // Redraw static pendulums when not running and view settings change
+  useEffect(() => {
+    if (isRunning) return;
+    const canvas = canvasRef.current;
+    if (!canvas || canvas.width === 0) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const drawStatic = () => {
+      const centerX = canvas.width / 2 + panOffsetRef.current.x;
+      const centerY = canvas.height / 2 + panOffsetRef.current.y;
+      const scale = 100 * zoomRef.current;
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      ctx.translate(centerX, centerY);
+
+      const baseGridSize = 20;
+      let fineGridSize, majorGridSize;
+      if (zoomRef.current < 0.5) {
+        fineGridSize = baseGridSize * 4;
+        majorGridSize = baseGridSize * 8;
+      } else if (zoomRef.current < 1) {
+        fineGridSize = baseGridSize * 2;
+        majorGridSize = baseGridSize * 4;
+      } else if (zoomRef.current < 2) {
+        fineGridSize = baseGridSize;
+        majorGridSize = baseGridSize * 2;
+      } else {
+        fineGridSize = baseGridSize / 2;
+        majorGridSize = baseGridSize;
+      }
+
+      fineGridSize *= zoomRef.current;
+      majorGridSize *= zoomRef.current;
+
+      const worldLeft = -centerX;
+      const worldRight = canvas.width - centerX;
+      const worldTop = -centerY;
+      const worldBottom = canvas.height - centerY;
+
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = 0.5;
+      for (let x = Math.floor(worldLeft / fineGridSize) * fineGridSize; x <= worldRight; x += fineGridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, worldTop);
+        ctx.lineTo(x, worldBottom);
+        ctx.stroke();
+      }
+      for (let y = Math.floor(worldTop / fineGridSize) * fineGridSize; y <= worldBottom; y += fineGridSize) {
+        ctx.beginPath();
+        ctx.moveTo(worldLeft, y);
+        ctx.lineTo(worldRight, y);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#cccccc';
+      ctx.lineWidth = 1;
+      for (let x = Math.floor(worldLeft / majorGridSize) * majorGridSize; x <= worldRight; x += majorGridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, worldTop);
+        ctx.lineTo(x, worldBottom);
+        ctx.stroke();
+      }
+      for (let y = Math.floor(worldTop / majorGridSize) * majorGridSize; y <= worldBottom; y += majorGridSize) {
+        ctx.beginPath();
+        ctx.moveTo(worldLeft, y);
+        ctx.lineTo(worldRight, y);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = '#999999';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(worldLeft, 0);
+      ctx.lineTo(worldRight, 0);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(0, worldTop);
+      ctx.lineTo(0, worldBottom);
+      ctx.stroke();
+
+      ctx.restore();
+
+      for (let i = 0; i < numPendulums; i++) {
+        const theta1 = (initialAngle1 * Math.PI) / 180;
+        const theta2 = (initialAngle2 + i * separation) * Math.PI / 180;
+        const x1 = centerX + length1Ref.current * scale * Math.sin(theta1);
+        const y1 = centerY + length1Ref.current * scale * Math.cos(theta1);
+        const x2 = x1 + length2Ref.current * scale * Math.sin(theta2);
+        const y2 = y1 + length2Ref.current * scale * Math.cos(theta2);
+        const hue = (i * 360 / numPendulums);
+        ctx.strokeStyle = `hsl(${hue}, 70%, 50%)`;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+        ctx.beginPath();
+        ctx.arc(x1, y1, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(x2, y2, 6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.fillStyle = '#374151';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 4, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    drawStatic();
+  }, [isRunning, zoom, panOffset, showTrails, length1, length2, initialAngle1, initialAngle2, separation, canvasSize]);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     setIsDragging(true);
@@ -504,8 +673,6 @@ export default function MultiplePendulumsPage() {
   };
 
   const handleWheel = (e: React.WheelEvent<HTMLCanvasElement>) => {
-    if (isRunning) return;
-    
     e.preventDefault();
     const zoomSpeed = 0.1;
     const newZoom = e.deltaY > 0 ? zoom - zoomSpeed : zoom + zoomSpeed;
@@ -801,9 +968,7 @@ export default function MultiplePendulumsPage() {
         <div className="flex-1 bg-white relative overflow-hidden">
           <canvas
             ref={canvasRef}
-            width={1600}
-            height={1200}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-move"
+            className="w-full h-full block cursor-move"
             style={{ imageRendering: 'crisp-edges' }}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}

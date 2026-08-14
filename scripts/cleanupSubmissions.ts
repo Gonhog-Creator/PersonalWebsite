@@ -1,6 +1,6 @@
 import { withRedis } from '@/lib/kv';
 
-async function cleanupSubmissions() {
+export async function cleanupSubmissions() {
   try {
     await withRedis(async (client) => {
       // Get all submission keys

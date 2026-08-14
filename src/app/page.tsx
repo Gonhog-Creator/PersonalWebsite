@@ -8,7 +8,6 @@ import 'aos/dist/aos.css';
 // Icons are used in the component (using custom Icon component)
 import { Header } from '@/components/Header/Header';
 import { Hero } from '@/components/Hero/Hero';
-import { Sidebar } from '@/components/Sidebar/Sidebar';
 import { Icon } from '@/components/ui/Icon'; // Importing our custom Icon component
 
 const SideQuests = dynamic(
@@ -56,7 +55,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen font-sans bg-gray-900 text-gray-100">
-      <Sidebar />
       <Header />
       <Hero />
 
@@ -147,8 +145,8 @@ export default function Home() {
           >
             <div className="container mx-auto px-4 relative z-10">
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">
-                  Technical <span className="text-blue-600 dark:text-blue-400">Skills</span>
+                <h2 className="text-3xl font-bold mb-4 text-white">
+                  Technical <span className="text-blue-400">Skills</span>
                 </h2>
               </div>
 
@@ -176,7 +174,7 @@ export default function Home() {
                     <div className="w-20 h-20 flex items-center justify-center mb-3">
                       <Icon
                         icon={skill.icon}
-                        className="w-full h-full text-gray-700 dark:text-gray-200"
+                        className="w-full h-full text-gray-200"
                         width="90"
                         height="90"
                       />

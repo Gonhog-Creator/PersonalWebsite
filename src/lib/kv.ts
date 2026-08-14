@@ -42,7 +42,7 @@ export const getRedisClient = async (): Promise<RedisClient> => {
     redisClient = createClient({
       url,
       socket: {
-        tls: isSecure,
+        ...(isSecure ? { tls: true } : {}),
         rejectUnauthorized: false, // Required for Redis Cloud with TLS
         connectTimeout: 10000, // 10 seconds
         reconnectStrategy: (retries) => {
@@ -125,7 +125,7 @@ export async function withRedis<T>(fn: (client: RedisClient) => Promise<T>): Pro
   }
 }
 
-export async function getAllSubmissions() {
+export async function getAllSubmissions(type?: string) {
   try {
     const client = await getRedisClient();
     
@@ -185,6 +185,7 @@ export async function getAllSubmissions() {
         }
       })
       .filter(Boolean) // Filter out any null values from failed parses
+      .filter(sub => !type || sub.type === type)
       .sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       ); // Sort by date, newest first
@@ -237,7 +238,7 @@ export async function addSubmission(type: string, data: SubmissionData) {
       if (ingredientKeys.length > 0) {
         const pipeline = client.multi();
         ingredientKeys.forEach(key => pipeline.get(key));
-        const results = await pipeline.exec();
+        const results = await pipeline.exec() as unknown as Array<[Error | null, unknown]>;
         
         const ingredientExists = results.some(([err, item]) => {
           if (err || !item) return false;
@@ -315,10 +316,10 @@ export async function listIngredients(searchTerm?: string, page = 1, pageSize = 
     if (keys.length === 0) return { data: [], total: 0 };
     
     // Use a pipeline for better performance
-    const pipeline = client.pipeline();
+    const pipeline = client.pipeline() as any;
     keys.forEach(key => pipeline.get(key));
-    const results = await pipeline.exec();
-    
+    const results = await pipeline.exec() as unknown as Array<[Error | null, unknown]>;
+
     const ingredients = results.map(([err, data]) => {
       if (err || !data) return null;
       return JSON.parse(data as string);

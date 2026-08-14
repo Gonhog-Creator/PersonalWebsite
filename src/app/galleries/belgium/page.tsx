@@ -6,7 +6,6 @@ import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
-import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { YouTubePlayer } from '@/components/gallery/YouTubePlayer';
 import { BackToTop } from '@/components/ui/BackToTop';
 import { ImageModal } from '@/components/gallery/ImageModal';
@@ -80,21 +79,8 @@ export default function BelgiumGallery() {
   }, [currentView, loadedTabs]);
 
 
-  // Verify image paths when photos tab is active
-  useEffect(() => {
-    if (currentView === 'photos' && galleryImages.length > 0) {
-      console.log('Verifying image paths...');
-      galleryImages.forEach(img => {
-        const imgEl = new window.Image();
-        imgEl.onload = () => console.log(`✅ Image loaded: ${img.src}`);
-        imgEl.onerror = () => console.error(`❌ Error loading image: ${img.src}`);
-        imgEl.src = img.src;
-      });
-    }
-  }, [currentView, galleryImages]);
-
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-900">
       {/* Project Header */}
       <ProjectHeader />
 
@@ -189,30 +175,13 @@ export default function BelgiumGallery() {
                 className="flex w-auto"
                 columnClassName="masonry-column"
               >
-                <style jsx global>{`
-                  .masonry-column {
-                    padding-left: 8px !important;
-                    padding-right: 8px !important;
-                  }
-                  .masonry-column > div {
-                    margin-bottom: 16px !important;
-                    border-radius: 0.5rem;
-                    overflow: hidden;
-                  }
-                  .masonry-column:first-child {
-                    padding-left: 0 !important;
-                  }
-                  .masonry-column:last-child {
-                    padding-right: 0 !important;
-                  }
-                `}</style>
-                {galleryImages.map((image, index) => (
+{galleryImages.map((image, index) => (
                   <div
                     key={image.id}
                     className="relative group cursor-pointer overflow-hidden transition-all duration-300 mb-4 mx-1"
                     onClick={() => openLightbox(index)}
                   >
-                    <div className="relative w-full overflow-hidden rounded-lg bg-white dark:bg-gray-800">
+                    <div className="relative w-full overflow-hidden rounded-lg bg-gray-800">
                       <Image
                         src={image.src}
                         alt={image.alt}

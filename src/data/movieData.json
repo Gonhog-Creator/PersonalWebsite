@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "lastUpdated": "2026-06-25T13:08:36.561314",
-    "totalMovies": 286,
-    "totalHours": 574,
+    "lastUpdated": "2026-08-14T17:56:52.753932",
+    "totalMovies": 309,
+    "totalHours": 620,
     "generatedBy": "process_movies.py",
     "version": "1.2.0",
-    "newMovies": 86,
+    "newMovies": 109,
     "updatedMovies": 200
   },
   "movies": [
@@ -29,8 +29,8 @@
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.13,
-        "rotten": 0.06
+        "imdb": 0.0,
+        "rotten": 0.0
       },
       "position": 1,
       "imdbId": "tt15239678",
@@ -98,6 +98,49 @@
       "country": "United States, United Kingdom, Canada"
     },
     {
+      "id": "movie_4",
+      "title": "Gladiator",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYWQ4YmNjYjEtOWE1Zi00Y2U4LWI4NTAtMTU0MjkxNWQ1ZmJiXkEyXkFqcGc@._V1_SX300.jpg",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Drama",
+      "myRating": 9.6,
+      "imdbScore": 8.5,
+      "rottenTomatoesScore": 0.8,
+      "protagonistRating": 9.4,
+      "antagonistRating": 9.1,
+      "soundtrackRating": 9.8,
+      "setDesignRating": 9.2,
+      "plotRating": 9.7,
+      "endingRating": 10.0,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 155,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.1,
+        "rotten": 0.15
+      },
+      "position": 4,
+      "imdbId": "tt0172495",
+      "plot": "A former Roman General sets out to exact vengeance against the corrupt emperor who murdered his family and sent him into slavery.",
+      "imdbRating": 85.0,
+      "genres": [
+        "Action",
+        "Adventure",
+        "Drama"
+      ],
+      "rated": "R",
+      "director": "Ridley Scott",
+      "actors": [
+        "Russell Crowe",
+        "Joaquin Phoenix",
+        "Connie Nielsen"
+      ],
+      "language": "English",
+      "country": "United States, United Kingdom, Malta, Morocco"
+    },
+    {
       "id": "movie_3",
       "title": "Dune",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMGJlMGM3NDAtOWNhMy00MWExLWI2MzEtMDQ0ZDIzZDY5ZmQ2XkEyXkFqcGc@._V1_SX300.jpg",
@@ -141,93 +184,6 @@
       "country": "United States, Mexico"
     },
     {
-      "id": "movie_4",
-      "title": "Gladiator",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYWQ4YmNjYjEtOWE1Zi00Y2U4LWI4NTAtMTU0MjkxNWQ1ZmJiXkEyXkFqcGc@._V1_SX300.jpg",
-      "releaseDate": "",
-      "genre": "Action, Adventure, Drama",
-      "myRating": 9.5,
-      "imdbScore": 8.5,
-      "rottenTomatoesScore": 0.8,
-      "protagonistRating": 9.4,
-      "antagonistRating": 9.1,
-      "soundtrackRating": 9.8,
-      "setDesignRating": 9.2,
-      "plotRating": 9.7,
-      "endingRating": 10.0,
-      "year": "N/A",
-      "watchedDate": "",
-      "runtime": 155,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.1,
-        "rotten": 0.15
-      },
-      "position": 4,
-      "imdbId": "tt0172495",
-      "plot": "A former Roman General sets out to exact vengeance against the corrupt emperor who murdered his family and sent him into slavery.",
-      "imdbRating": 85.0,
-      "genres": [
-        "Action",
-        "Adventure",
-        "Drama"
-      ],
-      "rated": "R",
-      "director": "Ridley Scott",
-      "actors": [
-        "Russell Crowe",
-        "Joaquin Phoenix",
-        "Connie Nielsen"
-      ],
-      "language": "English",
-      "country": "United States, United Kingdom, Malta, Morocco"
-    },
-    {
-      "id": "movie_5",
-      "title": "Se7en",
-      "releaseDate": "",
-      "genre": "Crime, Drama, Mystery",
-      "myRating": 9.5,
-      "imdbScore": 8.6,
-      "rottenTomatoesScore": 0.84,
-      "protagonistRating": 9.3,
-      "antagonistRating": 10.0,
-      "soundtrackRating": 8.5,
-      "setDesignRating": 9.3,
-      "plotRating": 10.0,
-      "endingRating": 10.0,
-      "year": "2016",
-      "watchedDate": "",
-      "runtime": 127,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.0,
-        "rotten": 0.0
-      },
-      "position": 5,
-      "imdbId": "tt5883564",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTU5MTFlYmItMGI4Ni00OTJkLTlmZTUtNzcyNzcxM2Y4MWI0XkEyXkFqcGdeQXVyNzg5OTk2OA@@._V1_SX300.jpg",
-      "plot": "Short student film.",
-      "genres": [
-        "Crime",
-        "Drama",
-        "Mystery"
-      ],
-      "rated": "N/A",
-      "director": "Georgios Tsononas",
-      "actors": [
-        "Steven Williams",
-        "Vasilios Ieronymakis"
-      ],
-      "language": "N/A",
-      "country": "Greece",
-      "metascore": "N/A",
-      "awards": "N/A",
-      "production": "N/A"
-    },
-    {
       "id": "movie_5",
       "title": "The Prestige",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTM3MzQ5MjQ5OF5BMl5BanBnXkFtZTcwMTQ3NzMzMw@@._V1_SX300.jpg",
@@ -269,6 +225,50 @@
       ],
       "language": "English",
       "country": "United Kingdom, United States"
+    },
+    {
+      "id": "movie_6",
+      "title": "Se7en",
+      "releaseDate": "",
+      "genre": "Crime, Drama, Mystery",
+      "myRating": 9.5,
+      "imdbScore": 8.6,
+      "rottenTomatoesScore": 0.84,
+      "protagonistRating": 9.3,
+      "antagonistRating": 10.0,
+      "soundtrackRating": 8.5,
+      "setDesignRating": 9.3,
+      "plotRating": 10.0,
+      "endingRating": 10.0,
+      "year": "2016",
+      "watchedDate": "",
+      "runtime": 127,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 6,
+      "imdbId": "tt0114369",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BY2IzNzMxZjctZjUxZi00YzAxLTk3ZjMtODFjODdhMDU5NDM1XkEyXkFqcGc@._V1_QL75_UX380_CR0,16,380,562_.jpg",
+      "plot": "Two detectives try to track down a serial killer who chooses his victims based on the Seven Deadly Sins.",
+      "genres": [
+        "Crime",
+        "Drama",
+        "Mystery"
+      ],
+      "rated": "N/A",
+      "director": "Georgios Tsononas",
+      "actors": [
+        "Steven Williams",
+        "Vasilios Ieronymakis"
+      ],
+      "language": "N/A",
+      "country": "Greece",
+      "metascore": "N/A",
+      "awards": "N/A",
+      "production": "N/A"
     },
     {
       "id": "movie_6",
@@ -547,8 +547,8 @@
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.12,
-        "rotten": 0.02
+        "imdb": 0.0,
+        "rotten": 0.0
       },
       "position": 13,
       "imdbId": "tt3783958",
@@ -747,6 +747,51 @@
       "country": "United States"
     },
     {
+      "id": "movie_19",
+      "title": "Nightcrawler",
+      "releaseDate": "",
+      "genre": "Crime, Drama, Thriller",
+      "myRating": 9.2,
+      "imdbScore": 7.8,
+      "rottenTomatoesScore": 0.95,
+      "protagonistRating": 9.7,
+      "antagonistRating": 10.0,
+      "soundtrackRating": 8.2,
+      "setDesignRating": 8.5,
+      "plotRating": 9.5,
+      "endingRating": 9.4,
+      "year": "2014",
+      "watchedDate": "",
+      "runtime": 117,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 19,
+      "imdbId": "tt2872718",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjMwMmI5MWQtOTU4OS00OTAyLTg0OTYtNmQ5YzExZTQ3ZWJhXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "A petty thief desperate for work muscles into the world of crime journalism and becomes the star of his own story as he blurs the line between observer and participant.",
+      "genres": [
+        "Crime",
+        "Drama",
+        "Thriller"
+      ],
+      "rated": "R",
+      "director": "Dan Gilroy",
+      "actors": [
+        "Jake Gyllenhaal",
+        "Rene Russo",
+        "Bill Paxton"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "76",
+      "awards": "Nominated for 1 Oscar. 46 wins & 126 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_15",
       "title": "Spider-Man: No Way Home",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmFiZGZjMmEtMTA0Ni00MzA2LTljMTYtZGI2MGJmZWYzZTQ2XkEyXkFqcGc@._V1_SX300.jpg",
@@ -790,7 +835,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_283",
+      "id": "movie_21",
       "title": "Project Hail Mary",
       "releaseDate": "",
       "genre": "Adventure, Comedy, Drama",
@@ -812,7 +857,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 20,
+      "position": 21,
       "imdbId": "tt12042730",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTkwNzJiYTctNzI3NC00NjE1LTlhYjktY2Q5MTdmMWFmNzcxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "A science teacher wakes up alone on a spaceship. As his memory returns, he uncovers a mission to stop a mysterious substance killing Earth's sun, and realizes that an unexpected friendship may be the key.",
@@ -831,7 +876,7 @@
       "language": "English",
       "country": "United States",
       "metascore": "77",
-      "awards": "1 win & 5 nominations total",
+      "awards": "7 wins & 11 nominations total",
       "production": "N/A"
     },
     {
@@ -1050,7 +1095,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_25",
+      "id": "movie_27",
       "title": "Vesper",
       "releaseDate": "",
       "genre": "Adventure, Drama, Sci-Fi",
@@ -1072,7 +1117,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 26,
+      "position": 27,
       "imdbId": "tt20225374",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BODNiMDhjNTAtZDc4ZS00MmY2LTljOGMtNzU3M2JhOTQ5YmQ2XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Struggling to survive with her father after the collapse of Earth's ecosystem, 13-year-old Vesper must use her wits, strength and bio-hacking abilities to fight for the future.",
@@ -1179,6 +1224,50 @@
       ],
       "language": "English",
       "country": "United States, United Kingdom"
+    },
+    {
+      "id": "movie_30",
+      "title": "Before Sunset",
+      "releaseDate": "",
+      "genre": "Drama, Romance",
+      "myRating": 9.0,
+      "imdbScore": 8.1,
+      "rottenTomatoesScore": 0.94,
+      "protagonistRating": 9.5,
+      "antagonistRating": 9.3,
+      "soundtrackRating": 8.0,
+      "setDesignRating": 7.5,
+      "plotRating": 9.8,
+      "endingRating": 9.7,
+      "year": "2004",
+      "watchedDate": "",
+      "runtime": 80,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 30,
+      "imdbId": "tt0381681",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQ1MjAwNTM5Ml5BMl5BanBnXkFtZTYwNDM0MTc3._V1_SX300.jpg",
+      "plot": "Nine years after Jesse and Celine first met, they encounter each other again on the French leg of Jesse's book tour.",
+      "genres": [
+        "Drama",
+        "Romance"
+      ],
+      "rated": "R",
+      "director": "Richard Linklater",
+      "actors": [
+        "Ethan Hawke",
+        "Julie Delpy",
+        "Vernon Dobtcheff"
+      ],
+      "language": "English, French",
+      "country": "United States",
+      "metascore": "91",
+      "awards": "Nominated for 1 Oscar. 10 wins & 32 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_25",
@@ -1480,7 +1569,7 @@
       "country": "United States, Mexico"
     },
     {
-      "id": "movie_35",
+      "id": "movie_38",
       "title": "Her",
       "releaseDate": "",
       "genre": "Drama, Romance, Sci-Fi",
@@ -1502,7 +1591,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 36,
+      "position": 38,
       "imdbId": "tt1798709",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjA1Nzk0OTM2OF5BMl5BanBnXkFtZTgwNjU2NjEwMDE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "In the near future, a lonely writer develops an unlikely relationship with an operating system designed to meet his every need.",
@@ -1697,7 +1786,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_40",
+      "id": "movie_43",
       "title": "One Battle After Another",
       "releaseDate": "",
       "genre": "Action, Crime, Drama",
@@ -1719,7 +1808,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 41,
+      "position": 43,
       "imdbId": "tt30144839",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzBkZmQ0NjMtNTZlMy00ZjdlLTg5ODUtYWFlNGM0YzE3MTg0XkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
       "plot": "When their enemy resurfaces after 16 years, a group of ex-revolutionaries reunite to rescue the daughter of one of their own.",
@@ -1828,7 +1917,7 @@
       "country": "China, Japan, United States"
     },
     {
-      "id": "movie_43",
+      "id": "movie_46",
       "title": "The Thin Red Line",
       "releaseDate": "",
       "genre": "Drama, History, War",
@@ -1850,7 +1939,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 44,
+      "position": 46,
       "imdbId": "tt0120863",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzQ5NmViMDUtMjI1NC00ZWJkLTkwNzctMmIxZWY2MzQyZDc2XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Adaptation of James Jones' autobiographical 1962 novel, focusing on the conflict at Guadalcanal during the second World War.",
@@ -1870,6 +1959,51 @@
       "country": "United States",
       "metascore": "78",
       "awards": "Nominated for 7 Oscars. 23 wins & 47 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_47",
+      "title": "Warrior",
+      "releaseDate": "",
+      "genre": "Action, Drama, Sport",
+      "myRating": 8.7,
+      "imdbScore": 8.1,
+      "rottenTomatoesScore": 0.84,
+      "protagonistRating": 9.1,
+      "antagonistRating": 8.8,
+      "soundtrackRating": 7.8,
+      "setDesignRating": 8.6,
+      "plotRating": 8.7,
+      "endingRating": 9.0,
+      "year": "2011",
+      "watchedDate": "",
+      "runtime": 140,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 47,
+      "imdbId": "tt1291584",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTk4ODk5MTMyNV5BMl5BanBnXkFtZTcwMDMyNTg0Ng@@._V1_SX300.jpg",
+      "plot": "The youngest son of an alcoholic former boxer returns home, where he's trained by his father for competition in a mixed martial arts tournament - a path that puts the fighter on a collision course with his estranged, older brother.",
+      "genres": [
+        "Action",
+        "Drama",
+        "Sport"
+      ],
+      "rated": "PG-13",
+      "director": "Gavin O'Connor",
+      "actors": [
+        "Tom Hardy",
+        "Nick Nolte",
+        "Joel Edgerton"
+      ],
+      "language": "English, Spanish",
+      "country": "United States",
+      "metascore": "71",
+      "awards": "Nominated for 1 Oscar. 6 wins & 22 nominations total",
       "production": "N/A"
     },
     {
@@ -1959,7 +2093,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_46",
+      "id": "movie_50",
       "title": "Snowpiercer",
       "releaseDate": "",
       "genre": "Action, Sci-Fi, Thriller",
@@ -1978,10 +2112,10 @@
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.16,
-        "rotten": 0.06999999999999999
+        "imdb": 0.0,
+        "rotten": 0.0
       },
-      "position": 47,
+      "position": 50,
       "imdbId": "tt1706620",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQ3NzA1MTY3MV5BMl5BanBnXkFtZTgwNzE2Mzg5MTE@._V1_SX300.jpg",
       "plot": "In a future where a failed climate change experiment has killed all life except for the survivors who boarded the Snowpiercer (a train that travels around the globe), a new class system emerges.",
@@ -2045,51 +2179,6 @@
       ],
       "language": "English",
       "country": "United States"
-    },
-    {
-      "id": "movie_280",
-      "title": "Warrior",
-      "releaseDate": "",
-      "genre": "Action, Drama, Sport",
-      "myRating": 8.7,
-      "imdbScore": 8.1,
-      "rottenTomatoesScore": 0.84,
-      "protagonistRating": 9.1,
-      "antagonistRating": 8.8,
-      "soundtrackRating": 7.8,
-      "setDesignRating": 8.6,
-      "plotRating": 8.7,
-      "endingRating": 9.0,
-      "year": "2011",
-      "watchedDate": "",
-      "runtime": 140,
-      "style": "nan",
-      "mediaType": "Nan",
-      "differences": {
-        "imdb": 0.0,
-        "rotten": 0.0
-      },
-      "position": 49,
-      "imdbId": "tt1291584",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTk4ODk5MTMyNV5BMl5BanBnXkFtZTcwMDMyNTg0Ng@@._V1_SX300.jpg",
-      "plot": "The youngest son of an alcoholic former boxer returns home, where he's trained by his father for competition in a mixed martial arts tournament - a path that puts the fighter on a collision course with his estranged, older brother.",
-      "genres": [
-        "Action",
-        "Drama",
-        "Sport"
-      ],
-      "rated": "PG-13",
-      "director": "Gavin O'Connor",
-      "actors": [
-        "Tom Hardy",
-        "Nick Nolte",
-        "Joel Edgerton"
-      ],
-      "language": "English, Spanish",
-      "country": "United States",
-      "metascore": "71",
-      "awards": "Nominated for 1 Oscar. 6 wins & 22 nominations total",
-      "production": "N/A"
     },
     {
       "id": "movie_47",
@@ -2821,7 +2910,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_65",
+      "id": "movie_69",
       "title": "Good Luck, Have Fun, Don't Die",
       "releaseDate": "",
       "genre": "Action, Adventure, Comedy",
@@ -2843,7 +2932,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 67,
+      "position": 69,
       "imdbId": "tt1341338",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTQ0NzYzM2QtOWYzMC00MGU5LWJmMTQtYTU1ODU0ZjUwYjk0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "A \"Man From the Future\" arrives at a diner in Los Angeles where he must recruit the precise combination of disgruntled patrons to join him on a one-night quest to save the world from the terminal threat of a rogue artificial intel...",
@@ -2862,7 +2951,7 @@
       "language": "English",
       "country": "Germany, United States",
       "metascore": "66",
-      "awards": "N/A",
+      "awards": "2 wins & 3 nominations total",
       "production": "N/A"
     },
     {
@@ -2952,7 +3041,7 @@
       "country": "United Kingdom, United States"
     },
     {
-      "id": "movie_68",
+      "id": "movie_72",
       "title": "Together",
       "releaseDate": "",
       "genre": "Horror, Romance",
@@ -2974,7 +3063,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 70,
+      "position": 72,
       "imdbId": "tt31184028",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BOWI1Mzg0OWUtNDYxYy00Mzk3LTgxMjMtYWYxZjJhMjI4NDcyXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "Years into their relationship, Tim and Millie find themselves at a crossroads as they move to the country. With tensions already flaring, an encounter with an unnatural force threatens to corrupt their lives, their love and their ...",
@@ -3037,6 +3126,49 @@
       ],
       "language": "English, Spanish",
       "country": "United States"
+    },
+    {
+      "id": "movie_74",
+      "title": "Locke",
+      "releaseDate": "",
+      "genre": "Drama",
+      "myRating": 8.3,
+      "imdbScore": 7.1,
+      "rottenTomatoesScore": 0.91,
+      "protagonistRating": 8.9,
+      "antagonistRating": 8.4,
+      "soundtrackRating": 6.5,
+      "setDesignRating": 8.8,
+      "plotRating": 8.6,
+      "endingRating": 8.5,
+      "year": "2013",
+      "watchedDate": "",
+      "runtime": 85,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 74,
+      "imdbId": "tt2692904",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQ1MjE5MzU2M15BMl5BanBnXkFtZTgwNzE4OTMzMTE@._V1_SX300.jpg",
+      "plot": "Ivan Locke, a dedicated family man and successful construction manager, receives a phone call that sets in motion a series of events that threaten his carefully cultivated existence.",
+      "genres": [
+        "Drama"
+      ],
+      "rated": "R",
+      "director": "Steven Knight",
+      "actors": [
+        "Tom Hardy",
+        "Olivia Colman",
+        "Ruth Wilson"
+      ],
+      "language": "English",
+      "country": "United Kingdom, United States",
+      "metascore": "83",
+      "awards": "7 wins & 33 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_62",
@@ -3124,7 +3256,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_72",
+      "id": "movie_77",
       "title": "Finch",
       "releaseDate": "",
       "genre": "Adventure, Drama, Sci-Fi",
@@ -3146,7 +3278,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 74,
+      "position": 77,
       "imdbId": "tt3420504",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjhhMGVkN2MtNDA3OC00M2E5LTg3ODYtZGJiNmIwNmQwMWYyXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "On a post-apocalyptic Earth, a robot, built to protect the life of his creator's beloved dog learns about life, love, friendship and what it means to be human.",
@@ -3253,6 +3385,51 @@
       ],
       "language": "English",
       "country": "United States"
+    },
+    {
+      "id": "movie_80",
+      "title": "No Time To Die",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Thriller",
+      "myRating": 8.2,
+      "imdbScore": 7.3,
+      "rottenTomatoesScore": 0.83,
+      "protagonistRating": 8.8,
+      "antagonistRating": 7.5,
+      "soundtrackRating": 8.3,
+      "setDesignRating": 8.1,
+      "plotRating": 7.7,
+      "endingRating": 8.6,
+      "year": "2021",
+      "watchedDate": "",
+      "runtime": 163,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 80,
+      "imdbId": "tt2382320",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGZiOGZhZDQtZmRkNy00ZmUzLTliMGEtZGU0NjExOGMxZDVkXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "James Bond has left active service. His peace is short-lived when Felix Leiter, an old friend from the CIA, turns up asking for help, leading Bond onto the trail of a mysterious villain armed with dangerous new technology.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Thriller"
+      ],
+      "rated": "PG-13",
+      "director": "Cary Joji Fukunaga",
+      "actors": [
+        "Daniel Craig",
+        "Ana de Armas",
+        "Rami Malek"
+      ],
+      "language": "English, French, Italian, Russian, Spanish, Norwegian, German",
+      "country": "United Kingdom, United States",
+      "metascore": "68",
+      "awards": "Won 1 Oscar. 52 wins & 75 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_66",
@@ -3470,7 +3647,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_80",
+      "id": "movie_86",
       "title": "The Long Walk",
       "releaseDate": "",
       "genre": "Horror, Sci-Fi, Thriller",
@@ -3492,7 +3669,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 82,
+      "position": 86,
       "imdbId": "tt10374610",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNmE4YmIxNWQtMzJhMy00NDI5LWFmYjEtMGYyMmFhNzdjODVmXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "A group of teenage boys compete in an annual contest known as \"The Long Walk,\" in which they must maintain a certain walking speed or get shot.",
@@ -3515,12 +3692,12 @@
       "production": "N/A"
     },
     {
-      "id": "movie_81",
+      "id": "movie_87",
       "title": "Avatar: Fire and Ash",
       "releaseDate": "",
       "genre": "Action, Adventure, Fantasy",
       "myRating": 8.1,
-      "imdbScore": 73.0,
+      "imdbScore": 72.0,
       "rottenTomatoesScore": 0.0,
       "protagonistRating": 7.2,
       "antagonistRating": 7.7,
@@ -3537,7 +3714,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 83,
+      "position": 87,
       "imdbId": "tt1757678",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDYxY2I1OGMtN2Y4MS00ZmU1LTgyNDAtODA0MzAyYjI0N2Y2XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "Jake and Neytiri's family grapples with grief, encountering a new, aggressive Na'vi tribe, the Ash People, who are led by the fiery Varang, as the conflict on Pandora escalates and a new moral focus emerges.",
@@ -3556,7 +3733,7 @@
       "language": "English",
       "country": "United States, Canada",
       "metascore": "61",
-      "awards": "Won 1 Oscar. 40 wins & 58 nominations total",
+      "awards": "Won 1 Oscar. 41 wins & 62 nominations total",
       "production": "N/A"
     },
     {
@@ -3860,7 +4037,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_89",
+      "id": "movie_95",
       "title": "13 Hours: The Secret Soldiers of Benghazi",
       "releaseDate": "",
       "genre": "Action, Drama, History",
@@ -3882,7 +4059,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 91,
+      "position": 95,
       "imdbId": "tt23862116",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTI1Mzc1ZjctYmU5My00ZTliLWI1ZTktMTRjYWNhNTRkODNkXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Should you watch '13 Hours: The Secret Soldiers of Benghazi from 2016? If these boxes that are checked off interest you then sit down and let the Bayhem wash over you. You like Michael Bay? Check. You like John Krasinksi's rock ha...",
@@ -3948,7 +4125,7 @@
       "country": "United States, Canada"
     },
     {
-      "id": "movie_91",
+      "id": "movie_97",
       "title": "Maze Runner: The Death Cure",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -3970,7 +4147,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 93,
+      "position": 97,
       "imdbId": "tt4500922",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTYyNzk3MDc2NF5BMl5BanBnXkFtZTgwMDk3OTM1NDM@._V1_SX300.jpg",
       "plot": "In a desperate attempt to save their friends, the Gladers try to infiltrate a fortified city and make it out alive.",
@@ -4036,7 +4213,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_93",
+      "id": "movie_99",
       "title": "Frankenstein",
       "releaseDate": "",
       "genre": "Drama, Horror, Sci-Fi",
@@ -4058,7 +4235,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 95,
+      "position": 99,
       "imdbId": "tt1312221",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzYzNDYxMTQtMTU4OS00MTdlLThhMTQtZjI4NGJmMTZmNmRiXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "Dr. Victor Frankenstein, a brilliant but egotistical scientist, brings a creature to life in a monstrous experiment that ultimately leads to the undoing of both the creator and his tragic creation.",
@@ -4167,7 +4344,97 @@
       "country": "United States, Canada, Hong Kong, Luxembourg"
     },
     {
-      "id": "movie_96",
+      "id": "movie_102",
+      "title": "28 Years Later: The Bone Temple",
+      "releaseDate": "",
+      "genre": "Horror, Sci-Fi, Thriller",
+      "myRating": 8.0,
+      "imdbScore": 7.3,
+      "rottenTomatoesScore": 0.91,
+      "protagonistRating": 8.6,
+      "antagonistRating": 7.5,
+      "soundtrackRating": 7.6,
+      "setDesignRating": 8.9,
+      "plotRating": 7.4,
+      "endingRating": 8.2,
+      "year": "2026",
+      "watchedDate": "",
+      "runtime": 109,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 102,
+      "imdbId": "tt32141377",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGU2M2Y1YTItMWYxNS00NDYxLThhOTYtNjNhOWUzNjA3MTYwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+      "plot": "As Spike is inducted into Jimmy Crystal's gang on the mainland, Dr. Kelson makes a discovery that could alter the world.",
+      "genres": [
+        "Horror",
+        "Sci-Fi",
+        "Thriller"
+      ],
+      "rated": "R",
+      "director": "Nia DaCosta",
+      "actors": [
+        "Jack O'Connell",
+        "Alfie Williams",
+        "Connor Newall"
+      ],
+      "language": "English",
+      "country": "United Kingdom, United States, Canada",
+      "metascore": "81",
+      "awards": "3 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_103",
+      "title": "Casino Royale",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Thriller",
+      "myRating": 8.0,
+      "imdbScore": 8.0,
+      "rottenTomatoesScore": 0.94,
+      "protagonistRating": 8.4,
+      "antagonistRating": 8.2,
+      "soundtrackRating": 8.6,
+      "setDesignRating": 6.8,
+      "plotRating": 8.4,
+      "endingRating": 7.8,
+      "year": "2006",
+      "watchedDate": "",
+      "runtime": 144,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 103,
+      "imdbId": "tt0381061",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWQ1ZDM4NDktMWY0NC00MjcxLWJlMDMtNmE2MGVhYzRjMWQ0XkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "After earning a licence to kill, secret agent James Bond sets out on his first mission as 007. Bond must defeat a private banker funding terrorists in a high-stakes game of poker at Casino Royale, in Montenegro.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Thriller"
+      ],
+      "rated": "PG-13",
+      "director": "Martin Campbell",
+      "actors": [
+        "Daniel Craig",
+        "Eva Green",
+        "Judi Dench"
+      ],
+      "language": "English, Serbian, German, Italian, French",
+      "country": "United States, United Kingdom, Czech Republic, Germany, Bahamas, Italy",
+      "metascore": "80",
+      "awards": "Won 1 BAFTA Award28 wins & 44 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_104",
       "title": "It",
       "releaseDate": "",
       "genre": "Horror",
@@ -4189,7 +4456,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 98,
+      "position": 104,
       "imdbId": "tt1396484",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGZmOTZjNzUtOTE4OS00OGM3LWJiNGEtZjk4Yzg2M2Q1YzYxXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
       "plot": "In the summer of 1989, a group of bullied kids band together to destroy a shape-shifting monster, which disguises itself as a clown and preys on the children of Derry, their small Maine town.",
@@ -4381,7 +4648,7 @@
       "country": "United States, United Kingdom, Morocco"
     },
     {
-      "id": "movie_101",
+      "id": "movie_109",
       "title": "Mary Poppins Returns",
       "releaseDate": "",
       "genre": "Adventure, Comedy, Family",
@@ -4403,7 +4670,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 103,
+      "position": 109,
       "imdbId": "tt5028340",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTk0NDIzMTA1MF5BMl5BanBnXkFtZTgwMzM0MTUzNjM@._V1_SX300.jpg",
       "plot": "A few decades after her original visit, Mary Poppins, the magical nanny, returns to help the Banks siblings and Michael's children through a difficult time in their lives.",
@@ -4554,7 +4821,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_105",
+      "id": "movie_113",
       "title": "The Creator",
       "releaseDate": "",
       "genre": "Action, Adventure, Drama",
@@ -4576,7 +4843,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 107,
+      "position": 113,
       "imdbId": "tt11858890",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDkxMTUxOTQtYzM4Yi00YzA2LTgzOTYtNDg2NTliODE0ZTRjXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Against the backdrop of a war between humans and robots with artificial intelligence, a former soldier finds the robots' secret weapon to end the conflict, an AI in the form of a child.",
@@ -4899,6 +5166,51 @@
       "country": "Italy, United States"
     },
     {
+      "id": "movie_121",
+      "title": "Skyfall",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Thriller",
+      "myRating": 7.9,
+      "imdbScore": 7.8,
+      "rottenTomatoesScore": 0.92,
+      "protagonistRating": 8.7,
+      "antagonistRating": 8.0,
+      "soundtrackRating": 7.7,
+      "setDesignRating": 7.2,
+      "plotRating": 8.4,
+      "endingRating": 7.3,
+      "year": "2012",
+      "watchedDate": "",
+      "runtime": 143,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 121,
+      "imdbId": "tt1074638",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjAzMWNkODUtM2FlMi00NzgyLWJhMGUtMWEyNDYyZGFiN2RlXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "James Bond's loyalty to M is tested when her past comes back to haunt her. When MI6 comes under attack, 007 must track down and destroy the threat, no matter how personal the cost.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Thriller"
+      ],
+      "rated": "PG-13",
+      "director": "Sam Mendes",
+      "actors": [
+        "Daniel Craig",
+        "Javier Bardem",
+        "Naomie Harris"
+      ],
+      "language": "English, Turkish, Shanghainese, Portuguese, Japanese",
+      "country": "United Kingdom, United States, Turkey, China",
+      "metascore": "81",
+      "awards": "Won 2 Oscars. 69 wins & 125 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_96",
       "title": "300",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjc4OTc0ODgwNV5BMl5BanBnXkFtZTcwNjM1ODE0MQ@@._V1_SX300.jpg",
@@ -5113,7 +5425,7 @@
       "country": "United Kingdom, United States"
     },
     {
-      "id": "movie_118",
+      "id": "movie_127",
       "title": "The Bourne Ultimatum",
       "releaseDate": "",
       "genre": "Action, Mystery, Thriller",
@@ -5135,7 +5447,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 120,
+      "position": 127,
       "imdbId": "tt0440963",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzE3ZGM4MzctZjU5MC00NWE2LTg5ZjYtMDFiM2ZlMWQ1MjkwXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Jason Bourne dodges a ruthless C.I.A. official and his Agents from a new assassination program while searching for the origins of his life as a trained killer.",
@@ -5156,6 +5468,32 @@
       "metascore": "85",
       "awards": "Won 3 Oscars. 29 wins & 42 nominations total",
       "production": "N/A"
+    },
+    {
+      "id": "movie_128",
+      "title": "Backrooms (2026)",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzQyYjZmMjctMzIyZi00MDI0LWJhNGQtMzQ3MTFlNDgwNGM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+      "releaseDate": "",
+      "genre": "Horror, Sci-Fi, Thriller",
+      "myRating": 7.8,
+      "imdbScore": 7.0,
+      "rottenTomatoesScore": 0.0,
+      "protagonistRating": 8.5,
+      "antagonistRating": 8.6,
+      "soundtrackRating": 7.5,
+      "setDesignRating": 7.7,
+      "plotRating": 8.3,
+      "endingRating": 6.4,
+      "year": "N/A",
+      "watchedDate": "",
+      "runtime": 110,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 128
     },
     {
       "id": "movie_103",
@@ -5201,7 +5539,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_120",
+      "id": "movie_130",
       "title": "The Bourne Supremacy",
       "releaseDate": "",
       "genre": "Action, Mystery, Thriller",
@@ -5223,7 +5561,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 122,
+      "position": 130,
       "imdbId": "tt0372183",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZTU4ZDgyYjgtODA0Mi00MmE3LTgzYWQtZjc1YTFiMTczZTQ3XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "When Jason Bourne is framed for a CIA operation gone awry, he is forced to resume his former life as a trained assassin to survive.",
@@ -5332,6 +5670,51 @@
       "country": "United States"
     },
     {
+      "id": "movie_133",
+      "title": "The Great Debaters",
+      "releaseDate": "",
+      "genre": "Biography, Drama, Romance",
+      "myRating": 7.8,
+      "imdbScore": 7.5,
+      "rottenTomatoesScore": 0.0,
+      "protagonistRating": 8.9,
+      "antagonistRating": 6.5,
+      "soundtrackRating": 7.8,
+      "setDesignRating": 6.5,
+      "plotRating": 8.5,
+      "endingRating": 8.8,
+      "year": "2007",
+      "watchedDate": "",
+      "runtime": 126,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 133,
+      "imdbId": "tt0427309",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQxMDc1NzkwMF5BMl5BanBnXkFtZTcwMDI5MjU1MQ@@._V1_SX300.jpg",
+      "plot": "A drama based on the true story of Melvin B. Tolson, a professor at Wiley College Texas. In 1935, he inspired students to form the school's first debate team, which went on to challenge Harvard in the national championship.",
+      "genres": [
+        "Biography",
+        "Drama",
+        "Romance"
+      ],
+      "rated": "PG-13",
+      "director": "Denzel Washington",
+      "actors": [
+        "Denzel Washington",
+        "Forest Whitaker",
+        "Kimberly Elise"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "65",
+      "awards": "10 wins & 10 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_104",
       "title": "Deadpool 2",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGY3N2ZhYmMtYTlmYi00ZWIzLWJiZWMtMjgxMjljYTk3MDAwXkEyXkFqcGc@._V1_SX300.jpg",
@@ -5375,7 +5758,7 @@
       "country": "United States, Canada"
     },
     {
-      "id": "movie_124",
+      "id": "movie_135",
       "title": "The Bourne Identity",
       "releaseDate": "",
       "genre": "Action, Mystery, Thriller",
@@ -5397,7 +5780,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 126,
+      "position": 135,
       "imdbId": "tt0258463",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTk1ZTcyMWMtMWUxYS00MmEzLTlmODYtOTk1MGRjOTg1ZjlmXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A man is picked up by a fishing boat, bullet-riddled and suffering from amnesia, before racing to elude assassins and attempting to regain his memory.",
@@ -5420,7 +5803,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_125",
+      "id": "movie_136",
       "title": "Wake Up Dead Man",
       "releaseDate": "",
       "genre": "Comedy, Crime, Drama",
@@ -5442,7 +5825,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 127,
+      "position": 136,
       "imdbId": "tt14364480",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BY2Q0OTA5MTEtNWU4NC00ZWFmLTg5NmYtNDFmODViYWUxZmJkXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "Detective Benoit Blanc teams up with an earnest young priest to investigate a perfectly impossible crime at a small-town church with a dark history.",
@@ -5810,6 +6193,7 @@
     {
       "id": "movie_128",
       "title": "The Thing With Feathers (2025)",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMWYyM2RmMzgtNGJmMy00OGZhLTk3YjgtYzg4NjFlMjA1YmY5XkEyXkFqcGc@._V1_SX300.jpg",
       "releaseDate": "",
       "genre": "Drama",
       "myRating": 7.7,
@@ -5831,6 +6215,51 @@
         "rotten": 0.0
       },
       "position": 128
+    },
+    {
+      "id": "movie_146",
+      "title": "Before Sunrise",
+      "releaseDate": "",
+      "genre": "Comedy, Drama, Romance",
+      "myRating": 7.7,
+      "imdbScore": 8.1,
+      "rottenTomatoesScore": 1.0,
+      "protagonistRating": 8.8,
+      "antagonistRating": 9.0,
+      "soundtrackRating": 6.3,
+      "setDesignRating": 7.7,
+      "plotRating": 7.3,
+      "endingRating": 7.0,
+      "year": "1995",
+      "watchedDate": "",
+      "runtime": 101,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 146,
+      "imdbId": "tt0112471",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDZhZmI1ZTUtYWI3NC00NTMwLTk3NWMtNDc0OGNjM2I0ZjlmXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "A young man and woman meet on a train in Europe, and wind up spending one evening together in Vienna. Unfortunately, both know that this will probably be their only night together.",
+      "genres": [
+        "Comedy",
+        "Drama",
+        "Romance"
+      ],
+      "rated": "R",
+      "director": "Richard Linklater",
+      "actors": [
+        "Ethan Hawke",
+        "Julie Delpy",
+        "Andrea Eckert"
+      ],
+      "language": "English, German, French",
+      "country": "United States, Austria",
+      "metascore": "79",
+      "awards": "2 wins & 7 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_113",
@@ -5878,6 +6307,7 @@
     {
       "id": "movie_114",
       "title": "Guy Ritchie's The Covenant",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDY2NmI1YzAtYmE2OS00NTY4LWJjM2UtNjQzMDliYzc5MzUyXkEyXkFqcGc@._V1_SX300.jpg",
       "releaseDate": "",
       "genre": "Action, Drama, Thriller",
       "myRating": 7.7,
@@ -5901,52 +6331,7 @@
       "position": 115
     },
     {
-      "id": "movie_137",
-      "title": "The Super Mario Galaxy Movie",
-      "releaseDate": "",
-      "genre": "Animation, Adventure, Comedy",
-      "myRating": 7.7,
-      "imdbScore": 6.3,
-      "rottenTomatoesScore": 0.0,
-      "protagonistRating": 7.8,
-      "antagonistRating": 7.3,
-      "soundtrackRating": 8.3,
-      "setDesignRating": 8.6,
-      "plotRating": 7.7,
-      "endingRating": 6.2,
-      "year": "2026",
-      "watchedDate": "",
-      "runtime": 98,
-      "style": "Animated",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.0,
-        "rotten": 0.0
-      },
-      "position": 139,
-      "imdbId": "tt28650488",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYWYxYWRkMTUtMGMwZC00MzYyLThlNjEtNDcwMDYyMTQ4ZjJlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-      "plot": "Mario ventures into space, exploring cosmic worlds and tackling galactic challenges far from the familiar Mushroom Kingdom.",
-      "genres": [
-        "Animation",
-        "Adventure",
-        "Comedy"
-      ],
-      "rated": "PG",
-      "director": "Aaron Horvath, Michael Jelenic, Pierre Leduc",
-      "actors": [
-        "Brie Larson",
-        "Virginia Dare Jelenic",
-        "Benny Safdie"
-      ],
-      "language": "English",
-      "country": "Japan, United States",
-      "metascore": "37",
-      "awards": "N/A",
-      "production": "N/A"
-    },
-    {
-      "id": "movie_282",
+      "id": "movie_149",
       "title": "Iron Lung",
       "releaseDate": "",
       "genre": "Horror, Sci-Fi",
@@ -5968,7 +6353,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 140,
+      "position": 149,
       "imdbId": "tt27564844",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzkxOGU1YmQtNDc0Ni00M2JhLWFlZjktODMzOGU3MjQxMTQ0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "In a post-apocalyptic future after \"The Quiet Rapture\" event, a convict explores a blood ocean on a desolate moon using a submarine called the \"Iron Lung\" to search for missing stars/planets.",
@@ -5990,7 +6375,52 @@
       "production": "N/A"
     },
     {
-      "id": "movie_138",
+      "id": "movie_150",
+      "title": "The Super Mario Galaxy Movie",
+      "releaseDate": "",
+      "genre": "Animation, Adventure, Comedy",
+      "myRating": 7.7,
+      "imdbScore": 6.3,
+      "rottenTomatoesScore": 0.0,
+      "protagonistRating": 7.8,
+      "antagonistRating": 7.3,
+      "soundtrackRating": 8.3,
+      "setDesignRating": 8.6,
+      "plotRating": 7.7,
+      "endingRating": 6.2,
+      "year": "2026",
+      "watchedDate": "",
+      "runtime": 98,
+      "style": "Animated",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 150,
+      "imdbId": "tt28650488",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMGIzMGI4OWYtNzdkMy00MjJlLWJiMDMtZjY1Y2UwMzQ0YzY3XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+      "plot": "Mario ventures into space, exploring cosmic worlds and tackling galactic challenges far from the familiar Mushroom Kingdom.",
+      "genres": [
+        "Animation",
+        "Adventure",
+        "Comedy"
+      ],
+      "rated": "PG",
+      "director": "Aaron Horvath, Michael Jelenic, Pierre Leduc",
+      "actors": [
+        "Brie Larson",
+        "Virginia Dare Jelenic",
+        "Benny Safdie"
+      ],
+      "language": "English",
+      "country": "Japan, United States",
+      "metascore": "37",
+      "awards": "N/A",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_151",
       "title": "The Super Mario Bros. Movie",
       "releaseDate": "",
       "genre": "Animation, Adventure, Comedy",
@@ -6012,7 +6442,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 141,
+      "position": 151,
       "imdbId": "tt6718170",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BOGZlN2EzOTYtMzUzOS00NTM3LTg0MTQtZDVjZGM4YmJlNWNhXkEyXkFqcGc@._V1_QL75_UY562_CR0,0,380,562_.jpg",
       "plot": "Brooklyn plumbers Mario and Luigi are warped to the magical Mushroom Kingdom, and Mario must team up with Princess Peach, Toad, and Donkey Kong to save Luigi from the evil Bowser.",
@@ -6121,7 +6551,7 @@
       "country": "United States, Germany, Canada, France"
     },
     {
-      "id": "movie_141",
+      "id": "movie_154",
       "title": "The Amazing Spider-Man 2",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -6143,7 +6573,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 144,
+      "position": 154,
       "imdbId": "tt1872181",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BOTA5NDYxNTg0OV5BMl5BanBnXkFtZTgwODE5NzU1MTE@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "When New York is put under siege by Oscorp, it is up to Spider-Man to save the city he swore to protect as well as his loved ones.",
@@ -6252,7 +6682,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_144",
+      "id": "movie_157",
       "title": "The Penguin Lessons",
       "releaseDate": "2025-03-28",
       "genre": "Drama",
@@ -6271,10 +6701,10 @@
       "style": "Live Action",
       "mediaType": "Movie",
       "differences": {
-        "imdb": 0.05,
-        "rotten": 0.02
+        "imdb": 0.0,
+        "rotten": 0.0
       },
-      "position": 147,
+      "position": 157,
       "imdbId": "tt26677014",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTU1MmE0NDEtNjM0OC00MjExLThmNjUtNTE4ZGU0NjRmY2NlXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A disillusioned Englishman who goes to work in a school in a divided Argentina in 1976 finds his life transformed when he rescues an orphaned penguin from the beach.",
@@ -6381,6 +6811,51 @@
       "country": "United States"
     },
     {
+      "id": "movie_160",
+      "title": "Quantum of Solace",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Mystery",
+      "myRating": 7.5,
+      "imdbScore": 6.5,
+      "rottenTomatoesScore": 0.63,
+      "protagonistRating": 8.4,
+      "antagonistRating": 7.6,
+      "soundtrackRating": 7.4,
+      "setDesignRating": 7.1,
+      "plotRating": 6.6,
+      "endingRating": 7.7,
+      "year": "2008",
+      "watchedDate": "",
+      "runtime": 106,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 160,
+      "imdbId": "tt0830515",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYmMwZTA3MTAtNWU0Yy00NGZmLTg0YmItZTVkZGFjZTI1ZWJiXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "James Bond tries to stop an organisation from eliminating a country's most valuable resource.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Mystery"
+      ],
+      "rated": "PG-13",
+      "director": "Marc Forster",
+      "actors": [
+        "Daniel Craig",
+        "Olga Kurylenko",
+        "Mathieu Amalric"
+      ],
+      "language": "English, Spanish, Italian, French, Swiss German, German",
+      "country": "United Kingdom, United States, Italy",
+      "metascore": "58",
+      "awards": "Nominated for 2 BAFTA 4 wins & 32 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_122",
       "title": "Thor: The Dark World",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTQyNzAwOTUxOF5BMl5BanBnXkFtZTcwMTE0OTc5OQ@@._V1_SX300.jpg",
@@ -6426,6 +6901,7 @@
     {
       "id": "movie_140",
       "title": "The Running Man (2025)",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTk5NjU4OTAtNTEyMS00ZjBiLTg0ZjMtOGJiMGJhNjQ3MzYxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
       "myRating": 7.5,
@@ -6449,7 +6925,7 @@
       "position": 140
     },
     {
-      "id": "movie_149",
+      "id": "movie_163",
       "title": "Spider-Man",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -6471,7 +6947,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 152,
+      "position": 163,
       "imdbId": "tt0145487",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZWM0OWVmNTEtNWVkOS00MzgyLTkyMzgtMmE2ZTZiNjY4MmFiXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "After being bitten by a genetically-modified spider, a shy teenager gains spider-like abilities that he uses to fight injustice as a masked superhero and face a vengeful enemy.",
@@ -6494,7 +6970,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_150",
+      "id": "movie_164",
       "title": "Into the Wild",
       "releaseDate": "",
       "genre": "Adventure, Biography, Drama",
@@ -6516,7 +6992,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 153,
+      "position": 164,
       "imdbId": "tt0758758",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTgwZTJhNWMtNzVjMy00YzQzLWI4MTAtYmJhOGQ5ZmQ3MDM0XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "After graduating from Emory University, top student and athlete Christopher McCandless abandons his possessions, gives his entire $24,000 savings account to charity and hitchhikes to Alaska to live in the wilderness.",
@@ -6539,7 +7015,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_151",
+      "id": "movie_165",
       "title": "Now You See Me: Now You Don't",
       "releaseDate": "",
       "genre": "Crime, Thriller",
@@ -6561,7 +7037,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 154,
+      "position": 165,
       "imdbId": "tt4712810",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYmZmZDc1Y2EtMmU2MS00NmMzLTllZmYtNjlkODFkNjZlOGE0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "The Four Horsemen reunite and team up with a new generation of young illusionists to expose a diamond heiress's global money laundering scheme for criminals.",
@@ -6583,7 +7059,7 @@
       "production": "Lionsgate"
     },
     {
-      "id": "movie_152",
+      "id": "movie_166",
       "title": "Rango",
       "releaseDate": "",
       "genre": "Animation, Action, Adventure",
@@ -6605,7 +7081,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 155,
+      "position": 166,
       "imdbId": "tt1192628",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc4NjEyODE1OV5BMl5BanBnXkFtZTcwMjYzNTkxNA@@._V1_SX300.jpg",
       "plot": "Rango is an ordinary chameleon who accidentally winds up in the town of Dirt, a lawless outpost in the Wild West in desperate need of a new sheriff.",
@@ -6628,7 +7104,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_153",
+      "id": "movie_167",
       "title": "Knives Out",
       "releaseDate": "",
       "genre": "Comedy, Crime, Drama",
@@ -6650,7 +7126,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 156,
+      "position": 167,
       "imdbId": "tt8946378",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDU5ZTRkYmItZjg0Mi00ZTQwLThjMWItNWM3MTMxMzVjZmVjXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "When renowned crime novelist Harlan Thrombey is found dead at his estate just after his 85th birthday, the inquisitive and debonair Detective Benoit Blanc is mysteriously enlisted to investigate.",
@@ -6673,7 +7149,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_154",
+      "id": "movie_168",
       "title": "The Amazing Spider-Man",
       "releaseDate": "",
       "genre": "Action, Sci-Fi",
@@ -6695,7 +7171,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 157,
+      "position": 168,
       "imdbId": "tt0948470",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjMyOTM4MDMxNV5BMl5BanBnXkFtZTcwNjIyNzExOA@@._V1_QL75_UX380_CR0,1,380,562_.jpg",
       "plot": "After Peter Parker is bitten by a genetically altered spider, he gains newfound, spider-like powers and ventures out to save the city from the machinations of a mysterious reptilian foe.",
@@ -6717,7 +7193,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_155",
+      "id": "movie_169",
       "title": "Materialists",
       "releaseDate": "",
       "genre": "Comedy, Romance",
@@ -6739,7 +7215,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 158,
+      "position": 169,
       "imdbId": "tt30253473",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNmQxMTI1YmEtOGY3Yi00NzVlLWEzMjAtYTI1NWZkNDFiMDg1XkEyXkFqcGc@._V1_QL75_UX380_CR0,15,380,562_.jpg",
       "plot": "An ambitious young New York City matchmaker finds herself torn between the perfect match and her imperfect ex.",
@@ -6761,7 +7237,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_156",
+      "id": "movie_170",
       "title": "Black Hawk Down",
       "releaseDate": "",
       "genre": "Action, Drama, History",
@@ -6783,7 +7259,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 159,
+      "position": 170,
       "imdbId": "tt0265086",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYTM3YTQ1M2MtNDEyNC00NzRlLWFmOTgtYjBhNDg2ODNjNTU0XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "The story of one hundred and sixty elite U.S. soldiers who dropped into Mogadishu in October 1993 to capture two top lieutenants of a renegade warlord, but found themselves in a desperate battle with a large force of heavily armed...",
@@ -6978,7 +7454,7 @@
       "country": "United States, China, Colombia"
     },
     {
-      "id": "movie_161",
+      "id": "movie_175",
       "title": "The Fall Guy",
       "releaseDate": "",
       "genre": "Action, Comedy, Drama",
@@ -7000,7 +7476,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 164,
+      "position": 175,
       "imdbId": "tt1684562",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BM2U0MTJiYTItMjNiZS00MzU4LTkxYTAtYTU0ZGY1ODJhMjRhXkEyXkFqcGc@._V1_QL75_UX380_CR0,20,380,562_.jpg",
       "plot": "A stuntman, fresh off an almost career-ending accident, has to track down a missing movie star, solve a conspiracy and try to win back the love of his life while still doing his day job.",
@@ -7152,7 +7628,51 @@
       "country": "United States"
     },
     {
-      "id": "movie_165",
+      "id": "movie_179",
+      "title": "A Clockwork Orange",
+      "releaseDate": "",
+      "genre": "Crime, Sci-Fi",
+      "myRating": 7.2,
+      "imdbScore": 8.2,
+      "rottenTomatoesScore": 0.86,
+      "protagonistRating": 6.8,
+      "antagonistRating": 8.4,
+      "soundtrackRating": 8.3,
+      "setDesignRating": 7.2,
+      "plotRating": 6.2,
+      "endingRating": 6.5,
+      "year": "1971",
+      "watchedDate": "",
+      "runtime": 136,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 179,
+      "imdbId": "tt0066921",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTY3MjM1Mzc4N15BMl5BanBnXkFtZTgwODM0NzAxMDE@._V1_SX300.jpg",
+      "plot": "Alex DeLarge and his droogs barbarize a decaying near-future.",
+      "genres": [
+        "Crime",
+        "Sci-Fi"
+      ],
+      "rated": "R",
+      "director": "Stanley Kubrick",
+      "actors": [
+        "Malcolm McDowell",
+        "Patrick Magee",
+        "Michael Bates"
+      ],
+      "language": "English",
+      "country": "United Kingdom, United States",
+      "metascore": "77",
+      "awards": "Nominated for 4 Oscars. 12 wins & 26 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_180",
       "title": "The Age of Adaline",
       "releaseDate": "",
       "genre": "Drama, Fantasy, Romance",
@@ -7174,7 +7694,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 168,
+      "position": 180,
       "imdbId": "tt1655441",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTAzMTQzMTA2MjheQTJeQWpwZ15BbWU4MDk2MTg2MzUx._V1_QL75_UX380_CR0,6,380,562_.jpg",
       "plot": "An ageless woman meets someone who reawakens her passion for life and romance.",
@@ -7197,7 +7717,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_166",
+      "id": "movie_181",
       "title": "Transformers: Dark of the Moon",
       "releaseDate": "",
       "genre": "Action, Adventure, Comedy",
@@ -7219,7 +7739,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 169,
+      "position": 181,
       "imdbId": "tt1399103",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTkwOTY0MTc1NV5BMl5BanBnXkFtZTcwMDQwNjA2NQ@@._V1_SX300.jpg",
       "plot": "The Autobots learn of a Cybertronian spacecraft hidden on the moon, and race against the Decepticons to reach it and to learn its secrets.",
@@ -7328,7 +7848,7 @@
       "country": "United States, Spain"
     },
     {
-      "id": "movie_169",
+      "id": "movie_184",
       "title": "Transformers: Age of Extinction",
       "releaseDate": "",
       "genre": "Action, Adventure, Comedy",
@@ -7350,7 +7870,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 172,
+      "position": 184,
       "imdbId": "tt2109248",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjEwNTg1MTA5Nl5BMl5BanBnXkFtZTgwOTg2OTM4MTE@._V1_SX300.jpg",
       "plot": "When humanity allies with a bounty hunter in pursuit of Optimus Prime, the Autobots turn to a mechanic and his family for help.",
@@ -7373,7 +7893,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_170",
+      "id": "movie_185",
       "title": "Transformers: The Last Knight",
       "releaseDate": "",
       "genre": "Action, Adventure, Comedy",
@@ -7395,7 +7915,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 173,
+      "position": 185,
       "imdbId": "tt3371366",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYWNlNjU3ZTItYTY3Mi00YTU1LTk4NjQtYjQ3MjFiNjcyODliXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A deadly threat from Earth's history reappears and a hunt for a lost artifact takes place between Autobots and Decepticons, while Optimus Prime encounters his creator in space.",
@@ -7415,6 +7935,51 @@
       "country": "United States, China, Canada",
       "metascore": "27",
       "awards": "3 wins & 21 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_186",
+      "title": "Disclosure Day",
+      "releaseDate": "",
+      "genre": "Action, Drama, Mystery",
+      "myRating": 7.1,
+      "imdbScore": 6.7,
+      "rottenTomatoesScore": 0.0,
+      "protagonistRating": 7.3,
+      "antagonistRating": 5.6,
+      "soundtrackRating": 5.3,
+      "setDesignRating": 7.6,
+      "plotRating": 8.8,
+      "endingRating": 8.1,
+      "year": "2026",
+      "watchedDate": "",
+      "runtime": 145,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 186,
+      "imdbId": "tt15047880",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTgwNDI1ZjctYWNmMS00MTJhLTg1ZWItMzI1Yjk5NjZkYWFkXkEyXkFqcGc@._V1_QL75_UX380_CR0,20,380,562_.jpg",
+      "plot": "If you found out we weren't alone, if someone showed you, proved it to you, would that frighten you?",
+      "genres": [
+        "Action",
+        "Drama",
+        "Mystery"
+      ],
+      "rated": "PG-13",
+      "director": "Steven Spielberg",
+      "actors": [
+        "Emily Blunt",
+        "Josh O&apos;Connor",
+        "Colin Firth"
+      ],
+      "language": "English",
+      "country": "United States, Canada, New Zealand, Japan",
+      "metascore": "74",
+      "awards": "2 wins & 8 nominations total",
       "production": "N/A"
     },
     {
@@ -7459,6 +8024,51 @@
       ],
       "language": "English, Mandarin",
       "country": "United States"
+    },
+    {
+      "id": "movie_188",
+      "title": "The Devil's Advocate",
+      "releaseDate": "",
+      "genre": "Drama, Fantasy, Mystery",
+      "myRating": 7.1,
+      "imdbScore": 7.5,
+      "rottenTomatoesScore": 0.65,
+      "protagonistRating": 8.0,
+      "antagonistRating": 7.8,
+      "soundtrackRating": 5.8,
+      "setDesignRating": 7.2,
+      "plotRating": 7.0,
+      "endingRating": 6.8,
+      "year": "1997",
+      "watchedDate": "",
+      "runtime": 144,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 188,
+      "imdbId": "tt0118971",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGIxZmU2ZjEtYjc3OC00Y2FiLWE2ZTQtZGI3NzE0YmRhOTMxXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "An exceptionally adept Florida lawyer is offered a job at a high-end New York City law firm with a high-end boss - the biggest opportunity of his career to date.",
+      "genres": [
+        "Drama",
+        "Fantasy",
+        "Mystery"
+      ],
+      "rated": "R",
+      "director": "Taylor Hackford",
+      "actors": [
+        "Keanu Reeves",
+        "Al Pacino",
+        "Charlize Theron"
+      ],
+      "language": "English, German, Italian, Mandarin, Spanish",
+      "country": "United States",
+      "metascore": "60",
+      "awards": "2 wins & 7 nominations total",
+      "production": "N/A"
     },
     {
       "id": "movie_133",
@@ -7547,7 +8157,7 @@
       "country": "United States, Canada"
     },
     {
-      "id": "movie_174",
+      "id": "movie_191",
       "title": "The Bourne Legacy",
       "releaseDate": "",
       "genre": "Action, Adventure, Thriller",
@@ -7569,7 +8179,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 177,
+      "position": 191,
       "imdbId": "tt1194173",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTc4Njk3MDM1Nl5BMl5BanBnXkFtZTcwODgyOTMxOA@@._V1_SX300.jpg",
       "plot": "An expansion of the universe from Robert Ludlum's novels, centered on a new hero whose stakes have been triggered by the events of the previous three films.",
@@ -7633,51 +8243,6 @@
       ],
       "language": "English, Mandarin, Cantonese",
       "country": "United States, Hong Kong"
-    },
-    {
-      "id": "movie_286",
-      "title": "The Devil's Advocate",
-      "releaseDate": "",
-      "genre": "Drama, Fantasy, Mystery",
-      "myRating": 7.1,
-      "imdbScore": 7.5,
-      "rottenTomatoesScore": 0.65,
-      "protagonistRating": 8.0,
-      "antagonistRating": 7.8,
-      "soundtrackRating": 5.8,
-      "setDesignRating": 7.2,
-      "plotRating": 7.0,
-      "endingRating": 6.8,
-      "year": "1997",
-      "watchedDate": "",
-      "runtime": 144,
-      "style": "nan",
-      "mediaType": "Nan",
-      "differences": {
-        "imdb": 0.0,
-        "rotten": 0.0
-      },
-      "position": 179,
-      "imdbId": "tt0118971",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGIxZmU2ZjEtYjc3OC00Y2FiLWE2ZTQtZGI3NzE0YmRhOTMxXkEyXkFqcGc@._V1_SX300.jpg",
-      "plot": "An exceptionally adept Florida lawyer is offered a job at a high-end New York City law firm with a high-end boss - the biggest opportunity of his career to date.",
-      "genres": [
-        "Drama",
-        "Fantasy",
-        "Mystery"
-      ],
-      "rated": "R",
-      "director": "Taylor Hackford",
-      "actors": [
-        "Keanu Reeves",
-        "Al Pacino",
-        "Charlize Theron"
-      ],
-      "language": "English, German, Italian, Mandarin, Spanish",
-      "country": "United States",
-      "metascore": "60",
-      "awards": "2 wins & 7 nominations total",
-      "production": "N/A"
     },
     {
       "id": "movie_136",
@@ -7852,6 +8417,51 @@
       "country": "United States, United Kingdom, Canada"
     },
     {
+      "id": "movie_197",
+      "title": "The Punisher: One Last Kill",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Crime",
+      "myRating": 7.0,
+      "imdbScore": 7.0,
+      "rottenTomatoesScore": 0.73,
+      "protagonistRating": 9.5,
+      "antagonistRating": 8.7,
+      "soundtrackRating": 5.0,
+      "setDesignRating": 7.7,
+      "plotRating": 5.4,
+      "endingRating": 5.8,
+      "year": "2026",
+      "watchedDate": "",
+      "runtime": 60,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 197,
+      "imdbId": "tt36042156",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzdhZTI5YWQtOTE5ZS00YmE1LTgxOWUtN2ZiMzYwOGU5OWNhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+      "plot": "As Frank Castle searches for meaning beyond revenge, an unexpected force pulls him back into the fight.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Crime"
+      ],
+      "rated": "N/A",
+      "director": "Reinaldo Marcus Green",
+      "actors": [
+        "Jon Bernthal",
+        "Chelsea Brea",
+        "Colton Hill"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "N/A",
+      "awards": "N/A",
+      "production": "N/A"
+    },
+    {
       "id": "movie_141",
       "title": "A Scanner Darkly",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMDliMjJiYTYtYWU0YS00OTUzLWI4MjMtYmM1YzgxNDcwOTZjXkEyXkFqcGc@._V1_SX300.jpg",
@@ -7937,6 +8547,96 @@
       "country": "United States"
     },
     {
+      "id": "movie_200",
+      "title": "Spectre",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Thriller",
+      "myRating": 7.0,
+      "imdbScore": 6.8,
+      "rottenTomatoesScore": 0.63,
+      "protagonistRating": 7.6,
+      "antagonistRating": 6.5,
+      "soundtrackRating": 8.5,
+      "setDesignRating": 8.0,
+      "plotRating": 5.3,
+      "endingRating": 6.1,
+      "year": "2015",
+      "watchedDate": "",
+      "runtime": 148,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 200,
+      "imdbId": "tt2379713",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzA5MzFiNDAtYTI0NC00MDE5LTljYTctYTNkODk1OTZlODI5XkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "A cryptic message from James Bond's past sends him on a trail to uncover the existence of a sinister organisation named SPECTRE. With a new threat dawning, Bond learns the terrible truth about the author of all his pain in his mos...",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Thriller"
+      ],
+      "rated": "PG-13",
+      "director": "Sam Mendes",
+      "actors": [
+        "Daniel Craig",
+        "Christoph Waltz",
+        "Léa Seydoux"
+      ],
+      "language": "English, German, Italian, Spanish, French, Ukrainian",
+      "country": "United Kingdom, United States, Morocco, Italy, Austria, Canada, Mexico",
+      "metascore": "60",
+      "awards": "Won 1 Oscar. 8 wins & 37 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_201",
+      "title": "The Greatest Showman",
+      "releaseDate": "",
+      "genre": "Biography, Drama, Musical",
+      "myRating": 7.0,
+      "imdbScore": 7.5,
+      "rottenTomatoesScore": 0.56,
+      "protagonistRating": 6.4,
+      "antagonistRating": 6.0,
+      "soundtrackRating": 9.6,
+      "setDesignRating": 7.3,
+      "plotRating": 4.9,
+      "endingRating": 7.8,
+      "year": "2017",
+      "watchedDate": "",
+      "runtime": 105,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 201,
+      "imdbId": "tt1485796",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI1NDYzNzY2Ml5BMl5BanBnXkFtZTgwODQwODczNTM@._V1_SX300.jpg",
+      "plot": "Celebrates the birth of show business and tells of a visionary who rose from nothing to create a spectacle that became a worldwide sensation.",
+      "genres": [
+        "Biography",
+        "Drama",
+        "Musical"
+      ],
+      "rated": "PG",
+      "director": "Michael Gracey",
+      "actors": [
+        "Hugh Jackman",
+        "Michelle Williams",
+        "Zac Efron"
+      ],
+      "language": "English",
+      "country": "United States, China",
+      "metascore": "48",
+      "awards": "Nominated for 1 Oscar. 17 wins & 32 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_142",
       "title": "The Incredibles",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTY5OTU0OTc2NV5BMl5BanBnXkFtZTcwMzU4MDcyMQ@@._V1_SX300.jpg",
@@ -7980,7 +8680,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_183",
+      "id": "movie_203",
       "title": "Rememory",
       "releaseDate": "",
       "genre": "Drama, Mystery, Sci-Fi",
@@ -8002,7 +8702,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 187,
+      "position": 203,
       "imdbId": "tt2331047",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjMzNzAyNzYwOF5BMl5BanBnXkFtZTgwMDg5ODEyMzI@._V1_SX300.jpg",
       "plot": "A man steals a machine that can extract, record, and play a person's memories to try to solve the murder of the scientist who invented it.",
@@ -8196,7 +8896,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_188",
+      "id": "movie_208",
       "title": "Transformers: Revenge of the Fallen",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -8218,7 +8918,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 192,
+      "position": 208,
       "imdbId": "tt1055369",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjk4OTczOTk0NF5BMl5BanBnXkFtZTcwNjQ0NzMzMw@@._V1_SX300.jpg",
       "plot": "Sam Witwicky leaves the Autobots behind for a normal life. But when his mind is filled with cryptic symbols, the Decepticons target him and he is dragged back into the Transformers' war.",
@@ -8327,7 +9027,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_191",
+      "id": "movie_211",
       "title": "Bruce Almighty",
       "releaseDate": "",
       "genre": "Comedy, Fantasy",
@@ -8349,7 +9049,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 195,
+      "position": 211,
       "imdbId": "tt0315327",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZWM2ZjA2OTctZmRhMy00ZDIzLTkwZGQtYTRlNmQwZWZmMDBlXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A whiny news reporter is given the chance to step into God's shoes.",
@@ -8371,7 +9071,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_192",
+      "id": "movie_212",
       "title": "The Big Short",
       "releaseDate": "",
       "genre": "Biography, Comedy, Drama",
@@ -8393,7 +9093,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 196,
+      "position": 212,
       "imdbId": "tt1596363",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZDZkNDQ3YjktYjBlZC00YTY1LTgxOGYtY2RhMWFhZmNkZGY3XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "In 2006-2007 a group of investors bet against the United States mortgage market. In their research, they discover how flawed and corrupt the market is.",
@@ -8459,7 +9159,7 @@
       "country": "United States, India, Singapore, Canada, United Kingdom, Japan, Australia"
     },
     {
-      "id": "movie_194",
+      "id": "movie_214",
       "title": "Cloudy with a Chance of Meatballs",
       "releaseDate": "",
       "genre": "Animation, Adventure, Comedy",
@@ -8481,7 +9181,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 198,
+      "position": 214,
       "imdbId": "tt0844471",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTg0MjAwNDI5MV5BMl5BanBnXkFtZTcwODkyMzg2Mg@@._V1_SX300.jpg",
       "plot": "A local scientist is often regarded as a failure until he invents a machine that can make food fall from the sky. But little does he know that things are about to take a turn for the worst.",
@@ -8504,7 +9204,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_195",
+      "id": "movie_215",
       "title": "Spider-Man 3",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -8526,7 +9226,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 199,
+      "position": 215,
       "imdbId": "tt0413300",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BODE2NzNhMDctYjUzMC00Y2M5LWI2Y2EtODJkZTFjN2Y5ODlmXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A strange black entity from another world bonds with Peter Parker and causes inner turmoil as he contends with new villains, temptations, and revenge.",
@@ -8636,6 +9336,7 @@
     {
       "id": "movie_151",
       "title": "The Divergent Series: Insurgent",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTgxOTYxMTg3OF5BMl5BanBnXkFtZTgwMDgyMzA2NDE@._V1_SX300.jpg",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
       "myRating": 6.8,
@@ -8659,7 +9360,7 @@
       "position": 152
     },
     {
-      "id": "movie_199",
+      "id": "movie_219",
       "title": "Spider-Man 2",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -8681,7 +9382,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 203,
+      "position": 219,
       "imdbId": "tt0316654",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNGQ0YTQyYTgtNWI2YS00NTE2LWJmNDItNTFlMTUwNmFlZTM0XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Peter Parker is beset with troubles in his failing personal life as he battles a former brilliant scientist named Otto Octavius.",
@@ -8706,7 +9407,7 @@
     {
       "id": "movie_154",
       "title": "S.W.A.T.: Firefight",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjE1OTQ2NzgxM15BMl5BanBnXkFtZTcwNTk3NDM1NA@@._V1_SX300.jpg",
+      "posterUrl": "/img/projects/movies/swat-firefight.jfif",
       "releaseDate": "",
       "genre": "Action, Crime, Thriller",
       "myRating": 6.7,
@@ -8748,7 +9449,51 @@
       "country": "USA"
     },
     {
-      "id": "movie_201",
+      "id": "movie_221",
+      "title": "Micheal",
+      "releaseDate": "",
+      "genre": "Documentary, Sport",
+      "myRating": 6.7,
+      "imdbScore": 7.5,
+      "rottenTomatoesScore": 0.0,
+      "protagonistRating": 7.6,
+      "antagonistRating": 5.9,
+      "soundtrackRating": 8.3,
+      "setDesignRating": 6.3,
+      "plotRating": 6.8,
+      "endingRating": 5.5,
+      "year": "2000",
+      "watchedDate": "",
+      "runtime": 30,
+      "style": "nan",
+      "mediaType": "Nan",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 221,
+      "imdbId": "tt0236867",
+      "posterUrl": "/img/projects/movies/placeholder-movie.svg",
+      "plot": "N/A",
+      "genres": [
+        "Documentary",
+        "Sport"
+      ],
+      "rated": "N/A",
+      "director": "Jim Podhoretz, Larry Weitzman",
+      "actors": [
+        "Micheal Ray Richardson",
+        "Chris Rock",
+        "Stan Albeck"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "N/A",
+      "awards": "N/A",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_222",
       "title": "Final Destination: Bloodlines",
       "releaseDate": "",
       "genre": "Horror, Thriller",
@@ -8770,7 +9515,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 205,
+      "position": 222,
       "imdbId": "tt9619824",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzc3OWFhZWItMTE2Yy00N2NmLTg1YTktNGVlNDY0ODQ5YjNlXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "Plagued by a recurring violent nightmare, a college student returns home to find the one person who can break the cycle and save her family from the horrific fate that inevitably awaits them.",
@@ -8835,7 +9580,7 @@
       "country": "United States, Japan, India, United Kingdom, Australia"
     },
     {
-      "id": "movie_203",
+      "id": "movie_224",
       "title": "No Reservations",
       "releaseDate": "",
       "genre": "Comedy, Drama, Romance",
@@ -8857,7 +9602,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 207,
+      "position": 224,
       "imdbId": "tt0481141",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTI1NzQ5MzU1OV5BMl5BanBnXkFtZTcwNzExODU0MQ@@._V1_SX300.jpg",
       "plot": "The life of a top chef changes when she becomes the guardian of her young niece.",
@@ -8880,51 +9625,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_284",
-      "title": "Micheal",
-      "releaseDate": "",
-      "genre": "Documentary, Sport",
-      "myRating": 6.7,
-      "imdbScore": 7.5,
-      "rottenTomatoesScore": 0.0,
-      "protagonistRating": 7.6,
-      "antagonistRating": 5.9,
-      "soundtrackRating": 8.3,
-      "setDesignRating": 6.3,
-      "plotRating": 6.8,
-      "endingRating": 5.5,
-      "year": "2000",
-      "watchedDate": "",
-      "runtime": 30,
-      "style": "nan",
-      "mediaType": "Nan",
-      "differences": {
-        "imdb": 0.0,
-        "rotten": 0.0
-      },
-      "position": 208,
-      "imdbId": "tt0236867",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjg1NTZiZmUtZjgyYS00ZmExLWI0YjgtMWNkNzYxZTExMjUyXkEyXkFqcGdeQXVyMTI2NzcyMTA@._V1_SX300.jpg",
-      "plot": "N/A",
-      "genres": [
-        "Documentary",
-        "Sport"
-      ],
-      "rated": "N/A",
-      "director": "Jim Podhoretz, Larry Weitzman",
-      "actors": [
-        "Micheal Ray Richardson",
-        "Chris Rock",
-        "Stan Albeck"
-      ],
-      "language": "English",
-      "country": "United States",
-      "metascore": "N/A",
-      "awards": "N/A",
-      "production": "N/A"
-    },
-    {
-      "id": "movie_204",
+      "id": "movie_225",
       "title": "Chappie",
       "releaseDate": "",
       "genre": "Action, Crime, Drama",
@@ -8946,7 +9647,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 209,
+      "position": 225,
       "imdbId": "tt1823672",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTUyNTI4NTIwNl5BMl5BanBnXkFtZTgwMjQ4MTI0NDE@._V1_SX300.jpg",
       "plot": "In the near future, crime is patrolled by a mechanized police force. When one police droid, Chappie, is stolen and given new programming, he becomes the first robot with the ability to think and feel for himself.",
@@ -8969,7 +9670,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_205",
+      "id": "movie_226",
       "title": "The Fantastic Four: First Steps",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -8991,7 +9692,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 210,
+      "position": 226,
       "imdbId": "tt10676052",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BOGM5MzA3MDAtYmEwMi00ZDNiLTg4MDgtMTZjOTc0ZGMyNTIwXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "Forced to balance their roles as heroes with the strength of their family bond, the Fantastic Four must defend Earth from a ravenous space god called Galactus and his enigmatic herald, the Silver Surfer.",
@@ -9100,7 +9801,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_208",
+      "id": "movie_229",
       "title": "Final Destination 3",
       "releaseDate": "",
       "genre": "Horror, Thriller",
@@ -9122,7 +9823,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 213,
+      "position": 229,
       "imdbId": "tt0414982",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzI3NzE0MmEtYmFjZC00NTJhLWI4OWUtNGRmNDEwNGU3NzM0XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Wendy Christensen and a group of teens who escaped a fatal roller-coaster crash face a bloody date with Death.",
@@ -9187,7 +9888,7 @@
       "country": "United States, South Korea"
     },
     {
-      "id": "movie_210",
+      "id": "movie_231",
       "title": "Final Destination 2",
       "releaseDate": "",
       "genre": "Horror, Thriller",
@@ -9209,7 +9910,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 215,
+      "position": 231,
       "imdbId": "tt0309593",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjExMTMyODAzN15BMl5BanBnXkFtZTYwNjc5NDQ3._V1_SX300.jpg",
       "plot": "Death is stalking Kimberly Corman and multiple survivors of a deadly highway accident.",
@@ -9319,6 +10020,7 @@
     {
       "id": "movie_198",
       "title": "Superman (2025)",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BOGMwZGJiM2EtMzEwZC00YTYzLWIxNzYtMmJmZWNlZjgxZTMwXkEyXkFqcGc@._V1_QL75_UY562_CR35,0,380,562_.jpg",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
       "myRating": 6.5,
@@ -9342,7 +10044,52 @@
       "position": 198
     },
     {
-      "id": "movie_214",
+      "id": "movie_235",
+      "title": "I Am Legend",
+      "releaseDate": "",
+      "genre": "Drama, Horror, Sci-Fi",
+      "myRating": 6.5,
+      "imdbScore": 7.2,
+      "rottenTomatoesScore": 0.68,
+      "protagonistRating": 6.7,
+      "antagonistRating": 6.8,
+      "soundtrackRating": 5.4,
+      "setDesignRating": 7.1,
+      "plotRating": 6.6,
+      "endingRating": 6.4,
+      "year": "2007",
+      "watchedDate": "",
+      "runtime": 101,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 235,
+      "imdbId": "tt0480249",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMGE1OWZkZmItNmVhMC00YzAxLTgxOTctNjg3NWExM2RmOWJkXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Years after a plague kills most of humanity and transforms the rest into monsters, the sole survivor in New York City struggles valiantly to find a cure.",
+      "genres": [
+        "Drama",
+        "Horror",
+        "Sci-Fi"
+      ],
+      "rated": "PG-13",
+      "director": "Francis Lawrence",
+      "actors": [
+        "Will Smith",
+        "Alice Braga",
+        "Charlie Tahan"
+      ],
+      "language": "English",
+      "country": "United States, United Kingdom",
+      "metascore": "65",
+      "awards": "9 wins & 23 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_236",
       "title": "Transformers: Rise of the Beasts",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -9364,7 +10111,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 219,
+      "position": 236,
       "imdbId": "tt5090568",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZTVkZWY5MmItYjY3OS00OWY3LTg2NWEtOWE1NmQ4NGMwZGNlXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "During the '90s, a new faction of Transformers - the Maximals - join the Autobots as allies in the battle for Earth.",
@@ -9430,48 +10177,48 @@
       "country": "Australia, United States"
     },
     {
-      "id": "movie_281",
-      "title": "I Am Legend",
+      "id": "movie_238",
+      "title": "Roman J. Israel, Esq.",
       "releaseDate": "",
-      "genre": "Drama, Horror, Sci-Fi",
+      "genre": "Crime, Drama, Thriller",
       "myRating": 6.5,
-      "imdbScore": 7.2,
-      "rottenTomatoesScore": 0.68,
-      "protagonistRating": 6.7,
-      "antagonistRating": 6.8,
-      "soundtrackRating": 5.4,
-      "setDesignRating": 7.1,
-      "plotRating": 6.6,
-      "endingRating": 6.4,
-      "year": "2007",
+      "imdbScore": 6.5,
+      "rottenTomatoesScore": 0.55,
+      "protagonistRating": 7.7,
+      "antagonistRating": 6.2,
+      "soundtrackRating": 5.3,
+      "setDesignRating": 6.0,
+      "plotRating": 7.3,
+      "endingRating": 6.2,
+      "year": "2017",
       "watchedDate": "",
-      "runtime": 101,
-      "style": "nan",
-      "mediaType": "Nan",
+      "runtime": 122,
+      "style": "Live Action",
+      "mediaType": "Movie",
       "differences": {
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 221,
-      "imdbId": "tt0480249",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMGE1OWZkZmItNmVhMC00YzAxLTgxOTctNjg3NWExM2RmOWJkXkEyXkFqcGc@._V1_SX300.jpg",
-      "plot": "Years after a plague kills most of humanity and transforms the rest into monsters, the sole survivor in New York City struggles valiantly to find a cure.",
+      "position": 238,
+      "imdbId": "tt6000478",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNmQ4ODQwNTMtMDk3OC00NzMzLTgzNGQtOTA2ZWExMDI3Yjg2XkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Roman J. Israel, Esq., a driven, idealistic defense attorney, finds himself in a tumultuous series of events that lead to a crisis and the necessity for extreme action.",
       "genres": [
+        "Crime",
         "Drama",
-        "Horror",
-        "Sci-Fi"
+        "Thriller"
       ],
       "rated": "PG-13",
-      "director": "Francis Lawrence",
+      "director": "Dan Gilroy",
       "actors": [
-        "Will Smith",
-        "Alice Braga",
-        "Charlie Tahan"
+        "Denzel Washington",
+        "Colin Farrell",
+        "Carmen Ejogo"
       ],
-      "language": "English",
-      "country": "United States, United Kingdom",
-      "metascore": "65",
-      "awards": "9 wins & 23 nominations total",
+      "language": "English, Spanish, Armenian",
+      "country": "Canada, United Arab Emirates, United States",
+      "metascore": "58",
+      "awards": "Nominated for 1 Oscar. 2 wins & 11 nominations total",
       "production": "N/A"
     },
     {
@@ -9689,7 +10436,7 @@
       "country": "United Kingdom, China, Japan, United States, Mexico, Australia"
     },
     {
-      "id": "movie_221",
+      "id": "movie_244",
       "title": "Final Destination",
       "releaseDate": "",
       "genre": "Horror, Thriller",
@@ -9711,7 +10458,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 227,
+      "position": 244,
       "imdbId": "tt0195714",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjE1MjlmOWYtYzdjMS00OTgwLThjMDctZWU4N2FkZjgyNTJiXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "After getting a premonition about a plane crash on his school trip, Alex, a student, saves a few of his classmates. However, their situation gets complicated when death starts chasing them.",
@@ -9818,6 +10565,51 @@
       "country": "United States"
     },
     {
+      "id": "movie_247",
+      "title": "Underworld Evolution",
+      "releaseDate": "",
+      "genre": "Action, Fantasy, Thriller",
+      "myRating": 6.3,
+      "imdbScore": 6.7,
+      "rottenTomatoesScore": 0.17,
+      "protagonistRating": 6.6,
+      "antagonistRating": 6.6,
+      "soundtrackRating": 5.3,
+      "setDesignRating": 5.6,
+      "plotRating": 6.8,
+      "endingRating": 6.7,
+      "year": "2006",
+      "watchedDate": "",
+      "runtime": 106,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 247,
+      "imdbId": "tt0401855",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjEzNDY1OTQwOV5BMl5BanBnXkFtZTcwNjcxMTIzMw@@._V1_SX300.jpg",
+      "plot": "Picking up directly from the previous movie, vampire warrior Selene and the half werewolf Michael hunt for clues to reveal the history of their races and the war between them.",
+      "genres": [
+        "Action",
+        "Fantasy",
+        "Thriller"
+      ],
+      "rated": "R",
+      "director": "Len Wiseman",
+      "actors": [
+        "Kate Beckinsale",
+        "Scott Speedman",
+        "Bill Nighy"
+      ],
+      "language": "English, French, Hungarian",
+      "country": "United States, Canada",
+      "metascore": "36",
+      "awards": "2 wins & 6 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_168",
       "title": "Hitman's Wife's Bodyguard",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BY2ZjOWJkMTYtYTI1Yi00YTI5LTg5MWItYmU4NGU0ODViYzQ4XkEyXkFqcGc@._V1_SX300.jpg",
@@ -9861,52 +10653,7 @@
       "country": "United Kingdom, United States, Sweden, Bulgaria, France"
     },
     {
-      "id": "movie_229",
-      "title": "Underworld Evolution",
-      "releaseDate": "",
-      "genre": "Action, Fantasy, Thriller",
-      "myRating": 6.3,
-      "imdbScore": 6.7,
-      "rottenTomatoesScore": 0.17,
-      "protagonistRating": 6.6,
-      "antagonistRating": 6.6,
-      "soundtrackRating": 5.3,
-      "setDesignRating": 5.6,
-      "plotRating": 6.8,
-      "endingRating": 6.7,
-      "year": "2006",
-      "watchedDate": "",
-      "runtime": 106,
-      "style": "nan",
-      "mediaType": "Nan",
-      "differences": {
-        "imdb": 0.0,
-        "rotten": 0.0
-      },
-      "position": 231,
-      "imdbId": "tt0401855",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjEzNDY1OTQwOV5BMl5BanBnXkFtZTcwNjcxMTIzMw@@._V1_SX300.jpg",
-      "plot": "Picking up directly from the previous movie, vampire warrior Selene and the half werewolf Michael hunt for clues to reveal the history of their races and the war between them.",
-      "genres": [
-        "Action",
-        "Fantasy",
-        "Thriller"
-      ],
-      "rated": "R",
-      "director": "Len Wiseman",
-      "actors": [
-        "Kate Beckinsale",
-        "Scott Speedman",
-        "Bill Nighy"
-      ],
-      "language": "English, French, Hungarian",
-      "country": "United States, Canada",
-      "metascore": "36",
-      "awards": "2 wins & 6 nominations total",
-      "production": "N/A"
-    },
-    {
-      "id": "movie_225",
+      "id": "movie_249",
       "title": "Underworld Awakening",
       "releaseDate": "",
       "genre": "Action, Fantasy, Thriller",
@@ -9928,7 +10675,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 232,
+      "position": 249,
       "imdbId": "tt1496025",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjAxMjc0ODk0OF5BMl5BanBnXkFtZTcwMTc5NDQwNw@@._V1_SX300.jpg",
       "plot": "When human forces discover the existence of the Vampire and Lycan clans, a war to eradicate both species commences. The vampire warrior Selene leads the battle against humankind.",
@@ -9994,6 +10741,51 @@
       "country": "United States, China"
     },
     {
+      "id": "movie_251",
+      "title": "In The Grey",
+      "releaseDate": "",
+      "genre": "Action, Drama, Thriller",
+      "myRating": 6.2,
+      "imdbScore": 6.6,
+      "rottenTomatoesScore": 0.49,
+      "protagonistRating": 7.6,
+      "antagonistRating": 5.5,
+      "soundtrackRating": 5.0,
+      "setDesignRating": 6.0,
+      "plotRating": 5.6,
+      "endingRating": 7.6,
+      "year": "2026",
+      "watchedDate": "",
+      "runtime": 98,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 251,
+      "imdbId": "tt27681354",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTZkMTIzMTItMTQwZS00MTg4LWE0MTEtM2NiNmUzYjRmMGUxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+      "plot": "A covert team of elite operatives are living in the shadows. When a ruthless despot steals a billion-dollar fortune, they're sent to take it back-an impossible heist that erupts into a deadly game of strategy, deception and survival.",
+      "genres": [
+        "Action",
+        "Drama",
+        "Thriller"
+      ],
+      "rated": "R",
+      "director": "Guy Ritchie",
+      "actors": [
+        "Henry Cavill",
+        "Jake Gyllenhaal",
+        "Eiza González"
+      ],
+      "language": "English",
+      "country": "United Kingdom, United States",
+      "metascore": "53",
+      "awards": "N/A",
+      "production": "N/A"
+    },
+    {
       "id": "movie_170",
       "title": "Midsommar",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzQxNzQzOTQwM15BMl5BanBnXkFtZTgwMDQ2NTcwODM@._V1_SX300.jpg",
@@ -10037,6 +10829,96 @@
       "country": "United States, Sweden"
     },
     {
+      "id": "movie_253",
+      "title": "Underworld",
+      "releaseDate": "",
+      "genre": "Action, Fantasy, Thriller",
+      "myRating": 6.2,
+      "imdbScore": 7.0,
+      "rottenTomatoesScore": 0.3,
+      "protagonistRating": 6.4,
+      "antagonistRating": 6.7,
+      "soundtrackRating": 5.5,
+      "setDesignRating": 5.7,
+      "plotRating": 6.6,
+      "endingRating": 6.4,
+      "year": "2003",
+      "watchedDate": "",
+      "runtime": 121,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 253,
+      "imdbId": "tt0320691",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BOWIwZjFkYjktZTI3My00YzhkLWI5NmUtZDYyMTg5ZWVmODZkXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Selene, a vampire warrior, is entrenched in a conflict between vampires and werewolves, while falling in love with Michael, a human who is sought by werewolves for unknown reasons.",
+      "genres": [
+        "Action",
+        "Fantasy",
+        "Thriller"
+      ],
+      "rated": "R",
+      "director": "Len Wiseman",
+      "actors": [
+        "Kate Beckinsale",
+        "Scott Speedman",
+        "Shane Brolly"
+      ],
+      "language": "English",
+      "country": "United States, United Kingdom, Germany, Hungary",
+      "metascore": "42",
+      "awards": "1 win & 10 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_254",
+      "title": "Jack Ryan Ghost War",
+      "releaseDate": "",
+      "genre": "Action, Drama, Thriller",
+      "myRating": 6.2,
+      "imdbScore": 5.7,
+      "rottenTomatoesScore": 0.41,
+      "protagonistRating": 7.0,
+      "antagonistRating": 6.5,
+      "soundtrackRating": 5.5,
+      "setDesignRating": 7.3,
+      "plotRating": 5.6,
+      "endingRating": 5.3,
+      "year": "2026",
+      "watchedDate": "",
+      "runtime": 105,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 254,
+      "imdbId": "tt34378301",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BZGVkZjAxMzYtNGE5YS00ZWEwLTk0NGMtY2Q4MWJiN2YyZDA2XkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
+      "plot": "Follows Jack Ryan who reunites with CIA operatives to navigate a treacherous web of betrayal against an enemy who knows their every move, facing a past they thought was long put to rest.",
+      "genres": [
+        "Action",
+        "Drama",
+        "Thriller"
+      ],
+      "rated": "R",
+      "director": "Andrew Bernstein",
+      "actors": [
+        "John Krasinski",
+        "Wendell Pierce",
+        "Sienna Miller"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "40",
+      "awards": "N/A",
+      "production": "N/A"
+    },
+    {
       "id": "movie_171",
       "title": "Iron Man 2",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYWYyOGQzOGYtMGQ1My00ZWYxLTgzZjktZWYzN2IwYjkxYzM0XkEyXkFqcGc@._V1_SX300.jpg",
@@ -10077,51 +10959,6 @@
       ],
       "language": "English, French, Russian",
       "country": "United States"
-    },
-    {
-      "id": "movie_230",
-      "title": "Underworld",
-      "releaseDate": "",
-      "genre": "Action, Fantasy, Thriller",
-      "myRating": 6.2,
-      "imdbScore": 7.0,
-      "rottenTomatoesScore": 0.3,
-      "protagonistRating": 6.4,
-      "antagonistRating": 6.7,
-      "soundtrackRating": 5.5,
-      "setDesignRating": 5.7,
-      "plotRating": 6.6,
-      "endingRating": 6.4,
-      "year": "2003",
-      "watchedDate": "",
-      "runtime": 121,
-      "style": "Live Action",
-      "mediaType": "Movie",
-      "differences": {
-        "imdb": 0.0,
-        "rotten": 0.0
-      },
-      "position": 236,
-      "imdbId": "tt0320691",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BOWIwZjFkYjktZTI3My00YzhkLWI5NmUtZDYyMTg5ZWVmODZkXkEyXkFqcGc@._V1_SX300.jpg",
-      "plot": "Selene, a vampire warrior, is entrenched in a conflict between vampires and werewolves, while falling in love with Michael, a human who is sought by werewolves for unknown reasons.",
-      "genres": [
-        "Action",
-        "Fantasy",
-        "Thriller"
-      ],
-      "rated": "R",
-      "director": "Len Wiseman",
-      "actors": [
-        "Kate Beckinsale",
-        "Scott Speedman",
-        "Shane Brolly"
-      ],
-      "language": "English",
-      "country": "United States, United Kingdom, Germany, Hungary",
-      "metascore": "42",
-      "awards": "1 win & 10 nominations total",
-      "production": "N/A"
     },
     {
       "id": "movie_172",
@@ -10167,7 +11004,7 @@
       "country": "United Kingdom, United States"
     },
     {
-      "id": "movie_232",
+      "id": "movie_257",
       "title": "Glass Onion: A Knives Out Mystery",
       "releaseDate": "",
       "genre": "Crime, Mystery",
@@ -10189,7 +11026,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 238,
+      "position": 257,
       "imdbId": "tt24734444",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMzAxOGJiYmMtZDEwNS00MzdhLTg1NDctNTM5OGRkNDI5OWI0XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "N/A",
@@ -10209,7 +11046,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_233",
+      "id": "movie_258",
       "title": "Final Destination 5",
       "releaseDate": "",
       "genre": "Horror, Thriller",
@@ -10231,7 +11068,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 239,
+      "position": 258,
       "imdbId": "tt1622979",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTgyOTExNDc1M15BMl5BanBnXkFtZTcwMDA0MTA4NQ@@._V1_SX300.jpg",
       "plot": "Death returns to claim the lucky survivors of a deadly bridge collapse in this fifth frightening installment in the series.",
@@ -10250,51 +11087,6 @@
       "country": "Canada, United States",
       "metascore": "50",
       "awards": "2 wins & 6 nominations total",
-      "production": "N/A"
-    },
-    {
-      "id": "movie_285",
-      "title": "In The Grey",
-      "releaseDate": "",
-      "genre": "Action, Drama, Thriller",
-      "myRating": 6.2,
-      "imdbScore": 6.6,
-      "rottenTomatoesScore": 0.49,
-      "protagonistRating": 7.6,
-      "antagonistRating": 5.5,
-      "soundtrackRating": 5.0,
-      "setDesignRating": 6.0,
-      "plotRating": 5.6,
-      "endingRating": 7.6,
-      "year": "2026",
-      "watchedDate": "",
-      "runtime": 98,
-      "style": "nan",
-      "mediaType": "Nan",
-      "differences": {
-        "imdb": 0.0,
-        "rotten": 0.0
-      },
-      "position": 240,
-      "imdbId": "tt27681354",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTZkMTIzMTItMTQwZS00MTg4LWE0MTEtM2NiNmUzYjRmMGUxXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
-      "plot": "A covert team of elite operatives are living in the shadows. When a ruthless despot steals a billion-dollar fortune, they're sent to take it back-an impossible heist that erupts into a deadly game of strategy, deception and survival.",
-      "genres": [
-        "Action",
-        "Drama",
-        "Thriller"
-      ],
-      "rated": "R",
-      "director": "Guy Ritchie",
-      "actors": [
-        "Henry Cavill",
-        "Jake Gyllenhaal",
-        "Eiza González"
-      ],
-      "language": "English",
-      "country": "United Kingdom, United States",
-      "metascore": "53",
-      "awards": "N/A",
       "production": "N/A"
     },
     {
@@ -10555,6 +11347,50 @@
       "country": "United States, Canada"
     },
     {
+      "id": "movie_265",
+      "title": "Mortal Kombat (2021)",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNmRmN2I5M2EtNDA1Ny00N2ZmLWE3YWYtMjQ1NTFjY2Q4NWM5XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Fantasy",
+      "myRating": 6.0,
+      "imdbScore": 6.1,
+      "rottenTomatoesScore": 0.55,
+      "protagonistRating": 5.5,
+      "antagonistRating": 5.4,
+      "soundtrackRating": 5.8,
+      "setDesignRating": 8.8,
+      "plotRating": 5.5,
+      "endingRating": 5.3,
+      "year": "2021",
+      "watchedDate": "",
+      "runtime": 110,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 265,
+      "imdbId": "tt25278616",
+      "posterUrl": "/img/placeholder-poster.jpg",
+      "plot": "N/A",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Fantasy"
+      ],
+      "rated": "N/A",
+      "director": "N/A",
+      "actors": [
+        "N/A"
+      ],
+      "language": "N/A",
+      "country": "N/A",
+      "metascore": "N/A",
+      "awards": "N/A",
+      "production": "N/A"
+    },
+    {
       "id": "movie_180",
       "title": "Ant-Man and the Wasp",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BODVkY2ZmZTAtYzFhMi00YzZlLWE2YWMtMDBiYjY2OTU4ZWM0XkEyXkFqcGc@._V1_SX300.jpg",
@@ -10598,7 +11434,7 @@
       "country": "United States, Canada"
     },
     {
-      "id": "movie_241",
+      "id": "movie_267",
       "title": "Underworld Blood Wars",
       "releaseDate": "",
       "genre": "Action, Crime, Drama",
@@ -10620,7 +11456,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 248,
+      "position": 267,
       "imdbId": "tt3717252",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjI5Njk0NTIyNV5BMl5BanBnXkFtZTgwNjU4MjY5MDI@._V1_SX300.jpg",
       "plot": "Vampire death dealer Selene (Kate Beckinsale) fights to end the eternal war between the Lycan clan and the Vampire faction that betrayed her.",
@@ -10728,7 +11564,7 @@
       "country": "United Kingdom, United States"
     },
     {
-      "id": "movie_244",
+      "id": "movie_270",
       "title": "The Mummy",
       "releaseDate": "",
       "genre": "Action, Adventure, Fantasy",
@@ -10750,7 +11586,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 251,
+      "position": 270,
       "imdbId": "tt0120616",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTY4YWE0OGMtNjU0Yi00YzIwLTk3NTktM2ZiYWQwNjM4MmMxXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "At an archaeological dig in the ancient city of Hamunaptra, an American serving in the French Foreign Legion accidentally awakens a mummy who begins to wreak havoc as he searches for the reincarnation of his long-lost love.",
@@ -10773,7 +11609,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_245",
+      "id": "movie_271",
       "title": "War Machine",
       "releaseDate": "",
       "genre": "Comedy, Drama, War",
@@ -10795,7 +11631,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 252,
+      "position": 271,
       "imdbId": "tt15940132",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMmM1ZTc5ZTYtOTM2My00MjBmLWE5NzktYzkyYzdlYWE3ZDAzXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
       "plot": "Follow the final recruits of a grueling special ops boot camp who encounter a mysterious deadly force.",
@@ -10861,6 +11697,51 @@
       "country": "United States"
     },
     {
+      "id": "movie_273",
+      "title": "Mortal Kombat II",
+      "releaseDate": "",
+      "genre": "Action, Adventure, Fantasy",
+      "myRating": 5.9,
+      "imdbScore": 6.7,
+      "rottenTomatoesScore": 0.64,
+      "protagonistRating": 5.6,
+      "antagonistRating": 6.2,
+      "soundtrackRating": 5.5,
+      "setDesignRating": 8.4,
+      "plotRating": 4.6,
+      "endingRating": 4.8,
+      "year": "2026",
+      "watchedDate": "",
+      "runtime": 116,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 273,
+      "imdbId": "tt17490712",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTg2YWNkN2EtMzc1Ny00ZTBhLWFmYTItMmMyNzhjNjhhNmVhXkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+      "plot": "The fan favorite champions -- now joined by Johnny Cage himself -- are pitted against one another in the ultimate battle to defeat the dark rule of Shao Kahn that threatens the very existence of the Earthrealm and its defenders.",
+      "genres": [
+        "Action",
+        "Adventure",
+        "Fantasy"
+      ],
+      "rated": "R",
+      "director": "Simon McQuoid",
+      "actors": [
+        "Adeline Rudolph",
+        "Karl Urban",
+        "Martyn Ford"
+      ],
+      "language": "English, Spanish",
+      "country": "United States",
+      "metascore": "46",
+      "awards": "3 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_184",
       "title": "Pete's Dragon",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjBiYTdjZDUtYjg3ZS00YTA0LTkzZGUtMzA2OWEyOGZiN2VhXkEyXkFqcGc@._V1_SX300.jpg",
@@ -10904,7 +11785,7 @@
       "country": "United States, United Kingdom, New Zealand, India"
     },
     {
-      "id": "movie_248",
+      "id": "movie_275",
       "title": "Highest 2 Lowest",
       "releaseDate": "",
       "genre": "Crime, Drama, Mystery",
@@ -10926,7 +11807,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 255,
+      "position": 275,
       "imdbId": "tt31194612",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNTExYmRjMmMtMGRjMi00ZGIyLTkwZTAtOWExOTYwNmM4NTk3XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "When a titan music mogul is targeted with a ransom plot, he is jammed up in a life-or-death moral dilemma.",
@@ -10946,6 +11827,51 @@
       "country": "United States, Japan",
       "metascore": "74",
       "awards": "1 win & 30 nominations total",
+      "production": "N/A"
+    },
+    {
+      "id": "movie_276",
+      "title": "300 Rise of an Empire",
+      "releaseDate": "",
+      "genre": "Action, Drama, Fantasy",
+      "myRating": 5.8,
+      "imdbScore": 6.2,
+      "rottenTomatoesScore": 0.45,
+      "protagonistRating": 5.6,
+      "antagonistRating": 6.5,
+      "soundtrackRating": 6.0,
+      "setDesignRating": 5.8,
+      "plotRating": 5.3,
+      "endingRating": 5.5,
+      "year": "2014",
+      "watchedDate": "",
+      "runtime": 102,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 276,
+      "imdbId": "tt1253863",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTEwNTU2MjAwMDdeQTJeQWpwZ15BbWU3MDk2Njc2Njk@._V1_SX300.jpg",
+      "plot": "Greek general Themistocles of Athens leads the naval charge against invading Persian forces led by mortal-turned-god Xerxes and Artemisia, vengeful commander of the Persian navy.",
+      "genres": [
+        "Action",
+        "Drama",
+        "Fantasy"
+      ],
+      "rated": "R",
+      "director": "Noam Murro",
+      "actors": [
+        "Sullivan Stapleton",
+        "Eva Green",
+        "Lena Headey"
+      ],
+      "language": "English",
+      "country": "United States, Bulgaria",
+      "metascore": "48",
+      "awards": "2 wins & 7 nominations total",
       "production": "N/A"
     },
     {
@@ -10994,6 +11920,7 @@
     {
       "id": "movie_228",
       "title": "Anaconda (2025)",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTNlMTk1YTItOWYxNi00ZWIzLTkyOWEtNTJmMzk4NmIyN2NmXkEyXkFqcGc@._V1_QL75_UX380_CR0,4,380,562_.jpg",
       "releaseDate": "",
       "genre": "Action, Adventure, Comedy",
       "myRating": 5.7,
@@ -11017,7 +11944,7 @@
       "position": 228
     },
     {
-      "id": "movie_287",
+      "id": "movie_279",
       "title": "Play Dirty",
       "releaseDate": "",
       "genre": "Action, Crime, Drama",
@@ -11033,13 +11960,13 @@
       "year": "2025",
       "watchedDate": "",
       "runtime": 125,
-      "style": "nan",
-      "mediaType": "Nan",
+      "style": "Live Action",
+      "mediaType": "Movie",
       "differences": {
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 258,
+      "position": 279,
       "imdbId": "tt18392014",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BN2E4MmM2ODctYTIyNS00ZGIxLWJmYjctYTUxYThhNzY4MmMzXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A ruthless thief and his expert crew stumble onto the heist of a lifetime.",
@@ -11148,7 +12075,7 @@
       "country": "United States, Australia, Canada"
     },
     {
-      "id": "movie_253",
+      "id": "movie_282",
       "title": "Olympus Has Fallen",
       "releaseDate": "",
       "genre": "Action, Thriller",
@@ -11170,7 +12097,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 261,
+      "position": 282,
       "imdbId": "tt2302755",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzg3Mjc0YzItZWQyOS00ODY4LTgwZjUtYWRmYzM1MDg1ZDA5XkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Secret Service agent Mike Banning finds himself trapped inside the White House in the wake of a terrorist attack and works with national security to rescue the President from his kidnappers.",
@@ -11235,7 +12162,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_255",
+      "id": "movie_284",
       "title": "How to Train Your Dragon: Snoggletog Log",
       "releaseDate": "",
       "genre": "Animation, Short",
@@ -11257,7 +12184,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 263,
+      "position": 284,
       "imdbId": "tt11409576",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYjU5NmNiN2UtZDRmNi00NWY3LWFkYTItMDJhMzU4ZWFlZTVjXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Come settle by the warmth of a roaring fire in Hiccup and Astrid's home. You never know who is going to stop by for a sip of Yak Nog.",
@@ -11277,7 +12204,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_256",
+      "id": "movie_285",
       "title": "Underworld: Rise of the Lycans",
       "releaseDate": "",
       "genre": "Action, Fantasy, Thriller",
@@ -11299,7 +12226,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 264,
+      "position": 285,
       "imdbId": "tt0834001",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTAwNzYzMDQyMzReQTJeQWpwZ15BbWU3MDMyNDA0MjI@._V1_SX300.jpg",
       "plot": "A prequel centered on the origins of the centuries-old feud between the race of aristocratic vampires and their former slaves, the Lycans.",
@@ -11365,6 +12292,51 @@
       "country": "United States"
     },
     {
+      "id": "movie_287",
+      "title": "Flatliners",
+      "releaseDate": "",
+      "genre": "Drama, Horror, Sci-Fi",
+      "myRating": 5.5,
+      "imdbScore": 6.6,
+      "rottenTomatoesScore": 0.5,
+      "protagonistRating": 5.4,
+      "antagonistRating": 5.9,
+      "soundtrackRating": 6.0,
+      "setDesignRating": 5.3,
+      "plotRating": 5.7,
+      "endingRating": 4.5,
+      "year": "1990",
+      "watchedDate": "",
+      "runtime": 115,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 287,
+      "imdbId": "tt0099582",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BOGU2YWM2MDctNWU5My00ZDIxLWFkM2YtNzQwNTQ4OWUxYmUxXkEyXkFqcGc@._V1_SX300.jpg",
+      "plot": "Five medical students experiment with \"near death\" experiences, until the dark consequences of past tragedies begin to jeopardize their lives.",
+      "genres": [
+        "Drama",
+        "Horror",
+        "Sci-Fi"
+      ],
+      "rated": "R",
+      "director": "Joel Schumacher",
+      "actors": [
+        "Kiefer Sutherland",
+        "Kevin Bacon",
+        "Julia Roberts"
+      ],
+      "language": "English",
+      "country": "United States",
+      "metascore": "55",
+      "awards": "Nominated for 1 Oscar. 3 nominations total",
+      "production": "N/A"
+    },
+    {
       "id": "movie_189",
       "title": "But I'm A Cheerleader",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjY2ZDdlNzctMzU4MS00YWNlLWIzYTUtNjMwZjYyMjk0M2UzXkEyXkFqcGc@._V1_SX300.jpg",
@@ -11410,7 +12382,8 @@
     {
       "id": "movie_190",
       "title": "Doctor Who: The Day of the Doctor",
-      "posterUrl": "/img/movies/doctor-who-the-day-of-the-doctor.jpg",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMjAyMTkzMDA5OV5BMl5BanBnXkFtZTgwMjUzNDMyMDE@._V1_SX300.jpg",
+      "imdbId": "tt2779318",
       "releaseDate": "",
       "genre": "nan",
       "myRating": 5.4,
@@ -11440,7 +12413,7 @@
       ]
     },
     {
-      "id": "movie_260",
+      "id": "movie_290",
       "title": "Five Nights At Freddy's 2",
       "releaseDate": "",
       "genre": "Horror, Mystery, Thriller",
@@ -11462,7 +12435,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 268,
+      "position": 290,
       "imdbId": "tt30274401",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmQ3NmIxNTgtYjFiNS00NzliLWI0YzAtZDkxY2E0YWIxZDEwXkEyXkFqcGc@._V1_QL75_UX380_CR0,20,380,562_.jpg",
       "plot": "One year after the supernatural nightmare at Freddy Fazbear's Pizza, Abby runs away to reconnect with her animatronic friends, uncovering dark secrets about the true origins of Freddy's and unleashing a horror hidden for decades.",
@@ -11485,7 +12458,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_261",
+      "id": "movie_291",
       "title": "The Final Destination",
       "releaseDate": "",
       "genre": "Horror, Thriller",
@@ -11507,7 +12480,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 269,
+      "position": 291,
       "imdbId": "tt1144884",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzY2YWViNDItNWM1NC00MGFhLTg1NzctMGIyYTMwYTk1MTdiXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A horrifying premonition saves a young man and his friends from death during a racetrack accident but terrible fates await them nonetheless.",
@@ -11571,7 +12544,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_263",
+      "id": "movie_293",
       "title": "R.I.P.D.",
       "releaseDate": "",
       "genre": "Action, Adventure, Comedy",
@@ -11593,7 +12566,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 271,
+      "position": 293,
       "imdbId": "tt0790736",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTM5OTYxNzE5N15BMl5BanBnXkFtZTcwMDU1MTQ4OQ@@._V1_SX300.jpg",
       "plot": "In the afterlife, Nick Walker, a detective who used to work for the Boston Police Department, is hired by a director of a group of deceased police officers to fight against the renegade ghosts.",
@@ -11616,7 +12589,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_264",
+      "id": "movie_294",
       "title": "Five Nights At Freddy's",
       "releaseDate": "",
       "genre": "Horror, Mystery, Thriller",
@@ -11638,7 +12611,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 272,
+      "position": 294,
       "imdbId": "tt4589218",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNzFkMDE2ZmEtOWMwNy00MWM2LThlNjMtZWQzNWY5MTJjZjcxXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "A troubled security guard begins working at Freddy Fazbear's Pizza. During his five nights on the job, he realizes that something is wrong with the pizzeria and pretty soon finds the truth about its animatronics.",
@@ -11747,7 +12720,7 @@
       "country": "United States, China, United Kingdom, Canada, Hong Kong"
     },
     {
-      "id": "movie_267",
+      "id": "movie_297",
       "title": "Lake Jesup: Bonecrusher's Revenge",
       "releaseDate": "",
       "genre": "Adventure, Comedy, Horror",
@@ -11769,7 +12742,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 275,
+      "position": 297,
       "imdbId": "tt30782197",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BY2UzYTkyYzEtZDliMi00ZmRlLTk4ZGUtYjZkYTIxMzgyYTJiXkEyXkFqcGc@._V1_SX300.jpg",
       "plot": "Florida's Lake Jesup is the most densely infested alligator lake in the entire United States - known by locals as \"the place to take your mother-in-law to water ski.\" This is the story of 13 hellish days on the lake in 2003.",
@@ -11792,7 +12765,7 @@
       "production": "N/A"
     },
     {
-      "id": "movie_268",
+      "id": "movie_298",
       "title": "Tron: Ares",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -11814,7 +12787,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 276,
+      "position": 298,
       "imdbId": "tt6604188",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BYzNlY2RiYWEtMDA0YS00MTZkLWI5YmUtMDNiZDZlN2E4MTVlXkEyXkFqcGc@._V1_QL75_UY562_CR0,0,380,562_.jpg",
       "plot": "A highly sophisticated program, Ares, is sent from the digital world into the real world on a dangerous mission.",
@@ -11878,6 +12851,51 @@
       ],
       "language": "English, Spanish, Russian",
       "country": "United States"
+    },
+    {
+      "id": "movie_300",
+      "title": "The Cloverfield Paradox",
+      "releaseDate": "",
+      "genre": "Horror, Sci-Fi, Thriller",
+      "myRating": 4.8,
+      "imdbScore": 5.5,
+      "rottenTomatoesScore": 0.22,
+      "protagonistRating": 7.4,
+      "antagonistRating": 4.3,
+      "soundtrackRating": 4.7,
+      "setDesignRating": 6.1,
+      "plotRating": 3.5,
+      "endingRating": 2.6,
+      "year": "2018",
+      "watchedDate": "",
+      "runtime": 102,
+      "style": "Live Action",
+      "mediaType": "Movie",
+      "differences": {
+        "imdb": 0.0,
+        "rotten": 0.0
+      },
+      "position": 300,
+      "imdbId": "tt2548396",
+      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTAwOTIxMDA0MjZeQTJeQWpwZ15BbWU4MDg1MjgzNzQz._V1_SX300.jpg",
+      "plot": "Orbiting a planet on the brink of war, scientists test a device to solve an energy crisis, and end up face-to-face with a dark alternate reality.",
+      "genres": [
+        "Horror",
+        "Sci-Fi",
+        "Thriller"
+      ],
+      "rated": "PG-13",
+      "director": "Julius Onah",
+      "actors": [
+        "Gugu Mbatha-Raw",
+        "David Oyelowo",
+        "Daniel Brühl"
+      ],
+      "language": "English, Mandarin, German",
+      "country": "United States",
+      "metascore": "37",
+      "awards": "1 nomination total",
+      "production": "N/A"
     },
     {
       "id": "movie_195",
@@ -12008,7 +13026,7 @@
       "country": "United States, Sweden, New Zealand, Canada"
     },
     {
-      "id": "movie_273",
+      "id": "movie_304",
       "title": "Jurassic World Rebirth",
       "releaseDate": "",
       "genre": "Action, Adventure, Sci-Fi",
@@ -12030,7 +13048,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 281,
+      "position": 304,
       "imdbId": "tt31036941",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNjg2NTcwYWQtYzk4NS00MTJhLWEzZjItMzIxNjk3YzlkYzU0XkEyXkFqcGc@._V1_QL75_UY562_CR0,0,380,562_.jpg",
       "plot": "Five years post-Jurassic World: Dominion (2022), an expedition braves isolated equatorial regions to extract DNA from three massive prehistoric creatures for a groundbreaking medical breakthrough.",
@@ -12139,7 +13157,7 @@
       "country": "United States, Canada, France"
     },
     {
-      "id": "movie_276",
+      "id": "movie_307",
       "title": "House",
       "releaseDate": "",
       "genre": "Horror, Fantasy",
@@ -12161,9 +13179,9 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 284,
+      "position": 307,
       "imdbId": "tt0076162",
-      "posterUrl": "https://m.media-amazon.com/images/M/MV5BMTEwMTUyODgtYzlhYS00OGM4LWJjOTAtMjk2ZjU3YzU5MzNlXkEyXkFqcGc@._V1_SX300.jpg",
+      "posterUrl": "/img/projects/movies/house-1977.jpg",
       "plot": "A schoolgirl and six of her classmates travel to her aunt's country home, which turns out to be haunted.",
       "genres": [
         "Horror",
@@ -12269,7 +13287,7 @@
       "country": "United States"
     },
     {
-      "id": "movie_279",
+      "id": "movie_310",
       "title": "War of the Worlds",
       "releaseDate": "",
       "genre": "Thriller",
@@ -12291,7 +13309,7 @@
         "imdb": 0.0,
         "rotten": 0.0
       },
-      "position": 287,
+      "position": 310,
       "imdbId": "tt0407304",
       "posterUrl": "https://m.media-amazon.com/images/M/MV5BNDUyODAzNDI1Nl5BMl5BanBnXkFtZTcwMDA2NDAzMw@@._V1_SX300.jpg",
       "plot": "An alien invasion threatens the future of humanity. The catastrophic nightmare is depicted through the eyes of one American family fighting for survival.",

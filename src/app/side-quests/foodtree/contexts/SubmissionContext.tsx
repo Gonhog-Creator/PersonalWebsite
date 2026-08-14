@@ -16,18 +16,22 @@ export interface Submission {
   type: SubmissionType;
   data: SubmissionData;
   status: 'pending' | 'approved' | 'rejected';
+  submittedBy?: string;
   submittedAt: string;
+  createdAt?: string;
   updatedAt: string;
   reviewedAt?: string;
   notes?: string;
 }
 
-interface SubmissionContextType {
+export interface SubmissionContextType {
   submissions: Submission[];
   addSubmission: (type: SubmissionType, data: SubmissionData) => Promise<void>;
   refreshSubmissions: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
+  success: {message: string, itemName: string} | null;
+  setSuccess: (success: {message: string, itemName: string} | null) => void;
 }
 
 export function SubmissionProvider({ children }: { children: ReactNode }) {
@@ -159,15 +163,6 @@ export function SubmissionProvider({ children }: { children: ReactNode }) {
       {children}
     </SubmissionContext.Provider>
   );
-}
-
-export interface SubmissionContextType {
-  submissions: Submission[];
-  addSubmission: (type: SubmissionType, data: SubmissionData) => Promise<void>;
-  refreshSubmissions: () => Promise<void>;
-  isLoading: boolean;
-  error: string | null;
-  success: {message: string, itemName: string} | null;
 }
 
 export function useSubmissions() {

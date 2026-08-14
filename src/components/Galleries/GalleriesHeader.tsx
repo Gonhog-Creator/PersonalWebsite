@@ -29,9 +29,9 @@ export function GalleriesHeader() {
   return (
     <header 
       className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 ease-in-out font-sans ${
-        isScrolled 
-          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md py-3 shadow-sm' 
-          : 'bg-transparent dark:bg-transparent py-6'
+        isScrolled
+          ? 'bg-gray-900/80 backdrop-blur-md py-3 shadow-sm'
+          : 'bg-transparent py-6'
       }`}
     >
       <div className="container mx-auto px-8">
@@ -54,8 +54,8 @@ export function GalleriesHeader() {
                 href={link.href}
                 className="relative group flex items-center py-8"
               >
-                <Icon icon={link.icon} className="w-6 h-6 text-gray-800 dark:text-white group-hover:scale-110 transition-transform duration-200" />
-                <span className="text-gray-800 dark:text-white text-base font-medium tracking-wide ml-4">{link.name}</span>
+                <Icon icon={link.icon} className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-200" />
+                <span className="text-white text-base font-medium tracking-wide ml-4">{link.name}</span>
                 <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 transition-all duration-300 transform scale-x-0 group-hover:scale-x-100"></span>
               </Link>
             ))}

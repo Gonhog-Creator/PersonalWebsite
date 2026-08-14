@@ -1,12 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { PanoramaViewer } from '@/components/gallery/PanoramaViewer';
-import { ZoomableImage } from '@/components/gallery/ZoomableImage';
 import { VideoPlayer } from '@/components/gallery/VideoPlayer';
 import { BackToTop } from '@/components/ui/BackToTop';
 import { ImageModal } from '@/components/gallery/ImageModal';
@@ -147,24 +146,7 @@ export default function GreeceGallery() {
                   onClick={() => openLightbox(index)}
                 >
                   <div className="relative w-full overflow-hidden rounded-lg">
-                    <style jsx global>{`
-                      .masonry-column {
-                        padding-left: 8px !important;
-                        padding-right: 8px !important;
-                      }
-                      .masonry-column > div {
-                        margin-bottom: 16px !important;
-                        border-radius: 0.5rem;
-                        overflow: hidden;
-                      }
-                      .masonry-column:first-child {
-                        padding-left: 0 !important;
-                      }
-                      .masonry-column:last-child {
-                        padding-right: 0 !important;
-                      }
-                    `}</style>
-                    <div className="relative w-full h-full">
+<div className="relative w-full h-full">
                       <Image
                         src={image.src}
                         alt={image.alt}
@@ -173,6 +155,8 @@ export default function GreeceGallery() {
                         className="w-full h-auto transition-transform duration-300 group-hover:scale-105"
                         style={{ display: 'block' }}
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+                        loading="lazy"
+                        decoding="async"
                       />
                       {
             /* Hover effect disabled as per user request

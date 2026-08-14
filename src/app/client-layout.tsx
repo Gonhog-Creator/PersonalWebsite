@@ -64,30 +64,9 @@ type ClientLayoutProps = {
 };
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
-  // Enforce dark theme
+  // Enforce dark theme on mount
   useEffect(() => {
     addDarkClass();
-    // Force dark mode on html element
-    document.documentElement.classList.add('dark');
-    document.documentElement.style.colorScheme = 'dark';
-    
-    // Prevent theme switching
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
-          if (!document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.add('dark');
-          }
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
   }, []);
 
   return (

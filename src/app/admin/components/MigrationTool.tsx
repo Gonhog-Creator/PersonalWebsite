@@ -14,7 +14,7 @@ export interface SubmissionCheckResult {
 }
 
 interface MigrationToolProps {
-  onCheckComplete: (result: SubmissionCheckResult) => void;
+  onCheckComplete?: (result: SubmissionCheckResult) => void;
 }
 
 export function MigrationTool({ onCheckComplete }: MigrationToolProps) {
@@ -27,7 +27,7 @@ export function MigrationTool({ onCheckComplete }: MigrationToolProps) {
       const response = await fetch('/api/foodtree/admin/check-submissions');
       
       if (response.status === 401) {
-        onCheckComplete({
+        onCheckComplete?.({
           success: false,
           message: 'You are not authorized to perform this action',
           total: 0,
@@ -41,7 +41,7 @@ export function MigrationTool({ onCheckComplete }: MigrationToolProps) {
       if (!response.ok) {
         const error = await response.text();
         console.error('Error checking submissions:', error);
-        onCheckComplete({
+        onCheckComplete?.({
           success: false,
           message: `Error checking submissions: ${error}`,
           total: 0,
@@ -53,10 +53,10 @@ export function MigrationTool({ onCheckComplete }: MigrationToolProps) {
       }
       
       const data = await response.json();
-      onCheckComplete(data);
+      onCheckComplete?.(data);
     } catch (error) {
       console.error('Error checking submissions:', error);
-      onCheckComplete({
+      onCheckComplete?.({
         success: false,
         message: 'Failed to check submissions. Please try again.',
         total: 0,

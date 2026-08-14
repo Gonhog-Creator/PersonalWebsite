@@ -56,11 +56,11 @@ export function SubmissionQueue() {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+      <h3 className="text-lg font-medium text-white">
         Your Submissions
       </h3>
       
-      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+      <div className="bg-gray-800 shadow overflow-hidden sm:rounded-md">
         <ul className="divide-y divide-gray-200">
           {submissions.map((submission) => (
             <li key={submission.id}>
@@ -72,12 +72,12 @@ export function SubmissionQueue() {
                     </span>
                     <div>
                       <p className="text-sm font-medium text-indigo-600 truncate">
-                        {submission.data?.name || submission.name || 'New ' + submission.type}
+                        {(submission.data as { name?: string })?.name || 'New ' + submission.type}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Submitted by {submission.submittedBy || submission.data?.submittedBy || 'Anonymous'}
+                        Submitted by {submission.submittedBy || (submission.data as { submittedBy?: string })?.submittedBy || 'Anonymous'}
                         <span className="mx-2">•</span>
-                        {formatDistanceToNow(new Date(submission.submittedAt || submission.createdAt), { addSuffix: true })}
+                        {formatDistanceToNow(new Date(submission.submittedAt || submission.createdAt || new Date().toISOString()), { addSuffix: true })}
                       </p>
                     </div>
                   </div>

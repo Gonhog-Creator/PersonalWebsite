@@ -21,10 +21,6 @@ const securityHeaders = [
     key: 'Referrer-Policy',
     value: 'strict-origin-when-cross-origin',
   },
-  {
-    key: 'Cache-Control',
-    value: 'public, max-age=0, must-revalidate',
-  },
 ];
 
 module.exports = {
@@ -77,7 +73,8 @@ module.exports = {
       },
     ],
     formats: ['image/webp'],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840]
+    deviceSizes: [360, 414, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    minimumCacheTTL: 86400
   },
   
   // Build optimizations
@@ -88,7 +85,7 @@ module.exports = {
   
   // Configure TypeScript
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: false
   },
   
   // Webpack configuration

@@ -297,25 +297,7 @@ export default function AstrophotographyGallery() {
         );
       });
     }
-    // Apply type filter
-    if (selectedTypes.length > 0) {
-      result = result.filter(dso => {
-        // Map the UI filter types to the actual data types
-        const typeMap: Record<string, string[]> = {
-          'galaxy': ['Galaxy'],
-          'nebula': ['Emission Nebula', 'Reflection Nebula'],
-          'star-cluster': ['Open Cluster', 'Globular Cluster'],
-          'supernova': ['Supernova Remnant'],
-          'other': ['Other']
-        };
 
-        return selectedTypes.some(selectedType => {
-          const matchingTypes = typeMap[selectedType] || [];
-          return matchingTypes.includes(dso.type);
-        });
-      });
-    }
-    
     // Apply constellation filter
     if (selectedConstellations.length > 0) {
       result = result.filter(dso => selectedConstellations.includes(dso.constellation));
@@ -760,6 +742,8 @@ export default function AstrophotographyGallery() {
                       alt={dso.title}
                       fill
                       className="object-cover opacity-90"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      loading="lazy"
                     />
                   </div>
                   <div className="p-6">

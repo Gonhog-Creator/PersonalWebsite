@@ -4,21 +4,7 @@ import React, { useRef, useState, useMemo, useEffect, Suspense, useCallback } fr
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Text, Billboard } from '@react-three/drei'; // Removed unused Sphere import
 import * as THREE from 'three';
-import { useFoodTree } from '../hooks/useFoodTree';
-
-type NodeType = 'ingredient' | 'dish' | 'root';
-
-interface FoodNode {
-  id: string;
-  name: string;
-  type: NodeType;
-  children: string[];
-  parentIngredients?: string[];
-  position: [number, number, number];
-  color: string;
-  size: number;
-  highlighted?: boolean;
-}
+import { useFoodTree, type Edge, type NodeType, type FoodNode } from '../hooks/useFoodTree';
 
 interface NodeProps {
   node: FoodNode;
@@ -104,7 +90,7 @@ interface EdgeProps {
   edgeKey?: string;
 }
 
-const Edge: React.FC<EdgeProps> = ({ start, end, color = 'white', highlighted = false }) => {
+const EdgeLine: React.FC<EdgeProps> = ({ start, end, color = 'white', highlighted = false }) => {
   const points = useMemo(() => {
     const curve = new THREE.QuadraticBezierCurve3(
       new THREE.Vector3(start.x, start.y, start.z),
@@ -126,6 +112,7 @@ const Edge: React.FC<EdgeProps> = ({ start, end, color = 'white', highlighted = 
   }, [points]);
 
   return (
+    // @ts-expect-error R3F <line> conflicts with SVG <line> in TypeScript
     <line geometry={lineGeometry}>
       <lineBasicMaterial 
         color={highlighted ? '#ffd700' : color} 
@@ -287,7 +274,7 @@ const FoodTree = React.memo(({ nodes, edges, onNodeClick }: FoodTreeProps) => {
       const width = window.innerWidth;
       const height = window.innerHeight;
       
-      camera.aspect = width / height;
+      (camera as THREE.PerspectiveCamera).aspect = width / height;
       camera.updateProjectionMatrix();
       gl.setSize(width, height);
     };
@@ -316,7 +303,7 @@ const FoodTree = React.memo(({ nodes, edges, onNodeClick }: FoodTreeProps) => {
     ));
 
     const memoizedEdges = edges.map((edge, index) => (
-      <Edge
+      <EdgeLine
         key={`${edge.sourceId}-${edge.targetId}-${index}`}
         start={new THREE.Vector3(...edge.sourcePosition)}
         end={new THREE.Vector3(...edge.targetPosition)}
@@ -430,18 +417,18 @@ export const FoodTree3D = () => {
 
   if (error) {
     return (
-      <div className="w-full h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-        <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+      <div className="w-full h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-center p-6 bg-gray-800 rounded-lg shadow-lg">
           <div className="text-6xl mb-4">😕</div>
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Something went wrong</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-white mb-2">Something went wrong</h2>
+          <p className="text-gray-300 mb-6">{error}</p>
           <button 
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             Reload Page
           </button>
-          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-4 text-sm text-gray-500 text-gray-400">
             Check the browser console for more details
           </p>
         </div>
@@ -471,7 +458,7 @@ export const FoodTree3D = () => {
             }}
             dpr={[1, 2]}
             camera={{ position: [0, 15, 25], fov: 40, near: 0.1, far: 1000 }}
-            onCreated={({ gl, canvas }) => {
+            onCreated={({ gl }) => {
               try {
                 // Set up WebGL context
                 gl.setClearColor('#1a1a1a');
@@ -487,6 +474,7 @@ export const FoodTree3D = () => {
                   return false;
                 };
                 
+                const canvas = gl.domElement;
                 // Safely add event listeners
                 if (canvas) {
                   const handleContextLost = (event: Event) => {
@@ -512,7 +500,7 @@ export const FoodTree3D = () => {
             }}
             onError={(error) => {
               console.error('WebGL Error:', error);
-              setError(`Failed to initialize 3D view: ${error.message}`);
+              setError(`Failed to initialize 3D view: ${(error as unknown as Error).message}`);
             }}
           >
           <Suspense fallback={null}>

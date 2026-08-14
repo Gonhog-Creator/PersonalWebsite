@@ -43,6 +43,15 @@ export function ImageModal({ images, currentIndex, onClose, onNavigate }: ImageM
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []); // Empty dependency array - listener only attached once
 
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
+
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -53,7 +62,7 @@ export function ImageModal({ images, currentIndex, onClose, onNavigate }: ImageM
 
   return (
     <div
-      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out"
+      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 cursor-zoom-out overflow-hidden overscroll-none"
       onClick={handleBackdropClick}
     >
       {/* Close button */}

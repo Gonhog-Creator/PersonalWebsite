@@ -170,7 +170,7 @@ export default function GalleriesPage() {
   }, [sortedGalleries]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-900">
       <GalleriesHeader />
       
       <main className="pt-16">
@@ -179,8 +179,8 @@ export default function GalleriesPage() {
         
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 px-4" data-aos="fade-up">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              All <span className="text-blue-600 dark:text-blue-400">Galleries</span>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              All <span className="text-blue-400">Galleries</span>
             </h1>
             <div className="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
           </div>
@@ -191,7 +191,7 @@ export default function GalleriesPage() {
               key={gallery.id}
               className="relative w-full mb-8 overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300"
             >
-              <div className="relative w-full h-[35vh] min-h-[250px] bg-gray-100 dark:bg-gray-800 overflow-hidden">
+              <div className="relative w-full h-[35vh] min-h-[250px] bg-gray-800 overflow-hidden">
                 <div className="absolute inset-0 w-full h-full">
                   <Image
                     src={gallery.image}

@@ -50,15 +50,9 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      // Add the isAdmin flag to the session
-      if (session.user) {
-        session.user.isAdmin = token.isAdmin === true;
-      }
-      return session;
-    },
-    async session({ session, token }) {
-      // Add role to the session
+      // Add the isAdmin flag and role to the session
       if (session?.user) {
+        session.user.isAdmin = token.isAdmin === true;
         session.user.role = token.role || 'user';
       }
       return session;

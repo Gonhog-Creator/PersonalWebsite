@@ -1,5 +1,7 @@
 // This is a dynamic route that will be replaced during build time for static export
 
+export {};
+
 // In development or server-side rendering, use the real handler
 if (process.env.NEXT_PHASE !== 'phase-export') {
   const { NextResponse } = require('next/server');
@@ -24,12 +26,12 @@ if (process.env.NEXT_PHASE !== 'phase-export') {
       const fileContents = await fs.readFile(DATA_FILE, 'utf8');
       return JSON.parse(fileContents);
     } catch (error) {
-      if (error.code === 'ENOENT') return [];
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') return [];
       throw error;
     }
   }
 
-  async function writeData(data) {
+  async function writeData(data: Dish[]) {
     await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
   }
 
@@ -46,7 +48,7 @@ if (process.env.NEXT_PHASE !== 'phase-export') {
     }
   }
 
-  async function handlePost(request) {
+  async function handlePost(request: Request) {
     try {
       const newDish = await request.json();
       const dishes = await readData();

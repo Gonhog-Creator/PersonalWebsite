@@ -281,7 +281,7 @@ export default function ImageCompressorPage() {
                   setZipTooLarge(false);
                 }}
                 variant={format === 'jpeg' ? 'default' : 'outline'}
-                className="w-[100px] py-3 h-6"
+                className="w-[100px]"
               >
                 JPEG
               </Button>
@@ -292,7 +292,7 @@ export default function ImageCompressorPage() {
                   setZipTooLarge(false);
                 }}
                 variant={format === 'png' ? 'default' : 'outline'}
-                className="w-[120px] py-3 h-auto"
+                className="w-[100px]"
               >
                 PNG
               </Button>
@@ -303,7 +303,7 @@ export default function ImageCompressorPage() {
                   setZipTooLarge(false);
                 }}
                 variant={format === 'webp' ? 'default' : 'outline'}
-                className="w-[140px] py-3 h-auto"
+                className="w-[100px]"
               >
                 WEBP
               </Button>
@@ -358,7 +358,7 @@ export default function ImageCompressorPage() {
               onClick={startCompression}
               disabled={isRunning || tasks.length === 0}
               size="lg"
-              className="px-10 py-50 w-[140px] h-[40px]"
+              className="px-8"
             >
               {isRunning ? 'Compressing...' : 'Compress Images'}
             </Button>
@@ -391,7 +391,7 @@ export default function ImageCompressorPage() {
               </div>
               <div className="relative h-2 rounded-full bg-[#0d1117]">
                 <div
-                  className="absolute left-0 top-0 h-full rounded-full bg-white transition-all"
+                  className="absolute left-0 top-0 h-full rounded-full bg-gray-800 transition-all"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -545,7 +545,7 @@ export default function ImageCompressorPage() {
                   {(task.status === 'pending' || task.status === 'processing') && (
                     <div className="mt-5 !-mx-16">
                       <div className="relative h-2 bg-[#0d1117] overflow-hidden">
-                        <div className="absolute left-0 top-0 h-full bg-white/80 animate-pulse w-full" />
+                        <div className="absolute left-0 top-0 h-full bg-gray-800/80 animate-pulse w-full" />
                       </div>
                     </div>
                   )}
@@ -562,7 +562,7 @@ export default function ImageCompressorPage() {
                     onClick={buildZip}
                     disabled={zipBlob !== null || zipTooLarge}
                     size="lg"
-                    className="px-16 py-8 w-[160px] h-10 text-base"
+                    className="px-8 text-base"
                   >
                     <Archive className="w-6 h-6" />
                     {zipBlob ? 'ZIP Ready' : zipTooLarge ? 'ZIP Too Large' : 'Build ZIP'}
@@ -572,7 +572,7 @@ export default function ImageCompressorPage() {
                       onClick={downloadZip}
                       variant="outline"
                       size="lg"
-                      className="px-10 py-5 h-auto"
+                      className="px-8"
                     >
                       <Download className="w-4 h-4" />
                       Download ZIP
