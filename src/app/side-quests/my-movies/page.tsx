@@ -144,6 +144,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
             className="object-cover transition-transform duration-500 group-hover:scale-110"
             sizes="(max-width: 768px) 45vw, (max-width: 1200px) 30vw, 22vw"
             priority={false}
+            unoptimized
             onError={(e) => {
               // Fallback to placeholder if image fails to load
               const target = e.target as HTMLImageElement;
@@ -462,6 +463,7 @@ export default function MyMoviesPage() {
                 className="h-4/5 md:h-5/6 transition-all duration-300 hover:z-10 object-cover"
                 loading="eager"
                 priority={false}
+                unoptimized
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = '/img/projects/movies/placeholder-movie.jpg';

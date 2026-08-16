@@ -70,6 +70,7 @@ const Work = () => {
                       className="object-cover transition-transform duration-500 hover:scale-105"
                       sizes="(max-width: 768px) 100vw, 50vw"
                       priority={index < 2}
+                      unoptimized
                     />
                   </div>
                 </div>
