@@ -45,89 +45,106 @@ const Work = () => {
       image: '/img/projects/RDE/RDE_Cover.png',
       link: '/side-quests/ncsu-rocketry',
       skills: ['Rotating Detonation Engines', 'Computational Modeling', 'Experimental Testing', 'Data Analysis', 'Propulsion Systems']
+    },
+    {
+      id: 3,
+      title: 'Delta V Blindajes',
+      role: 'Engineering & Technical Program Manager',
+      period: '2024 - Present',
+      description: 'Working across the complete lifecycle of ballistic-protection systems — from material sourcing and product development through manufacturing, international logistics, ballistic testing, NIJ certification, and laboratory infrastructure.',
+      image: '/img/deltavcoverimage.jpg',
+      link: '/projects/deltav-ballistics',
+      skills: ['Ballistic Engineering', 'NIJ Certification', 'UHMWPE', 'Manufacturing', 'ERP/Odoo', 'Full-Stack Development', 'International Logistics', 'Defense Industry']
     }
   ];
 
   return (
-    <section className="w-full bg-gray-800 py-16 md:py-24">
-      <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto">
-        <div className="w-full flex justify-center">
-          <div className="w-full max-w-4xl">
-            <div className="flex flex-col gap-12">
-            {workExperiences.map((experience, index) => (
-              <div 
-                key={experience.id}
-                className="flex flex-col md:flex-row gap-8 lg:gap-12 p-6 rounded-xl bg-gray-800 border border-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300"
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
-              >
-                <div className="md:w-5/12">
-                  <div className="relative overflow-hidden rounded-xl aspect-[4/3] border-2 border-gray-700">
-                    <Image
-                      src={experience.image}
-                      alt={experience.title}
-                      fill
-                      className="object-cover transition-transform duration-500 hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      priority={index < 2}
-                      unoptimized
-                    />
-                  </div>
+    <div className="relative max-w-5xl mx-auto">
+      {/* Timeline line - horizontal on desktop, vertical on mobile */}
+      <div className="absolute left-4 md:left-0 md:right-0 md:top-6 md:bottom-auto md:h-px md:w-full top-0 bottom-0 w-px bg-gradient-to-r from-blue-500/60 via-blue-500/30 to-transparent md:bg-gradient-to-r bg-gradient-to-b" />
+
+      <div className="flex flex-col md:flex-row gap-12 md:gap-6 md:items-start">
+        {workExperiences.map((experience, index) => (
+          <div
+            key={experience.id}
+            className="relative flex flex-col md:flex-1"
+            data-aos="fade-up"
+            data-aos-delay={index * 100}
+          >
+            {/* Timeline dot */}
+            <div className="absolute left-4 md:left-6 md:top-6 top-6 -translate-x-1/2 md:-translate-x-1/2 z-10">
+              <div className="w-4 h-4 rounded-full bg-blue-500 ring-4 ring-gray-900 ring-offset-2 ring-offset-blue-500/20" />
+            </div>
+
+            {/* Content card */}
+            <div className="ml-12 md:ml-0 md:mt-12">
+              <div className="group relative rounded-2xl bg-gray-900/60 backdrop-blur-sm border border-gray-700/50 hover:border-blue-500/40 transition-all duration-300 overflow-hidden shadow-xl hover:shadow-blue-500/10">
+                {/* Subtle gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-500 pointer-events-none" />
+
+                {/* Company logo */}
+                <div className="relative h-36 overflow-hidden border-b border-gray-700/50 bg-gradient-to-br from-gray-800 to-gray-900">
+                  <Image
+                    src={experience.image}
+                    alt={experience.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent" />
                 </div>
-                
-                <div className="md:w-7/12 flex flex-col justify-center">
-                  <div className="mb-2">
-                    <span className="inline-block px-3 py-1 text-sm font-medium bg-blue-900/30 text-blue-300 rounded-full">
-                      {experience.period}
-                    </span>
+
+                {/* Content */}
+                <div className="relative p-6">
+                  {/* Period badge */}
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium mb-4">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                    {experience.period}
                   </div>
-                  
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+
+                  {/* Company & role */}
+                  <h3 className="text-xl font-bold text-white mb-1">
                     {experience.title}
                   </h3>
-                  
-                  <p className="text-lg text-blue-400 font-medium mb-4">
+                  <p className="text-sm text-blue-400 font-medium mb-4">
                     {experience.role}
                   </p>
-                  
-                  <p className="text-gray-300 mb-6">
+
+                  {/* Description */}
+                  <p className="text-sm text-gray-400 leading-relaxed mb-5">
                     {experience.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2 mb-6">
+                  {/* Skills */}
+                  <div className="flex flex-wrap gap-2 mb-5">
                     {experience.skills.map((skill, i) => (
-                      <span 
+                      <span
                         key={i}
-                        className="px-3 py-1 bg-gray-700 text-gray-200 text-sm rounded-full"
+                        className="px-2.5 py-1 text-xs font-medium text-gray-300 rounded-md bg-gray-800/80 border border-gray-700/50"
                       >
                         {skill}
                       </span>
                     ))}
                   </div>
-                  
-                  <div className="h-6"></div>
-                  
-                  <div className="text-center">
-                    <SilverBorderButton 
-                      as="a" 
-                      href={experience.link}
-                      width="180px"
-                      height="45px"
-                      className="text-sm"
-                    >
-                      View Project Details
-                    </SilverBorderButton>
-                  </div>
+
+                  {/* Link */}
+                  <SilverBorderButton
+                    as="a"
+                    href={experience.link}
+                    width="100%"
+                    height="42px"
+                    className="text-sm w-full"
+                  >
+                    View Details
+                  </SilverBorderButton>
                 </div>
               </div>
-            ))}
-          
             </div>
-            {/* Resume download button removed as per user request */}
           </div>
-        </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 };
 

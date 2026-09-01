@@ -109,10 +109,11 @@ export default function Home() {
         </section>
 
         {/* Work Experience Section */}
-        <section id="experience" className="py-20 bg-gray-800">
+        <section id="experience" className="py-20 bg-gradient-to-b from-gray-800 via-gray-800 to-gray-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-4 text-white">Work <span className="text-blue-400">Experience</span></h2>
+              <p className="text-gray-400 max-w-2xl mx-auto">My professional journey in engineering and research</p>
             </div>
             <Work />
           </div>
