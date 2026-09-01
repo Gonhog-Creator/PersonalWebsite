@@ -1,203 +1,230 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import AOS from 'aos';
-import { RainbowBorderButton } from '../ui/rainbow-borders-button';
 import 'aos/dist/aos.css';
-import { SilverBorderButton } from "@/components/ui/SilverBorderButton";
 
-type GalleryItem = {
-  id: string;
+type BentoTile = {
+  href: string;
   title: string;
+  subtitle: string;
   image: string;
-  count: number;
-  category: string;
-  location: string;
-  date: string;
-  aspectRatio?: string;
+  span: 'wide' | 'normal';
+  previews: string[];
 };
 
+const tiles: BentoTile[] = [
+  {
+    href: '/gallery_map',
+    title: 'World Map',
+    subtitle: 'Explore photos by location',
+    image: '/img/WorldMapImage.png',
+    span: 'wide',
+    previews: [
+      '/img/Argentina/argentina (15).jpg',
+      '/img/Australia/australia (42).jpg',
+      '/img/Norway/norway (8).jpg',
+      '/img/Italy/Bologna/Bologna (86).jpg',
+      '/img/Switzerland/switzerland (12).jpg',
+      '/img/Costa Rica/costarica (85).jpg',
+    ],
+  },
+  {
+    href: '/galleries/bests',
+    title: 'The Bests',
+    subtitle: 'My favorite shots',
+    image: '/img/Best/Sunsets/sunsets (18).jpg',
+    span: 'normal',
+    previews: [
+      '/img/Best/Landscape/landscape (1).jpg',
+      '/img/Best/Birds/birds (1).jpg',
+      '/img/Best/Animals/animals (1).jpg',
+      '/img/Best/Plants/plants (1).jpg',
+      '/img/Best/Urban/urban (1).jpg',
+      '/img/Best/Drone/drone (1).jpg',
+    ],
+  },
+  {
+    href: '/astrophotography',
+    title: 'Astrophotography',
+    subtitle: 'Deep space imaging',
+    image: '/img/Astro/M31-10.6.25-4.75hours.jpg',
+    span: 'normal',
+    previews: [
+      '/img/Astro/M51-10.9.25-59x20sec.jpg',
+      '/img/Astro/astro-15.jpg',
+      '/img/Astro/EasternVeil 8.31.26 HOO Compressed.jpg',
+      '/img/Astro/M42-12.1.25-394x10sec.jpg',
+      '/img/Astro/M101-10.9.25-1123x10sec.jpg',
+      '/img/Astro/M31-10.6.25-4.75hours.jpg',
+    ],
+  },
+  {
+    href: '/galleries',
+    title: 'All Galleries',
+    subtitle: 'Browse every country',
+    image: '/img/Greece/greece (67).jpg',
+    span: 'wide',
+    previews: [
+      '/img/Belgium/belgium (45).jpg',
+      '/img/Czech Republic/czech-republic (53).jpg',
+      '/img/Estonia/estonia (33).jpg',
+      '/img/Slovenia/slovenia (13).jpg',
+      '/img/Uruguay/uruguay (6).jpg',
+      '/img/United Kingdom/united_kingdom (70).jpg',
+    ],
+  },
+  {
+    href: '/photo-search',
+    title: 'Photo Search',
+    subtitle: 'Find photos by keyword',
+    image: '/img/Italy/Florence/florence-panorama (5).jpg',
+    span: 'wide',
+    previews: [
+      '/img/USA/usa (15).jpg',
+      '/img/Scotland/scotland (5).jpg',
+      '/img/Finland/finland (15).jpg',
+      '/img/Greece/greece (67).jpg',
+      '/img/Costa Rica/costarica (124).jpg',
+      '/img/Best/Sunsets/sunsets (18).jpg',
+    ],
+  },
+  {
+    href: '/carousel_gallery',
+    title: 'Screensaver',
+    subtitle: 'Auto-playing slideshow',
+    image: '/img/Costa Rica/costarica (124).jpg',
+    span: 'normal',
+    previews: [
+      '/img/Sweden/sweden (7).jpg',
+      '/img/Norway/norway (15).jpg',
+      '/img/Argentina/argentina (30).jpg',
+      '/img/France/france (10).jpg',
+      '/img/Switzerland/switzerland (8).jpg',
+      '/img/Costa Rica/costarica (50).jpg',
+    ],
+  },
+];
 
 const Photography = () => {
-  // Initialize AOS
+  const [hoveredTile, setHoveredTile] = useState<number | null>(null);
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
+    AOS.init({ duration: 800, once: true });
+  }, []);
+
+  // Preload all preview images on mount
+  useEffect(() => {
+    const allPreviews = tiles.flatMap(t => t.previews);
+    allPreviews.forEach(src => {
+      const img = new window.Image();
+      img.src = src;
     });
   }, []);
 
+  const handleMouseEnter = useCallback((i: number) => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => {
+      setHoveredTile(i);
+    }, 500);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+  }, []);
+
+  const activeTileIndex = hoveredTile !== null ? hoveredTile : 0;
+  const activePreviews = tiles[activeTileIndex].previews;
+  const leftPreviews = activePreviews.slice(0, 3);
+  const rightPreviews = activePreviews.slice(3, 6);
+  const isHovered = hoveredTile !== null;
+
   return (
-    <section className="py-16 md:py-24 bg-gray-900" id="photography">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-8 bg-gray-900" id="photography">
+      <div className="flex items-stretch justify-center gap-4 px-4">
+        {/* Left photo strip - visible on xl+ */}
+        <div className="hidden xl:flex flex-col gap-3 w-[330px] 2xl:w-[450px] shrink-0">
+          {leftPreviews.map((src, i) => (
+              <div
+                key={`L${i}`}
+                className="relative flex-1 rounded-xl overflow-hidden bg-gray-800 min-h-0"
+              >
+                <img src={src} alt="Preview" loading="eager" className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+              </div>
+            ))}
+        </div>
 
-        {/* World Map Section */}
-        <div className="w-full flex flex-col items-center mb-32" data-aos="fade-up">
-          <div className="w-full max-w-4xl px-4">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">World Map</h3>
-            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <div className="w-full h-[500px] relative">
+        {/* Bento grid */}
+        <div className="flex-1 max-w-[96rem]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+            {tiles.map((tile, i) => (
+              <Link
+                key={tile.href}
+                href={tile.href}
+                data-aos="fade-up"
+                data-aos-delay={i * 80}
+                onMouseEnter={() => handleMouseEnter(i)}
+                onMouseLeave={() => handleMouseLeave()}
+                className={`group relative block rounded-2xl overflow-hidden ${
+                  tile.span === 'wide' ? 'md:col-span-2 lg:col-span-2' : ''
+                } h-[280px] md:h-[340px]`}
+              >
                 <Image
-                  src="/img/WorldMapImage.png"
-                  alt="World Map"
+                  src={tile.image}
+                  alt={tile.title}
                   fill
-                  className="object-cover"
-                  priority
-                  style={{ objectPosition: 'center' }}
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  priority={i < 2}
                 />
-              </div>
-            </div>
-            <div className="mt-8 mb-12 flex justify-center">
-              <SilverBorderButton 
-                as="a" 
-                href="/gallery_map"
-                width="220px"
-                height="50px"
-                className="text-base mx-auto"
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent transition-opacity duration-300 group-hover:from-black/90" />
+                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-1">
+                    {tile.title}
+                  </h3>
+                  <p className="text-sm text-gray-300 opacity-90">
+                    {tile.subtitle}
+                  </p>
+                  <div className="flex items-center gap-1 mt-3 text-blue-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    Explore
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Right photo strip - visible on xl+ */}
+        <div className="hidden xl:flex flex-col gap-3 w-[330px] 2xl:w-[450px] shrink-0">
+          {rightPreviews.map((src, i) => (
+              <div
+                key={`R${i}`}
+                className="relative flex-1 rounded-xl overflow-hidden bg-gray-800 min-h-0"
               >
-                View Map
-              </SilverBorderButton>
-            </div>
-          </div>
+                <img src={src} alt="Preview" loading="eager" className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+              </div>
+            ))}
         </div>
-
-        {/* Spacing between sections */}
-        <div className="h-24"></div>
-
-        {/* Best of Section */}
-        <div className="w-full flex flex-col items-center mb-32" data-aos="fade-up">
-          <div className="w-full max-w-4xl px-4">
-            <h3 className="text-2xl font-bold text-white mb-6 text-center">The Bests</h3>
-            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <div className="w-full h-[500px] relative">
-                <Image
-                  src="/img/Best/Sunsets/sunsets (18).jpg"
-                  alt="Best"
-                  fill
-                  className="object-cover"
-                  priority
-                  style={{ objectPosition: 'center' }}
-                />
-              </div>
-            </div>
-            <div className="mt-8 mb-12 flex justify-center">
-              <SilverBorderButton
-                as="a"
-                href="/galleries/bests"
-                width="220px"
-                height="50px"
-                className="text-base mx-auto"
-              >
-                View My Favorite Photos
-              </SilverBorderButton>
-            </div>
-          </div>
-        </div>
-
-        {/* Spacing between sections */}
-        <div className="h-24"></div>
-
-        {/* Astrophotography Section */}
-        <div className="mt-32 mb-32 text-center" data-aos="fade-up">
-          <h3 className="text-2xl font-bold text-white mb-4">Astrophotography</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <div className="relative w-full h-64">
-                <Image 
-                  src="/img/Astro/M31-10.6.25-4.75hours.jpg"
-                  alt="Astrophotography 1" 
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            </div>
-            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <div className="relative w-full h-64">
-                <Image 
-                  src="/img/Astro/astro-15.jpg"
-                  alt="Astrophotography 2" 
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center mt-6 mb-12">
-            <SilverBorderButton 
-              as="a" 
-              href="/astrophotography"
-              width="180px"
-              height="45px"
-              className="text-sm mx-auto"
-            >
-              View Full Gallery
-            </SilverBorderButton>
-          </div>
-        </div>
-
-        {/* Spacing between sections */}
-        <div className="h-24"></div>
-
-        {/* All Galleries Section */}
-        <div className="mt-20 text-center" data-aos="fade-up">
-          <h3 className="text-2xl font-bold text-white mb-4">View All Galleries</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <div className="relative w-full h-64">
-                <Image 
-                  src="/img/Greece/greece (67).jpg" 
-                  alt="Greece" 
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            </div>
-            <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-              <div className="relative w-full h-64">
-                <Image 
-                  src="/img/Costa Rica/costarica (124).jpg" 
-                  alt="Costa Rica" 
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  priority
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center gap-20 mt-6">
-            <SilverBorderButton 
-              as="a" 
-              href="/galleries"
-              width="220px"
-              height="45px"
-              className="text-sm"
-            >
-              View All Galleries
-            </SilverBorderButton>
-            <div>
-              <RainbowBorderButton
-                as="a"
-                href="/carousel_gallery"
-                width="260px"
-                height="55px"
-                className="text-base hover:scale-105 transition-transform"
-              >
-                Screensaver Gallery
-              </RainbowBorderButton>
-            </div>
-          </div>
-        </div>
-        
-
       </div>
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </section>
   );
 };
