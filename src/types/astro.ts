@@ -20,6 +20,22 @@ export interface DSOImage {
     number: number | string;
   }> | null;
   processing?: string;
+  astrobinUrl?: string;
+  integration?: Array<{
+    filter: string;
+    frames: number;
+    subExposure: string;
+    total: string;
+  }>;
+  palettes?: {
+    sho?: string;
+    hoo?: string;
+    custom?: string;
+    customLabel?: string;
+    shoAstrobinUrl?: string;
+    hooAstrobinUrl?: string;
+    customAstrobinUrl?: string;
+  };
 }
 
 export interface AstroPhoto {

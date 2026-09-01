@@ -860,5 +860,42 @@ export const dsoImages: DSOImage[] = [
       { type: 'other', number: 'LBN 190.10-18.00' }
     ],
     processing: 'Re-stacked and reprocessed using Siril, Nazstronomy, CosmicClarity, and HDR-Multiscale.'
+  },
+  {
+    id: 'dso-35',
+    title: 'Eastern Veil Nebula (NGC 6992) - Askar 80PHQ',
+    date: '2026-08-31',
+    shortDescription: 'The Eastern Veil Nebula captured with a dedicated deep space imaging setup, featuring three narrowband color palettes: SHO, HOO, and a custom Crimson and Green blend.',
+    fullDescription: 'The Eastern Veil Nebula (NGC 6992) is part of the larger Veil Nebula complex, a supernova remnant in the constellation Cygnus. This spectacular nebula is the result of a massive star that exploded approximately 10,000-20,000 years ago. The Eastern Veil is particularly notable for its delicate, wispy filaments of ionized gas that glow in various colors due to different elements being excited by the energy from the supernova explosion. This image was captured using narrowband filters (Ha, OIII, SII) and processed in PixInsight with three different color palettes to highlight different structural details. First ever image with my deep space telescope, very happy with the results!',
+    type: 'supernova',
+    constellation: 'Cygnus',
+    imageUrl: '/img/Astro/EasternVeil 8.31.26 Compressed.jpg',
+    telescope: 'Askar 80PHQ',
+    exposure: '7h 30m (90×300sec: 30×Ha, 30×OIII, 30×SII)',
+    location: 'Durham, NC',
+    year: 2026,
+    catalogues: [
+      { type: 'ngc', number: 6992 },
+      { type: 'ngc', number: 6995 },
+      { type: 'ic', number: 1340 },
+      { type: 'sharpless', number: 'Sh2-103' },
+      { type: 'other', number: 'Caldwell 33' },
+      { type: 'other', number: 'LBN 191' }
+    ],
+    processing: 'Captured with ZWO ASI6200MM Pro, ZWO filters (Ha 7nm, OIII 7nm, SII 7nm), Sky-Watcher EQ6-R Pro mount, ZWO ASIAIR Mini, ZWO EAF, ZWO EFW 7×2″. Guided with ZWO ASI533MM. Processed in PixInsight. Bortle 4.5 sky.',
+    astrobinUrl: 'https://app.astrobin.com/i/9sg5b8/',
+    integration: [
+      { filter: 'H-alpha 7nm', frames: 30, subExposure: '300s', total: '2h 30m' },
+      { filter: 'O-III 7nm', frames: 30, subExposure: '300s', total: '2h 30m' },
+      { filter: 'S-II 7nm', frames: 30, subExposure: '300s', total: '2h 30m' }
+    ],
+    palettes: {
+      sho: '/img/Astro/EasternVeil 8.31.26 Compressed.jpg',
+      shoAstrobinUrl: 'https://app.astrobin.com/i/9sg5b8/',
+      hoo: '/img/Astro/EasternVeil 8.31.26 HOO Compressed.jpg',
+      hooAstrobinUrl: 'https://app.astrobin.com/i/lqp89t/',
+      custom: '/img/Astro/EasternVeil 8.31.26 Crimson and Green Compressed.jpg',
+      customLabel: 'Crimson & Green'
+    }
   }
 ];
