@@ -1,1654 +1,230 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import Image from 'next/image';
-import { useTransition, a } from "@react-spring/web";
-import type { 
-  LayoutType, 
-  GalleryImage, 
-  GridItem, 
-  ImageGalleryScreensaverProps 
-} from "./types";
+import { useEffect, useState, useCallback } from 'react';
+import galleryImages from '@/data/galleryImages.json';
+import galleryPanos from '@/data/galleryPanos.json';
 
-// Cache for panorama detection results - currently not used but kept for future reference
-// const panoramaCache = new Map<string, boolean>();
+const REFRESH_INTERVAL = 15000;
+const ALL_PANO_COUNT = 3;
+const COLS_NORMAL = 7;
+const COLS_2K = 9;
+const PHOTOS_PER_COL_NORMAL = 6;
+const PHOTOS_PER_COL_WITH_PANO = 5;
 
-// Default image paths - will be populated asynchronously
-let imagePaths: string[] = [
-  // Simple SVG placeholder as a data URL
-  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjY2NyIgdmlld0JveD0iMCAwIDEwMDAgNjY3Ij48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1JSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb2FkaW5nIGltYWdlcy4uLjwvdGV4dDwvc3ZnPg==',
-  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjY2NyIgdmlld0JveD0iMCAwIDEwMDAgNjY3Ij48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWVlZWVlIi8+PHRleHQgeD0iNTAlIiB5PSI1JSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb2FkaW5nIGltYWdlcy4uLjwvdGV4dD48L3N2Zz4=',
-  'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAwIiBoZWlnaHQ9IjY2NyIgdmlld0JveD0iMCAwIDEwMDAgNjY3Ij48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1JSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb2FkaW5nIGltYWdlcy4uLjwvdGV4dD48L3N2Zz4='
-];
+// Layout heights (vh) - must total ~100vh per layout
+// normal: 1 masonry section × 100vh
+// top-pano: 18vh pano + 1 masonry × 82vh
+// bottom-pano: 1 masonry × 82vh + 18vh pano
+// all-pano: 3 panos × 33vh = 99vh
+const PANO_VH = { 'top-pano': 18, 'bottom-pano': 18, 'all-pano': 33 };
+const GRID_VH = { normal: 100, 'top-pano': 82, 'bottom-pano': 82 };
 
-let panoramaPaths: string[] = [];
+type LayoutType = 'normal' | 'top-pano' | 'bottom-pano' | 'all-pano';
+const LAYOUTS: LayoutType[] = ['normal', 'top-pano', 'bottom-pano', 'all-pano'];
 
-// Load image paths from JSON files in the browser
-const loadImagePaths = async () => {
-  if (typeof window === 'undefined') return;
-  
-  try {
-    // Load regular gallery images
-    const galleryModule = await import('@/data/galleryImages.json');
-    if (Array.isArray(galleryModule.default) && galleryModule.default.length > 0) {
-      imagePaths = galleryModule.default;
-    }
-    
-    // Load panorama images
-    const panoModule = await import('@/data/galleryPanos.json');
-    if (Array.isArray(panoModule.default)) {
-      panoramaPaths = panoModule.default;
-    }
-  } catch (error) {
-    console.error('Error loading image paths:', error);
-  }
-};
-
-// Start loading the image paths when the module loads
-if (typeof window !== 'undefined') {
-  loadImagePaths().catch(console.error);
+function shuffle<T>(arr: T[]): T[] {
+  return [...arr].sort(() => Math.random() - 0.5);
 }
 
-// Debounce helper
-const debounce = <T extends (...args: unknown[]) => void>(func: T, wait: number) => {
-  let timeout: NodeJS.Timeout | null = null;
-  return (...args: Parameters<T>) => {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
+type LayoutData = {
+  type: LayoutType;
+  panoramas: string[];
+  columns: string[][];
 };
-const COLUMN_COUNT = 5; // Set to 5 columns for better image display
-const GAP = 2; // 2px gap between items (reduced from 8px)
 
-// Function to get random panoramas from the pre-generated list
-const getRandomPanoramas = (count: number = 3): GalleryImage[] => {
-  if (panoramaPaths.length === 0) {
-    console.warn('No panorama images found in galleryPanos.json');
-    return [];
+const panoPattern = /panorama/i;
+const regularOnly = galleryImages.filter(src => !panoPattern.test(src));
+
+function distributeToColumns(items: string[], cols: number): string[][] {
+  const columns: string[][] = Array.from({ length: cols }, () => []);
+  items.forEach((item, i) => {
+    columns[i % cols].push(item);
+  });
+  return columns;
+}
+
+function generateLayout(type: LayoutType, colCount: number): LayoutData {
+  const shuffledRegular = shuffle(regularOnly);
+  const shuffledPanos = shuffle(galleryPanos);
+  let regIdx = 0;
+  let panoIdx = 0;
+
+  const getRegBatch = (count: number, colCount: number) => {
+    const batch: string[] = [];
+    for (let r = 0; r < count; r++) {
+      if (regIdx >= shuffledRegular.length) regIdx = 0;
+      batch.push(shuffledRegular[regIdx++]);
+    }
+    return distributeToColumns(batch, colCount);
+  };
+
+  const getPano = () => {
+    if (panoIdx >= shuffledPanos.length) panoIdx = 0;
+    return shuffledPanos[panoIdx++];
+  };
+
+  if (type === 'all-pano') {
+    const panoramas: string[] = [];
+    for (let i = 0; i < ALL_PANO_COUNT; i++) panoramas.push(getPano());
+    return { type, panoramas, columns: [] };
   }
 
-  // If we have fewer panoramas than requested, return all available
-  if (panoramaPaths.length <= count) {
-    console.log(`Using all ${panoramaPaths.length} available panoramas`);
-    return panoramaPaths.map(src => ({
-      id: `pano-${Math.random().toString(36).substr(2, 9)}`,
-      src,
-      width: 0, // These will be set when the image loads
-      height: 0,
-      isPanorama: true,
-      alt: `Panorama ${src.split('/').pop()?.replace(/[_-]/g, ' ') || 'image'}`
-    }));
-  }
-
-  // Get random unique indices
-  const indices = new Set<number>();
-  while (indices.size < count) {
-    const index = Math.floor(Math.random() * panoramaPaths.length);
-    indices.add(index);
-  }
-
-  // Create gallery image objects for the selected panoramas
-  const selectedPanoramas = Array.from(indices).map(index => {
-    const src = panoramaPaths[index];
+  if (type === 'top-pano') {
     return {
-      id: `pano-${Math.random().toString(36).substr(2, 9)}`,
-      src,
-      width: 0, // These will be set when the image loads
-      height: 0,
-      isPanorama: true,
-      alt: `Panorama ${src.split('/').pop()?.replace(/[_-]/g, ' ') || 'image'}`
+      type,
+      panoramas: [getPano(), getPano()],
+      columns: getRegBatch(PHOTOS_PER_COL_WITH_PANO * colCount, colCount),
     };
-  });
+  }
 
-  console.log(`Selected ${selectedPanoramas.length} random panoramas`);
-  return selectedPanoramas;
-};
+  if (type === 'bottom-pano') {
+    return {
+      type,
+      panoramas: [getPano(), getPano()],
+      columns: getRegBatch(PHOTOS_PER_COL_WITH_PANO * colCount, colCount),
+    };
+  }
 
-// Function to find panorama images from the pre-generated list
-const findPanoramaImages = async (): Promise<GalleryImage[]> => {
-  return getRandomPanoramas(3);
-};
+  // normal - single full-screen masonry
+  return { type, panoramas: [], columns: getRegBatch(PHOTOS_PER_COL_NORMAL * colCount, colCount) };
+}
 
-// getImageDimensions function removed as it's not used in the code
+export default function Screensaver() {
+  const [data, setData] = useState<LayoutData | null>(null);
+  const [fadeKey, setFadeKey] = useState(0);
+  const [layoutIdx, setLayoutIdx] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [colCount, setColCount] = useState(COLS_NORMAL);
 
-// Preload images and get their dimensions (unused but kept for future reference)
-// const preloadImages = async (urls: string[]) => {
-//   const validUrls = urls.filter(url => 
-//     url && !url.includes('favicon') && !url.includes('apple-touch-icon')
-//   );
-
-//   const images = await Promise.all(
-//     validUrls.map(async (src, index) => {
-//       try {
-//         const { width, height } = await getImageDimensions(src);
-//         return {
-//           id: `img-${index}`,
-//           src,
-//           width,
-//           height,
-//           isPanorama: isPanoramaImage(src)
-//         } as GalleryImage;
-//       } catch (error) {
-//         console.error(`Error loading image ${src}:`, error);
-//         return null;
-//       }
-//     })
-//   );
-
-//   return images.filter(Boolean) as GalleryImage[];
-// };
-
-// Configuration for batch loading
-const BATCH_SIZE = 30; // Number of images to load in the first batch
-const BATCH_INTERVAL = 100; // Time between loading subsequent batches (ms)
-
-// Custom hook to load images with batch loading and retry logic
-const useImageLoader = () => {
-  const [images, setImages] = useState<GalleryImage[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [isRetrying, setIsRetrying] = useState(false);
-  const [loadedCount, setLoadedCount] = useState(0);
-  const [totalImages, setTotalImages] = useState(0);
-  const retryCount = useRef<Record<string, number>>({});
-  const MAX_RETRIES = 3;
-  const loadingQueue = useRef<{src: string; index: number}[]>([]);
-  const isProcessing = useRef(false);
-  const processedImages = useRef<Set<string>>(new Set());
-
-  const loadImage = useCallback((src: string, index: number): Promise<GalleryImage> => {
-    return new Promise((resolve) => {
-      // Use window.Image to ensure we're using the browser's Image constructor
-      const img = new window.Image();
-      img.crossOrigin = 'anonymous'; // Add this for CORS support if needed
-      const retryKey = `${src}-${index}`;
-      const currentRetry = retryCount.current[retryKey] || 0;
-      let hasResolved = false;
-      
-      img.onload = () => {
-        if (hasResolved) return;
-        hasResolved = true;
-        
-        const isPanorama = panoramaPaths.includes(src);
-        
-        resolve({
-          id: `img-${index}-${Date.now()}`,
-          src: src,
-          originalSrc: src,
-          width: img.width || 1,
-          height: img.height || 1,
-          isPanorama: isPanorama,
-          lastRetry: Date.now(),
-          retryCount: currentRetry,
-          aspectRatio: img.width / img.height
-        });
-      };
-      
-      img.onerror = () => {
-        if (hasResolved) return;
-        
-        const retryDelay = Math.min(1000 * Math.pow(2, currentRetry), 15000);
-        
-        if (currentRetry < MAX_RETRIES) {
-          retryCount.current[retryKey] = currentRetry + 1;
-          
-          setTimeout(() => {
-            loadImage(src, index).then(resolve);
-          }, retryDelay);
-        } else {
-          hasResolved = true;
-          
-          if (process.env.NODE_ENV === 'development' && !panoramaPaths.some(p => p === src)) {
-            console.warn(`Failed to load image after ${MAX_RETRIES} attempts:`, src);
-          }
-          
-          resolve({
-            id: `img-${index}-error-${Date.now()}`,
-            src: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNlZWVlZWUiLz48bGluZSB4MT0iMCIgeTE9IjAiIHgyPSIxMDAiIHkyPSIxMDAiIHN0cm9rZT0iI2RkZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjEwMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMTAwIiBzdHJva2U9IiNkZGQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==',
-            originalSrc: src,
-            width: 100,
-            height: 100,
-            isPanorama: false,
-            isError: true,
-            lastRetry: Date.now(),
-            retryCount: currentRetry + 1
-          });
-        }
-      };
-      
-      // Stagger the start of image loading to prevent overwhelming the server
-      setTimeout(() => {
-        try {
-          img.src = src;
-        } catch (error) {
-          console.error('Error setting image source:', error, src);
-          setTimeout(() => loadImage(src, index).then(resolve), 1000);
-        }
-      }, 10 * (index % 20)); // Reduced stagger time for faster initial load
-    });
+  useEffect(() => {
+    const updateCols = () => {
+      setColCount(window.innerWidth >= 2048 ? COLS_2K : COLS_NORMAL);
+    };
+    updateCols();
+    window.addEventListener('resize', updateCols);
+    return () => window.removeEventListener('resize', updateCols);
   }, []);
 
-  // Type definition for IdleDeadline
-  interface IdleDeadline {
-    readonly didTimeout: boolean;
-    timeRemaining: () => number;
-  }
-
-  // Check if requestIdleCallback is available
-  const canUseIdleCallback = typeof window !== 'undefined' && 'requestIdleCallback' in window;
-  
-  // Process the next batch of images with requestIdleCallback for better performance
-  const processNextBatch = useCallback(async () => {
-    if (isProcessing.current || loadingQueue.current.length === 0) return;
-    
-    isProcessing.current = true;
-    setIsLoadingMore(true);
-    
-    const processWithIdleCallback = async (deadline: IdleDeadline) => {
-      const batch: {src: string; index: number}[] = [];
-      
-      // Process as many images as we can in the current idle period
-      while ((deadline.timeRemaining() > 0 || deadline.didTimeout) && loadingQueue.current.length > 0) {
-        const item = loadingQueue.current.shift();
-        if (item) {
-          batch.push(item);
-        }
-      }
-      
-      if (batch.length === 0) {
-        isProcessing.current = false;
-        setIsLoadingMore(false);
-        return;
-      }
-      
-      try {
-        // Load the batch of images with lower priority
-        const batchPromises = batch.map(({src, index}) => 
-          loadImage(src, index).then(img => {
-            if (!processedImages.current.has(src)) {
-              processedImages.current.add(src);
-              return img;
-            }
-            return null;
-          })
-        );
-        
-        const loadedImages = (await Promise.all(batchPromises)).filter(Boolean) as GalleryImage[];
-        
-        // Update the images state with the new batch
-        setImages(prevImages => {
-          const existingIds = new Set(prevImages.map(img => img.originalSrc));
-          const newImages = loadedImages.filter(img => !existingIds.has(img.originalSrc));
-          return [...prevImages, ...newImages];
-        });
-        
-        // Update the loaded count
-        setLoadedCount(prevCount => prevCount + loadedImages.length);
-        
-        // If there are more images to load, schedule the next batch
-        if (loadingQueue.current.length > 0) {
-          if (canUseIdleCallback) {
-            if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-              window.requestIdleCallback(processWithIdleCallback, { timeout: 500 });
-            } else {
-              setTimeout(processNextBatch, 100);
-            }
-          } else {
-            setTimeout(() => processNextBatch(), 100);
-          }
-        } else {
-          isProcessing.current = false;
-          setIsLoadingMore(false);
-        }
-      } catch (error) {
-        console.error('Error processing image batch:', error);
-        isProcessing.current = false;
-        setIsLoadingMore(false);
-      }
-    };
-    
-    // Start processing with requestIdleCallback if available
-    if (canUseIdleCallback && typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      window.requestIdleCallback(
-        processWithIdleCallback,
-        { timeout: 500 }
-      );
-    } else {
-      // Fallback for browsers that don't support requestIdleCallback
-      processWithIdleCallback({
-        timeRemaining: () => 50, // 50ms time slice
-        didTimeout: false
-      } as IdleDeadline);
-    }
-  }, [loadImage, canUseIdleCallback]);
-  
-  // Function to load the first batch of images with higher priority
-  const loadFirstBatch = useCallback(async (validImagePaths: string[]) => {
-    try {
-      setIsLoading(true);
-      
-      // Reset state
-      setImages([]);
-      setLoadedCount(0);
-      processedImages.current = new Set();
-      loadingQueue.current = [];
-      isProcessing.current = false;
-      
-      // Shuffle the array to get random images
-      const shuffledImages = [...validImagePaths].sort(() => Math.random() - 0.5);
-      
-      // Take a larger first batch for better initial display
-      const initialBatchSize = Math.min(BATCH_SIZE * 2, Math.ceil(validImagePaths.length * 0.3));
-      const firstBatch = shuffledImages.slice(0, initialBatchSize);
-      const remainingImages = shuffledImages.slice(initialBatchSize);
-      
-      // Queue remaining images for background loading
-      loadingQueue.current = remainingImages.map((src, i) => ({
-        src,
-        index: initialBatchSize + i
-      }));
-      
-      // Load first batch with higher priority
-      const firstBatchPromises = firstBatch.map((src, index) => 
-        loadImage(src, index).then(img => {
-          if (img && !processedImages.current.has(src)) {
-            processedImages.current.add(src);
-            return img;
-          }
-          return null;
-        })
-      );
-      
-      const firstBatchImages = (await Promise.all(firstBatchPromises)).filter(Boolean) as GalleryImage[];
-      
-      setImages(firstBatchImages);
-      setLoadedCount(firstBatchImages.length);
-      
-      // Queue the remaining images for background loading
-      if (remainingImages.length > 0) {
-        loadingQueue.current = remainingImages.map((src, index) => ({
-          src,
-          index: index + firstBatch.length
-        }));
-        
-        // Start processing the queue
-        setTimeout(processNextBatch, BATCH_INTERVAL);
-      }
-    } catch (error) {
-      console.error('Error loading images:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [loadImage, processNextBatch]); // Removed BATCH_SIZE and BATCH_INTERVAL as they're constants
-  
-  // Function to refresh the current batch of images
-  const refreshBatch = useCallback(() => {
-    if (isLoading) return;
-    
-    // Filter out invalid image paths
-    const validImagePaths = imagePaths.filter(
-      url => url && !url.includes('favicon') && !url.includes('apple-touch-icon')
-    );
-    
-    // Reload with a new random batch
-    loadFirstBatch(validImagePaths);
-  }, [isLoading, loadFirstBatch]); // Removed imagePaths as it's a module-level variable
-
-  useEffect(() => {
-    // Filter out invalid image paths
-    const validImagePaths = imagePaths.filter(
-      url => url && !url.includes('favicon') && !url.includes('apple-touch-icon')
-    );
-    
-    setTotalImages(validImagePaths.length);
-    
-    // Load the first batch of images
-    loadFirstBatch(validImagePaths);
-    
-    // Cleanup function to cancel any pending operations
-    return () => {
-      loadingQueue.current = [];
-      isProcessing.current = false;
-    };
-  }, [loadFirstBatch]);
-
-  return { 
-    images, 
-    isLoading, 
-    isLoadingMore,
-    isRetrying,
-    loadedCount, 
-    totalImages,
-    refreshBatch
-  };
-};
-// Helper function to create a grid item
-const createGridItem = (
-  img: GalleryImage, 
-  x: number, 
-  y: number, 
-  width: number, 
-  height: number, 
-  column: number,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _isPanorama: boolean // Prefix with underscore to indicate it's intentionally unused
-): GridItem => {
-  // Calculate scale to fill the container while maintaining aspect ratio
-  const containerAspect = width / height;
-  const imageAspect = img.width / img.height;
-  let scale = 1;
-  let translateX = 0;
-  let translateY = 0;
-
-  if (containerAspect > imageAspect) {
-    // Container is wider than image (relative to their heights)
-    scale = width / (height * imageAspect);
-    translateX = (width - height * imageAspect) / 2;
-  } else {
-    // Container is taller than image (relative to their widths)
-    scale = height / (width / imageAspect);
-    translateY = (height - width / imageAspect) / 2;
-  }
-
-  const gridItem: GridItem = {
-    ...img,
-    x,
-    y,
-    width,
-    height,
-    column,
-    style: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      objectPosition: 'center',
-      transform: `scale(${scale}) translate(${translateX}px, ${translateY}px)`,
-      transformOrigin: 'center center',
-      willChange: 'transform',
-      display: 'block'
-    }
-  };
-  
-  return gridItem;
-};
-
-// Handle full-panorama layout
-const createFullPanoramaLayout = (
-  panoramaImages: GalleryImage[],
-  containerWidth: number,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _gap: number
-): [number, GridItem[]] => {
-  const items: GridItem[] = [];
-  // Get the viewport height, fallback to 100vh if window is not available
-  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 1080;
-  // Calculate section height to fill the viewport with 3 equal sections
-  const sectionHeight = Math.floor(viewportHeight / 3);
-  
-  // Take up to 3 unique images, don't duplicate
-  const panoramaImagesToShow = panoramaImages.slice(0, 3);
-  
-  // If we don't have enough images, we'll have fewer than 3 sections
-  if (panoramaImagesToShow.length === 0) {
-    return [0, []]; // No images to show
-  }
-  
-  // Add each panorama in a vertical stack
-  panoramaImagesToShow.forEach((img, index) => {
-    if (!img) return;
-    
-    // Create a new image object with a unique ID
-    const uniqueImg = {
-      ...img,
-      id: `${img.id}-pano-${index}` // Append index to ensure unique ID
-    };
-    
-    items.push(createGridItem(
-      uniqueImg,
-      0, // x - full width
-      index * sectionHeight, // y - stack vertically
-      containerWidth, // width - full width
-      sectionHeight, // height - 1/3 of viewport
-      0, // column - single column
-      true // isPanorama
-    ));
-  });
-  
-  // Total height is viewport height (3 sections with no gaps between them)
-  const containerHeight = viewportHeight;
-  return [containerHeight, items];
-};
-
-// Handle panorama-middle layout
-const createPanoramaMiddleLayout = (
-  panorama: GalleryImage,
-  regularImages: GalleryImage[],
-  containerWidth: number,
-  columnWidth: number,
-  gap: number,
-  effectiveColumns: number
-): [number, GridItem[]] => {
-  const items: GridItem[] = [];
-  
-  // Calculate viewport-based dimensions
-  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 1080;
-  const sectionHeight = Math.floor(viewportHeight / 3);
-  
-  // 1. First row: Exactly 1/3 of viewport height
-  const firstRowHeight = sectionHeight;
-  const imgWidth = Math.floor((containerWidth - (effectiveColumns - 1) * gap) / effectiveColumns);
-  
-  // Only add first row if we have regular images
-  const firstRowImages = regularImages.slice(0, effectiveColumns);
-  const remainingImages = regularImages.slice(effectiveColumns);
-  
-  firstRowImages.forEach((img, index) => {
-    // Create a modified image object with style for proper filling
-    const styledImg = {
-      ...img,
-      style: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        objectPosition: 'center',
-        display: 'block'
-      }
-    };
-    
-    items.push(createGridItem(
-      styledImg,
-      index * (imgWidth + gap), // x
-      0, // y
-      imgWidth, // width
-      firstRowHeight, // height - exactly 1/3 of viewport
-      index, // column
-      false // isPanorama
-    ));
-  });
-  
-  // 2. Panorama: Full width below first row with height limited to 1/3 of viewport
-  const panoramaY = firstRowHeight + gap;
-  const maxPanoramaHeight = Math.floor(viewportHeight / 3);
-  const panoramaAspectRatio = panorama.width / panorama.height;
-  const panoramaHeight = Math.min(containerWidth / panoramaAspectRatio, maxPanoramaHeight);
-  
-  items.push(createGridItem(
-    panorama,
-    0, // x
-    panoramaY, // y
-    containerWidth, // width
-    panoramaHeight, // height
-    0, // column
-    true // isPanorama
-  ));
-  
-  // 3. Remaining images: Masonry layout below panorama with proper spacing
-  const remainingColumnHeights = new Array(effectiveColumns).fill(panoramaY + panoramaHeight + gap);
-  const remainingColumnWidth = (containerWidth - (effectiveColumns - 1) * gap) / effectiveColumns;
-  
-  remainingImages.forEach(img => {
-    const targetCol = remainingColumnHeights.indexOf(Math.min(...remainingColumnHeights));
-    const aspectRatio = img.width / img.height;
-    const imgHeight = remainingColumnWidth / aspectRatio;
-    
-    items.push(createGridItem(
-      img,
-      targetCol * (remainingColumnWidth + gap), // x
-      remainingColumnHeights[targetCol], // y
-      remainingColumnWidth, // width
-      imgHeight, // height
-      targetCol, // column
-      false // isPanorama
-    ));
-    
-    remainingColumnHeights[targetCol] += imgHeight + gap;
-  });
-  
-  const containerHeight = Math.max(...remainingColumnHeights, 0);
-  return [containerHeight, items];
-};
-
-// Handle panorama-bottom layout (similar to top but positions panorama at the bottom)
-const createPanoramaBottomLayout = (
-  panorama: GalleryImage,
-  regularImages: GalleryImage[],
-  containerWidth: number,
-  columnWidth: number,
-  _gap: number, // Prefix with underscore to indicate it's intentionally unused
-  effectiveColumns: number
-): [number, GridItem[]] => {
-  const items: GridItem[] = [];
-  const panoramaHeight = columnWidth * 2; // Make panorama twice as tall as a regular column
-  
-  // Position regular images first (above the panorama)
-  const y = 0; // Changed to const since it's never reassigned
-  const columns: number[] = new Array(effectiveColumns).fill(0);
-  
-  // Distribute regular images in a grid above the panorama
-  regularImages.forEach((img, index) => {
-    const columnIndex = index % effectiveColumns;
-    const x = columnIndex * (columnWidth + _gap);
-    
-    // Calculate height based on aspect ratio
-    const aspectRatio = img.width && img.height ? img.width / img.height : 1;
-    const height = columnWidth / aspectRatio;
-    
-    items.push(createGridItem(
-      img,
-      x,
-      y + columns[columnIndex],
-      columnWidth,
-      height,
-      columnIndex,
-      false
-    ));
-    
-    // Update column height
-    columns[columnIndex] += height + _gap;
-  });
-  
-  // Add the panorama at the bottom, spanning full width
-  const panoramaY = Math.max(0, ...columns) + _gap;
-  items.push(createGridItem(
-    panorama,
-    0,
-    panoramaY,
-    containerWidth,
-    panoramaHeight,
-    0,
-    true
-  ));
-  
-  // Calculate total height
-  const totalHeight = panoramaY + panoramaHeight + _gap;
-  
-  return [totalHeight, items];
-};
-
-// Handle panorama-top layout
-const createPanoramaTopLayout = (
-  panorama: GalleryImage,
-  regularImages: GalleryImage[],
-  containerWidth: number,
-  columnWidth: number,
-  gap: number,
-  effectiveColumns: number
-): [number, GridItem[]] => {
-  const items: GridItem[] = [];
-  const columnHeights = new Array(effectiveColumns).fill(0);
-  const panoramaAspectRatio = panorama.width / panorama.height;
-  const panoramaHeight = Math.min(containerWidth / panoramaAspectRatio, containerWidth * 0.4);
-  
-  // Add panorama at the top
-  items.push(createGridItem(
-    panorama,
-    0, // x
-    0, // y
-    containerWidth, // width
-    panoramaHeight, // height
-    0, // column
-    true // isPanorama
-  ));
-  
-  // Update column heights for remaining images
-  columnHeights.fill(panoramaHeight + gap);
-  
-  // Add remaining images
-  for (const img of regularImages) {
-    const targetCol = columnHeights.indexOf(Math.min(...columnHeights));
-    const aspectRatio = img.width / img.height;
-    const imgHeight = columnWidth / aspectRatio;
-    
-    items.push(createGridItem(
-      img,
-      targetCol * (columnWidth + gap), // x
-      columnHeights[targetCol], // y
-      columnWidth, // width
-      imgHeight, // height
-      targetCol, // column
-      false // isPanorama
-    ));
-    
-    columnHeights[targetCol] += imgHeight + gap;
-  }
-  
-  const containerHeight = Math.max(...columnHeights, 0);
-  return [containerHeight, items];
-};
-
-// Handle standard masonry layout
-const createMasonryLayout = (
-  images: GalleryImage[],
-  containerWidth: number,
-  gap: number,
-  effectiveColumns: number
-): [number, GridItem[]] => {
-  const items: GridItem[] = [];
-  const columnHeights = new Array(effectiveColumns).fill(0);
-  const columnWidth = (containerWidth - (effectiveColumns - 1) * gap) / effectiveColumns;
-  
-  for (const img of images) {
-    const targetCol = columnHeights.indexOf(Math.min(...columnHeights));
-    const aspectRatio = img.width / img.height;
-    const imgHeight = columnWidth / aspectRatio;
-    
-    items.push(createGridItem(
-      img,
-      targetCol * (columnWidth + gap), // x
-      columnHeights[targetCol], // y
-      columnWidth, // width
-      imgHeight, // height
-      targetCol, // column
-      img.isPanorama || false // isPanorama
-    ));
-    
-    columnHeights[targetCol] += imgHeight + gap;
-  }
-  
-  const containerHeight = Math.max(...columnHeights, 0);
-  return [containerHeight, items];
-};
-
-// Main layout calculation function (kept for future use)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const calculateLayout = (
-  images: GalleryImage[], 
-  containerWidth: number, 
-  layoutType: LayoutType = 'masonry',
-  columns: number = COLUMN_COUNT
-): [number, GridItem[]] => {
-  // Early return for empty state
-  if (!images.length || !containerWidth) {
-    return [0, []];
-  }
-
-  // Calculate the number of columns based on container width
-  const effectiveColumns = Math.min(columns, Math.max(1, Math.floor(containerWidth / 300)));
-  
-  // Separate panorama and regular images
-  const panoramaImages = images.filter(img => img.isPanorama);
-  const regularImages = images.filter(img => !img.isPanorama);
-
-  // Handle full-panorama layout
-  if (layoutType === 'full-panorama' && panoramaImages.length > 0) {
-    return createFullPanoramaLayout(panoramaImages, containerWidth, GAP);
-  }
-
-  // Handle panorama-top layout
-  if (layoutType === 'panorama-top' && panoramaImages.length > 0) {
-    const panorama = panoramaImages[Math.floor(Math.random() * panoramaImages.length)];
-    const columnWidth = (containerWidth - (effectiveColumns - 1) * GAP) / effectiveColumns;
-    return createPanoramaTopLayout(
-      panorama,
-      regularImages,
-      containerWidth,
-      columnWidth,
-      GAP,
-      effectiveColumns
-    );
-  }
-  
-  // Default to standard masonry layout
-  return createMasonryLayout(images, containerWidth, GAP, effectiveColumns);
-};
-
-// Custom hook to calculate layout for the current set of images
-const useCalculateLayout = (images: GalleryImage[], containerWidth: number, 
-  layoutType: LayoutType, columns: number): [number, GridItem[]] => {
-  const [layout, setLayout] = useState<[number, GridItem[]]>([0, []]);
-  
-  useEffect(() => {
-    const calculateLayout = async () => {
-      if (!images.length || !containerWidth) {
-        setLayout([0, []]);
-        return;
-      }
-      
-      const effectiveColumns = Math.min(columns, COLUMN_COUNT);
-      
-      // Handle full panorama layout
-      if (layoutType === 'full-panorama') {
-        console.log('Looking for panorama images...');
-        
-        try {
-          console.log('Searching for panorama images...');
-          const panoramas = await findPanoramaImages();
-          
-          if (panoramas.length > 0) {
-            console.log(`Using ${panoramas.length} panorama images`);
-            setLayout(createFullPanoramaLayout(panoramas, containerWidth, GAP));
-          } else {
-            console.warn('No panorama images found, falling back to masonry layout');
-            setLayout(createMasonryLayout(images, containerWidth, GAP, effectiveColumns));
-          }
-          return;
-        } catch (error) {
-          console.error('Error finding panorama images:', error);
-          setLayout(createMasonryLayout(images, containerWidth, GAP, effectiveColumns));
-          return;
-        }
-      }
-      
-      // Handle other layout types
-      if (layoutType.startsWith('panorama-')) {
-        const position = layoutType.split('-')[1] as 'top' | 'middle' | 'bottom';
-        const panoramaImages = images.filter(img => img.isPanorama);
-        
-        if (panoramaImages.length > 0) {
-          const panorama = panoramaImages[0];
-          const regularImages = images.filter(img => !img.isPanorama);
-          const columnWidth = (containerWidth - (effectiveColumns - 1) * GAP) / effectiveColumns;
-          
-          if (position === 'top') {
-            setLayout(createPanoramaTopLayout(
-              panorama,
-              regularImages,
-              containerWidth,
-              columnWidth,
-              GAP,
-              effectiveColumns
-            ));
-            return;
-          } else if (position === 'middle') {
-            setLayout(createPanoramaMiddleLayout(
-              panorama,
-              regularImages,
-              containerWidth,
-              columnWidth,
-              GAP,
-              effectiveColumns
-            ));
-            return;
-          } else if (position === 'bottom') {
-            setLayout(createPanoramaBottomLayout(
-              panorama,
-              regularImages,
-              containerWidth,
-              columnWidth,
-              GAP,
-              effectiveColumns
-            ));
-            return;
-          }
-        }
-      }
-      
-      // Default to standard masonry layout
-      setLayout(createMasonryLayout(images, containerWidth, GAP, effectiveColumns));
-    };
-    
-    calculateLayout().catch(console.error);
-  }, [images, containerWidth, layoutType, columns]);
-  
-  return layout;
-};
-
-const ImageGalleryScreensaver = ({
-  images = [],
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  refreshInterval = 15000, // 15 seconds auto-advance interval
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  isLoading = false,
-  isLoadingMore = false,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  loadedCount = 0,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  totalImages = 0,
-  initialLayoutType = 'masonry'
-}: ImageGalleryScreensaverProps & {
-  isLoading?: boolean;
-  isLoadingMore?: boolean;
-  loadedCount?: number;
-  totalImages?: number;
-  initialLayoutType?: LayoutType;
-}) => {
-  const [containerWidth, setContainerWidth] = useState(0);
-  // layoutType state is kept for future use
-  const [layoutType, setLayoutType] = useState<LayoutType>(initialLayoutType);
-  const [showDebugMenu, setShowDebugMenu] = useState(false);
-  
-  // Update layout type when initialLayoutType changes
-  useEffect(() => {
-    setLayoutType(initialLayoutType);
-  }, [initialLayoutType]);
-  // showLoadingMore state is kept for future use
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [showLoadingMore, setShowLoadingMore] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // Show loading more indicator with a delay to prevent flickering
-  useEffect(() => {
-    if (isLoadingMore) {
-      loadingTimeoutRef.current = setTimeout(() => {
-        setShowLoadingMore(true);
-      }, 300);
-    } else {
-      if (loadingTimeoutRef.current) {
-        clearTimeout(loadingTimeoutRef.current);
-      }
-      setShowLoadingMore(false);
-    }
-    
-    return () => {
-      if (loadingTimeoutRef.current) {
-        clearTimeout(loadingTimeoutRef.current);
-      }
-    };
-  }, [isLoadingMore]);
-  
-  // Use COLUMN_COUNT as the default
-  const [columns, setColumns] = useState(COLUMN_COUNT);
-  const [currentImages, setCurrentImages] = useState<GalleryImage[]>(images || []);
-  
-  // Update current images when images prop changes
-  useEffect(() => {
-    setCurrentImages(images);
-  }, [images]);
-  
-  // Update current images when images prop changes - limit to 20 images
-  useEffect(() => {
-    if (images && images.length > 0) {
-      // Shuffle and take first 20 images
-      const shuffled = [...images].sort(() => Math.random() - 0.5).slice(0, 20);
-      setCurrentImages(shuffled);
-    }
-  }, [images]);
-  
-  // Handle window resize with debounce
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const updateWidth = () => {
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
-    };
-    
-    // Initial width
-    updateWidth();
-    
-    // Debounced resize handler
-    const handleResize = debounce(updateWidth, 100);
-    window.addEventListener('resize', handleResize);
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-  
-  // Handle window resize and update columns
-  useEffect(() => {
-    if (!containerRef.current) return;
-    
-    const updateLayout = () => {
-      // Update container width
-      if (containerRef.current) {
-        setContainerWidth(containerRef.current.offsetWidth);
-      }
-      
-      // Update number of columns based on viewport width, but respect COLUMN_COUNT
-      if (typeof window !== 'undefined') {
-        const width = window.innerWidth;
-        if (width >= 1200) setColumns(COLUMN_COUNT);  // Show all columns on large screens
-        else if (width >= 900) setColumns(4);         // 4 columns on medium screens
-        else if (width >= 600) setColumns(3);         // 3 columns on small screens
-        else if (width >= 400) setColumns(2);         // 2 columns on very small screens
-        else setColumns(1);                           // 1 column on mobile
-      }
-    };
-
-    // Initial update
-    updateLayout();
-    
-    // Debounced resize handler
-    const debouncedResize = debounce(updateLayout, 100);
-    window.addEventListener('resize', debouncedResize);
-    
-    return () => {
-      window.removeEventListener('resize', debouncedResize);
-    };
-  }, []);
-
-  // Shuffle array helper
-  const shuffleArray = useCallback(<T,>(array: T[]): T[] => {
-    const newArray = [...array];
-    for (let i = newArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-    }
-    return newArray;
-  }, []);
-
-  // Get a new batch of 20 random images
-  const getNewBatch = useCallback(() => {
-    if (!images.length) return [];
-    
-    // If we have 20 or fewer images, just shuffle the ones we have
-    if (images.length <= 20) {
-      return shuffleArray([...images]);
-    }
-    
-    // Otherwise, get 20 random unique images
-    const availableImages = [...images];
-    const newBatch: GalleryImage[] = [];
-    
-    while (newBatch.length < 20 && availableImages.length > 0) {
-      const randomIndex = Math.floor(Math.random() * availableImages.length);
-      newBatch.push(availableImages.splice(randomIndex, 1)[0]);
-    }
-    
-    return newBatch;
-  }, [images, shuffleArray]);
-
-  // Refresh layout at intervals with smooth transition
-  const refreshLayout = useCallback(() => {
-    setCurrentImages(prevImages => {
-      // Get a new batch of images
-      const newBatch = getNewBatch();
-      if (newBatch.length === 0) return prevImages;
-      
-      // Shuffle the new batch
-      const shuffledBatch = shuffleArray(newBatch);
-      
-      // Cycle through all layout types
-      const layouts: LayoutType[] = ['masonry', 'panorama-top', 'panorama-middle', 'full-panorama'];
-      const currentIndex = layouts.indexOf(layoutType);
-      const nextIndex = (currentIndex + 1) % layouts.length;
-      setLayoutType(layouts[nextIndex]);
-      
-      return shuffledBatch;
+  const refresh = useCallback((newLayout: boolean) => {
+    setLayoutIdx(prev => {
+      const nextIdx = newLayout ? (prev + 1) % LAYOUTS.length : prev;
+      setData(generateLayout(LAYOUTS[nextIdx], colCount));
+      return nextIdx;
     });
-  }, [getNewBatch, layoutType, shuffleArray]);
+    setFadeKey(k => k + 1);
+    setLoading(false);
+  }, [colCount]);
 
-  // Function to update the layout type
-  const updateLayout = useCallback((newLayout: LayoutType) => {
-    // Disable animations temporarily during layout change
-    shouldAnimate.current = false;
-    
-    // Store the current scroll position to restore it later
-    const scrollY = window.scrollY;
-    
-    // Update the layout type
-    setLayoutType(prevLayout => {
-      // If switching to a different layout type, force a re-render
-      if (prevLayout !== newLayout) {
-        // Force a re-layout by toggling the container width
-        if (containerRef.current) {
-          const newWidth = containerRef.current.clientWidth;
-          setContainerWidth(0);
-          setTimeout(() => {
-            setContainerWidth(newWidth);
-            // Re-enable animations after a short delay
-            setTimeout(() => {
-              shouldAnimate.current = true;
-            }, 50);
-          }, 10);
-        }
-      }
-      return newLayout;
-    });
-    
-    // Get a new batch of images for the new layout
-    setCurrentImages(prevImages => {
-      const newBatch = getNewBatch();
-      return newBatch.length > 0 ? newBatch : prevImages;
-    });
-    
-    // Restore scroll position after layout update
-    requestAnimationFrame(() => {
-      window.scrollTo(0, scrollY);
-    });
-  }, [getNewBatch]);
-
-  // Handle keyboard shortcuts
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Toggle debug menu with Ctrl+Shift+D or Cmd+Shift+D
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'd') {
-        e.preventDefault();
-        setShowDebugMenu(prev => !prev);
-        return;
-      }
-
-      // Only handle number keys if debug menu is open
-      if (showDebugMenu && e.key >= '1' && e.key <= '4') {
-        e.preventDefault();
-        const layoutMap: {[key: string]: LayoutType} = {
-          '1': 'masonry',
-          '2': 'panorama-top',
-          '3': 'panorama-middle',
-          '4': 'full-panorama'
-        };
-        const newLayout = layoutMap[e.key as keyof typeof layoutMap];
-        if (newLayout) {
-          updateLayout(newLayout);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showDebugMenu, getNewBatch, updateLayout]);
-
-  // Set up refresh interval (20 seconds) with proper cleanup
-  useEffect(() => {
-    // Only start the interval if we have images loaded and debug menu is closed
-    if (images.length === 0 || showDebugMenu) return;
-    
-    // Initial layout - only if we don't have any images yet
-    if (currentImages.length === 0) {
-      const initialBatch = getNewBatch();
-      if (initialBatch.length > 0) {
-        setCurrentImages(initialBatch);
-      }
-    }
-    
-    // Set up the refresh interval
-    const interval = setInterval(() => {
-      if (!showDebugMenu) {  // Only refresh if debug menu is closed
-        refreshLayout();
-      }
-    }, 20000); // 20 seconds
-    
+    refresh(false);
+    const interval = setInterval(() => refresh(true), REFRESH_INTERVAL);
     return () => clearInterval(interval);
-  }, [images.length, getNewBatch, refreshLayout, showDebugMenu, currentImages.length]);
-  
-  // Handle layout change from debug menu
-  const handleLayoutChange = useCallback((newLayout: LayoutType) => {
-    // Don't change anything if we're already on this layout
-    if (newLayout === layoutType) return;
-    
-    // Update the layout type
-    setLayoutType(newLayout);
-    
-    setCurrentImages(prevImages => {
-      // For full-panorama, only keep panorama images and make sure we have exactly 3
-      if (newLayout === 'full-panorama') {
-        let panoramaImages = prevImages.filter(img => img.isPanorama);
-        
-        // If no panoramas in current set, get a new batch
-        if (panoramaImages.length === 0) {
-          panoramaImages = getNewBatch().filter(img => img.isPanorama);
-        }
-        
-        // If still no panoramas, return current images to prevent empty state
-        if (panoramaImages.length === 0) return prevImages;
-        
-        // Ensure we have exactly 3 panoramas (duplicate if needed)
-        const result = [];
-        for (let i = 0; i < 3; i++) {
-          const sourceImg = panoramaImages[i % panoramaImages.length];
-          result.push({
-            ...sourceImg,
-            id: `${sourceImg.id}-${i}` // Ensure unique IDs
-          });
-        }
-        return result;
-      }
-      
-      // For other layouts, only get new images if switching to a panorama layout
-      const shouldGetNewBatch = newLayout.startsWith('panorama-');
-      const newBatch = shouldGetNewBatch ? getNewBatch() : [...prevImages];
-      if (newBatch.length === 0) return prevImages;
-      
-      // Force a re-layout by toggling the container width
-      if (containerRef.current) {
-        const newWidth = containerRef.current.clientWidth;
-        setContainerWidth(0);
-        setTimeout(() => setContainerWidth(newWidth), 10);
-      }
-      
-      return newBatch;
-    });
-  }, [getNewBatch, layoutType]);
+  }, [refresh]);
 
-  // Debug menu component
-  const DebugMenu = () => {
-    // Toggle debug menu with a small delay to prevent immediate re-triggering
-    const toggleDebugMenu = useCallback(() => {
-      setShowDebugMenu(prev => !prev);
-    }, []);
-
-    return (
-      <div style={{
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        background: 'rgba(0,0,0,0.85)',
-        color: 'white',
-        padding: '12px',
-        borderRadius: '6px',
-        zIndex: 1000,
-        fontFamily: 'monospace',
-        fontSize: '14px',
-        boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-        border: '1px solid rgba(255,255,255,0.1)'
-      }}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '10px',
-          paddingBottom: '8px',
-          borderBottom: '1px solid rgba(255,255,255,0.1)'
-        }}>
-          <div style={{ fontWeight: 'bold' }}>Debug Menu</div>
-          <button 
-            onClick={toggleDebugMenu}
-            style={{
-              background: 'rgba(255,255,255,0.1)',
-              border: 'none',
-              color: 'white',
-              borderRadius: '4px',
-              padding: '2px 8px',
-              cursor: 'pointer',
-              fontSize: '12px'
-            }}
-          >
-            Close
-          </button>
-        </div>
-        
-        <div style={{ marginBottom: '12px' }}>
-          <div style={{ marginBottom: '8px' }}>Current Layout: <strong>
-            {layoutType === 'full-panorama' 
-              ? 'Full Pano' 
-              : layoutType.replace('panorama-', '').charAt(0).toUpperCase() + 
-                layoutType.replace('panorama-', '').slice(1)}
-          </strong></div>
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: '6px',
-            marginBottom: '10px'
-          }}>
-            <button 
-              onClick={() => handleLayoutChange('masonry')} 
-              style={{ 
-                padding: '6px 8px',
-                background: layoutType === 'masonry' ? 'rgba(59, 130, 246, 0.8)' : 'rgba(255,255,255,0.1)',
-                border: 'none',
-                color: 'white',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px',
-                textAlign: 'left'
-              }}
-            >
-              1: Masonry
-            </button>
-            <button 
-              onClick={() => handleLayoutChange('panorama-top')} 
-              style={{ 
-                padding: '6px 8px',
-                background: layoutType === 'panorama-top' ? 'rgba(59, 130, 246, 0.8)' : 'rgba(255,255,255,0.1)',
-                border: 'none',
-                color: 'white',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px',
-                textAlign: 'left'
-              }}
-            >
-              2: Top
-            </button>
-            <button 
-              onClick={() => handleLayoutChange('panorama-middle')} 
-              style={{ 
-                padding: '6px 8px',
-                background: layoutType === 'panorama-middle' ? 'rgba(59, 130, 246, 0.8)' : 'rgba(255,255,255,0.1)',
-                border: 'none',
-                color: 'white',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px',
-                textAlign: 'left'
-              }}
-            >
-              3: Middle
-            </button>
-            <button 
-              onClick={() => handleLayoutChange('full-panorama')} 
-              style={{ 
-                padding: '6px 8px',
-                background: layoutType === 'full-panorama' ? 'rgba(59, 130, 246, 0.8)' : 'rgba(255,255,255,0.1)',
-                border: 'none',
-                color: 'white',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '12px',
-                textAlign: 'left',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'
-              }}
-            >
-              4: Full Pano
-            </button>
-          </div>
-        </div>
-        
-        <div style={{
-          fontSize: '12px', 
-          color: 'rgba(255,255,255,0.6)',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          paddingTop: '8px'
-        }}>
-          <div>Auto-refresh: <strong style={{ color: showDebugMenu ? '#f87171' : '#86efac' }}>
-            {showDebugMenu ? 'Paused' : 'Active'}
-          </strong></div>
-          <div style={{ marginTop: '4px' }}>
-            Toggle Menu: <kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Memoize the grid items calculation
-  const [gridContainerHeight, gridItems] = useCalculateLayout(
-    currentImages,
-    containerWidth,
-    layoutType,
-    columns
-  );
-  
-  // Memoize the grid items to prevent unnecessary re-renders
-  const memoizedGridItems = useMemo(() => gridItems, [gridItems]);
-
-  // Set up transitions with optimized performance
-  const isPanoramaLayout = useMemo(() => 
-    layoutType === 'full-panorama' || layoutType.startsWith('panorama-'),
-    [layoutType]
-  );
-  
-  const prevLayoutType = useRef<LayoutType>(layoutType);
-  const shouldAnimate = useRef(true);
-  
-  // Intersection Observer for lazy loading
-  const observer = useRef<IntersectionObserver | null>(null);
-  const imageRefs = useRef<Map<string, HTMLImageElement>>(new Map());
-  
-  // Setup intersection observer for lazy loading
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target as HTMLImageElement;
-            const src = img.dataset.src;
-            if (src) {
-              // Only set src if it's not already set
-              if (img.src !== src) {
-                img.src = src;
-              }
-              img.removeAttribute('data-src');
-              observer.current?.unobserve(img);
-            }
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: '200px',
-        threshold: 0.01
-      }
-    );
-    
-    // Clean up on unmount
-    return () => {
-      observer.current?.disconnect();
-    };
-  }, []);
-  
-  // Set up ref callback for images with proper TypeScript types and null src handling
-  const setImageRef = useCallback((id: string | number, element: HTMLElement | null) => {
-    if (!observer.current) return;
-    
-    const idStr = String(id);
-    
-    // If the element is an img, we can observe it directly
-    const targetElement = (element?.tagName === 'IMG' 
-      ? element as HTMLImageElement 
-      : element?.querySelector('img')) as HTMLImageElement | null;
-      
-    if (!targetElement) return;
-    
-    // Clean up any existing element with this id
-    const existingElement = imageRefs.current.get(idStr);
-    if (existingElement) {
-      observer.current.unobserve(existingElement);
-      imageRefs.current.delete(idStr);
-    }
-    
-    // Only set up observer if we have a data-src attribute and no src
-    if (targetElement.dataset.src && !targetElement.src) {
-      // Add to our refs and observe
-      imageRefs.current.set(idStr, targetElement);
-      observer.current.observe(targetElement);
-    }
-  }, []);
-
-  // Reset animation state when layout type changes
-  useEffect(() => {
-    shouldAnimate.current = true;
-    return () => {
-      shouldAnimate.current = false;
-    };
-  }, [layoutType]);
-  
-  const transitions = useTransition(memoizedGridItems, {
-    keys: (item) => `${item.id}-${layoutType}`,
-    from: { opacity: 0, transform: 'scale(0.98)' },
-    enter: { opacity: 1, transform: 'scale(1)' },
-    update: { opacity: 1, transform: 'scale(1)' },
-    leave: { opacity: 0, transform: 'scale(1.02)' },
-    config: {
-      duration: shouldAnimate.current ? (isPanoramaLayout ? 400 : 600) : 0,
-      easing: t => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
-    },
-    trail: shouldAnimate.current ? (isPanoramaLayout ? 20 : 30) : 0,
-    unique: true,
-    reset: prevLayoutType.current !== layoutType,
-    expires: false,
-  });
-
-  // Update previous layout type ref
-  useEffect(() => {
-    prevLayoutType.current = layoutType;
-  }, [layoutType]);
-
-  // isFullPanorama is used to determine layout and styling
-  const isFullPanorama = layoutType === 'full-panorama';
-  
-  return (
-    <div className={`w-full h-screen bg-gray-900 ${isFullPanorama ? 'p-0' : 'p-4'} overflow-hidden`} style={{ overflowY: 'hidden' }}>
-      {showDebugMenu && <DebugMenu />}
-      <div
-        ref={containerRef}
-        className="relative mx-auto"
-        style={{ 
-          width: '100%',
-          height: isFullPanorama ? '100%' : `${gridContainerHeight}px`,
-          maxWidth: '100%',
-          overflow: 'hidden',
-        }}
-      >
-        {transitions((style, item, _, index) => {
-          const uniqueKey = isFullPanorama ? `${item.id}-${index}` : item.id;
-          
-          return (
-            <a.div
-              key={uniqueKey}
-              className="absolute will-change-transform"
-              style={{
-                left: item.x,
-                top: item.y,
-                width: item.width,
-                height: item.height,
-                padding: isFullPanorama ? 0 : GAP / 2,
-                zIndex: Math.max(0, Math.floor(item.y || 0)),
-                ...style
-              }}
-            >
-              <div 
-                className={`relative w-full h-full overflow-hidden ${
-                  isFullPanorama ? 'rounded-none' : 'rounded-sm hover:shadow-lg'
-                } bg-gray-800`}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  overflow: 'hidden',
-                  borderRadius: isFullPanorama ? 0 : '0.125rem',
-                  position: 'relative'
-                }}
-              >
-                <div 
-                  ref={(el) => setImageRef(item.id.toString(), el)}
-                  id={`image-${item.id}`}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    position: 'relative',
-                    transform: item.style?.transform,
-                    transformOrigin: item.style?.transformOrigin,
-                    willChange: item.style?.willChange as React.CSSProperties['willChange'],
-                    opacity: 0,
-                    transition: 'opacity 0.3s ease-in-out',
-                    backgroundColor: '#f0f0f0' // Placeholder color
-                  }}
-                >
-                  <Image
-                    src={item.src}
-                    alt=""
-                    fill
-                    priority={index < 3} // Load first 3 images with high priority
-                    loading={index < 3 ? 'eager' : 'lazy'}
-                    quality={85}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    style={{
-                      objectFit: item.style?.objectFit as React.CSSProperties['objectFit'] || 'cover',
-                      objectPosition: item.style?.objectPosition || 'center',
-                      display: 'block',
-                      transition: 'opacity 0.3s ease-in-out'
-                    }}
-                    placeholder="blur"
-                    blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCgkJCSAgICBCb3g9IjAgMCAxMDAgMTAwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0iZmlsbDojZjBmMGYwOyIvPgogIDxwYXRoIGQ9Ik0wIDBoNTB2NTBoLTUweiIgb3BhY2l0eT0iLjIiLz4KICA8cGF0aCBkPSJNMzAgMGg0MHY0MGgtNDB6IiBvcGFjaXR5PSIuMiIvPgo8L3N2Zz4="
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.onerror = null;
-                      // Set error placeholder
-                      target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNlZWVlZWUiLz48bGluZSB4MT0iMCIgeTE9IjAiIHgyPSIxMDAiIHkyPSIxMDAiIHN0cm9rZT0iI2RkZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGxpbmUgeDE9IjEwMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMTAwIiBzdHJva2U9IiNkZGQiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg=';
-                    }}
-                    onLoad={(e) => {
-                      const img = e.target as HTMLImageElement;
-                      const container = img.closest(`#image-${item.id}`) as HTMLElement;
-                      if (container) {
-                        container.style.opacity = '1';
-                        // Remove the placeholder background once loaded
-                        container.style.backgroundColor = 'transparent';
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            </a.div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-// Main export component
-const Screensaver = () => {
-  const { 
-    images, 
-    isLoading, 
-    isLoadingMore, 
-    isRetrying,
-    loadedCount, 
-    totalImages, 
-    refreshBatch 
-  } = useImageLoader();
-  
-  const [progress, setProgress] = useState(0);
-  const [showInitialLoading, setShowInitialLoading] = useState(true);
-  const [layoutType] = useState<LayoutType>('masonry');
-  const prevLayoutType = useRef<LayoutType>('masonry');
-
-  // Update progress when loadedCount changes
-  useEffect(() => {
-    if (totalImages > 0) {
-      const calculatedProgress = Math.min(Math.round((loadedCount / totalImages) * 100), 100);
-      setProgress(calculatedProgress);
-      
-      // Hide initial loading after first batch is loaded
-      if (loadedCount > 0 && showInitialLoading) {
-        setShowInitialLoading(false);
-      }
-    }
-  }, [loadedCount, totalImages, showInitialLoading]);
-  
-  // Refresh batch when layout changes (except for full-panorama)
-  useEffect(() => {
-    if (layoutType !== 'full-panorama' && layoutType !== prevLayoutType.current) {
-      refreshBatch();
-    }
-    prevLayoutType.current = layoutType;
-  }, [layoutType, refreshBatch]);
-  
-  // Show initial loading state
-  if (isLoading && showInitialLoading) {
+  if (loading || !data) {
     return (
       <div className="w-full h-screen flex items-center justify-center bg-black">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading gallery... {progress}%</p>
-          <p className="text-gray-400 text-sm mt-2">
-            {loadedCount} of {totalImages} images loaded
-          </p>
-        </div>
+        <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 rounded-full animate-spin" />
       </div>
     );
   }
-  
-  // Main gallery with loading indicator for background loading
+
+  const panoVh = PANO_VH[data.type] ?? 0;
+  const gridVh = GRID_VH[data.type] ?? 100;
+
   return (
-    <div className="relative w-full h-screen bg-black">
-      {/* Loading indicator for background loading */}
-      {isLoadingMore && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm flex items-center space-x-2 z-50">
-          <div className="w-4 h-4 border-2 border-t-transparent border-white rounded-full animate-spin"></div>
-          <span>Loading more images... {loadedCount}/{totalImages}</span>
-        </div>
-      )}
-      
-      {/* Main gallery */}
-      <ImageGalleryScreensaver 
-        images={images} 
-        isLoading={isLoading}
-        isLoadingMore={isLoadingMore || isRetrying}
-        loadedCount={loadedCount}
-        totalImages={totalImages}
-        initialLayoutType={layoutType}
-      />
-      
-      {/* Retry overlay */}
-      {isRetrying && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="text-center p-6 bg-black/80 rounded-lg">
-            <div className="w-12 h-12 border-4 border-t-transparent border-blue-500 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-white text-lg mb-2">Reloading images...</p>
-            <p className="text-gray-300 text-sm">Some images failed to load, retrying...</p>
+    <div className="w-full h-screen bg-black overflow-hidden">
+      <div key={fadeKey} className="flex flex-col h-full animate-fadeIn">
+        {/* Top panorama row */}
+        {data.type === 'top-pano' && (
+          <div className="flex gap-[3px] px-[3px] pt-[3px] shrink-0" style={{ height: `${panoVh}vh` }}>
+            {data.panoramas.map((src, i) => (
+              <div
+                key={`p-top-${fadeKey}-${i}`}
+                className="flex-1 overflow-hidden bg-gray-900 relative rounded-md"
+                style={{ animation: `fadeInUp 0.5s ease-out ${i * 0.04}s both` }}
+              >
+                <img src={src} alt="" loading="lazy" className="w-full h-full block object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              </div>
+            ))}
           </div>
-        </div>
-      )}
+        )}
+
+        {/* All-panorama layout */}
+        {data.type === 'all-pano' && (
+          <div className="flex flex-col gap-[3px] px-[3px] pt-[3px] h-full">
+            {data.panoramas.map((src, i) => (
+              <div
+                key={`p-all-${fadeKey}-${i}`}
+                className="flex-1 overflow-hidden bg-gray-900 relative rounded-md"
+                style={{ animation: `fadeInUp 0.5s ease-out ${i * 0.06}s both` }}
+              >
+                <img src={src} alt="" loading="lazy" className="w-full h-full block object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Single masonry section filling remaining space */}
+        {data.columns?.length > 0 && (
+          <div
+            className="flex gap-[3px] px-[3px] py-[3px] shrink-0 overflow-hidden"
+            style={{ height: `${gridVh}vh` }}
+          >
+            {data.columns.map((col, cIdx) => (
+              <div key={`col-${fadeKey}-${cIdx}`} className="flex-1 flex flex-col gap-[3px] min-h-0 overflow-hidden">
+                {col.map((src, i) => {
+                  const isLast = i === col.length - 1;
+                  return (
+                    <div
+                      key={`m-${fadeKey}-${cIdx}-${i}`}
+                      className={`relative overflow-hidden bg-gray-900 rounded-md ${isLast ? 'flex-1 min-h-0' : 'shrink-0'}`}
+                      style={{ animation: `fadeInUp 0.5s ease-out ${(cIdx * 4 + i) * 0.015}s both` }}
+                    >
+                      <img
+                        src={src}
+                        alt=""
+                        loading="lazy"
+                        className={`w-full block ${isLast ? 'h-full object-cover' : 'h-auto'}`}
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Bottom panorama row */}
+        {data.type === 'bottom-pano' && (
+          <div className="flex gap-[3px] px-[3px] pb-[3px] shrink-0" style={{ height: `${panoVh}vh` }}>
+            {data.panoramas.map((src, i) => (
+              <div
+                key={`p-bot-${fadeKey}-${i}`}
+                className="flex-1 overflow-hidden bg-gray-900 relative rounded-md"
+                style={{ animation: `fadeInUp 0.5s ease-out ${i * 0.04}s both` }}
+              >
+                <img src={src} alt="" loading="lazy" className="w-full h-full block object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.6s ease-out both;
+        }
+      `}</style>
     </div>
   );
-};
-
-export default Screensaver;
+}
