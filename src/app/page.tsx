@@ -245,7 +245,7 @@ export default function Home() {
       <footer className="relative h-[6vh] w-full">
         <div className="absolute bottom-0 left-0 right-0 py-2 bg-gray-900/90 backdrop-blur-sm">
           <div className="container mx-auto px-4 text-center">
-            <p className="text-gray-300 text-sm md:text-base">© 2026 Jose Maria Barbeito. All rights reserved.</p>
+            <p className="text-gray-300 text-sm md:text-base">© {new Date().getFullYear()} Jose Maria Barbeito. All rights reserved.</p>
           </div>
         </div>
       </footer>

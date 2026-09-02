@@ -158,16 +158,16 @@ const galleries = [
 
 ];
 
-export default function GalleriesPage() {
-  // Sort galleries alphabetically by title
-  const sortedGalleries = [...galleries].sort((a, b) => a.title.localeCompare(b.title));
+// Sort galleries alphabetically by title (static, so outside component)
+const sortedGalleries = [...galleries].sort((a, b) => a.title.localeCompare(b.title));
 
+export default function GalleriesPage() {
   // Check if images exist on component mount (silently)
   useEffect(() => {
     sortedGalleries.forEach(gallery => {
       fetch(gallery.image, { method: 'HEAD' }).catch(() => {});
     });
-  }, [sortedGalleries]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900">

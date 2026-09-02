@@ -142,7 +142,7 @@ const TableBody = ({ children, className = '' }: { children: React.ReactNode; cl
 );
 
 const TableRow = ({ children, className = '' }: { children: React.ReactNode; className?: string }) => (
-  <tr className={`border-b transition-colors hover:bg-gray-50 ${className}`}>
+  <tr className={`border-b transition-colors hover:bg-gray-700/80 ${className}`}>
     {children}
   </tr>
 );

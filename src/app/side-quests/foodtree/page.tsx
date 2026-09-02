@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { CubeIcon } from '@heroicons/react/24/outline';
 import { SubmissionProvider, useSubmissions } from './contexts/SubmissionContext';
 import { getLatestUpdate } from './utils/updates';
@@ -25,8 +24,6 @@ type TabId = 'explore' | 'add-ingredient' | 'add-dish' | 'my-submissions';
 const FoodTreeContent = () => {
   const [activeTab, setActiveTab] = useState<TabId>('explore');
   const { success, setSuccess } = useSubmissions();
-  // Router is kept for future use, so we'll keep the import but remove the unused variable
-  // const router = useRouter();
 
   return (
     <>

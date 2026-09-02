@@ -77,21 +77,6 @@ const tiles: BentoTile[] = [
     ],
   },
   {
-    href: '/photo-search',
-    title: 'Photo Search',
-    subtitle: 'Find photos by keyword',
-    image: '/img/Italy/Florence/florence-panorama (5).jpg',
-    span: 'wide',
-    previews: [
-      '/img/USA/usa (15).jpg',
-      '/img/Scotland/scotland (5).jpg',
-      '/img/Finland/finland (15).jpg',
-      '/img/Greece/greece (67).jpg',
-      '/img/Costa Rica/costarica (124).jpg',
-      '/img/Best/Sunsets/sunsets (18).jpg',
-    ],
-  },
-  {
     href: '/carousel_gallery',
     title: 'Screensaver',
     subtitle: 'Auto-playing slideshow',

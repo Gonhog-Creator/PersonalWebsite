@@ -143,11 +143,11 @@ export default function FractalsPage() {
                   <div className="relative aspect-square overflow-hidden">
                     <Image
                       src={
-                        module.id === 'pendulums' 
+                        module.id === 'pendulums'
                           ? '/img/projects/fractals/pendulumscover.jpg'
                           : module.id === 'multiple-pendulums'
                           ? '/img/projects/fractals/multiplependulums.png'
-                          : '/img/projects/fractals/pendulumscover.jpg'
+                          : '/img/projects/fractals/fractalcover.jpg'
                       }
                       alt={module.title}
                       fill
