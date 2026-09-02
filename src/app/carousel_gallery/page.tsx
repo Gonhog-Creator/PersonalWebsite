@@ -16,8 +16,8 @@ const PHOTOS_PER_COL_WITH_PANO = 5;
 // top-pano: 18vh pano + 1 masonry × 82vh
 // bottom-pano: 1 masonry × 82vh + 18vh pano
 // all-pano: 3 panos × 33vh = 99vh
-const PANO_VH = { 'top-pano': 18, 'bottom-pano': 18, 'all-pano': 33 };
-const GRID_VH = { normal: 100, 'top-pano': 82, 'bottom-pano': 82 };
+const PANO_VH: Record<LayoutType, number> = { normal: 0, 'top-pano': 18, 'bottom-pano': 18, 'all-pano': 33 };
+const GRID_VH: Record<LayoutType, number> = { normal: 100, 'top-pano': 82, 'bottom-pano': 82, 'all-pano': 0 };
 
 type LayoutType = 'normal' | 'top-pano' | 'bottom-pano' | 'all-pano';
 const LAYOUTS: LayoutType[] = ['normal', 'top-pano', 'bottom-pano', 'all-pano'];
