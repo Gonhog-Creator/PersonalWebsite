@@ -159,26 +159,26 @@ export function SubmissionModal({ submission, onClose, onStatusChange, onDelete 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Submitted By</h3>
-                <p className="mt-1 text-gray-900">
-                  {(submission.data as { submittedName?: string })?.submittedName || submission.submittedBy || 'Anonymous'}
+                <p className="mt-1 text-gray-200">
+                  {submission.submitted_by || 'Anonymous'}
                 </p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Submitted On</h3>
-                <p className="mt-1 text-gray-900">{format(new Date(submission.submittedAt), 'PPpp')}</p>
+                <p className="mt-1 text-gray-200">{format(new Date(submission.submitted_at), 'PPpp')}</p>
               </div>
-              {submission.updatedAt && (
+              {submission.reviewed_at && (
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500">Last Updated</h3>
-                  <p className="mt-1 text-gray-900">{format(new Date(submission.updatedAt), 'PPpp')}</p>
+                  <h3 className="text-sm font-medium text-gray-500">Reviewed On</h3>
+                  <p className="mt-1 text-gray-200">{format(new Date(submission.reviewed_at), 'PPpp')}</p>
                 </div>
               )}
             </div>
 
             <div className="border-t pt-4">
               <h3 className="text-sm font-medium text-gray-500 mb-2">Submission Data</h3>
-              <div className="bg-gray-50 p-4 rounded-md">
-                <pre className="text-sm overflow-auto max-h-60">
+              <div className="bg-gray-900 p-4 rounded-md">
+                <pre className="text-sm overflow-auto max-h-60 text-gray-200">
                   {JSON.stringify(submission.data, null, 2)}
                 </pre>
               </div>
@@ -187,7 +187,7 @@ export function SubmissionModal({ submission, onClose, onStatusChange, onDelete 
             {submission.notes && (
               <div className="border-t pt-4">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Notes</h3>
-                <p className="text-sm text-gray-700">{submission.notes}</p>
+                <p className="text-sm text-gray-300">{submission.notes}</p>
               </div>
             )}
 

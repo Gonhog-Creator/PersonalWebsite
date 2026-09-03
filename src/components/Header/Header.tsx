@@ -25,12 +25,18 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [pastAbout, setPastAbout] = useState(false);
   
   useEffect(() => {
     setMounted(true);
     
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
+      const aboutSection = document.getElementById('about');
+      if (aboutSection) {
+        const aboutTop = aboutSection.getBoundingClientRect().top;
+        setPastAbout(aboutTop < 0);
+      }
     };
     
     window.addEventListener('scroll', handleScroll);
@@ -70,9 +76,11 @@ export function Header() {
         <Sidebar />
         <header 
           className={`w-full transition-all duration-300 ease-in-out font-sans py-3 shadow-sm fixed top-0 left-0 right-0 ${
-            isScrolled 
-              ? 'bg-gray-900/80 backdrop-blur-md' 
-              : 'bg-transparent'
+            pastAbout
+              ? 'opacity-0 pointer-events-none'
+              : isScrolled
+                ? 'opacity-100 bg-gray-900/80 backdrop-blur-md'
+                : 'opacity-100 bg-gray-900/95 backdrop-blur-md'
           }`}
           style={{ paddingLeft: '72px' }}
         >

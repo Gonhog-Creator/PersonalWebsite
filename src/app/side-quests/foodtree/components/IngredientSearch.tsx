@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react'; // Removed unused useRef import
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 
 interface IngredientOption {
@@ -19,58 +19,40 @@ export default function IngredientSearch({ onSelect, selectedIngredients, placeh
   const [options, setOptions] = useState<IngredientOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch ingredients from the API when input changes
   useEffect(() => {
     if (inputValue.length < 2) {
       setOptions([]);
       return;
     }
-    
-    // Using window.setTimeout to avoid NodeJS.Timeout type issues
+
     const timerId = window.setTimeout(async () => {
       try {
         setIsLoading(true);
-        console.log('Fetching ingredients with search term:', inputValue);
-        
         const response = await fetch(`/api/foodtree/ingredients?search=${encodeURIComponent(inputValue)}`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
-        console.log('Received ingredients:', data);
-        
-        interface IngredientResponse {
-          name: string;
-          [key: string]: unknown;
-        }
-        
+
         const filteredOptions = data
-          .filter((ingredient: IngredientResponse) => !selectedIngredients.includes(ingredient.name))
-          .map((ingredient: IngredientResponse) => ({
-            value: ingredient.name,  // Use the name as the value
-            label: ingredient.name   // Display the name in the UI
+          .filter((ingredient: { name: string }) => !selectedIngredients.includes(ingredient.name))
+          .map((ingredient: { name: string }) => ({
+            value: ingredient.name,
+            label: ingredient.name,
           }));
-          
-        console.log('Filtered options:', filteredOptions);
+
         setOptions(filteredOptions);
-      } catch (error) {
-        console.error('Error fetching ingredients:', error);
+      } catch {
         setOptions([]);
       } finally {
         setIsLoading(false);
       }
     }, 300);
 
-    // Cleanup the timeout when the component unmounts or dependencies change
     return () => clearTimeout(timerId);
   }, [inputValue, selectedIngredients]);
 
   const handleChange = (selectedOption: IngredientOption | null) => {
     if (selectedOption) {
       onSelect(selectedOption.value);
-      // Clear the input value after selection
       setInputValue('');
       setOptions([]);
     }
@@ -80,7 +62,7 @@ export default function IngredientSearch({ onSelect, selectedIngredients, placeh
     <div className="w-full max-w-md">
       <div className="relative">
         <Select
-          className="react-select-container text-gray-900"
+          className="react-select-container"
           classNamePrefix="select"
           isLoading={isLoading}
           isClearable
@@ -92,7 +74,6 @@ export default function IngredientSearch({ onSelect, selectedIngredients, placeh
           value={null}
           inputValue={inputValue}
           onKeyDown={(e) => {
-            // Prevent form submission when pressing Enter in the search box
             if (e.key === 'Enter') {
               e.preventDefault();
               e.stopPropagation();
@@ -100,12 +81,8 @@ export default function IngredientSearch({ onSelect, selectedIngredients, placeh
             }
           }}
           noOptionsMessage={({ inputValue }) => {
-            if (inputValue.length < 2) {
-              return 'Type at least 2 characters to search';
-            }
-            if (isLoading) {
-              return 'Searching...';
-            }
+            if (inputValue.length < 2) return 'Type at least 2 characters to search';
+            if (isLoading) return 'Searching...';
             return 'No matching ingredients found';
           }}
           loadingMessage={() => 'Searching...'}
@@ -114,11 +91,11 @@ export default function IngredientSearch({ onSelect, selectedIngredients, placeh
             control: (base, state) => ({
               ...base,
               minHeight: '44px',
-              borderColor: state.isFocused ? '#4f46e5' : '#e5e7eb',
-              boxShadow: state.isFocused ? '0 0 0 1px #4f46e5' : 'none',
+              backgroundColor: '#374151',
+              borderColor: state.isFocused ? '#6366f1' : '#4b5563',
+              boxShadow: state.isFocused ? '0 0 0 1px #6366f1' : 'none',
               '&:hover': {
-                borderColor: state.isFocused ? '#4f46e5' : '#9ca3af',
-                boxShadow: state.isFocused ? '0 0 0 1px #4f46e5' : 'none',
+                borderColor: state.isFocused ? '#6366f1' : '#6b7280',
               },
             }),
             menu: (base) => ({
@@ -126,43 +103,40 @@ export default function IngredientSearch({ onSelect, selectedIngredients, placeh
               zIndex: 9999,
               marginTop: '4px',
               borderRadius: '0.375rem',
-              border: '1px solid #e5e7eb',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+              border: '1px solid #4b5563',
+              backgroundColor: '#1f2937',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3)',
             }),
             option: (base, state) => ({
               ...base,
-              backgroundColor: state.isFocused ? '#f3f4f6' : 'white',
-              color: '#111827',
+              backgroundColor: state.isFocused ? '#374151' : '#1f2937',
+              color: '#e5e7eb',
               '&:active': {
-                backgroundColor: '#e5e7eb',
+                backgroundColor: '#4b5563',
               },
+            }),
+            singleValue: (base) => ({
+              ...base,
+              color: '#e5e7eb',
+            }),
+            input: (base) => ({
+              ...base,
+              color: '#e5e7eb',
             }),
             placeholder: (base) => ({
               ...base,
               color: '#9ca3af',
             }),
+            clearIndicator: (base) => ({
+              ...base,
+              color: '#9ca3af',
+              '&:hover': { color: '#e5e7eb' },
+            }),
           }}
-          // Prevent form submission when clicking on the dropdown
-          onMenuOpen={() => {
-            const form = document.querySelector('form');
-            if (form) {
-              form.setAttribute('data-no-validate', 'true');
-            }
-          }}
-          onMenuClose={() => {
-            const form = document.querySelector('form');
-            if (form) {
-              form.removeAttribute('data-no-validate');
-            }
-          }}
-          // Add data attributes to help with testing
-          data-testid="ingredient-search"
-          // Fix for the content script error
           components={{
             DropdownIndicator: null,
             IndicatorSeparator: null,
           }}
-          // Add custom filter to ensure search works properly
           filterOption={null}
         />
       </div>

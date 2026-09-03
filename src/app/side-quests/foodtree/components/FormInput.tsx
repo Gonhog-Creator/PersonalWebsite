@@ -27,7 +27,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
           className={`w-full px-3 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
             error
               ? 'border-red-500 focus:ring-red-500'
-              : 'border-gray-300 border-gray-600 bg-gray-700 text-white'
+              : 'border-gray-600 bg-gray-700 text-white'
           } ${className}`}
           {...inputProps}
         />

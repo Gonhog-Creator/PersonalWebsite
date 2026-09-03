@@ -1,130 +1,17 @@
 import { NextResponse } from 'next/server';
-import { withRedis, createIngredient, listIngredients } from '@/lib/kv';
-import { v4 as uuidv4 } from 'uuid';
+import { listIngredients, createIngredient, type IngredientSource } from '@/lib/foodtree/db';
+import { containsProfanity, sanitizeText } from '@/lib/profanityFilter';
 
-interface BaseIngredient {
-  id: string;
-  name: string;
-  description?: string;
-  category?: string;
-  foodType?: 'grown' | 'gathered' | 'prepared';
-  parentIngredients?: string[];
-  type?: 'ingredient' | 'dish' | 'other';
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface Ingredient {
-  id: string;
-  name: string;
-  description?: string;
-  category?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const searchTerm = searchParams.get('search')?.toLowerCase() || '';
-    
-    // Test Redis connection first
-    try {
-      await withRedis(async (client) => {
-        await client.ping();
-      });
-    } catch (redisError) {
-      console.error('Redis connection test failed:', redisError);
-      throw redisError;
-    }
-    
-    const ingredients = await withRedis(async (client) => {
-      // Try different key patterns to find ingredients
-      let keys = await client.keys('ingredient:*');
-      
-      if (keys.length === 0) {
-        keys = await client.keys('foodtree:ingredient:*');
-      }
-      
-      if (keys.length === 0) {
-        keys = await client.keys('submission:*');
-      }
-      
-      if (keys.length === 0) {
-        return [];
-      }
-      
-      // Get all values in a single pipeline
-      const values = await Promise.all(
-        keys.map(async key => {
-          try {
-            const data = await client.get(key);
-            if (!data) return null;
-            
-            try {
-              return JSON.parse(data);
-            } catch (e) {
-              console.error(`Error parsing JSON for key ${key}:`, e);
-              return null;
-            }
-          } catch (e) {
-            console.error(`Error getting key ${key}:`, e);
-            return null;
-          }
-        })
-      );
-      
-      // Process submissions into ingredients
-      const validIngredients = values
-        .filter((item): item is { 
-          id: string;
-          data: { 
-            name: string; 
-            source?: string;
-            foodType?: string;
-            parentIngredients?: string[];
-          };
-          type?: string;
-          status?: string;
-        } => 
-          item && 
-          typeof item === 'object' && 
-          item.data && 
-          typeof item.data.name === 'string'
-        )
-        .map(item => ({
-          ...item.data,
-          id: item.id,
-          name: item.data.name.trim(),
-          type: item.type || 'ingredient',
-          status: item.status,
-          foodType: item.data.foodType || item.data.source || 'grown',
-          parentIngredients: Array.isArray(item.data.parentIngredients) 
-            ? item.data.parentIngredients 
-           : [],
-        }));
-      
-      // Filter ingredients by search term if provided
-      const filteredIngredients = searchTerm
-        ? validIngredients.filter(ingredient => 
-            ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-        : validIngredients;
-      
-      // Return unique ingredients by ID
-      const uniqueIngredients = Array.from(
-        new Map(filteredIngredients.map(item => [item.id, item])).values()
-      );
-      return uniqueIngredients;
-    });
-    
+    const search = searchParams.get('search') || undefined;
+    const ingredients = await listIngredients(search);
     return NextResponse.json(ingredients);
   } catch (error) {
     console.error('Error in GET /api/foodtree/ingredients:', error);
-    // In production, return empty array instead of error for static export
-    if (process.env.NODE_ENV === 'production') {
-      return NextResponse.json([]);
-    }
     return NextResponse.json(
       { error: 'Failed to fetch ingredients' },
       { status: 500 }
@@ -134,24 +21,37 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const newIngredient = await request.json();
-    
-    // Create the ingredient using the Redis client
+    const body = await request.json();
+
+    if (!body.name || !body.name.trim()) {
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+    }
+
+    if (containsProfanity(body.name)) {
+      return NextResponse.json({ error: 'Name contains inappropriate language' }, { status: 400 });
+    }
+
+    const source: IngredientSource = ['plant', 'animal', 'other'].includes(body.source)
+      ? body.source
+      : 'plant';
+
     const ingredient = await createIngredient({
-      name: newIngredient.name,
-      description: newIngredient.description,
-      type: newIngredient.type || 'ingredient',
-      foodType: newIngredient.foodType || 'prepared',
-      parentIngredients: newIngredient.parentIngredients || [],
-      category: newIngredient.category
+      name: sanitizeText(body.name.trim()),
+      source,
+      animal_type: body.animal_type || null,
+      is_source_animal: body.is_source_animal || false,
+      preparation_method: body.preparation_method || null,
+      parent_ingredient_ids: Array.isArray(body.parent_ingredient_ids) ? body.parent_ingredient_ids : [],
+      description: body.description || null,
     });
-    
+
     return NextResponse.json(ingredient, { status: 201 });
   } catch (error) {
     console.error('Error creating ingredient:', error);
+    const message = error instanceof Error ? error.message : 'Failed to create ingredient';
     return NextResponse.json(
-      { error: 'Failed to create ingredient', details: (error as Error).message },
-      { status: 500 }
+      { error: message.includes('duplicate') || message.includes('unique') ? 'This ingredient already exists' : message },
+      { status: message.includes('duplicate') || message.includes('unique') ? 409 : 500 }
     );
   }
 }

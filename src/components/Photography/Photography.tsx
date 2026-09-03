@@ -77,6 +77,21 @@ const tiles: BentoTile[] = [
     ],
   },
   {
+    href: '/photo-search',
+    title: 'Photo Search',
+    subtitle: 'Search photos by content',
+    image: '/img/Best/Plants/plants (1).jpg',
+    span: 'wide',
+    previews: [
+      '/img/Best/Birds/birds (1).jpg',
+      '/img/Best/Animals/animals (1).jpg',
+      '/img/Best/Urban/urban (1).jpg',
+      '/img/Best/Drone/drone (1).jpg',
+      '/img/Best/Sunsets/sunsets (18).jpg',
+      '/img/Best/Landscape/landscape (1).jpg',
+    ],
+  },
+  {
     href: '/carousel_gallery',
     title: 'Screensaver',
     subtitle: 'Auto-playing slideshow',

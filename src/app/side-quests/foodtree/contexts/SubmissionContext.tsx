@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react'; // Removed unused useEffect import
+import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
 
 const SubmissionContext = createContext<SubmissionContextType | undefined>(undefined);
 
@@ -8,145 +8,88 @@ export type SubmissionType = 'ingredient' | 'dish';
 
 export interface SubmissionData {
   name: string;
-  [key: string]: unknown; // Allow for additional properties
+  [key: string]: unknown;
 }
 
 export interface Submission {
   id: string;
   type: SubmissionType;
   data: SubmissionData;
+  submitted_by: string;
   status: 'pending' | 'approved' | 'rejected';
-  submittedBy?: string;
-  submittedAt: string;
-  createdAt?: string;
-  updatedAt: string;
-  reviewedAt?: string;
-  notes?: string;
+  submitted_at: string;
+  reviewed_at: string | null;
+  notes: string | null;
 }
 
 export interface SubmissionContextType {
   submissions: Submission[];
-  addSubmission: (type: SubmissionType, data: SubmissionData) => Promise<void>;
+  addSubmission: (type: SubmissionType, data: SubmissionData) => Promise<Submission>;
   refreshSubmissions: () => Promise<void>;
   isLoading: boolean;
   error: string | null;
-  success: {message: string, itemName: string} | null;
-  setSuccess: (success: {message: string, itemName: string} | null) => void;
+  success: { message: string; itemName: string } | null;
+  setSuccess: (success: { message: string; itemName: string } | null) => void;
 }
 
 export function SubmissionProvider({ children }: { children: ReactNode }) {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<{message: string, itemName: string} | null>(null);
-
-  const addSubmission = useCallback(async (type: SubmissionType, data: SubmissionData) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      
-      const response = await fetch('/api/foodtree/submissions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ type, data }),
-      });
-
-      let responseData;
-      const responseText = await response.text();
-      
-      try {
-        responseData = responseText ? JSON.parse(responseText) : {};
-        console.log('[SubmissionContext] Parsed response data:', responseData);
-      } catch (e) {
-        console.error('[SubmissionContext] Failed to parse JSON response. Response text:', responseText);
-        throw new Error('Invalid server response');
-      }
-
-      if (!response.ok) {
-        // Handle duplicate entry error specifically
-        if (response.status === 400 && responseData.error?.includes('already exists')) {
-          // Instead of throwing, we'll return a custom error object
-          const error = new Error(`"${data.name}" already exists in the database.`);
-          error.name = 'DuplicateEntryError';
-          throw error;
-        }
-        const error = new Error(responseData.error || 'Failed to submit');
-        error.name = 'SubmissionError';
-        throw error;
-      }
-      
-      // Update the local state with the new submission
-      setSubmissions(prev => [responseData, ...prev]);
-      
-      // Success toast is shown by the form component
-      
-      return responseData;
-    } catch (err) {
-      // Don't log expected errors to the console
-      if (!(err instanceof Error && err.name === 'DuplicateEntryError')) {
-        console.error('Error in addSubmission:', err);
-      }
-      
-      const errorMessage = err instanceof Error ? 
-        (err.name === 'DuplicateEntryError' ? err.message : `Failed to submit: ${err.message}`) : 
-        'An unknown error occurred';
-      
-      setError(errorMessage);
-      
-      // Clear error after 5 seconds
-      setTimeout(() => setError(null), 5000);
-      
-      // Only re-throw if it's not a duplicate entry error
-      if (!(err instanceof Error && err.name === 'DuplicateEntryError')) {
-        throw err;
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const [success, setSuccess] = useState<{ message: string; itemName: string } | null>(null);
 
   const refreshSubmissions = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-      
       const response = await fetch('/api/foodtree/submissions');
-      const responseText = await response.text();
-      let responseData;
-      
-      try {
-        responseData = responseText ? JSON.parse(responseText) : [];
-      } catch (e) {
-        console.error('Failed to parse JSON response:', responseText);
-        throw new Error('Invalid server response');
-      }
-      
-      if (!response.ok) {
-        const errorMessage = responseData?.error || `Error ${response.status}: ${response.statusText}`;
-        throw new Error(errorMessage);
-      }
-      
-      setSubmissions(Array.isArray(responseData) ? responseData : []);
+      if (!response.ok) throw new Error('Failed to load submissions');
+      const data = await response.json();
+      setSubmissions(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error('Error fetching submissions:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load submissions';
-      setError(errorMessage);
+      const message = err instanceof Error ? err.message : 'Failed to load submissions';
+      setError(message);
       setSubmissions([]);
     } finally {
       setIsLoading(false);
     }
   }, []);
-  const initialize = useCallback(() => {
-    refreshSubmissions().catch(err => {
-      console.error('Failed to fetch initial submissions:', err);
-    });
-  }, [refreshSubmissions]);
 
-  React.useEffect(() => {
-    initialize();
-  }, [initialize]);
+  const addSubmission = useCallback(async (type: SubmissionType, data: SubmissionData): Promise<Submission> => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await fetch('/api/foodtree/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, data }),
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 409 || responseData.error?.includes('already exists')) {
+          throw new Error(`"${data.name}" already exists in the database.`);
+        }
+        throw new Error(responseData.error || 'Failed to submit');
+      }
+
+      setSubmissions(prev => [responseData, ...prev]);
+      return responseData;
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'An unknown error occurred';
+      setError(message);
+      setTimeout(() => setError(null), 5000);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshSubmissions().catch(() => {});
+  }, [refreshSubmissions]);
 
   const contextValue = React.useMemo(() => ({
     submissions,
@@ -155,7 +98,7 @@ export function SubmissionProvider({ children }: { children: ReactNode }) {
     isLoading,
     error,
     success,
-    setSuccess
+    setSuccess,
   }), [submissions, addSubmission, refreshSubmissions, isLoading, error, success]);
 
   return (

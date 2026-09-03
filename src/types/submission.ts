@@ -6,33 +6,19 @@ interface BaseSubmissionData {
   [key: string]: unknown;
 }
 
-interface IngredientData extends BaseSubmissionData {
-  type: 'ingredient';
-  // Add more specific fields for ingredient submissions here
-}
-
-interface DishData extends BaseSubmissionData {
-  type: 'dish';
-  // Add more specific fields for dish submissions here
-}
-
-type OtherData = Record<string, unknown>;
-
 export interface Submission {
   id: string;
-  type: 'ingredient' | 'dish' | 'other';
+  type: 'ingredient' | 'dish';
   status: SubmissionStatus;
-  data: IngredientData | DishData | OtherData;
-  submittedBy: string;
-  submittedAt: string;
-  updatedAt?: string;
-  notes?: string;
+  data: BaseSubmissionData;
+  submitted_by: string;
+  submitted_at: string;
+  reviewed_at: string | null;
+  notes: string | null;
 }
 
 export interface SubmissionFilters {
   status?: SubmissionStatus;
   type?: string;
   search?: string;
-  startDate?: string;
-  endDate?: string;
 }

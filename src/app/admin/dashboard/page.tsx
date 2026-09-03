@@ -2,14 +2,13 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState, useMemo, useRef } from 'react';
-import { resetRedisDatabase } from '@/lib/server/redis-actions';
+import { useCallback, useEffect, useState, useMemo } from 'react';
+
 import { format } from 'date-fns';
-import { Search, Eye, Trash2, AlertCircle, Loader2, PieChart, Table as TableIcon, Download, Upload } from 'lucide-react';
+import { Search, Eye, Trash2, AlertCircle, Loader2, Download } from 'lucide-react';
 import { Submission, SubmissionFilters } from '@/types/submission';
 import { getSubmissions, updateSubmissionStatus, deleteSubmission } from '@/lib/api/submissions';
 import { SubmissionModal } from '@/components/admin/SubmissionModal';
-import { MigrationTool } from '../components/MigrationTool';
 import { FoodTypeChart } from '../components/FoodTypeChart';
 import React from 'react';
 
@@ -196,165 +195,22 @@ export default function AdminDashboard() {
   const [selectedSubmission, setSelectedSubmission] = useState<Submission | null>(null);
   const [filters, setFilters] = useState<SubmissionFilters>({});
   const [viewMode, setViewMode] = useState<'table' | 'chart'>('table');
-  const [migrationResult, setMigrationResult] = useState<{
-    success: boolean;
-    message: string;
-    total?: number;
-    valid?: number;
-    issues?: number;
-    details?: string[];
-  } | null>(null);
-
-  const RedisResetButton = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        try {
-          const content = event.target?.result as string;
-          // Validate JSON
-          JSON.parse(content);
-          
-          setIsLoading(true);
-          setError(null);
-          setSuccess(null);
-          
-          const result = await resetRedisDatabase(content);
-          
-          if (result.success) {
-            setSuccess('Database reset successfully! Page will reload...');
-            setTimeout(() => window.location.reload(), 1000);
-          } else {
-            throw new Error(result.message);
-          }
-        } catch (err) {
-          console.error('Error processing file:', err);
-          setError('Invalid JSON file. Please check the format and try again.');
-        } finally {
-          setIsLoading(false);
-          // Reset file input
-          if (fileInputRef.current) {
-            fileInputRef.current.value = '';
-          }
-        }
-      };
-      reader.readAsText(file);
-    };
-
-    const handleDownload = async () => {
-      try {
-        const response = await fetch('/api/foodtree/submissions');
-        const data = await response.json();
-        
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `submissions-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      } catch (err) {
-        console.error('Error downloading submissions:', err);
-        setError('Failed to download submissions. Please try again.');
-      }
-    };
-
-    return (
-      <div className="flex items-center gap-8">
-        <button
-          onClick={handleDownload}
-          className="h-10 px-6 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
-          title="Download Submissions"
-          disabled={isLoading}
-        >
-          <Download className="h-4 w-4" />
-          <span>Export Data</span>
-        </button>
-        
-        <div className="relative">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="h-10 px-6 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
-            title="Import Database"
-            disabled={isLoading}
-          >
-            <Upload className="h-4 w-4" />
-            <span>Import Data</span>
-          </button>
-          
-          {isOpen && (
-            <div className="absolute right-0 mt-2 w-80 bg-gray-800 rounded-lg shadow-lg border border-gray-200 border-gray-700 p-4 z-50">
-              <h4 className="text-sm font-medium text-white mb-2">Import Database</h4>
-              <p className="text-xs text-gray-300 mb-3">
-                Upload a JSON file to reset the database. This will delete all existing data.
-              </p>
-              
-              <div className="mt-2">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Select JSON File
-                </label>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  accept=".json,application/json"
-                  onChange={handleFileUpload}
-                  className="block w-full text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-md file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-50 file:text-blue-700
-                    hover:file:bg-blue-100
-                    file:bg-blue-900/30 file:text-blue-300
-                    hover:file:bg-blue-900/50"
-                  disabled={isLoading}
-                />
-              </div>
-              
-              <div className="mt-4 text-xs text-gray-500 text-gray-400">
-                <p className="font-medium">File Format:</p>
-                <pre className="mt-1 p-2 bg-gray-700 rounded text-xs overflow-x-auto">
-                  {`{
-  "key1": { "name": "value1" },
-  "key2": { "name": "value2" }
-}`}
-                </pre>
-              </div>
-
-              {error && (
-                <div className="mt-3 text-sm text-red-600 text-red-400">
-                  {error}
-                </div>
-              )}
-              {success && (
-                <div className="mt-3 text-sm text-green-600 text-green-400">
-                  {success}
-                </div>
-              )}
-              
-              <div className="mt-4 pt-3 border-t border-gray-200 border-gray-700 flex justify-end">
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 bg-gray-700 hover:bg-gray-600 rounded-md"
-                  disabled={isLoading}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    );
+  const handleDownload = async () => {
+    try {
+      const response = await fetch('/api/foodtree/submissions');
+      const data = await response.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `submissions-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error downloading submissions:', err);
+    }
   };
 
   // Fetch all submissions on initial load
@@ -381,7 +237,7 @@ export default function AdminDashboard() {
       const matchesSearch = !searchTerm || 
         ((submission.data as { name?: string })?.name?.toLowerCase().includes(searchTerm)) || 
         submission.id.toLowerCase().includes(searchTerm) ||
-        (submission.submittedBy && submission.submittedBy.toLowerCase().includes(searchTerm));
+        (submission.submitted_by && submission.submitted_by.toLowerCase().includes(searchTerm));
 
       // Filter by type if specified
       const matchesType = !filters.type || submission.type === filters.type;
@@ -452,35 +308,6 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Migration Result Banner */}
-        {migrationResult && (
-          <div className={`p-3 mb-4 rounded-md text-sm ${
-            migrationResult.success ? 'bg-green-50 bg-green-900/20' : 'bg-yellow-50 bg-yellow-900/20'
-          }`}>
-            <div className="flex items-center justify-between">
-              <div>
-                <h4 className="font-medium">
-                  {migrationResult.success ? '✅ Check Complete' : '⚠️ Issues Found'}
-                </h4>
-                <p>{migrationResult.message}</p>
-                {migrationResult.details && migrationResult.details.length > 0 && (
-                  <div className="mt-2">
-                    {migrationResult.details.map((detail, i) => (
-                      <div key={i} className="text-xs opacity-80">{detail}</div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <button
-                onClick={() => setMigrationResult(null)}
-                className="text-gray-500 hover:text-gray-300"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Top Bar with Filters and Actions */}
         <div className="bg-gray-800 shadow-sm rounded-lg p-4 mb-6 border border-gray-700">
           <div className="flex flex-wrap items-end gap-3">
@@ -539,10 +366,6 @@ export default function AdminDashboard() {
             {/* Action Buttons */}
             <div className="flex items-center gap-6">
               <div className="flex items-center">
-                <MigrationTool onCheckComplete={setMigrationResult} />
-              </div>
-              
-              <div className="flex items-center">
                 <button
                   onClick={() => setViewMode(viewMode === 'table' ? 'chart' : 'table')}
                   className="h-10 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center whitespace-nowrap"
@@ -552,7 +375,14 @@ export default function AdminDashboard() {
               </div>
               
               <div className="flex items-center gap-4">
-                <RedisResetButton />
+                <button
+                  onClick={handleDownload}
+                  className="h-10 px-6 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+                  title="Download Submissions"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Export Data</span>
+                </button>
               </div>
             </div>
           </div>
@@ -648,7 +478,7 @@ export default function AdminDashboard() {
                         </span>
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-300">
-                        {(submission.data as { name?: string })?.name || submission.submittedBy || 'N/A'}
+                        {(submission.data as { name?: string })?.name || 'N/A'}
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900/30 text-blue-300 border border-blue-800/50">
@@ -656,11 +486,11 @@ export default function AdminDashboard() {
                         </span>
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-300">
-                        {(submission.data as { submittedName?: string })?.submittedName || submission.submittedBy || 'Anonymous'}
+                        {submission.submitted_by || 'Anonymous'}
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-sm text-gray-400">
-                        <time dateTime={submission.submittedAt}>
-                          {format(new Date(submission.submittedAt), 'MMM d, yyyy')}
+                        <time dateTime={submission.submitted_at}>
+                          {format(new Date(submission.submitted_at), 'MMM d, yyyy')}
                         </time>
                       </TableCell>
                       <TableCell className="whitespace-nowrap py-4 px-4 text-right text-sm font-medium">
@@ -702,9 +532,7 @@ export default function AdminDashboard() {
               <div className="space-y-8">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium text-white">Charts</h3>
-                  <RedisResetButton />
                 </div>
-                <MigrationTool />
                 <FoodTypeChart submissions={submissions} />
               </div>
               <div className="bg-gray-700 p-6 rounded-lg shadow">
