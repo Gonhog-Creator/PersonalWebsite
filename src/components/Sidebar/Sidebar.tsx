@@ -2,7 +2,7 @@
 
 import { Icon } from '@iconify/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ParticleEffect } from './ParticleEffect';
 
 const socialLinks = [
@@ -48,13 +48,19 @@ type SocialLinkProps = {
   bgColor: string;
   textColor: string;
   iconColor: string;
+  hidden: boolean;
+  index: number;
 };
 
-const SocialLink = ({ name, url, icon, bgColor, textColor, iconColor }: SocialLinkProps) => {
+const SocialLink = ({ name, url, icon, bgColor, textColor, iconColor, hidden, index }: SocialLinkProps) => {
   const [isHovered, setIsHovered] = useState(false);
   
   return (
-    <div className="relative h-14 flex items-center">
+    <motion.div
+      className="relative h-14 flex items-center"
+      animate={{ x: hidden ? -100 : 0 }}
+      transition={{ duration: 0.4, ease: 'easeInOut', delay: hidden ? index * 0.08 : (socialLinks.length - 1 - index) * 0.08 }}
+    >
       <a
         href={url}
         target="_blank"
@@ -102,15 +108,31 @@ const SocialLink = ({ name, url, icon, bgColor, textColor, iconColor }: SocialLi
           </div>
         </div>
       </a>
-    </div>
+    </motion.div>
   );
 };
 
 export function Sidebar() {
+  const [linksHidden, setLinksHidden] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const workSection = document.getElementById('experience');
+      if (!workSection) return;
+      
+      const workBottom = workSection.getBoundingClientRect().bottom;
+      const viewportMid = window.innerHeight / 2;
+      setLinksHidden(workBottom < viewportMid);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="fixed left-0 top-0 h-screen w-20 flex flex-col items-start justify-center z-40">
-      <div className="flex flex-col space-y-3 pl-2">
-        {socialLinks.map((link) => (
+      <div className="flex flex-col space-y-3">
+        {socialLinks.map((link, index) => (
           <SocialLink 
             key={link.name}
             name={link.name}
@@ -119,6 +141,8 @@ export function Sidebar() {
             bgColor={link.bgColor}
             textColor={link.textColor}
             iconColor={link.iconColor}
+            hidden={linksHidden}
+            index={index}
           />
         ))}
       </div>

@@ -58,9 +58,12 @@ export default function Home() {
       <Header />
       <Hero />
 
-      <main className="relative bg-gray-900">
+      <main className="relative">
+        {/* Gradient transition from Hero to About */}
+        <div className="h-16 bg-gradient-to-b from-transparent via-gray-900/60 to-gray-900" />
+
         {/* About Section */}
-        <section id="about" className="py-20 bg-gray-900">
+        <section id="about" className="py-20 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-800">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-4 text-white">About <span className="text-blue-400">Me</span></h2>
@@ -109,9 +112,9 @@ export default function Home() {
         </section>
 
         {/* Work Experience Section */}
-        <section id="experience" className="py-20 bg-gradient-to-b from-gray-800 via-gray-800 to-gray-900">
+        <section id="experience" className="py-10 bg-gradient-to-b from-gray-800 via-gray-800 to-gray-900">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
+            <div className="text-center mb-8">
               <h2 className="text-4xl font-bold mb-4 text-white">Work <span className="text-blue-400">Experience</span></h2>
               <p className="text-gray-400 max-w-2xl mx-auto">My professional journey in engineering and research</p>
             </div>
@@ -119,8 +122,11 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Gradient transition from Work to Photography */}
+        <div className="h-16 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-900" />
+
         {/* Photography Section */}
-        <section id="photography" className="pt-12 pb-8 bg-gray-900">
+        <section id="photography" className="pt-12 pb-8 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-900">
           <div className="container mx-auto px-4">
             <div className="text-center mb-8">
               <h2 className="text-4xl font-bold mb-4 text-white">My <span className="text-blue-400">Photography</span></h2>
