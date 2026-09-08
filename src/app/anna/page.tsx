@@ -26,7 +26,7 @@ export default function AnnaGuide() {
               There&apos;s lots of options for IDE&apos;s, but I use PyCharm for 3 reasons. First, it was recommended on reddit when I started searching for what to use. 2, it allows you to run python scripts within the editor directly, which is nice. And three, it allows Claude Code plugin to run (more on that later)
              </p>
           <ol className="list-decimal pl-6 space-y-2">
-            <li>Visit the <Link href="https://www.jetbrains.com/pycharm/download/" className="text-blue-600 hover:underline">PyCharm download page</Link></li>
+            <li>Visit the <Link href="https://www.jetbrains.com/pycharm/download/" className="text-blue-400 hover:underline">PyCharm download page</Link></li>
             <li>Download the Community Edition (It&apos;s free lets go)</li>
             <li>Run the installer and follow the on-screen instructions</li>
             <li>Launch that baby</li>
@@ -58,7 +58,7 @@ export default function AnnaGuide() {
         <div className="mb-6">
           <h3 className="text-xl font-medium mb-2">2.1 Create a GitHub Account</h3>
           <ol className="list-decimal pl-6 space-y-2">
-            <li>Go to <Link href="https://github.com/" className="text-blue-600 hover:underline">GitHub</Link></li>
+            <li>Go to <Link href="https://github.com/" className="text-blue-400 hover:underline">GitHub</Link></li>
             <li>Click <code>Sign up</code> and follow the registration process</li>
             <li>Verify your email address</li>
           </ol>
@@ -67,7 +67,7 @@ export default function AnnaGuide() {
         <div className="mb-6">
           <h3 className="text-xl font-medium mb-2">2.2 Set Up Git in PyCharm</h3>
           <ol className="list-decimal pl-6 space-y-2">
-            <li>Install Git from <Link href="https://git-scm.com/" className="text-blue-600 hover:underline">git-scm.com</Link></li>
+            <li>Install Git from <Link href="https://git-scm.com/" className="text-blue-400 hover:underline">git-scm.com</Link></li>
             <li>In PyCharm, go to <code>Settings</code> → <code>Version Control</code> → <code>Git</code></li>
             <li>Ensure the path to Git executable is correct, it should auto-detect</li>
             <li>Click <code>Test</code> to verify the installation</li>
@@ -119,7 +119,7 @@ export default function AnnaGuide() {
           <p className="mb-4">To start the development server:</p>
           <ol className="list-decimal pl-6 space-y-2 mb-4">
             <li>Open the terminal in PyCharm and run <code>npm run dev</code></li>
-            <li>Open <Link href="http://localhost:3000" className="text-blue-600 hover:underline">http://localhost:3000</Link> in your browser</li>
+            <li>Open <Link href="http://localhost:3000" className="text-blue-400 hover:underline">http://localhost:3000</Link> in your browser</li>
           </ol>
           <p className="mt-4">The page will automatically update as you edit files, which is really useful for checking along as you go.</p>
           <p className="mt-4">This is where you can use Windsurf to create your site. Pull up the localhost and ask it to do whatever you want!
@@ -156,13 +156,13 @@ export default function AnnaGuide() {
       <section className="mb-12">
         <h2 className="text-2xl font-semibold mb-4">Next Steps and Useful Sites</h2>
         <ul className="list-disc pl-6 space-y-2">
-          <li>Learn more about <Link href="https://nextjs.org/docs" className="text-blue-600 hover:underline">Next.js documentation</Link></li>
-          <li>I love using <Link href="https://21st.dev/community/components" className="text-blue-600 hover:underline">21st.dev</Link>, it allows you to search for custom Tailwind components that look great and it gives you the code for it!</li>
-          <li><Link href="https://icon-sets.iconify.design/logos/page-2.html" className="text-blue-600 hover:underline">Iconify</Link> is useful for logos</li>
-          <li><Link href="https://builtwith.com/" className="text-blue-600 hover:underline">Builtwith</Link> is great for seeing what a website uses for it&apos;s code (great for code thieves like me)</li>
-          <li>I use <Link href="https://imagecompressr.com/" className="text-blue-600 hover:underline">this</Link> is useful for compressing lots of images at once (open in a private browser to get around the 100 image limit). Generally, you want to make your images small in file size so they load quickly.</li>
+          <li>Learn more about <Link href="https://nextjs.org/docs" className="text-blue-400 hover:underline">Next.js documentation</Link></li>
+          <li>I love using <Link href="https://21st.dev/community/components" className="text-blue-400 hover:underline">21st.dev</Link>, it allows you to search for custom Tailwind components that look great and it gives you the code for it!</li>
+          <li><Link href="https://icon-sets.iconify.design/logos/page-2.html" className="text-blue-400 hover:underline">Iconify</Link> is useful for logos</li>
+          <li><Link href="https://builtwith.com/" className="text-blue-400 hover:underline">Builtwith</Link> is great for seeing what a website uses for it&apos;s code (great for code thieves like me)</li>
+          <li>I use <Link href="https://imagecompressr.com/" className="text-blue-400 hover:underline">this</Link> is useful for compressing lots of images at once (open in a private browser to get around the 100 image limit). Generally, you want to make your images small in file size so they load quickly.</li>
           <li>Use the developer console to check for page&apos;s performance, console messages, and even see it like a phone would! Use fn+F12 on your mac, or just F12 on a windows. </li>
-          <li><Link href="https://www.githubstatus.com/" className="text-blue-600 hover:underline">This</Link> useful to check if Github is down</li>
+          <li><Link href="https://www.githubstatus.com/" className="text-blue-400 hover:underline">This</Link> useful to check if Github is down</li>
         </ul>
       </section>
         </div>

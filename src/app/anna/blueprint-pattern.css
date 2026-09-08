@@ -11,10 +11,10 @@
 }
 
 .blueprint-bg {
-  background-color: #f0f9ff;
+  background-color: #0a0a0a;
   background-image: 
-    linear-gradient(rgba(147, 197, 253, 0.3) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(147, 197, 253, 0.3) 1px, transparent 1px);
+    linear-gradient(rgba(59, 130, 246, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.15) 1px, transparent 1px);
   background-size: 40px 40px;
   background-position: 0 0;
   position: fixed;
@@ -54,9 +54,9 @@ html, body, #__next {
 
 /* Content container */
 .blueprint-content {
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: rgba(26, 26, 26, 0.95);
   border-radius: 0.75rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
   margin: 0 auto;
   max-width: 64rem;
   width: 90%;
@@ -64,10 +64,10 @@ html, body, #__next {
   position: relative;
   min-height: calc(100vh - 8rem);
   box-sizing: border-box;
-  color: #000000; /* Set default text color to black */
+  color: #ededed;
 }
 
-/* Ensure all text elements are black */
+/* Ensure all text elements are light */
 .blueprint-content h1,
 .blueprint-content h2,
 .blueprint-content h3,
@@ -76,16 +76,16 @@ html, body, #__next {
 .blueprint-content h6,
 .blueprint-content p,
 .blueprint-content li,
-.blueprint-content a:not(.text-blue-600) {
-  color: #000000;
+.blueprint-content a:not(.text-blue-400) {
+  color: #ededed;
 }
 
 /* Ensure links remain visible */
 .blueprint-content a {
-  color: #1a56db; /* Slightly darker blue for better contrast */
+  color: #60a5fa;
   text-decoration: underline;
 }
 
 .blueprint-content a:hover {
-  color: #1e40af; /* Darker blue on hover */
+  color: #93c5fd;
 }
