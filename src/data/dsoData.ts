@@ -897,5 +897,114 @@ export const dsoImages: DSOImage[] = [
       custom: '/img/Astro/EasternVeil 8.31.26 Crimson and Green Compressed.jpg',
       customLabel: 'Crimson & Green'
     }
+  },
+  {
+    id: 'dso-36',
+    title: 'Inchworm Nebula (IC 417)',
+    date: '2026-09-02',
+    shortDescription: 'An emission nebula in the constellation Auriga, home to the young open cluster Stock 8 whose stars trace out the shape of an inchworm. Presented in two SHO palettes and HOO.',
+    fullDescription: 'IC 417, sometimes called the Spider Nebula, is an emission nebula located about 10,000 light-years away in the constellation Auriga. Embedded within it is the young open cluster Stock 8, whose brightest stars form a curved line resembling an inchworm crawling through the nebula, giving the region its popular nickname. The energetic radiation and stellar winds from the cluster\'s hot, massive stars are sculpting the surrounding gas and dust, carving out cavities and triggering new star formation along the nebula\'s edges. This image was captured in narrowband (Ha, OIII, SII) with RGB stars and is presented in three color palettes: two SHO variations and HOO.',
+    type: 'nebula',
+    constellation: 'Auriga',
+    imageUrl: '/img/Astro/Inchworm Cluster SHO 9.2.26 Compressed.jpg',
+    telescope: 'Askar 80PHQ',
+    exposure: '8.9 hours (100×300s narrowband + 129×15s RGB)',
+    location: 'Durham, NC',
+    year: 2026,
+    catalogues: [
+      { type: 'ic', number: 417 },
+      { type: 'sharpless', number: 'Sh2-234' },
+      { type: 'other', number: 'Stock 8' },
+      { type: 'other', number: 'LBN 804' }
+    ],
+    processing: 'Captured with ZWO ASI6200MM Pro, ZWO filters (Ha 7nm, OIII 7nm, SII 7nm), Sky-Watcher EQ6-R Pro mount, ZWO ASIAIR Mini, ZWO EAF, ZWO EFW 7×2″. Guided with ZWO ASI533MM. RGB frames used for stars. Processed in PixInsight. Bortle 4.5 sky.',
+    integration: [
+      { filter: 'O-III 7nm', frames: 40, subExposure: '300s', total: '3.3h' },
+      { filter: 'H-alpha 7nm', frames: 30, subExposure: '300s', total: '2.5h' },
+      { filter: 'S-II 7nm', frames: 30, subExposure: '300s', total: '2.5h' },
+      { filter: 'Blue', frames: 43, subExposure: '15s', total: '0.2h' },
+      { filter: 'Green', frames: 43, subExposure: '15s', total: '0.2h' },
+      { filter: 'Red', frames: 43, subExposure: '15s', total: '0.2h' }
+    ],
+    palettes: {
+      sho: '/img/Astro/Inchworm Cluster SHO 9.2.26 Compressed.jpg',
+      shoAstrobinUrl: 'https://www.astrobin.com/3wslvb/',
+      hoo: '/img/Astro/Inchworm Cluster HOO 9.2.26 Compressed.jpg',
+      custom: '/img/Astro/Inchworm Cluster 9.1.26 Compressed.jpg',
+      customLabel: 'SHO (Alt)'
+    }
+  },
+  {
+    id: 'dso-37',
+    title: 'Bubble Nebula & Lobster Claw (NGC 7635 / Sh2-157)',
+    date: '2026-09-15',
+    shortDescription: 'Two iconic emission nebulae in Cassiopeia: the Bubble Nebula, a shell of gas inflated by a massive central star, alongside the sprawling Lobster Claw Nebula. Presented in SHO and HOO.',
+    fullDescription: 'The Bubble Nebula (NGC 7635) is an emission nebula in the constellation Cassiopeia, located roughly 7,100–11,000 light-years from Earth. Its distinctive spherical "bubble" is a shell of gas about 7 light-years across, inflated by the fierce stellar wind of the massive, hot central star BD+60°2522, which is over 40 times the mass of the Sun. Sharing the frame is the Lobster Claw Nebula (Sh2-157), a large H II star-forming region whose glowing gas and dark dust lanes resemble the pincers of a lobster. Both objects lie within the Cassiopeia OB2 association, a rich region of young, massive stars. This image was captured in narrowband (Ha, OIII, SII) with RGB stars and is presented in SHO and HOO palettes.',
+    type: 'nebula',
+    constellation: 'Cassiopeia',
+    imageUrl: '/img/Astro/Bubble SHO 9.15.26.jpg',
+    telescope: 'Askar 80PHQ',
+    exposure: '2.6 hours (29×300s narrowband + 45×15s RGB)',
+    location: 'Durham, NC',
+    year: 2026,
+    catalogues: [
+      { type: 'ngc', number: 7635 },
+      { type: 'sharpless', number: 'Sh2-162' },
+      { type: 'sharpless', number: 'Sh2-157' },
+      { type: 'other', number: 'Caldwell 11' },
+      { type: 'other', number: 'Bubble Nebula' },
+      { type: 'other', number: 'Lobster Claw Nebula' }
+    ],
+    processing: 'Captured with ZWO ASI6200MM Pro, ZWO filters (Ha 7nm, OIII 7nm, SII 7nm), Sky-Watcher EQ6-R Pro mount, ZWO ASIAIR Mini, ZWO EAF, ZWO EFW 7×2″. Guided with ZWO ASI533MM. RGB frames used for stars. Processed in PixInsight. Bortle 4.5 sky.',
+    integration: [
+      { filter: 'H-alpha 7nm', frames: 10, subExposure: '300s', total: '0.8h' },
+      { filter: 'O-III 7nm', frames: 10, subExposure: '300s', total: '0.8h' },
+      { filter: 'S-II 7nm', frames: 9, subExposure: '300s', total: '0.8h' },
+      { filter: 'Blue', frames: 15, subExposure: '15s', total: '0.1h' },
+      { filter: 'Green', frames: 15, subExposure: '15s', total: '0.1h' },
+      { filter: 'Red', frames: 15, subExposure: '15s', total: '0.1h' }
+    ],
+    astrobinUrl: 'https://app.astrobin.com/i/yggyaf',
+    palettes: {
+      sho: '/img/Astro/Bubble SHO 9.15.26.jpg',
+      hoo: '/img/Astro/Bubble HOO 9.15.26.jpg'
+    }
+  },
+  {
+    id: 'dso-38',
+    title: 'Veil Nebula Mosaic (WIP)',
+    date: '2026-09-16',
+    shortDescription: 'A work-in-progress narrowband mosaic of the Veil Nebula complex in Cygnus, a vast supernova remnant spanning several degrees of sky. Shown in HOO.',
+    fullDescription: 'The Veil Nebula is a large supernova remnant in the constellation Cygnus, located about 2,400 light-years from Earth. It is the expanding debris cloud of a massive star that exploded roughly 10,000–20,000 years ago, and today its delicate filaments of ionized gas span an area of sky about six times the diameter of the full Moon. The complex includes the Eastern Veil (NGC 6992/6995), the Western Veil (NGC 6960, the "Witch\'s Broom"), and Pickering\'s Triangle. This work-in-progress mosaic combines multiple panels captured in narrowband (Ha, OIII, SII) with RGB stars, shown here in the HOO palette. Additional panels and integration time are planned to complete the full remnant.',
+    type: 'supernova',
+    constellation: 'Cygnus',
+    imageUrl: '/img/Astro/VeilMosaicHOODelete.jpg',
+    telescope: 'Askar 80PHQ',
+    exposure: '17.9 hours (213×300s narrowband + 180×15s RGB)',
+    location: 'Durham, NC',
+    year: 2026,
+    catalogues: [
+      { type: 'ngc', number: 6960 },
+      { type: 'ngc', number: 6992 },
+      { type: 'ngc', number: 6995 },
+      { type: 'ic', number: 1340 },
+      { type: 'sharpless', number: 'Sh2-103' },
+      { type: 'other', number: 'Caldwell 33' },
+      { type: 'other', number: 'Caldwell 34' },
+      { type: 'other', number: 'Pickering\'s Triangle' },
+      { type: 'other', number: 'Cygnus Loop' }
+    ],
+    processing: 'Captured with ZWO ASI6200MM Pro, ZWO filters (Ha 7nm, OIII 7nm, SII 7nm), Sky-Watcher EQ6-R Pro mount, ZWO ASIAIR Mini, ZWO EAF, ZWO EFW 7×2″. Guided with ZWO ASI533MM. RGB frames used for stars. Multi-panel mosaic processed in PixInsight. Bortle 4.5 sky. Work in progress.',
+    integration: [
+      { filter: 'S-II 7nm', frames: 79, subExposure: '300s', total: '6.3h' },
+      { filter: 'H-alpha 7nm', frames: 72, subExposure: '300s', total: '5.8h' },
+      { filter: 'O-III 7nm', frames: 62, subExposure: '300s', total: '4.9h' },
+      { filter: 'Blue', frames: 60, subExposure: '15s', total: '0.3h' },
+      { filter: 'Green', frames: 60, subExposure: '15s', total: '0.3h' },
+      { filter: 'Red', frames: 60, subExposure: '15s', total: '0.3h' }
+    ],
+    palettes: {
+      hoo: '/img/Astro/VeilMosaicHOODelete.jpg'
+    }
   }
 ];
