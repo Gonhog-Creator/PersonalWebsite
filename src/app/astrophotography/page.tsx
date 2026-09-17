@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Masonry from 'react-masonry-css';
 import { FaSearch, FaTimes, FaChevronDown, FaChevronUp, FaFilter } from 'react-icons/fa';
@@ -28,6 +29,13 @@ const allConstellations = Array.from(new Set(dsoImages.map(dso => dso.constellat
 const allTelescopes = Array.from(new Set(dsoImages.map(dso => dso.telescope))).sort();
 const allYears = Array.from(new Set(dsoImages.map(dso => dso.year))).sort((a, b) => b - a);
 
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+const telescopeBySlug = new Map(allTelescopes.map(t => [slugify(t), t]));
+const constellationBySlug = new Map(allConstellations.map(c => [slugify(c), c]));
+const validTypes = new Set<string>(typeOptions.map(t => t.value));
+const validCatalogues = new Set<string>(['messier', 'ngc', 'ic', 'barnard', 'sharpless']);
+const validSorts = new Set<string>(['title-asc', 'title-desc', 'year-asc', 'year-desc', 'telescope-priority']);
+
 const timelapseVideos = [
   { id: 1, title: 'ARSA 1', videoUrl: 'https://www.youtube.com/embed/4VhxYci-OL4' },
   { id: 2, title: 'BHI 2', videoUrl: 'https://www.youtube.com/embed/d57AOn_xmKk' },
@@ -42,18 +50,37 @@ const timelapseVideos = [
   { id: 11, title: 'Northern California', videoUrl: 'https://www.youtube.com/embed/GRzPwDJ9268' },
 ];
 
-export default function Astrophotography() {
+function AstrophotographyContent() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [currentView, setCurrentView] = useState<'dso' | 'timelapses' | 'normal'>('dso');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '');
   const [selectedDSO, setSelectedDSO] = useState<DSOImage | null>(null);
   const [selectedDSOIndex, setSelectedDSOIndex] = useState<number>(0);
-  const [showFilters, setShowFilters] = useState(false);
-  const [selectedTypes, setSelectedTypes] = useState<DSOType[]>([]);
-  const [selectedConstellations, setSelectedConstellations] = useState<string[]>([]);
-  const [selectedTelescopes, setSelectedTelescopes] = useState<string[]>([]);
-  const [selectedYears, setSelectedYears] = useState<number[]>([]);
-  const [selectedCatalogues, setSelectedCatalogues] = useState<CatalogueType[]>([]);
-  const [sortBy, setSortBy] = useState<SortOption>('telescope-priority');
+  const [showFilters, setShowFilters] = useState(() =>
+    ['type', 'constellation', 'telescope', 'year', 'catalogue'].some(p => searchParams.get(p))
+  );
+  const [selectedTypes, setSelectedTypes] = useState<DSOType[]>(() =>
+    (searchParams.get('type')?.split(',') || []).filter((t): t is DSOType => validTypes.has(t))
+  );
+  const [selectedConstellations, setSelectedConstellations] = useState<string[]>(() =>
+    (searchParams.get('constellation')?.split(',') || []).map(s => constellationBySlug.get(s)).filter((c): c is string => !!c)
+  );
+  const [selectedTelescopes, setSelectedTelescopes] = useState<string[]>(() =>
+    (searchParams.get('telescope')?.split(',') || []).map(s => telescopeBySlug.get(s)).filter((t): t is string => !!t)
+  );
+  const [selectedYears, setSelectedYears] = useState<number[]>(() =>
+    (searchParams.get('year')?.split(',') || []).map(Number).filter(y => allYears.includes(y))
+  );
+  const [selectedCatalogues, setSelectedCatalogues] = useState<CatalogueType[]>(() =>
+    (searchParams.get('catalogue')?.split(',') || []).filter((c): c is CatalogueType => validCatalogues.has(c))
+  );
+  const [sortBy, setSortBy] = useState<SortOption>(() => {
+    const s = searchParams.get('sort') || '';
+    return validSorts.has(s) ? (s as SortOption) : 'telescope-priority';
+  });
   const [imageLoadState, setImageLoadState] = useState<{ [key: string]: boolean }>({});
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -87,6 +114,20 @@ export default function Astrophotography() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Sync filters to URL query params
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (searchQuery) params.set('q', searchQuery);
+    if (selectedTypes.length) params.set('type', selectedTypes.join(','));
+    if (selectedConstellations.length) params.set('constellation', selectedConstellations.map(slugify).join(','));
+    if (selectedTelescopes.length) params.set('telescope', selectedTelescopes.map(slugify).join(','));
+    if (selectedYears.length) params.set('year', selectedYears.join(','));
+    if (selectedCatalogues.length) params.set('catalogue', selectedCatalogues.join(','));
+    if (sortBy !== 'telescope-priority') params.set('sort', sortBy);
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }, [searchQuery, selectedTypes, selectedConstellations, selectedTelescopes, selectedYears, selectedCatalogues, sortBy, pathname, router]);
 
   const toggleDropdown = (dropdown: string) => {
     setOpenDropdown(openDropdown === dropdown ? null : dropdown);
@@ -662,5 +703,13 @@ export default function Astrophotography() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function Astrophotography() {
+  return (
+    <Suspense fallback={null}>
+      <AstrophotographyContent />
+    </Suspense>
   );
 }
