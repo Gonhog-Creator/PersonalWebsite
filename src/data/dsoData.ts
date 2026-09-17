@@ -972,15 +972,15 @@ export const dsoImages: DSOImage[] = [
   },
   {
     id: 'dso-38',
-    title: 'Veil Nebula Mosaic (WIP)',
-    date: '2026-09-16',
-    shortDescription: 'A work-in-progress narrowband mosaic of the Veil Nebula complex in Cygnus, a vast supernova remnant spanning several degrees of sky. Shown in HOO.',
-    fullDescription: 'The Veil Nebula is a large supernova remnant in the constellation Cygnus, located about 2,400 light-years from Earth. It is the expanding debris cloud of a massive star that exploded roughly 10,000–20,000 years ago, and today its delicate filaments of ionized gas span an area of sky about six times the diameter of the full Moon. The complex includes the Eastern Veil (NGC 6992/6995), the Western Veil (NGC 6960, the "Witch\'s Broom"), and Pickering\'s Triangle. This work-in-progress mosaic combines multiple panels captured in narrowband (Ha, OIII, SII) with RGB stars, shown here in the HOO palette. Additional panels and integration time are planned to complete the full remnant.',
+    title: 'Veil Nebula Mosaic',
+    date: '2026-09-17',
+    shortDescription: 'A narrowband mosaic of the Veil Nebula complex in Cygnus, a vast supernova remnant spanning several degrees of sky. Shown in HOO.',
+    fullDescription: 'The Veil Nebula is a large supernova remnant in the constellation Cygnus, located about 2,400 light-years from Earth. It is the expanding debris cloud of a massive star that exploded roughly 10,000–20,000 years ago, and today its delicate filaments of ionized gas span an area of sky about six times the diameter of the full Moon. The complex includes the Eastern Veil (NGC 6992/6995), the Western Veil (NGC 6960, the "Witch\'s Broom"), and Pickering\'s Triangle. This mosaic combines multiple panels captured in narrowband (Ha, OIII, SII) with RGB stars, shown here in the HOO palette.',
     type: 'supernova',
     constellation: 'Cygnus',
-    imageUrl: '/img/Astro/VeilMosaicHOODelete.jpg',
+    imageUrl: '/img/Astro/VeilMosaicHOO9.17.26.jpg',
     telescope: 'Askar 80PHQ',
-    exposure: '17.9 hours (213×300s narrowband + 180×15s RGB)',
+    exposure: '18.1 hours (206×300s narrowband + 225×15s RGB)',
     location: 'Durham, NC',
     year: 2026,
     catalogues: [
@@ -994,17 +994,19 @@ export const dsoImages: DSOImage[] = [
       { type: 'other', number: 'Pickering\'s Triangle' },
       { type: 'other', number: 'Cygnus Loop' }
     ],
-    processing: 'Captured with ZWO ASI6200MM Pro, ZWO filters (Ha 7nm, OIII 7nm, SII 7nm), Sky-Watcher EQ6-R Pro mount, ZWO ASIAIR Mini, ZWO EAF, ZWO EFW 7×2″. Guided with ZWO ASI533MM. RGB frames used for stars. Multi-panel mosaic processed in PixInsight. Bortle 4.5 sky. Work in progress.',
+    processing: 'Captured with ZWO ASI6200MM Pro, ZWO filters (Ha 7nm, OIII 7nm, SII 7nm), Sky-Watcher EQ6-R Pro mount, ZWO ASIAIR Mini, ZWO EAF, ZWO EFW 7×2″. Guided with ZWO ASI533MM. RGB frames used for stars. Multi-panel mosaic processed in PixInsight. Bortle 4.5 sky.',
+    astrobinUrl: 'https://www.astrobin.com/nzbdt6/',
     integration: [
-      { filter: 'S-II 7nm', frames: 79, subExposure: '300s', total: '6.3h' },
-      { filter: 'H-alpha 7nm', frames: 72, subExposure: '300s', total: '5.8h' },
-      { filter: 'O-III 7nm', frames: 62, subExposure: '300s', total: '4.9h' },
-      { filter: 'Blue', frames: 60, subExposure: '15s', total: '0.3h' },
-      { filter: 'Green', frames: 60, subExposure: '15s', total: '0.3h' },
-      { filter: 'Red', frames: 60, subExposure: '15s', total: '0.3h' }
+      { filter: 'H-alpha 7nm', frames: 72, subExposure: '300s', total: '6.0h' },
+      { filter: 'S-II 7nm', frames: 72, subExposure: '300s', total: '6.0h' },
+      { filter: 'O-III 7nm', frames: 62, subExposure: '300s', total: '5.2h' },
+      { filter: 'Blue', frames: 75, subExposure: '15s', total: '0.3h' },
+      { filter: 'Green', frames: 75, subExposure: '15s', total: '0.3h' },
+      { filter: 'Red', frames: 75, subExposure: '15s', total: '0.3h' }
     ],
     palettes: {
-      hoo: '/img/Astro/VeilMosaicHOODelete.jpg'
+      hoo: '/img/Astro/VeilMosaicHOO9.17.26.jpg',
+      hooAstrobinUrl: 'https://www.astrobin.com/nzbdt6/'
     }
   }
 ];
