@@ -34,6 +34,17 @@ module.exports = {
   generateEtags: true,
   compress: true,
   
+  // URL redirects
+  async redirects() {
+    return [
+      {
+        source: '/astro',
+        destination: '/astrophotography',
+        permanent: true,
+      },
+    ];
+  },
+
   // URL rewrites
   async rewrites() {
     return [

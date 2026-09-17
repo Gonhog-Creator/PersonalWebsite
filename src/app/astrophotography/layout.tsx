@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import { pageMetadata } from '@/lib/og';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Greece Gallery',
-  description: 'Ancient history meets stunning Mediterranean beauty, from Santorini to the Acropolis.',
-  path: '/galleries/greece',
-  image: '/img/Greece/greece_panorama (1).jpg',
+  title: 'Astrophotography',
+  description: 'Exploring the cosmos through long exposure photography and deep space imaging.',
+  path: '/astrophotography',
+  image: '/img/Astro/astro_pano.jpg',
 });
 
 export default function Layout({

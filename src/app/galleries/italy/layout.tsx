@@ -2,16 +2,12 @@ import type { Metadata } from 'next';
 import { pageMetadata } from '@/lib/og';
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Venice Gallery',
-  description: 'Photography from Venice, Italy.',
-  path: '/galleries/italy/venice',
+  title: 'Italy Gallery',
+  description: 'Photography from Italy.',
+  path: '/galleries/italy',
   image: '/img/Italy/Venice/venice-panorama (7).jpg',
 });
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
