@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Masonry from 'react-masonry-css';
 import { FaSearch, FaTimes, FaChevronDown, FaChevronUp, FaFilter } from 'react-icons/fa';
@@ -52,7 +52,6 @@ const timelapseVideos = [
 
 function AstrophotographyContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
   const [currentView, setCurrentView] = useState<'dso' | 'timelapses' | 'normal'>('dso');
@@ -126,8 +125,11 @@ function AstrophotographyContent() {
     if (selectedCatalogues.length) params.set('catalogue', selectedCatalogues.join(','));
     if (sortBy !== 'telescope-priority') params.set('sort', sortBy);
     const qs = params.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
-  }, [searchQuery, selectedTypes, selectedConstellations, selectedTelescopes, selectedYears, selectedCatalogues, sortBy, pathname, router]);
+    // Use native history API: router.replace triggers a Next.js navigation that
+    // re-suspends the useSearchParams boundary and remounts this component,
+    // causing an infinite refresh loop.
+    window.history.replaceState(null, '', qs ? `${pathname}?${qs}` : pathname);
+  }, [searchQuery, selectedTypes, selectedConstellations, selectedTelescopes, selectedYears, selectedCatalogues, sortBy, pathname]);
 
   const toggleDropdown = (dropdown: string) => {
     setOpenDropdown(openDropdown === dropdown ? null : dropdown);
