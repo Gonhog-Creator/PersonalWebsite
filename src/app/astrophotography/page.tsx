@@ -14,6 +14,7 @@ import { GradientButton } from '@/components/ui/gradient-button';
 import { ImageModal } from '@/components/gallery/ImageModal';
 import { DSOCard } from './DSOCard';
 import { DSODetail } from './DSODetail';
+import { astroThumb, astroMedium } from '@/lib/astro-image';
 
 type SortOption = 'title-asc' | 'title-desc' | 'year-asc' | 'year-desc' | 'telescope-priority';
 
@@ -567,7 +568,7 @@ function AstrophotographyContent() {
             <div className="relative w-full overflow-hidden rounded-lg">
               <div className={`relative aspect-[4/3] bg-gray-800 transition-opacity duration-300 ${imageLoadState[photo.id] ? 'opacity-100' : 'opacity-0'}`}>
                 <Image
-                  src={photo.src}
+                  src={astroThumb(photo.src)}
                   alt={photo.alt}
                   fill
                   className="object-cover"
@@ -622,7 +623,7 @@ function AstrophotographyContent() {
       {/* Lightbox for normal photos */}
       {selectedIndex !== null && (
         <ImageModal
-          images={astroPhotos.map(p => ({ id: p.id, src: p.src, alt: p.alt }))}
+          images={astroPhotos.map(p => ({ id: p.id, src: astroMedium(p.src), alt: p.alt }))}
           currentIndex={selectedIndex}
           onClose={closeLightbox}
           onNavigate={navigateImage}
@@ -647,7 +648,7 @@ function AstrophotographyContent() {
       <div className="relative h-[60vh] min-h-[500px] bg-gradient-to-b from-gray-900 to-gray-800">
         <div className="absolute inset-0">
           <Image
-            src="/img/Astro/astro_pano.jpg"
+            src={astroMedium('/img/Astro/astro_pano.jpg')}
             alt="Astrophotography Background"
             fill
             className="object-cover"

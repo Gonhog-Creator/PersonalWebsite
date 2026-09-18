@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "postbuild": "node scripts/copy-assets.js",
+    "thumbs:astro": "node scripts/generate-astro-thumbs.js",
     "clean": "rm -rf .next out node_modules/.cache",
     "build:local": "npm run clean && NODE_ENV=production next build",
     "build:gh-pages": "npm run clean && GH_PAGES=true USE_CUSTOM_DOMAIN=true NODE_ENV=production next build",

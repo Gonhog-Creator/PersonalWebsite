@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { FaTimes, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { DSOImage } from '@/types/astro';
+import { astroMedium } from '@/lib/astro-image';
 
 interface DSODetailProps {
   dso: DSOImage;
@@ -83,7 +84,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                 style={{ pointerEvents: 'none' }}
               >
                 <Image
-                  src={activeImageSrc}
+                  src={astroMedium(activeImageSrc)}
                   alt={dso.title}
                   fill
                   className="object-contain"
@@ -242,7 +243,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
               style={{ pointerEvents: 'none' }}
             >
               <Image
-                src={activeImageSrc}
+                src={astroMedium(activeImageSrc)}
                 alt={dso.title}
                 fill
                 className="object-contain"

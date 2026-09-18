@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { DSOImage, CatalogueType } from '@/types/astro';
+import { astroThumb } from '@/lib/astro-image';
 
 interface DSOCardProps {
   dso: DSOImage;
@@ -58,7 +59,7 @@ export function DSOCard({ dso, onSelect }: DSOCardProps) {
         transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
       >
         <Image
-          src={dso.imageUrl}
+          src={astroThumb(dso.imageUrl)}
           alt={dso.title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"

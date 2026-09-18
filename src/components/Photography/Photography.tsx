@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { astroThumb } from '@/lib/astro-image';
 
 type BentoTile = {
   href: string;
@@ -121,7 +122,7 @@ const Photography = () => {
     const allPreviews = tiles.flatMap(t => t.previews);
     allPreviews.forEach(src => {
       const img = new window.Image();
-      img.src = src;
+      img.src = astroThumb(src);
     });
   }, []);
 
@@ -152,7 +153,7 @@ const Photography = () => {
                 key={`L${i}`}
                 className="relative flex-1 rounded-xl overflow-hidden bg-gray-800 min-h-0"
               >
-                <img src={src} alt="Preview" loading="eager" className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+                <img src={astroThumb(src)} alt="Preview" loading="eager" className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
               </div>
             ))}
         </div>
@@ -173,7 +174,7 @@ const Photography = () => {
                 } h-[280px] md:h-[340px]`}
               >
                 <Image
-                  src={tile.image}
+                  src={astroThumb(tile.image)}
                   alt={tile.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -207,7 +208,7 @@ const Photography = () => {
                 key={`R${i}`}
                 className="relative flex-1 rounded-xl overflow-hidden bg-gray-800 min-h-0"
               >
-                <img src={src} alt="Preview" loading="eager" className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+                <img src={astroThumb(src)} alt="Preview" loading="eager" className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
               </div>
             ))}
         </div>
