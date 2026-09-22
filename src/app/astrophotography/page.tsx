@@ -3,8 +3,9 @@
 import { useState, useEffect, useMemo, useCallback, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import Masonry from 'react-masonry-css';
-import { FaSearch, FaTimes, FaChevronDown, FaChevronUp, FaFilter } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaChevronDown, FaChevronUp, FaFilter, FaTools } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProjectHeader } from '@/components/gallery/ProjectHeader';
 import { dsoImages } from '@/data/dsoData';
@@ -368,8 +369,8 @@ function AstrophotographyContent() {
             </div>
           </div>
 
-          {/* Filters toggle */}
-          <div className="flex justify-center w-full mt-4">
+          {/* Filters toggle + setup link */}
+          <div className="flex justify-center items-center gap-3 w-full mt-4">
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors shadow-lg"
@@ -378,6 +379,13 @@ function AstrophotographyContent() {
               {showFilters ? 'Hide Filters' : 'Advanced Filters'}
               {showFilters ? <FaChevronUp className="ml-1" /> : <FaChevronDown className="ml-1" />}
             </button>
+            <Link
+              href="/astrophotography/setup"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors shadow-lg"
+            >
+              <FaTools />
+              Setup &amp; Workflow
+            </Link>
           </div>
 
           {/* Filters panel */}

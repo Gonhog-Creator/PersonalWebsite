@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { FaTimes, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaTimes, FaArrowLeft, FaArrowRight, FaSearchPlus } from 'react-icons/fa';
 import { DSOImage } from '@/types/astro';
 import { astroMedium } from '@/lib/astro-image';
+import { ZoomViewer } from './ZoomViewer';
 
 interface DSODetailProps {
   dso: DSOImage;
@@ -15,7 +16,45 @@ interface DSODetailProps {
 
 export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
   const [isVertical, setIsVertical] = useState(false);
+  // Lazy init so the zoom viewer mounts on the first render - otherwise the
+  // image flashes in, then gets replaced by an empty viewer mid-animation.
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
+  );
   const [activePalette, setActivePalette] = useState<'sho' | 'hoo' | 'custom'>('sho');
+  const [zoomActive, setZoomActive] = useState(false);
+
+  const zoomActiveRef = useRef(false);
+  const wheelCleanupRef = useRef<(() => void) | null>(null);
+  useEffect(() => { zoomActiveRef.current = zoomActive; }, [zoomActive]);
+
+  // Deep zoom is desktop-only; mobile keeps the plain image. Preload the
+  // OpenSeadragon chunk so activating zoom feels instant.
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    if (mq.matches) void import('openseadragon');
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  // Non-passive wheel listener: the first scroll over the image activates
+  // zoom instead of scrolling the page. Callback ref so it survives the
+  // vertical/horizontal layout swap.
+  const imageContainerRef = useCallback((el: HTMLDivElement | null) => {
+    wheelCleanupRef.current?.();
+    wheelCleanupRef.current = null;
+    if (!el || !isDesktop) return;
+    const onWheel = (e: WheelEvent) => {
+      if (zoomActiveRef.current) return;
+      e.preventDefault();
+      setZoomActive(true);
+    };
+    el.addEventListener('wheel', onWheel, { passive: false });
+    wheelCleanupRef.current = () => el.removeEventListener('wheel', onWheel);
+  }, [isDesktop]);
+
+  useEffect(() => () => wheelCleanupRef.current?.(), []);
 
   const hasPalettes = !!(dso.palettes?.sho || dso.palettes?.hoo || dso.palettes?.custom);
 
@@ -78,10 +117,12 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
             {/* Image column */}
             <div className="md:w-1/2 md:flex-shrink-0">
               <motion.div
+                ref={imageContainerRef}
                 layoutId={`dso-image-${dso.id}`}
                 className="relative w-full h-[50vh] md:h-[75vh] overflow-hidden"
                 transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-                style={{ pointerEvents: 'none' }}
+                style={{ pointerEvents: isDesktop ? 'auto' : 'none' }}
+                onDoubleClick={() => isDesktop && setZoomActive(true)}
               >
                 <Image
                   src={astroMedium(activeImageSrc)}
@@ -97,6 +138,19 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                     }
                   }}
                 />
+                {isDesktop && zoomActive && (
+                  <ZoomViewer src={activeImageSrc} onExit={() => setZoomActive(false)} />
+                )}
+                {isDesktop && !zoomActive && (
+                  <button
+                    onClick={() => setZoomActive(true)}
+                    className="absolute bottom-3 right-3 z-10 p-2.5 rounded-lg bg-gray-800/80 hover:bg-gray-700 text-gray-200 hover:text-white transition-colors backdrop-blur-sm border border-white/10"
+                    aria-label="Enable zoom"
+                    title="Zoom (or scroll over image)"
+                  >
+                    <FaSearchPlus size={16} />
+                  </button>
+                )}
               </motion.div>
               <div className="flex justify-center items-center gap-4 mt-3" onClick={e => e.stopPropagation()}>
                 {hasPalettes && (
@@ -157,8 +211,8 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                 {dso.fullDescription}
               </p>
 
-              <div className="mt-8 grid grid-cols-1 gap-4">
-                <div className="bg-gray-900/60 rounded-xl p-5 border border-gray-800">
+              <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="bg-gray-900/60 rounded-xl p-5 border border-gray-800 lg:col-span-2">
                   <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide text-gray-400">Acquisition</h3>
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
@@ -181,7 +235,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                 </div>
 
                 {dso.integration && dso.integration.length > 0 && (
-                  <div className="bg-gray-900/60 rounded-xl p-5 border border-gray-800">
+                  <div className="bg-gray-900/60 rounded-xl p-5 border border-gray-800 lg:col-span-2">
                     <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wide text-gray-400">Integration</h3>
                     <div className="overflow-x-auto">
                       <table className="w-full text-sm">
@@ -222,14 +276,14 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                     ))}
                   </div>
                 </div>
-              </div>
 
-              {dso.processing && (
-                <div className="mt-4 bg-gray-900/60 rounded-xl p-5 border border-gray-800">
-                  <h3 className="text-white font-semibold mb-2 text-sm uppercase tracking-wide text-gray-400">Processing</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">{dso.processing}</p>
-                </div>
-              )}
+                {dso.processing && (
+                  <div className="bg-gray-900/60 rounded-xl p-5 border border-gray-800">
+                    <h3 className="text-white font-semibold mb-2 text-sm uppercase tracking-wide text-gray-400">Processing</h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">{dso.processing}</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ) : (
@@ -237,10 +291,12 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
           <>
             {/* Hero image with shared layout transition */}
             <motion.div
+              ref={imageContainerRef}
               layoutId={`dso-image-${dso.id}`}
               className="relative w-full h-[75vh] overflow-hidden"
               transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-              style={{ pointerEvents: 'none' }}
+              style={{ pointerEvents: isDesktop ? 'auto' : 'none' }}
+              onDoubleClick={() => isDesktop && setZoomActive(true)}
             >
               <Image
                 src={astroMedium(activeImageSrc)}
@@ -256,6 +312,19 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                   }
                 }}
               />
+              {isDesktop && zoomActive && (
+                <ZoomViewer src={activeImageSrc} onExit={() => setZoomActive(false)} />
+              )}
+              {isDesktop && !zoomActive && (
+                <button
+                  onClick={() => setZoomActive(true)}
+                  className="absolute bottom-3 right-3 z-10 p-2.5 rounded-lg bg-gray-800/80 hover:bg-gray-700 text-gray-200 hover:text-white transition-colors backdrop-blur-sm border border-white/10"
+                  aria-label="Enable zoom"
+                  title="Zoom (or scroll over image)"
+                >
+                  <FaSearchPlus size={16} />
+                </button>
+              )}
             </motion.div>
 
             <div className="flex justify-center items-center gap-4 mt-4" onClick={e => e.stopPropagation()}>
@@ -384,15 +453,15 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                   ))}
                 </div>
               </div>
-            </div>
 
-            {/* Processing */}
-            {dso.processing && (
-              <div className="mt-6 bg-gray-900/60 rounded-xl p-5 border border-gray-800">
-                <h3 className="text-white font-semibold mb-2 text-sm uppercase tracking-wide text-gray-400">Processing</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{dso.processing}</p>
-              </div>
-            )}
+              {/* Processing */}
+              {dso.processing && (
+                <div className="bg-gray-900/60 rounded-xl p-5 border border-gray-800">
+                  <h3 className="text-white font-semibold mb-2 text-sm uppercase tracking-wide text-gray-400">Processing</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{dso.processing}</p>
+                </div>
+              )}
+            </div>
           </>
         )}
       </div>

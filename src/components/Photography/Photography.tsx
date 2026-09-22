@@ -48,11 +48,26 @@ const tiles: BentoTile[] = [
     ],
   },
   {
+    href: '/carousel_gallery',
+    title: 'Screensaver',
+    subtitle: 'Auto-playing slideshow',
+    image: '/img/Costa Rica/costarica (124).jpg',
+    span: 'normal',
+    previews: [
+      '/img/Sweden/sweden (7).jpg',
+      '/img/Norway/norway (15).jpg',
+      '/img/Argentina/argentina (30).jpg',
+      '/img/France/france (10).jpg',
+      '/img/Switzerland/switzerland (8).jpg',
+      '/img/Costa Rica/costarica (50).jpg',
+    ],
+  },
+  {
     href: '/astrophotography',
     title: 'Astrophotography',
     subtitle: 'Deep space imaging',
     image: '/img/Astro/M31-10.6.25-4.75hours.jpg',
-    span: 'normal',
+    span: 'wide',
     previews: [
       '/img/Astro/M51-10.9.25-59x20sec.jpg',
       '/img/Astro/astro-15.jpg',
@@ -82,7 +97,7 @@ const tiles: BentoTile[] = [
     title: 'Photo Search',
     subtitle: 'Search photos by content',
     image: '/img/Best/Plants/plants (1).jpg',
-    span: 'wide',
+    span: 'normal',
     previews: [
       '/img/Best/Birds/birds (1).jpg',
       '/img/Best/Animals/animals (1).jpg',
@@ -90,21 +105,6 @@ const tiles: BentoTile[] = [
       '/img/Best/Drone/drone (1).jpg',
       '/img/Best/Sunsets/sunsets (18).jpg',
       '/img/Best/Landscape/landscape (1).jpg',
-    ],
-  },
-  {
-    href: '/carousel_gallery',
-    title: 'Screensaver',
-    subtitle: 'Auto-playing slideshow',
-    image: '/img/Costa Rica/costarica (124).jpg',
-    span: 'normal',
-    previews: [
-      '/img/Sweden/sweden (7).jpg',
-      '/img/Norway/norway (15).jpg',
-      '/img/Argentina/argentina (30).jpg',
-      '/img/France/france (10).jpg',
-      '/img/Switzerland/switzerland (8).jpg',
-      '/img/Costa Rica/costarica (50).jpg',
     ],
   },
 ];
