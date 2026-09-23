@@ -8,7 +8,7 @@ Welcome to my personal portfolio website, a modern and responsive showcase of my
 
 ## ✨ Features
 
-- **Modern Stack**: Next.js 14, TypeScript, and Tailwind CSS
+- **Modern Stack**: Next.js 16, React 19, TypeScript, and Tailwind CSS 4
 - **Performance Optimized**: Static site generation and image optimization
 - **Responsive Design**: Works seamlessly on all devices
 - **Smooth Animations**: Powered by Framer Motion
@@ -17,7 +17,7 @@ Welcome to my personal portfolio website, a modern and responsive showcase of my
 
 ### 🎯 About Me
 - Professional background as a Chemical Engineer and Material Scientist
-- Education at NC State University
+- B.S. from NC State University; M.S. in progress at the University of Padua, Italy
 - Technical skills and expertise overview
 
 ### 💼 Work Experience
@@ -32,8 +32,10 @@ Welcome to my personal portfolio website, a modern and responsive showcase of my
 - **Gallery Organization**: Country-specific and thematic collections
 
 ### 🚀 Side Projects
-- **Roasim**: Battle simulation optimization tool
-- **Food Tree**: Interactive food tracking system
+- **Food Tree**: Interactive 3D graph exploring connections between ingredients and dishes
+- **Evolution Sim**: Simulated ecosystem where creatures evolve and adapt
+- **Flight Tracker**: Interactive globe tracing flights across the years
+- **Image Compressor**: Browser-based bulk image compression to JPEG, PNG, and WebP
 - **NC State Rocketry**: Rocketry project documentation
 - **My Movies**: Personal movie database and tracking
 - **Fractals**: Mathematical visualization projects
@@ -41,11 +43,11 @@ Welcome to my personal portfolio website, a modern and responsive showcase of my
 
 ## 🛠️ Technologies Used
 
-- **Frontend**: Next.js, React, TypeScript
-- **Styling**: Tailwind CSS
-- **Animation**: Framer Motion
-- **Analytics**: Google Analytics
-- **Hosting**: GitHub Pages
+- **Frontend**: Next.js 16, React 19, TypeScript
+- **Styling**: Tailwind CSS 4
+- **Animation**: Framer Motion, AOS
+- **Analytics**: Google Analytics, Vercel Analytics & Speed Insights
+- **Hosting**: Vercel
 
 ## 📝 License
 

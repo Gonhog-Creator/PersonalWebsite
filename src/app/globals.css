@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* Gradient button custom properties (moved from GradientLayout.tsx to avoid FOUC) */
 @property --pos-x { syntax: '<percentage>'; initial-value: 11.14%; inherits: false; }

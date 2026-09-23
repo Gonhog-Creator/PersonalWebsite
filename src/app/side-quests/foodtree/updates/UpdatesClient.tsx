@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { updates } from './page';
+import { updates } from '../utils/updates';
 
 function getTypeStyles(type: string) {
   const baseStyles = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium';

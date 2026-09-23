@@ -24,10 +24,10 @@ const securityHeaders = [
 ];
 
 module.exports = {
-  // Disable Turbopack and configure webpack
+  // Webpack is used for builds via the --webpack flag in package.json scripts
+  // (Next 16 defaults to Turbopack; the custom webpack config below requires webpack)
   experimental: {
-    webpackBuildWorker: true,
-    turbopack: false
+    webpackBuildWorker: true
   },
   // Basic configuration
   trailingSlash: true,

@@ -54,13 +54,15 @@ export const metadata: Metadata = {
     default: 'Jose Barbeito | Engineer & Photographer',
     template: '%s | Jose Barbeito',
   },
-  description: 'Chemical Engineering and Material Science student at NC State University with a passion for photography and technology.',
+  description: "Chemical Engineering and Material Science graduate of NC State University, now pursuing a Master's at the University of Padua, with a passion for photography and technology.",
   keywords: [
     'Jose Barbeito', 
     'Chemical Engineering', 
     'Material Science', 
-    'NC State University', 
+    'NC State University',
+    'University of Padua',
     'Photography',
+    'Astrophotography',
     'Portfolio',
     'Engineer',
     'Resume'
@@ -92,7 +94,7 @@ export const metadata: Metadata = {
     url: 'https://josebarbeito.com',
     title: 'Jose Barbeito | Engineer & Photographer',
     siteName: 'Jose Barbeito',
-    description: 'Chemical Engineering and Material Science student at NC State University with a passion for photography and technology.',
+    description: "Chemical Engineering and Material Science graduate of NC State University, now pursuing a Master's at the University of Padua, with a passion for photography and technology.",
     images: [
       {
         url: '/img/og-image.jpg',
@@ -105,7 +107,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Jose Barbeito | Engineer & Photographer',
-    description: 'Chemical Engineering and Material Science student at NC State University with a passion for photography and technology.',
+    description: "Chemical Engineering and Material Science graduate of NC State University, now pursuing a Master's at the University of Padua, with a passion for photography and technology.",
     images: ['/img/og-image.jpg'],
   },
   icons: {
