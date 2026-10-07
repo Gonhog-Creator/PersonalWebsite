@@ -32,10 +32,16 @@ export interface DSOImage {
     hoo?: string;
     custom?: string;
     customLabel?: string;
+    defaultPalette?: 'sho' | 'hoo' | 'custom';
     shoAstrobinUrl?: string;
     hooAstrobinUrl?: string;
     customAstrobinUrl?: string;
   };
+  crops?: Array<{
+    label: string;
+    src: string;
+    description?: string;
+  }>;
 }
 
 export interface AstroPhoto {

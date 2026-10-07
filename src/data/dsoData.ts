@@ -1008,5 +1008,99 @@ export const dsoImages: DSOImage[] = [
       hoo: '/img/Astro/VeilMosaicHOO9.17.26.jpg',
       hooAstrobinUrl: 'https://www.astrobin.com/nzbdt6/'
     }
+  },
+  {
+    id: 'dso-39',
+    title: 'Cocoon Nebula (IC 5146) - Askar 80PHQ',
+    date: '2026-10-06',
+    shortDescription: 'An emission and reflection nebula in Cygnus, glowing at the end of the long dark molecular cloud Barnard 168. Presented in SHO, HOO, and broadband RGB.',
+    fullDescription: 'The Cocoon Nebula (IC 5146) is a compact emission and reflection nebula located about 2,500 light-years away in the constellation Cygnus. The glowing knot of hydrogen gas sits at the end of Barnard 168, a long dark molecular cloud that appears to trail off from the nebula like a tether. At its heart lies a young cluster of stars, including the hot, massive BD+46°3474, whose ultraviolet radiation ionizes the surrounding gas and makes it shine. This image combines over 7.5 hours of narrowband data (Ha, OIII, SII) with 1.5 hours of broadband RGB frames for natural star color and a true-color version, presented in SHO, HOO, and RGB palettes.',
+    type: 'nebula',
+    constellation: 'Cygnus',
+    imageUrl: '/img/Astro/Cacoon HOO 10.6.26.jpg',
+    telescope: 'Askar 80PHQ',
+    exposure: '9 hours (90×300s narrowband + 180×30s RGB)',
+    location: 'Durham, NC',
+    year: 2026,
+    catalogues: [
+      { type: 'ic', number: 5146 },
+      { type: 'sharpless', number: 'Sh2-125' },
+      { type: 'barnard', number: 168 },
+      { type: 'other', number: 'Caldwell 19' },
+      { type: 'other', number: 'Cr 470' },
+      { type: 'other', number: 'LBN 424' }
+    ],
+    processing: 'Captured with ZWO ASI6200MM Pro, ZWO filters (Ha 7nm, OIII 7nm, SII 7nm, RGB), Sky-Watcher EQ6-R Pro mount, ZWO ASIAIR Mini, ZWO EAF, ZWO EFW 7×2″. Guided with ZWO ASI533MM. Processed in PixInsight. Bortle 4.5 sky.',
+    integration: [
+      { filter: 'H-alpha 7nm', frames: 40, subExposure: '300s', total: '3.3h' },
+      { filter: 'O-III 7nm', frames: 35, subExposure: '300s', total: '2.9h' },
+      { filter: 'S-II 7nm', frames: 15, subExposure: '300s', total: '1.3h' },
+      { filter: 'Blue', frames: 60, subExposure: '30s', total: '0.5h' },
+      { filter: 'Green', frames: 60, subExposure: '30s', total: '0.5h' },
+      { filter: 'Red', frames: 60, subExposure: '30s', total: '0.5h' }
+    ],
+    palettes: {
+      sho: '/img/Astro/Cacoon SHO 10.6.26.jpg',
+      hoo: '/img/Astro/Cacoon HOO 10.6.26.jpg',
+      hooAstrobinUrl: 'https://www.astrobin.com/bdze33/',
+      custom: '/img/Astro/Cacoon RGB 10.6.26.jpg',
+      customLabel: 'RGB',
+      defaultPalette: 'hoo'
+    }
+  },
+  {
+    id: 'dso-40',
+    title: 'Deer Lick Group (NGC 7331) - Askar 80PHQ',
+    date: '2026-10-07',
+    shortDescription: 'A wide-field view of Pegasus centered on the Deer Lick Group around spiral galaxy NGC 7331, with Stephan\'s Quintet and the NGC 7342 group sharing the frame. Cropped views highlight each grouping.',
+    fullDescription: 'The Deer Lick Group is a collection of galaxies in the constellation Pegasus, dominated by the large spiral galaxy NGC 7331 about 40 million light-years away. NGC 7331 is similar in size and structure to our Milky Way and is sometimes called the "Milky Way\'s twin." The smaller galaxies appearing around it - NGC 7335, 7336, 7337, and 7340, nicknamed the "fleas" - are actually much more distant background objects hundreds of millions of light-years away. The frame is unusually rich in galaxy groups: the right side holds Stephan\'s Quintet (Hickson 92), the first compact galaxy group ever identified, where four interacting galaxies roughly 300 million light-years away are joined in the view by the foreground blue spiral NGC 7320 at just 40 million light-years. On the left side lies a smaller grouping around NGC 7342. Because these galaxies appear small in the full frame, three cropped versions are included below: a center crop of NGC 7331 and its fleas, a right crop of Stephan\'s Quintet, and a left crop of the NGC 7342 group.',
+    type: 'galaxy',
+    constellation: 'Pegasus',
+    imageUrl: '/img/Astro/Deer Lickgroup RGB.jpg',
+    telescope: 'Askar 80PHQ',
+    exposure: '5 hours (60×300s RGB)',
+    location: 'Durham, NC',
+    year: 2026,
+    catalogues: [
+      { type: 'ngc', number: 7331 },
+      { type: 'ngc', number: 7335 },
+      { type: 'ngc', number: 7336 },
+      { type: 'ngc', number: 7337 },
+      { type: 'ngc', number: 7340 },
+      { type: 'ngc', number: 7317 },
+      { type: 'ngc', number: 7318 },
+      { type: 'ngc', number: 7319 },
+      { type: 'ngc', number: 7320 },
+      { type: 'ngc', number: 7342 },
+      { type: 'other', number: 'Caldwell 30' },
+      { type: 'other', number: 'Arp 25' },
+      { type: 'other', number: 'HCG 92' },
+      { type: 'other', number: 'Stephan\'s Quintet' },
+      { type: 'other', number: 'Deer Lick Group' }
+    ],
+    processing: 'Captured with ZWO ASI6200MM Pro, ZWO RGB filters, Sky-Watcher EQ6-R Pro mount, ZWO ASIAIR Mini, ZWO EAF, ZWO EFW 7×2″. Guided with ZWO ASI533MM. Processed in PixInsight. Bortle 4.5 sky.',
+    astrobinUrl: 'https://www.astrobin.com/33qpew/',
+    integration: [
+      { filter: 'Blue', frames: 20, subExposure: '300s', total: '1.7h' },
+      { filter: 'Green', frames: 20, subExposure: '300s', total: '1.7h' },
+      { filter: 'Red', frames: 20, subExposure: '300s', total: '1.7h' }
+    ],
+    crops: [
+      {
+        label: 'NGC 7331',
+        src: '/img/Astro/Deer Lickgroup RGB Center Cropped.jpg',
+        description: 'Center crop - NGC 7331, the "Milky Way\'s twin" and anchor of the Deer Lick Group, flanked by its much more distant companions NGC 7335, 7336, 7337, and 7340 (the "fleas").'
+      },
+      {
+        label: 'Stephan\'s Quintet',
+        src: '/img/Astro/Deer Lickgroup RGB Right Cropped.jpg',
+        description: 'Right crop - Stephan\'s Quintet (Hickson 92), a compact group of interacting galaxies roughly 300 million light-years away. The bright blue NGC 7320 is a foreground galaxy only about 40 million light-years away, not a true member of the group.'
+      },
+      {
+        label: 'NGC 7342 Group',
+        src: '/img/Astro/Deer Lickgroup RGB Left Cropped.jpg',
+        description: 'Left crop - the smaller galaxy grouping around NGC 7342, part of the same rich field of galaxies in Pegasus.'
+      }
+    ]
   }
 ];

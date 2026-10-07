@@ -21,7 +21,10 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
   const [isDesktop, setIsDesktop] = useState(
     () => typeof window !== 'undefined' && window.matchMedia('(min-width: 768px)').matches
   );
-  const [activePalette, setActivePalette] = useState<'sho' | 'hoo' | 'custom'>('sho');
+  const [activePalette, setActivePalette] = useState<'sho' | 'hoo' | 'custom'>(
+    dso.palettes?.defaultPalette ?? 'sho'
+  );
+  const [activeCrop, setActiveCrop] = useState<number | null>(null);
   const [zoomActive, setZoomActive] = useState(false);
 
   const zoomActiveRef = useRef(false);
@@ -57,22 +60,49 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
   useEffect(() => () => wheelCleanupRef.current?.(), []);
 
   const hasPalettes = !!(dso.palettes?.sho || dso.palettes?.hoo || dso.palettes?.custom);
+  const crops = dso.crops ?? [];
+  const activeCropData = activeCrop !== null ? crops[activeCrop] : undefined;
 
   const paletteOptions: { key: 'sho' | 'hoo' | 'custom'; label: string }[] = [];
   if (dso.palettes?.sho) paletteOptions.push({ key: 'sho', label: 'SHO' });
   if (dso.palettes?.hoo) paletteOptions.push({ key: 'hoo', label: 'HOO' });
   if (dso.palettes?.custom) paletteOptions.push({ key: 'custom', label: dso.palettes.customLabel || 'Custom' });
 
-  const activeImageSrc = hasPalettes
-    ? (dso.palettes?.[activePalette] || dso.imageUrl)
-    : dso.imageUrl;
+  const activeImageSrc = activeCropData
+    ? activeCropData.src
+    : hasPalettes
+      ? (dso.palettes?.[activePalette] || dso.imageUrl)
+      : dso.imageUrl;
 
   const paletteAstrobinUrls: Record<string, string | undefined> = {
     sho: dso.palettes?.shoAstrobinUrl,
     hoo: dso.palettes?.hooAstrobinUrl,
     custom: dso.palettes?.customAstrobinUrl,
   };
-  const activeAstrobinUrl = paletteAstrobinUrls[activePalette] || dso.astrobinUrl;
+  // Crops are local-only files - "full resolution" falls back to the crop itself.
+  const activeAstrobinUrl = activeCropData
+    ? undefined
+    : paletteAstrobinUrls[activePalette] || dso.astrobinUrl;
+
+  const cropButtons = crops.length > 0 && (
+    <div className="flex gap-2">
+      {crops.map((crop, i) => (
+        <button
+          key={crop.src}
+          onClick={() => setActiveCrop(activeCrop === i ? null : i)}
+          className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${activeCrop === i ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+        >
+          {crop.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  const cropDescription = activeCropData?.description && (
+    <p className="text-gray-400 text-sm text-center mt-2 max-w-2xl mx-auto">
+      {activeCropData.description}
+    </p>
+  );
 
   return (
     <motion.div
@@ -158,7 +188,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                     {paletteOptions.map(opt => (
                       <button
                         key={opt.key}
-                        onClick={() => setActivePalette(opt.key)}
+                        onClick={() => { setActivePalette(opt.key); setActiveCrop(null); }}
                         className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${activePalette === opt.key ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
                       >
                         {opt.label}
@@ -166,6 +196,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                     ))}
                   </div>
                 )}
+                {cropButtons}
                 {activeAstrobinUrl ? (
                   <a
                     href={activeAstrobinUrl}
@@ -186,6 +217,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                   </a>
                 )}
               </div>
+              {cropDescription}
             </div>
 
             {/* Details column */}
@@ -333,7 +365,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                   {paletteOptions.map(opt => (
                     <button
                       key={opt.key}
-                      onClick={() => setActivePalette(opt.key)}
+                      onClick={() => { setActivePalette(opt.key); setActiveCrop(null); }}
                       className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-colors ${activePalette === opt.key ? 'bg-blue-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
                     >
                       {opt.label}
@@ -341,6 +373,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                   ))}
                 </div>
               )}
+              {cropButtons}
               {activeAstrobinUrl ? (
                 <a
                   href={activeAstrobinUrl}
@@ -361,6 +394,7 @@ export function DSODetail({ dso, onClose, onNavigate }: DSODetailProps) {
                 </a>
               )}
             </div>
+            {cropDescription}
 
             {/* Title with shared layout transition */}
             <motion.div

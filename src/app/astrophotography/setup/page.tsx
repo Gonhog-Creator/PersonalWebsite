@@ -116,7 +116,7 @@ export default function SetupPage() {
               <GearPhoto
                 src={scope.photo}
                 alt={scope.name}
-                className="w-full h-64"
+                className="w-full h-96 md:h-[32rem]"
               />
               <div className="p-6">
                 <h3 className="text-xl font-bold text-white">{scope.name}</h3>
