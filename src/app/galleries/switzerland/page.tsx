@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 import { GradientButton } from '@/components/ui/gradient-button';
@@ -99,17 +100,17 @@ export default function SwitzerlandGallery() {
       {/* Navigation Section */}
       <section className="w-full bg-gray-900 py-12">
         <div className="w-full flex justify-center px-4">
-          <div className="flex items-center justify-center gap-8 md:gap-16 lg:gap-32">
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5">
             <GradientButton
               variant={currentView === 'panoramas' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+              className="rounded-full min-w-0 px-5 md:px-7 py-2.5 md:py-3.5 text-xs md:text-sm font-bold"
               onClick={() => setCurrentView('panoramas')}
             >
               Panoramas
             </GradientButton>
             <GradientButton
               variant={currentView === 'photos' ? 'variant' : 'default'}
-              className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+              className="rounded-full min-w-0 px-5 md:px-7 py-2.5 md:py-3.5 text-xs md:text-sm font-bold"
               onClick={() => setCurrentView('photos')}
             >
               Photos
@@ -117,12 +118,19 @@ export default function SwitzerlandGallery() {
             {true && (
               <GradientButton
                 variant={currentView === 'drone' ? 'variant' : 'default'}
-                className="px-6 md:px-10 py-3 md:py-5 text-sm md:text-lg font-bold transform scale-100 md:scale-125 lg:scale-150 origin-center"
+                className="rounded-full min-w-0 px-5 md:px-7 py-2.5 md:py-3.5 text-xs md:text-sm font-bold"
                 onClick={() => setCurrentView('drone')}
               >
                 Drone Videos
               </GradientButton>
             )}
+              <GradientButton
+                asChild
+                className="rounded-full min-w-0 px-5 md:px-7 py-2.5 md:py-3.5 text-xs md:text-sm font-bold"
+              >
+                <Link href="/galleries/switzerland/guide">Guide</Link>
+              </GradientButton>
+
           </div>
         </div>
       </section>

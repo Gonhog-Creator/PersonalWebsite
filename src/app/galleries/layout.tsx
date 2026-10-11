@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { pageMetadata } from '@/lib/og';
+import { GallerySpacer } from '@/components/Galleries/GallerySpacer';
 
 export const metadata: Metadata = pageMetadata({
   title: 'Photo Galleries',
@@ -9,5 +10,11 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      {/* Spacer matching the fixed header height so page heroes sit below it (hidden on /guide pages) */}
+      <GallerySpacer />
+      {children}
+    </>
+  );
 }

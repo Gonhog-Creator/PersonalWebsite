@@ -58,13 +58,14 @@ const projects: ProjectItem[] = [
     description: 'Spin the globe and trace my flights across the years',
     path: '/side-quests/flight-tracker'
   },
-  {
-    id: 'evolution-sim',
-    title: 'Evolution Sim',
-    image: '/img/projects/evolution-sim/evolution-sim-cover.svg',
-    description: 'Watch creatures evolve and adapt in a simulated ecosystem',
-    path: '/side-quests/evolution-sim'
-  }
+  // Hidden for now — uncomment to restore the tile
+  // {
+  //   id: 'evolution-sim',
+  //   title: 'Evolution Sim',
+  //   image: '/img/projects/evolution-sim/evolution-sim-cover.svg',
+  //   description: 'Watch creatures evolve and adapt in a simulated ecosystem',
+  //   path: '/side-quests/evolution-sim'
+  // }
 ];
 
 const container = {

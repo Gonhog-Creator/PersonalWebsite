@@ -20,7 +20,7 @@ const navLinks: NavLink[] = [
   { name: 'Contact', href: '/#contact', icon: 'mdi:email' },
 ];
 
-export function ProjectHeader() {
+export function ProjectHeader({ light = false }: { light?: boolean }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
@@ -35,13 +35,19 @@ export function ProjectHeader() {
   }, []);
 
   return (
-    <div className="fixed w-full z-50">
+    <div
+      className={`fixed top-0 left-0 w-full z-50 ${
+        light && !isScrolled ? 'bg-[#FAF7F2]' : ''
+      }`}
+    >
       <div className="relative">
         <header
           className={`w-full transition-all duration-300 ease-in-out font-sans py-4 shadow-sm ${
             isScrolled
               ? 'opacity-0 pointer-events-none'
-              : 'opacity-100 bg-gray-900/95 backdrop-blur-md'
+              : light
+                ? 'opacity-100 bg-[#FAF7F2] border-b border-stone-200'
+                : 'opacity-100 bg-gray-900/95 backdrop-blur-md'
           }`}
         >
           <div className="container mx-auto px-8">
@@ -52,7 +58,7 @@ export function ProjectHeader() {
                   src="/img/logo.png" 
                   alt="JB Logo" 
                   fill 
-                  className="object-contain"
+                  className={`object-contain${light ? ' invert' : ''}`}
                   priority
                 />
               </Link>
@@ -65,16 +71,16 @@ export function ProjectHeader() {
                     href={link.href}
                     className="relative group flex items-center py-8"
                   >
-                    <Icon icon={link.icon} className="w-6 h-6 text-white group-hover:scale-110 transition-transform duration-200" />
-                    <span className="text-white text-base font-medium tracking-wide ml-4">{link.name}</span>
-                    <span className="absolute -bottom-2 left-0 right-0 h-0.5 bg-blue-500 transition-all duration-300 transform scale-x-0 group-hover:scale-x-100"></span>
+                    <Icon icon={link.icon} className={`w-6 h-6 ${light ? 'text-stone-800' : 'text-white'} group-hover:scale-110 transition-transform duration-200`} />
+                    <span className={`${light ? 'text-stone-800' : 'text-white'} text-base font-medium tracking-wide ml-4`}>{link.name}</span>
+                    <span className={`absolute -bottom-2 left-0 right-0 h-0.5 ${light ? 'bg-amber-800' : 'bg-blue-500'} transition-all duration-300 transform scale-x-0 group-hover:scale-x-100`}></span>
                   </Link>
                 ))}
               </nav>
 
               {/* Mobile menu button */}
               <button
-                className="md:hidden text-white focus:outline-none p-2 -mr-2"
+                className={`md:hidden ${light ? 'text-stone-900' : 'text-white'} focus:outline-none p-2 -mr-2`}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle menu"
               >
@@ -101,12 +107,12 @@ export function ProjectHeader() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        className="flex items-center px-4 py-3 text-white hover:bg-gray-800 rounded-lg transition-colors duration-200 group"
+                        className={`flex items-center px-4 py-3 ${light ? 'text-stone-800 hover:bg-stone-200' : 'text-white hover:bg-gray-800'} rounded-lg transition-colors duration-200 group`}
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        <Icon icon={link.icon} className="w-6 h-6 text-blue-400" />
+                        <Icon icon={link.icon} className={`w-6 h-6 ${light ? 'text-amber-700' : 'text-blue-400'}`} />
                         <span className="ml-4 text-lg font-medium">{link.name}</span>
-                        <span className="ml-auto w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-8"></span>
+                        <span className={`ml-auto w-0 h-0.5 ${light ? 'bg-amber-800' : 'bg-blue-500'} transition-all duration-300 group-hover:w-8`}></span>
                       </Link>
                     ))}
                   </div>

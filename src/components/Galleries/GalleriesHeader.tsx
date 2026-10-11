@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Icon } from '@iconify/react';
@@ -16,23 +16,33 @@ const navLinks = [
 
 export function GalleriesHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      // Fade the navbar once it has scrolled past the "All Galleries" title
+      const title = document.getElementById('galleries-title');
+      if (title) {
+        const headerBottom = headerRef.current?.offsetHeight ?? 160;
+        setIsScrolled(title.getBoundingClientRect().bottom < headerBottom);
+      } else {
+        setIsScrolled(window.scrollY > 10);
+      }
     };
-    
+
+    handleScroll();
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <header 
-      className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 ease-in-out font-sans ${
+      ref={headerRef}
+      className={`w-full fixed top-0 left-0 z-50 transition-opacity duration-300 ease-in-out font-sans ${
         isScrolled
-          ? 'bg-gray-900/80 backdrop-blur-md py-3 shadow-sm'
-          : 'bg-transparent py-6'
-      }`}
+          ? 'opacity-0 pointer-events-none'
+          : 'opacity-100'
+      } bg-transparent py-6`}
     >
       <div className="container mx-auto px-8">
         <div className="flex justify-between items-center">
