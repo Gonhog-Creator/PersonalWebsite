@@ -16,7 +16,7 @@ const socialLinks = [
   },
   { 
     name: 'Instagram', 
-    url: 'https://instagram.com/day_by_day_jmb', 
+    url: 'https://instagram.com/josembarbeito', 
     icon: 'mdi:instagram',
     bgColor: 'bg-white',
     textColor: 'text-gray-900',
